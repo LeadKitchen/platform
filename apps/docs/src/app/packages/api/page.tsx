@@ -3,7 +3,7 @@ import { DocsBreadcrumb } from "@/components/docs/docs-breadcrumb";
 import { DocsFeedback } from "@/components/docs/docs-feedback";
 
 export const metadata = {
-  title: "@acme/api Package",
+  title: "@sitruk/api Package",
   description: "tRPC API router definitions",
 };
 
@@ -15,14 +15,14 @@ export default function ApiPackagePage() {
           <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary mb-4">
             Packages
           </div>
-          <h1 className="text-4xl font-bold tracking-tight mb-4">@acme/api</h1>
+          <h1 className="text-4xl font-bold tracking-tight mb-4">@sitruk/api</h1>
           <p className="text-xl text-muted-foreground">
             tRPC router definitions and API endpoints.
           </p>
         </div>
 
         <DocsBreadcrumb
-          items={[{ title: "Packages" }, { title: "@acme/api" }]}
+          items={[{ title: "Packages" }, { title: "@sitruk/api" }]}
         />
 
         <h2>Overview</h2>

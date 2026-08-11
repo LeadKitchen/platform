@@ -1,5 +1,5 @@
-import { APP_CONFIG } from "@acme/config";
-import { cn, ThemeProvider, ThemeToggle, Toaster } from "@acme/ui";
+import { APP_CONFIG } from "@sitruk/config";
+import { cn, ThemeProvider, ThemeToggle, Toaster } from "@sitruk/ui";
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";

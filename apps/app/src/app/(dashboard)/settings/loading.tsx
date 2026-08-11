@@ -1,4 +1,4 @@
-import { Skeleton } from "@acme/ui";
+import { Skeleton } from "@sitruk/ui";
 
 export default function SettingsLoading() {
   return (

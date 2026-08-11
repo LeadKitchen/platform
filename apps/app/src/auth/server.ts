@@ -1,8 +1,8 @@
 import "server-only";
 
-import { initAuth } from "@acme/auth";
-import { env } from "@acme/config";
-import { OtpSignInEmail, ResetPasswordEmail, sendEmail } from "@acme/emails";
+import { initAuth } from "@sitruk/auth";
+import { env } from "@sitruk/config";
+import { OtpSignInEmail, ResetPasswordEmail, sendEmail } from "@sitruk/emails";
 import { nextCookies } from "better-auth/next-js";
 import { headers } from "next/headers";
 import { cache } from "react";

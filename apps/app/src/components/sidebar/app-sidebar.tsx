@@ -1,6 +1,6 @@
 "use client";
 
-import { APP_CONFIG, paths } from "@acme/config";
+import { APP_CONFIG, paths } from "@sitruk/config";
 import {
   Sidebar,
   SidebarContent,
@@ -10,7 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@acme/ui";
+} from "@sitruk/ui";
 import {
   IconChartBar,
   IconDashboard,

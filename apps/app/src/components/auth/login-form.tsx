@@ -1,6 +1,6 @@
 "use client";
 
-import { paths } from "@acme/config";
+import { paths } from "@sitruk/config";
 import {
   Button,
   Card,
@@ -16,8 +16,8 @@ import {
   FormLabel,
   FormMessage,
   Input,
-} from "@acme/ui";
-import { type LoginFormData, loginFormSchema } from "@acme/validators";
+} from "@sitruk/ui";
+import { type LoginFormData, loginFormSchema } from "@sitruk/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

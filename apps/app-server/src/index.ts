@@ -1,7 +1,7 @@
 /**
  * Optional standalone API server.
  *
- * The Next.js app (`apps/app`) is fully self-contained: it serves `@acme/api`
+ * The Next.js app (`apps/app`) is fully self-contained: it serves `@sitruk/api`
  * through its own route handler at `/api/orpc`. This Hono server is an
  * *optional* deployment target for teams who want to run the API as a separate
  * service (e.g. for mobile clients, a dedicated container, or to scale the API
@@ -9,8 +9,8 @@
  * `NEXT_PUBLIC_API_URL`.
  */
 
-import { appRouter, createORPCContext } from "@acme/api";
-import { env, logger } from "@acme/config";
+import { appRouter, createORPCContext } from "@sitruk/api";
+import { env, logger } from "@sitruk/config";
 import { onError } from "@orpc/server";
 import { RPCHandler } from "@orpc/server/fetch";
 import { Hono } from "hono";

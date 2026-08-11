@@ -75,8 +75,8 @@ export function WelcomeEmail({ name }: { name: string }) {
         <p>Send emails from your API:</p>
 
         <pre className="bg-muted rounded-lg p-4 overflow-x-auto my-4">
-          <code>{`import { sendEmail } from "@acme/emails";
-import { WelcomeEmail } from "@acme/emails/welcome";
+          <code>{`import { sendEmail } from "@sitruk/emails";
+import { WelcomeEmail } from "@sitruk/emails/welcome";
 
 await sendEmail({
   to: "user@example.com",

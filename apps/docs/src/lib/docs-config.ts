@@ -44,11 +44,11 @@ export const docsConfig: DocsConfig = {
       title: "Packages",
       items: [
         { title: "Overview", href: "/packages" },
-        { title: "@acme/api", href: "/packages/api" },
-        { title: "@acme/auth", href: "/packages/auth" },
-        { title: "@acme/db", href: "/packages/db" },
-        { title: "@acme/ui", href: "/packages/ui" },
-        { title: "@acme/emails", href: "/packages/emails" },
+        { title: "@sitruk/api", href: "/packages/api" },
+        { title: "@sitruk/auth", href: "/packages/auth" },
+        { title: "@sitruk/db", href: "/packages/db" },
+        { title: "@sitruk/ui", href: "/packages/ui" },
+        { title: "@sitruk/emails", href: "/packages/emails" },
       ],
     },
     {

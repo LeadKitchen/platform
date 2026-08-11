@@ -63,7 +63,7 @@ export const env = createEnv({
         <p>Import and use environment variables:</p>
 
         <pre className="bg-muted rounded-lg p-4 overflow-x-auto my-4">
-          <code>{`import { env } from "@acme/config";
+          <code>{`import { env } from "@sitruk/config";
 
 // Fully typed and validated
 const dbUrl = env.POSTGRES_URL;`}</code>

@@ -130,7 +130,7 @@ bun install`}</code>
         <div className="my-6 rounded-lg border border-border bg-muted/50 p-4">
           <p className="font-medium mb-2">💡 Tip: Rename the Project</p>
           <p className="text-sm text-muted-foreground">
-            Replace <code>@acme</code> with your organization name using
+            Replace <code>@sitruk</code> with your organization name using
             find-and-replace across the project.
           </p>
         </div>

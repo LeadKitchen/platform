@@ -1,6 +1,6 @@
 "use client";
 
-import { paths } from "@acme/config";
+import { paths } from "@sitruk/config";
 import {
   Button,
   Card,
@@ -20,7 +20,7 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@acme/ui";
+} from "@sitruk/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

@@ -9,7 +9,7 @@ import {
   BreadcrumbSeparator,
   Separator,
   SidebarTrigger,
-} from "@acme/ui";
+} from "@sitruk/ui";
 
 interface SiteHeaderProps {
   title?: string;

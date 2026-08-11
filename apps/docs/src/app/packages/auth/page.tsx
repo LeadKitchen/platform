@@ -3,7 +3,7 @@ import { DocsBreadcrumb } from "@/components/docs/docs-breadcrumb";
 import { DocsFeedback } from "@/components/docs/docs-feedback";
 
 export const metadata = {
-  title: "@acme/auth Package",
+  title: "@sitruk/auth Package",
   description: "Authentication logic with Better Auth",
 };
 
@@ -15,14 +15,14 @@ export default function AuthPackagePage() {
           <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary mb-4">
             Packages
           </div>
-          <h1 className="text-4xl font-bold tracking-tight mb-4">@acme/auth</h1>
+          <h1 className="text-4xl font-bold tracking-tight mb-4">@sitruk/auth</h1>
           <p className="text-xl text-muted-foreground">
             Authentication logic with Better Auth.
           </p>
         </div>
 
         <DocsBreadcrumb
-          items={[{ title: "Packages" }, { title: "@acme/auth" }]}
+          items={[{ title: "Packages" }, { title: "@sitruk/auth" }]}
         />
 
         <h2>Overview</h2>
@@ -55,7 +55,7 @@ export const auth = betterAuth({
         <p>Use authentication in your app:</p>
 
         <pre className="bg-muted rounded-lg p-4 overflow-x-auto my-4">
-          <code>{`import { auth } from "@acme/auth";
+          <code>{`import { auth } from "@sitruk/auth";
 
 const session = await auth.api.getSession({ headers });`}</code>
         </pre>

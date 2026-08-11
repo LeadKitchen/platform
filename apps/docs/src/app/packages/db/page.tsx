@@ -3,7 +3,7 @@ import { DocsBreadcrumb } from "@/components/docs/docs-breadcrumb";
 import { DocsFeedback } from "@/components/docs/docs-feedback";
 
 export const metadata = {
-  title: "@acme/db Package",
+  title: "@sitruk/db Package",
   description: "Database schema and Drizzle ORM client",
 };
 
@@ -15,14 +15,14 @@ export default function DbPackagePage() {
           <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary mb-4">
             Packages
           </div>
-          <h1 className="text-4xl font-bold tracking-tight mb-4">@acme/db</h1>
+          <h1 className="text-4xl font-bold tracking-tight mb-4">@sitruk/db</h1>
           <p className="text-xl text-muted-foreground">
             Database schema and Drizzle ORM client.
           </p>
         </div>
 
         <DocsBreadcrumb
-          items={[{ title: "Packages" }, { title: "@acme/db" }]}
+          items={[{ title: "Packages" }, { title: "@sitruk/db" }]}
         />
 
         <h2>Overview</h2>
@@ -47,7 +47,7 @@ export default function DbPackagePage() {
         <p>Import the database client:</p>
 
         <pre className="bg-muted rounded-lg p-4 overflow-x-auto my-4">
-          <code>{`import { db } from "@acme/db";
+          <code>{`import { db } from "@sitruk/db";
 
 const posts = await db.query.posts.findMany();`}</code>
         </pre>

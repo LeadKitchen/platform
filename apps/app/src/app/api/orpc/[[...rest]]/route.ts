@@ -1,5 +1,5 @@
-import { appRouter, createORPCContext } from "@acme/api";
-import { logger } from "@acme/config";
+import { appRouter, createORPCContext } from "@sitruk/api";
+import { logger } from "@sitruk/config";
 import { onError } from "@orpc/server";
 import { RPCHandler } from "@orpc/server/fetch";
 

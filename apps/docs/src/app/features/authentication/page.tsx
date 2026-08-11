@@ -70,7 +70,7 @@ export default function AuthenticationPage() {
         <p>Use authentication in your app:</p>
 
         <pre className="bg-muted rounded-lg p-4 overflow-x-auto my-4">
-          <code>{`import { auth } from "@acme/auth";
+          <code>{`import { auth } from "@sitruk/auth";
 
 // Get current session
 const session = await auth.api.getSession({ headers });

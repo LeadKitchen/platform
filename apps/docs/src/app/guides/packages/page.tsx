@@ -60,7 +60,7 @@ export default function PackagesGuidePage() {
 
         <pre className="bg-muted rounded-lg p-4 overflow-x-auto my-4">
           <code>{`{
-  "name": "@acme/my-package",
+  "name": "@sitruk/my-package",
   "version": "0.1.0",
   "main": "./src/index.ts",
   "types": "./src/index.ts"
@@ -72,7 +72,7 @@ export default function PackagesGuidePage() {
         <p>Import it in your apps:</p>
 
         <pre className="bg-muted rounded-lg p-4 overflow-x-auto my-4">
-          <code>{`import { something } from "@acme/my-package";`}</code>
+          <code>{`import { something } from "@sitruk/my-package";`}</code>
         </pre>
 
         <div className="my-8">

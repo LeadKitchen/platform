@@ -3,7 +3,7 @@ import { DocsBreadcrumb } from "@/components/docs/docs-breadcrumb";
 import { DocsFeedback } from "@/components/docs/docs-feedback";
 
 export const metadata = {
-  title: "@acme/ui Package",
+  title: "@sitruk/ui Package",
   description: "Shared UI components with shadcn/ui",
 };
 
@@ -15,14 +15,14 @@ export default function UiPackagePage() {
           <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary mb-4">
             Packages
           </div>
-          <h1 className="text-4xl font-bold tracking-tight mb-4">@acme/ui</h1>
+          <h1 className="text-4xl font-bold tracking-tight mb-4">@sitruk/ui</h1>
           <p className="text-xl text-muted-foreground">
             Shared UI components with shadcn/ui.
           </p>
         </div>
 
         <DocsBreadcrumb
-          items={[{ title: "Packages" }, { title: "@acme/ui" }]}
+          items={[{ title: "Packages" }, { title: "@sitruk/ui" }]}
         />
 
         <h2>Overview</h2>
@@ -45,8 +45,8 @@ export default function UiPackagePage() {
         <p>Import components in your app:</p>
 
         <pre className="bg-muted rounded-lg p-4 overflow-x-auto my-4">
-          <code>{`import { Button } from "@acme/ui/button";
-import { Input } from "@acme/ui/input";
+          <code>{`import { Button } from "@sitruk/ui/button";
+import { Input } from "@sitruk/ui/input";
 
 export default function Page() {
   return (

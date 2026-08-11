@@ -113,7 +113,7 @@ export default function ProjectStructurePage() {
           and can be versioned independently.
         </p>
 
-        <h3>@acme/api</h3>
+        <h3>@sitruk/api</h3>
 
         <p>
           tRPC router definitions and API endpoints. This package exports the
@@ -128,8 +128,8 @@ export default function ProjectStructurePage() {
             <strong>Exports:</strong> tRPC routers, procedures, and types
           </li>
           <li>
-            <strong>Dependencies:</strong> @acme/db, @acme/auth,
-            @acme/validators
+            <strong>Dependencies:</strong> @sitruk/db, @sitruk/auth,
+            @sitruk/validators
           </li>
         </ul>
 
@@ -138,7 +138,7 @@ export default function ProjectStructurePage() {
           <Link href="/packages/api">API package documentation</Link>.
         </p>
 
-        <h3>@acme/auth</h3>
+        <h3>@sitruk/auth</h3>
 
         <p>
           Authentication logic using Better Auth. Handles user sessions, OAuth
@@ -154,7 +154,7 @@ export default function ProjectStructurePage() {
           </li>
         </ul>
 
-        <h3>@acme/db</h3>
+        <h3>@sitruk/db</h3>
 
         <p>Database schema and Drizzle ORM client for Neon Postgres.</p>
 
@@ -171,7 +171,7 @@ export default function ProjectStructurePage() {
           </li>
         </ul>
 
-        <h3>@acme/ui</h3>
+        <h3>@sitruk/ui</h3>
 
         <p>
           Shared UI components built with shadcn/ui and Radix UI primitives.
@@ -189,7 +189,7 @@ export default function ProjectStructurePage() {
           </li>
         </ul>
 
-        <h3>@acme/validators</h3>
+        <h3>@sitruk/validators</h3>
 
         <p>Shared Zod validation schemas used across API and frontend.</p>
 
@@ -202,7 +202,7 @@ export default function ProjectStructurePage() {
           </li>
         </ul>
 
-        <h3>@acme/emails</h3>
+        <h3>@sitruk/emails</h3>
 
         <p>Email templates built with React Email and sent via Resend.</p>
 
@@ -228,7 +228,7 @@ export default function ProjectStructurePage() {
 
         <pre className="bg-muted rounded-lg p-4 overflow-x-auto my-4">
           <code>{`// In your app's tailwind.config.ts
-import baseConfig from "@acme/tailwind-config";
+import baseConfig from "@sitruk/tailwind-config";
 
 export default {
   ...baseConfig,
@@ -243,7 +243,7 @@ export default {
         <pre className="bg-muted rounded-lg p-4 overflow-x-auto my-4">
           <code>{`// In your package's tsconfig.json
 {
-  "extends": "@acme/typescript-config/base.json",
+  "extends": "@sitruk/typescript-config/base.json",
   "compilerOptions": {
     // Your overrides
   }

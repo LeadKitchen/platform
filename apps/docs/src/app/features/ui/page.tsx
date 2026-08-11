@@ -60,7 +60,7 @@ export default function UiPage() {
         <p>Import and use components in your app:</p>
 
         <pre className="bg-muted rounded-lg p-4 overflow-x-auto my-4">
-          <code>{`import { Button } from "@acme/ui/button";
+          <code>{`import { Button } from "@sitruk/ui/button";
 
 export default function Page() {
   return <Button>Click me</Button>;

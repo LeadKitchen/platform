@@ -3,7 +3,7 @@ import { DocsBreadcrumb } from "@/components/docs/docs-breadcrumb";
 import { DocsFeedback } from "@/components/docs/docs-feedback";
 
 export const metadata = {
-  title: "@acme/emails Package",
+  title: "@sitruk/emails Package",
   description: "Email templates with React Email",
 };
 
@@ -16,7 +16,7 @@ export default function EmailsPackagePage() {
             Packages
           </div>
           <h1 className="text-4xl font-bold tracking-tight mb-4">
-            @acme/emails
+            @sitruk/emails
           </h1>
           <p className="text-xl text-muted-foreground">
             Email templates with React Email.
@@ -24,7 +24,7 @@ export default function EmailsPackagePage() {
         </div>
 
         <DocsBreadcrumb
-          items={[{ title: "Packages" }, { title: "@acme/emails" }]}
+          items={[{ title: "Packages" }, { title: "@sitruk/emails" }]}
         />
 
         <h2>Overview</h2>
@@ -58,8 +58,8 @@ export function WelcomeEmail({ name }: { name: string }) {
         <p>Use the send function:</p>
 
         <pre className="bg-muted rounded-lg p-4 overflow-x-auto my-4">
-          <code>{`import { sendEmail } from "@acme/emails";
-import { WelcomeEmail } from "@acme/emails/welcome";
+          <code>{`import { sendEmail } from "@sitruk/emails";
+import { WelcomeEmail } from "@sitruk/emails/welcome";
 
 await sendEmail({
   to: "user@example.com",

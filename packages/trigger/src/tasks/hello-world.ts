@@ -10,7 +10,7 @@ export interface HelloWorldPayload {
  * Trigger from your app:
  * ```ts
  * import { tasks } from "@trigger.dev/sdk/v4";
- * import type { helloWorldTask } from "@acme/trigger";
+ * import type { helloWorldTask } from "@sitruk/trigger";
  *
  * await tasks.trigger<typeof helloWorldTask>("hello-world", { name: "World" });
  * ```

@@ -43,7 +43,7 @@ export default function PackagesPage() {
             <div className="flex items-start gap-3">
               <Package className="h-5 w-5 text-primary mt-0.5" />
               <div>
-                <h3 className="font-semibold mb-1">@acme/api</h3>
+                <h3 className="font-semibold mb-1">@sitruk/api</h3>
                 <p className="text-sm text-muted-foreground">
                   tRPC router definitions and API endpoints
                 </p>
@@ -58,7 +58,7 @@ export default function PackagesPage() {
             <div className="flex items-start gap-3">
               <Package className="h-5 w-5 text-primary mt-0.5" />
               <div>
-                <h3 className="font-semibold mb-1">@acme/auth</h3>
+                <h3 className="font-semibold mb-1">@sitruk/auth</h3>
                 <p className="text-sm text-muted-foreground">
                   Authentication logic with Better Auth
                 </p>
@@ -73,7 +73,7 @@ export default function PackagesPage() {
             <div className="flex items-start gap-3">
               <Package className="h-5 w-5 text-primary mt-0.5" />
               <div>
-                <h3 className="font-semibold mb-1">@acme/db</h3>
+                <h3 className="font-semibold mb-1">@sitruk/db</h3>
                 <p className="text-sm text-muted-foreground">
                   Database schema and Drizzle ORM client
                 </p>
@@ -88,7 +88,7 @@ export default function PackagesPage() {
             <div className="flex items-start gap-3">
               <Package className="h-5 w-5 text-primary mt-0.5" />
               <div>
-                <h3 className="font-semibold mb-1">@acme/ui</h3>
+                <h3 className="font-semibold mb-1">@sitruk/ui</h3>
                 <p className="text-sm text-muted-foreground">
                   Shared UI components with shadcn/ui
                 </p>
@@ -103,7 +103,7 @@ export default function PackagesPage() {
             <div className="flex items-start gap-3">
               <Package className="h-5 w-5 text-primary mt-0.5" />
               <div>
-                <h3 className="font-semibold mb-1">@acme/emails</h3>
+                <h3 className="font-semibold mb-1">@sitruk/emails</h3>
                 <p className="text-sm text-muted-foreground">
                   Email templates with React Email
                 </p>

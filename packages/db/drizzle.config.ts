@@ -1,4 +1,4 @@
-import { env } from "@acme/config";
+import { env } from "@sitruk/config";
 import type { Config } from "drizzle-kit";
 
 if (!env.POSTGRES_URL) {

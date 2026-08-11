@@ -14,8 +14,8 @@ import {
   SelectTrigger,
   SelectValue,
   toast,
-} from "@acme/ui";
-import { type AccountFormValues, accountFormSchema } from "@acme/validators";
+} from "@sitruk/ui";
+import { type AccountFormValues, accountFormSchema } from "@sitruk/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
