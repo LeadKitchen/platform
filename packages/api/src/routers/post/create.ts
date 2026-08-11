@@ -1,4 +1,4 @@
-import { CreatePostSchema, Post } from "@sitruk/db";
+import { CreatePostSchema, Post } from "@acme/db";
 
 import { protectedProcedure } from "../../orpc";
 

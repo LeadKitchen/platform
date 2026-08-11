@@ -1,4 +1,4 @@
-import { sql, user } from "@sitruk/db";
+import { sql, user } from "@acme/db";
 import { z } from "zod";
 
 import { adminProcedure } from "../../../orpc";

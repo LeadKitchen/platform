@@ -1,5 +1,5 @@
 {
-  "name": "@sitruk/trigger",
+  "name": "@acme/trigger",
   "private": true,
   "type": "module",
   "exports": {
@@ -23,7 +23,7 @@
     "@trigger.dev/sdk": "4.5.10"
   },
   "devDependencies": {
-    "@sitruk/tsconfig": "workspace:*",
+    "@acme/tsconfig": "workspace:*",
     "@types/node": "26.2.0",
     "typescript": "7.0.2"
   }

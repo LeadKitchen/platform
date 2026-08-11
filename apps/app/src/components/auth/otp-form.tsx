@@ -1,6 +1,6 @@
 "use client";
 
-import { paths } from "@sitruk/config";
+import { paths } from "@acme/config";
 import {
   Button,
   Card,
@@ -18,8 +18,8 @@ import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from "@sitruk/ui";
-import { type OTPFormData, otpFormSchema } from "@sitruk/validators";
+} from "@acme/ui";
+import { type OTPFormData, otpFormSchema } from "@acme/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";

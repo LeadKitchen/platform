@@ -1,5 +1,5 @@
 {
-  "name": "@sitruk/db",
+  "name": "@acme/db",
   "private": true,
   "type": "module",
   "exports": {
@@ -33,7 +33,7 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@sitruk/config": "workspace:*",
+    "@acme/config": "workspace:*",
     "@neondatabase/serverless": "^1.1.0",
     "@vercel/postgres": "0.10.0",
     "drizzle-orm": "0.45.2",
@@ -42,7 +42,7 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@sitruk/tsconfig": "workspace:*",
+    "@acme/tsconfig": "workspace:*",
     "@types/bun": "1.3.14",
     "@types/node": "26.2.0",
     "@types/pg": "^8.21.0",

@@ -1,4 +1,4 @@
-import { env } from "@sitruk/config";
+import { env } from "@acme/config";
 import {
   GetObjectCommand,
   PutObjectCommand,

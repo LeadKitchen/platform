@@ -12,7 +12,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@sitruk/ui";
+} from "@acme/ui";
 import type { Icon } from "@tabler/icons-react";
 import { IconChevronRight } from "@tabler/icons-react";
 

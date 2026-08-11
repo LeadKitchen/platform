@@ -1,4 +1,4 @@
-import { paths } from "@sitruk/config";
+import { paths } from "@acme/config";
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 

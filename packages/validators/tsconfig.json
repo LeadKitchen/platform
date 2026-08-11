@@ -1,5 +1,5 @@
 {
-  "extends": "@sitruk/tsconfig/compiled-package.json",
+  "extends": "@acme/tsconfig/compiled-package.json",
   "compilerOptions": {
     "rootDir": "./src"
   },

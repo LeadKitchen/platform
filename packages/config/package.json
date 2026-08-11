@@ -1,5 +1,5 @@
 {
-  "name": "@sitruk/config",
+  "name": "@acme/config",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -27,7 +27,7 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@sitruk/tsconfig": "workspace:*",
+    "@acme/tsconfig": "workspace:*",
     "@types/node": "26.2.0",
     "tsdown": "0.22.14",
     "typescript": "7.0.2"

@@ -1,5 +1,5 @@
 {
-  "name": "@sitruk/emails",
+  "name": "@acme/emails",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -24,7 +24,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@sitruk/config": "workspace:*",
+    "@acme/config": "workspace:*",
     "@radix-ui/colors": "3.0.0",
     "@react-email/components": "1.0.12",
     "@tailwindcss/typography": "0.5.20",
@@ -39,7 +39,7 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@sitruk/tsconfig": "workspace:*",
+    "@acme/tsconfig": "workspace:*",
     "@react-email/preview-server": "5.2.10",
     "@types/node": "26.2.0",
     "@types/nodemailer": "^8.0.1",

@@ -1,5 +1,5 @@
 {
-  "name": "@sitruk/ui",
+  "name": "@acme/ui",
   "private": true,
   "type": "module",
   "exports": {
@@ -30,7 +30,7 @@
     "vaul": "^1.1.2"
   },
   "devDependencies": {
-    "@sitruk/tsconfig": "workspace:*",
+    "@acme/tsconfig": "workspace:*",
     "@types/react": "19.2.18",
     "react": "19.2.8",
     "typescript": "7.0.2",

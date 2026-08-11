@@ -1,5 +1,5 @@
 {
-  "name": "@sitruk/jobs",
+  "name": "@acme/jobs",
   "private": true,
   "type": "module",
   "exports": {
@@ -22,7 +22,7 @@
     "@hatchet-dev/typescript-sdk": "1.28.1"
   },
   "devDependencies": {
-    "@sitruk/tsconfig": "workspace:*",
+    "@acme/tsconfig": "workspace:*",
     "@types/node": "26.2.0",
     "typescript": "7.0.2"
   }

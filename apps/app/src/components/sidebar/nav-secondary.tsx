@@ -6,7 +6,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@sitruk/ui";
+} from "@acme/ui";
 import type { Icon } from "@tabler/icons-react";
 import type * as React from "react";
 

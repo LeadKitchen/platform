@@ -1,7 +1,7 @@
 "use client";
 
-import { paths } from "@sitruk/config";
-import { cn } from "@sitruk/ui";
+import { paths } from "@acme/config";
+import { cn } from "@acme/ui";
 import { Bell, Circle, Globe, Monitor, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

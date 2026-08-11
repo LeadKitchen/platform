@@ -46,12 +46,12 @@ export default async function createNextConfig(): Promise<NextConfig> {
     /** Enables hot reloading for local packages without a build step */
     output: "standalone",
     transpilePackages: [
-      "@sitruk/api",
-      "@sitruk/auth",
-      "@sitruk/config",
-      "@sitruk/db",
-      "@sitruk/ui",
-      "@sitruk/validators",
+      "@acme/api",
+      "@acme/auth",
+      "@acme/config",
+      "@acme/db",
+      "@acme/ui",
+      "@acme/validators",
       "@t3-oss/env-nextjs",
       "@t3-oss/env-core",
     ],

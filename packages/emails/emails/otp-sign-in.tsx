@@ -1,4 +1,4 @@
-import { APP_CONFIG, env } from "@sitruk/config";
+import { APP_CONFIG, env } from "@acme/config";
 import {
   Body,
   Container,

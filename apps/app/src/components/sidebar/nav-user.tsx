@@ -1,6 +1,6 @@
 "use client";
 
-import { paths } from "@sitruk/config";
+import { paths } from "@acme/config";
 import {
   Avatar,
   AvatarFallback,
@@ -16,7 +16,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@sitruk/ui";
+} from "@acme/ui";
 import {
   IconCreditCard,
   IconDotsVertical,

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@sitruk/ui";
+import { Button } from "@acme/ui";
 import { useEffect } from "react";
 
 export default function SettingsError({

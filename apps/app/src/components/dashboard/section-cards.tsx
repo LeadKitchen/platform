@@ -6,7 +6,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@sitruk/ui";
+} from "@acme/ui";
 import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
 
 export function SectionCards() {

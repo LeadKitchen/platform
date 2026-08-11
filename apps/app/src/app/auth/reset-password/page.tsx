@@ -1,4 +1,4 @@
-import { APP_CONFIG, paths } from "@sitruk/config";
+import { APP_CONFIG, paths } from "@acme/config";
 import { GalleryVerticalEnd } from "lucide-react";
 import type { Metadata } from "next";
 import { Suspense } from "react";
