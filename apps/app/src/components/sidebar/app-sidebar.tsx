@@ -36,6 +36,15 @@ import {
 const data = {
   navMain: [
     {
+      title: "Деловая игра",
+      url: "/game",
+      icon: IconListDetails,
+      items: [
+        { title: "Сессии", url: "/game" },
+        { title: "Разборы и подходы", url: "/admin/game" },
+      ],
+    },
+    {
       title: "Dashboard",
       url: paths.dashboard.root,
       icon: IconDashboard,

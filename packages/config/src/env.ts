@@ -28,6 +28,15 @@ export const env = createEnv({
     AUTH_GOOGLE_ID: z.string().optional(),
     AUTH_GOOGLE_SECRET: z.string().optional(),
 
+    // AI module (деловая игра «Ситуационное руководство»)
+    ANTHROPIC_API_KEY: z.string().optional(),
+    /** "anthropic" | "mock" — по умолчанию anthropic, если задан ключ. */
+    AI_PROVIDER: z.enum(["anthropic", "mock"]).optional(),
+    AI_MODEL: z.string().optional(),
+    AI_EFFORT: z.enum(["low", "medium", "high", "xhigh", "max"]).optional(),
+    /** Вариант конвейера по умолчанию для новых сессий. */
+    AI_DEFAULT_VARIANT: z.string().optional(),
+
     // AWS S3
     AWS_S3_ENDPOINT: z.string().optional(),
     AWS_S3_FORCE_PATH_STYLE: z.string().optional(),
@@ -56,6 +65,11 @@ export const env = createEnv({
     AUTH_SECRET: process.env.AUTH_SECRET,
     AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
     AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
+    ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
+    AI_PROVIDER: process.env.AI_PROVIDER,
+    AI_MODEL: process.env.AI_MODEL,
+    AI_EFFORT: process.env.AI_EFFORT,
+    AI_DEFAULT_VARIANT: process.env.AI_DEFAULT_VARIANT,
     AWS_S3_ENDPOINT: process.env.AWS_S3_ENDPOINT,
     AWS_S3_FORCE_PATH_STYLE: process.env.AWS_S3_FORCE_PATH_STYLE,
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,

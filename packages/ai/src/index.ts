@@ -1,0 +1,98 @@
+export {
+  createEngine,
+  createProviderFromEnv,
+  type Engine,
+  type EngineOptions,
+  fallbackResponder,
+} from "./engine";
+export {
+  buildCorpus,
+  type KnowledgeDoc,
+  type ScoredDoc,
+  searchCorpus,
+  tokenize,
+} from "./knowledge/corpus";
+export {
+  buildGraph,
+  type GraphEdge,
+  type GraphNode,
+  inferenceFacts,
+  type KnowledgeGraph,
+  type TraversalResult,
+  traverse,
+} from "./knowledge/graph";
+export {
+  createPipeline,
+  type EvaluateResult,
+  type Pipeline,
+  type PipelineDeps,
+  type TurnResult,
+  type TurnTelemetry,
+} from "./pipeline";
+export {
+  buildPersonaSystemPrompt,
+  buildTranscript,
+  CRITERIA_JUDGE_SYSTEM,
+  STYLE_JUDGE_SYSTEM,
+} from "./prompts";
+export {
+  type AnthropicProviderOptions,
+  createAnthropicProvider,
+} from "./provider/anthropic";
+export {
+  createMockProvider,
+  type MockProviderOptions,
+  type MockResponder,
+} from "./provider/mock";
+export { estimateCostUsd, MODEL_PRICING } from "./provider/pricing";
+export {
+  addUsage,
+  emptyUsage,
+  type LlmEffort,
+  type LlmMessage,
+  type LlmProvider,
+  type LlmRequest,
+  type LlmResult,
+  type LlmUsage,
+} from "./provider/types";
+export {
+  describeStrategies,
+  engagementRegistry,
+  evaluationRegistry,
+  knowledgeRegistry,
+  personaRegistry,
+} from "./registries";
+export { createRegistry, type Registry } from "./registry";
+export * from "./schemas";
+export { heuristicEngagement } from "./strategies/engagement/heuristic";
+export { llmEngagement } from "./strategies/engagement/llm";
+export { hybridEvaluation } from "./strategies/evaluation/hybrid";
+export {
+  judgeCriteria,
+  judgeStyle,
+  llmJudgeEvaluation,
+  renderTranscript,
+} from "./strategies/evaluation/llm-judge";
+export { rulesEvaluation } from "./strategies/evaluation/rules";
+export { baselineKnowledge } from "./strategies/knowledge/baseline";
+export { graphRagKnowledge } from "./strategies/knowledge/graph-rag";
+export { ragKnowledge } from "./strategies/knowledge/rag";
+export { promptPersona } from "./strategies/persona/prompt";
+export {
+  createInMemorySkillStore,
+  createSkillRlPersona,
+  DEFAULT_SKILLS,
+  type Skill,
+  type SkillPolicyStore,
+  type SkillRlOptions,
+  type SkillStats,
+  skillRlPersona,
+} from "./strategies/persona/skill-rl";
+export * from "./types";
+export {
+  BUILT_IN_VARIANTS,
+  DEFAULT_VARIANT_ID,
+  resolveVariant,
+  type VariantConfig,
+  variantConfigSchema,
+} from "./variants";

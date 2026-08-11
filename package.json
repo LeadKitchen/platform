@@ -14,6 +14,8 @@
     "db:generate": "turbo -F @acme/db generate",
     "db:migrate": "turbo -F @acme/db migrate",
     "db:studio": "turbo -F @acme/db studio",
+    "db:seed": "bun --env-file=.env run scripts/seed-game.ts",
+    "eval": "turbo -F @acme/eval eval --",
     "dev": "turbo watch dev -F @acme/app...",
     "dev:all": "turbo watch dev --continue",
     "dev:next": "turbo watch dev -F @acme/app...",

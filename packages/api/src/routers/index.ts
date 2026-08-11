@@ -14,9 +14,16 @@
  *   post.delete     – delete a post                            (admin)
  *   admin.users.*   – user management                          (admin)
  *   admin.stats.*   – system-wide statistics                   (admin)
+ *
+ *   game.catalog.*  – reference data & methodology dictionary  (protected)
+ *   game.session.*  – game sessions (round 2 / 3)              (protected)
+ *   game.order.*    – order queue & assignment                 (protected)
+ *   game.dialog.*   – role-play dialog + автооценка            (protected)
+ *   admin.game.*    – dialogs, experiment arms, A/B analytics  (admin)
  */
 
 import { adminRouter } from "./admin";
+import { gameRouter } from "./game";
 import { postRouter } from "./post";
 import { userRouter } from "./user";
 
@@ -24,6 +31,7 @@ export const appRouter = {
   user: userRouter,
   post: postRouter,
   admin: adminRouter,
+  game: gameRouter,
 };
 
 export type AppRouter = typeof appRouter;
