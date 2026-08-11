@@ -19,8 +19,5 @@ export const paths = {
   settings: {
     root: ROOTS.SETTINGS,
     profile: `${ROOTS.SETTINGS}/profile`,
-    appearance: `${ROOTS.SETTINGS}/appearance`,
-    notifications: `${ROOTS.SETTINGS}/notifications`,
-    display: `${ROOTS.SETTINGS}/display`,
   },
 } as const;

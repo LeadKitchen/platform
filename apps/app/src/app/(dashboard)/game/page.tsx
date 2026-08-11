@@ -6,6 +6,11 @@ import { api } from "~/orpc/server";
 
 export const dynamic = "force-dynamic";
 
+const SESSION_STATUS_LABELS: Record<string, string> = {
+  active: "идёт",
+  finished: "завершена",
+};
+
 export default async function GamePage() {
   const [sessions, catalog] = await Promise.all([
     api.game.session.list({ limit: 20, offset: 0 }),
@@ -53,7 +58,9 @@ export default async function GamePage() {
                   <Badge variant="secondary">
                     {session.variantId ?? "по умолчанию"}
                   </Badge>
-                  <Badge variant="outline">{session.status}</Badge>
+                  <Badge variant="outline">
+                    {SESSION_STATUS_LABELS[session.status] ?? session.status}
+                  </Badge>
                 </span>
               </Link>
             ))}

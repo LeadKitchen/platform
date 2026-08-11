@@ -6,10 +6,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@acme/ui";
+import type { ManagementStyle } from "@acme/game";
+import { STYLE_LABELS } from "@acme/game/styles";
 import Link from "next/link";
 import { VariantComparison } from "~/components/game";
 import { SiteHeader } from "~/components/layout";
 import { api } from "~/orpc/server";
+
+function styleLabel(style: string): string {
+  return STYLE_LABELS[style as ManagementStyle] ?? style;
+}
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +28,7 @@ export default async function AdminGamePage() {
 
   return (
     <>
-      <SiteHeader />
+      <SiteHeader title="Разборы и подходы" />
       <div className="flex flex-1 flex-col gap-6 p-4 lg:p-6">
         <VariantComparison variants={analytics.variants} />
 
@@ -89,8 +95,8 @@ export default async function AdminGamePage() {
                     <>
                       <Badge>{row.evaluation.scorePercent}%</Badge>
                       <Badge variant="outline">
-                        {row.evaluation.expectedStyle} →{" "}
-                        {row.evaluation.actualStyle}
+                        {styleLabel(row.evaluation.expectedStyle)} →{" "}
+                        {styleLabel(row.evaluation.actualStyle)}
                       </Badge>
                     </>
                   ) : (

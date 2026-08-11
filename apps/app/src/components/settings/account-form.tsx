@@ -51,13 +51,13 @@ export function AccountForm({
   const updateAccount = useMutation({
     ...orpc.user.updateAccount.mutationOptions(),
     onSuccess: async () => {
-      toast.success("Account updated successfully");
+      toast.success("Аккаунт обновлён");
       await queryClient.invalidateQueries({
         queryKey: orpc.user.key(),
       });
     },
     onError: (err: Error) => {
-      toast.error(err.message || "Failed to update account");
+      toast.error(err.message || "Не удалось обновить аккаунт");
     },
   });
 
@@ -75,12 +75,11 @@ export function AccountForm({
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-foreground font-medium">
-                Name
+                Имя
               </FormLabel>
-              <Input placeholder="Your name" {...field} />
+              <Input placeholder="Ваше имя" {...field} />
               <p className="text-sm text-amber-700/70">
-                This is the name that will be displayed on your profile and in
-                emails.
+                Это имя будет показываться в вашем профиле и в письмах.
               </p>
               <FormMessage />
             </FormItem>
@@ -94,11 +93,11 @@ export function AccountForm({
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-foreground font-medium">
-                Language
+                Язык
               </FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select language" />
+                  <SelectValue placeholder="Выберите язык" />
                 </SelectTrigger>
                 <SelectContent>
                   {languages.map((language) => (
@@ -109,7 +108,7 @@ export function AccountForm({
                 </SelectContent>
               </Select>
               <p className="text-sm text-amber-700/70">
-                This is the language that will be used in the dashboard.
+                Этот язык будет использоваться в интерфейсе.
               </p>
               <FormMessage />
             </FormItem>
@@ -121,7 +120,7 @@ export function AccountForm({
           className="bg-foreground text-background hover:bg-foreground/90"
           disabled={updateAccount.isPending}
         >
-          {updateAccount.isPending ? "Updating..." : "Update account"}
+          {updateAccount.isPending ? "Сохранение…" : "Сохранить"}
         </Button>
       </form>
     </Form>

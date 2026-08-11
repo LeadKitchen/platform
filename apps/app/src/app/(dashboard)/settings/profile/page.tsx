@@ -10,9 +10,9 @@ export default async function SettingsProfilePage() {
   return (
     <div className="space-y-6 p-10 pb-16 max-w-5xl">
       <div className="space-y-1">
-        <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Настройки</h1>
         <p className="text-muted-foreground">
-          Manage your account settings and set e-mail preferences.
+          Управляйте настройками аккаунта и языком интерфейса.
         </p>
       </div>
       <div className="flex flex-col gap-6 lg:flex-row">

@@ -13,6 +13,11 @@ import { api } from "~/orpc/server";
 
 export const dynamic = "force-dynamic";
 
+const DIALOG_STATUS_LABELS: Record<string, string> = {
+  active: "идёт",
+  finished: "завершён",
+};
+
 export default async function SessionPage({
   params,
 }: {
@@ -26,9 +31,14 @@ export default async function SessionPage({
     api.game.dialog.list({ sessionId }),
   ]);
 
+  const employeeName = (id: string) =>
+    reference.employees.find((employee) => employee.id === id)?.name ?? id;
+  const taskTitle = (id: string) =>
+    reference.tasks.find((task) => task.id === id)?.title ?? id;
+
   return (
     <>
-      <SiteHeader />
+      <SiteHeader title={session.title} />
       <div className="flex flex-1 flex-col gap-6 p-4 lg:p-6">
         <Card>
           <CardHeader>
@@ -72,10 +82,14 @@ export default async function SessionPage({
                 className="hover:bg-muted flex flex-wrap items-center justify-between gap-2 rounded-md border px-3 py-2"
               >
                 <span>
-                  {row.dialog.employeeId} · {row.dialog.taskId}
+                  {employeeName(row.dialog.employeeId)} ·{" "}
+                  {taskTitle(row.dialog.taskId)}
                 </span>
                 <span className="flex items-center gap-2">
-                  <Badge variant="outline">{row.dialog.status}</Badge>
+                  <Badge variant="outline">
+                    {DIALOG_STATUS_LABELS[row.dialog.status] ??
+                      row.dialog.status}
+                  </Badge>
                   {row.evaluation ? (
                     <Badge>{row.evaluation.scorePercent}%</Badge>
                   ) : null}

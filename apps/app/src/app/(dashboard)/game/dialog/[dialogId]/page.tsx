@@ -29,7 +29,7 @@ export default async function DialogPage({
 
   return (
     <>
-      <SiteHeader />
+      <SiteHeader title={`${data.employee.name} — ${data.task.title}`} />
       <div className="flex flex-1 flex-col gap-6 p-4 lg:p-6">
         <DialogRoom
           dialogId={data.dialog.id}
