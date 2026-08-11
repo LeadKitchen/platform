@@ -21,7 +21,8 @@ export default function DashboardError({
           Что-то пошло не так
         </h2>
         <p className="text-muted-foreground text-sm max-w-sm">
-          {error.message || "Произошла непредвиденная ошибка. Попробуйте ещё раз."}
+          {error.message ||
+            "Произошла непредвиденная ошибка. Попробуйте ещё раз."}
         </p>
         {error.digest && (
           <p className="text-muted-foreground/60 font-mono text-xs">

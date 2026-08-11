@@ -74,9 +74,7 @@ export function AccountForm({
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-foreground font-medium">
-                Имя
-              </FormLabel>
+              <FormLabel className="text-foreground font-medium">Имя</FormLabel>
               <Input placeholder="Ваше имя" {...field} />
               <p className="text-sm text-amber-700/70">
                 Это имя будет показываться в вашем профиле и в письмах.

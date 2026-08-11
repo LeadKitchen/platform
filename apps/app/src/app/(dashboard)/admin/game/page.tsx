@@ -1,3 +1,5 @@
+import type { ManagementStyle } from "@acme/game";
+import { STYLE_LABELS } from "@acme/game/styles";
 import {
   Badge,
   Card,
@@ -6,8 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@acme/ui";
-import type { ManagementStyle } from "@acme/game";
-import { STYLE_LABELS } from "@acme/game/styles";
 import Link from "next/link";
 import { VariantComparison } from "~/components/game";
 import { SiteHeader } from "~/components/layout";

@@ -17,7 +17,11 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@acme/ui";
-import { IconDotsVertical, IconLogout, IconUserCircle } from "@tabler/icons-react";
+import {
+  IconDotsVertical,
+  IconLogout,
+  IconUserCircle,
+} from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 
 import { authClient } from "~/auth/client";
