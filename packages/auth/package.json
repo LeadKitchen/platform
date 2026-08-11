@@ -1,0 +1,30 @@
+{
+  "name": "@sitruk/auth",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./env": "./env.ts"
+  },
+  "license": "MIT",
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "format": "biome format .",
+    "lint": "biome lint .",
+    "check": "biome check .",
+    "generate": "bun --env-file=../../.env x @better-auth/cli generate --config script/auth-cli.ts --output ../db/src/auth-schema.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@sitruk/config": "workspace:*",
+    "@sitruk/db": "workspace:*",
+    "better-auth": "1.6.26",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@sitruk/tsconfig": "workspace:*",
+    "@better-auth/cli": "1.4.21",
+    "@types/node": "26.2.0",
+    "typescript": "7.0.2"
+  }
+}

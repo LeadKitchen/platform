@@ -1,0 +1,32 @@
+{
+  "name": "@sitruk/app-server",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.mjs",
+  "scripts": {
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit",
+    "compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server",
+    "dev": "bun with-env bun run --hot src/index.ts",
+    "start": "bun run dist/index.mjs",
+    "with-env": "bun run --env-file ../../.env"
+  },
+  "dependencies": {
+    "@sitruk/api": "workspace:*",
+    "@sitruk/auth": "workspace:*",
+    "@sitruk/config": "workspace:*",
+    "@sitruk/db": "workspace:*",
+    "@sitruk/emails": "workspace:*",
+    "@sitruk/storage": "workspace:*",
+    "@orpc/server": "^1.15.0",
+    "hono": "4.13.1",
+    "superjson": "2.2.6",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@sitruk/tsconfig": "workspace:*",
+    "@types/bun": "1.3.14",
+    "tsdown": "0.22.14",
+    "typescript": "7.0.2"
+  }
+}
