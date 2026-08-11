@@ -27,7 +27,11 @@ export function createAnthropicProvider(
 ): LlmProvider {
   const model = options.model ?? "claude-opus-5";
   const defaultEffort = options.effort ?? "medium";
-  const defaultMaxTokens = options.maxTokens ?? 4000;
+  // Adaptive thinking is always on and shares this budget with the response
+  // text — 4000 was tight enough that a long transcript could exhaust it
+  // mid-thought and come back with `parsed_output == null`. 16k keeps this a
+  // non-streaming-safe request while leaving real headroom for thinking.
+  const defaultMaxTokens = options.maxTokens ?? 16000;
   const client =
     options.client ??
     new Anthropic(options.apiKey ? { apiKey: options.apiKey } : {});

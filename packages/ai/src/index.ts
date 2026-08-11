@@ -87,6 +87,7 @@ export {
   type SkillRlOptions,
   type SkillStats,
   skillRlPersona,
+  skillRlStore,
 } from "./strategies/persona/skill-rl";
 export * from "./types";
 export {

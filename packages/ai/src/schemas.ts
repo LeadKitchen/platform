@@ -82,6 +82,11 @@ export const criteriaAssessmentSchema = z.object({
   toxicTurns: z
     .number()
     .describe("Сколько реплик руководителя были грубыми или вне сценария"),
+  toxicQuotes: z
+    .array(z.string())
+    .describe(
+      "Дословные цитаты грубых или неуместных реплик руководителя — по одной на каждую засчитанную в toxicTurns. Пустой массив, если таких реплик не было.",
+    ),
 });
 
 export type CriteriaAssessmentPayload = z.infer<

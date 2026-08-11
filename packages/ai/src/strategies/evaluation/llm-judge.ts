@@ -88,10 +88,28 @@ export async function judgeCriteria(
     comments[item.id] = item.comment;
   }
 
+  const managerTurns = dialog.turns.filter((turn) => turn.role === "manager");
+
+  // Штраф за токсичность отрезает до 45 баллов из 100 (см. TOXICITY_PENALTY в
+  // @acme/game), поэтому одному числу от модели доверять нельзя: цитата
+  // должна реально встречаться в речи руководителя, а итоговое число не может
+  // превышать ни количество приведённых цитат, ни число реплик руководителя.
+  const verifiedQuotes = result.value.toxicQuotes.filter((quote) =>
+    managerTurns.some((turn) => turn.text.includes(quote.trim())),
+  );
+  const toxicTurns = Math.max(
+    0,
+    Math.min(
+      Math.round(result.value.toxicTurns),
+      verifiedQuotes.length,
+      managerTurns.length,
+    ),
+  );
+
   return {
     met,
     comments,
-    toxicTurns: Math.max(0, Math.round(result.value.toxicTurns)),
+    toxicTurns,
     usage: addUsage(result.usage),
   };
 }

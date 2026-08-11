@@ -123,9 +123,9 @@ export function createSimulatedProvider(): LlmProvider {
       }
 
       const detected = detectCriteria(turns);
-      const toxicTurns = turns.filter(
-        (turn) => turn.role === "manager" && detectToxicity(turn.text),
-      ).length;
+      const toxicQuotes = turns
+        .filter((turn) => turn.role === "manager" && detectToxicity(turn.text))
+        .map((turn) => turn.text);
 
       return {
         criteria: parseRequestedCriteria(content).map((id) => ({
@@ -135,7 +135,8 @@ export function createSimulatedProvider(): LlmProvider {
             ? "видно из речи руководителя"
             : "в диалоге не прозвучало",
         })),
-        toxicTurns,
+        toxicTurns: toxicQuotes.length,
+        toxicQuotes,
       };
     },
     { id: "simulated", model: "mock-model", latencyMs: 1 },

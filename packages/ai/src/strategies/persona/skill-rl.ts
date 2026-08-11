@@ -262,5 +262,16 @@ export function createSkillRlPersona(
   };
 }
 
+/**
+ * Backing store of the default `skillRlPersona` instance below.
+ *
+ * Exposed so a host application can hydrate it from persistent storage at
+ * startup and write it back after `learn()` runs — see
+ * `packages/api/src/game/service.ts` → `loadSkillPolicy` / `saveSkillPolicy`.
+ * Without this, the registered singleton's policy lives only for the
+ * lifetime of the process.
+ */
+export const skillRlStore = createInMemorySkillStore();
+
 /** Default instance registered in the strategy registry. */
-export const skillRlPersona = createSkillRlPersona();
+export const skillRlPersona = createSkillRlPersona({ store: skillRlStore });

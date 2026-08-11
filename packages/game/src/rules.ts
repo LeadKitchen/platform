@@ -221,9 +221,14 @@ export function isEngagingUtterance(
   if (trimmed.length === 0) return false;
 
   const firstName = employee.name.split(" ")[0] ?? employee.name;
-  // Match the name stem so Russian cases ("Анну", "Анне") still count.
+  // Match the name stem so Russian cases ("Анну", "Анне") still count. Plain
+  // substring search, not a RegExp: employee names are admin-editable data,
+  // and a name containing regex metacharacters (e.g. "Иван (стажёр)") would
+  // otherwise throw `SyntaxError` and break every dialog for that employee.
   const stem = firstName.slice(0, Math.max(3, firstName.length - 1));
-  if (new RegExp(stem, "i").test(trimmed)) return true;
+  if (stem.length > 0 && trimmed.toLowerCase().includes(stem.toLowerCase())) {
+    return true;
+  }
 
   return NAME_FREE_ENGAGEMENT.some((pattern) => pattern.test(trimmed));
 }

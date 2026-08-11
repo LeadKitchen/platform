@@ -20,6 +20,7 @@ import {
   markDialogFinished,
   requireOpenDialog,
   saveEvaluation,
+  saveSkillPolicy,
 } from "../../game/service";
 import { protectedProcedure } from "../../orpc";
 
@@ -191,6 +192,7 @@ export const finish = protectedProcedure
     let inputTokens = result.usage?.inputTokens ?? 0;
     let outputTokens = result.usage?.outputTokens ?? 0;
     let costUsd = result.costUsd;
+    const turnMeta: Record<string, unknown>[] = [];
 
     for (const event of events) {
       const telemetry = event.payload.telemetry as
@@ -198,6 +200,7 @@ export const finish = protectedProcedure
             totalMs?: number;
             costUsd?: number;
             usage?: { inputTokens?: number; outputTokens?: number };
+            meta?: Record<string, unknown>;
           }
         | undefined;
       if (!telemetry) continue;
@@ -205,7 +208,22 @@ export const finish = protectedProcedure
       costUsd += telemetry.costUsd ?? 0;
       inputTokens += telemetry.usage?.inputTokens ?? 0;
       outputTokens += telemetry.usage?.outputTokens ?? 0;
+      if (telemetry.meta) turnMeta.push(telemetry.meta);
     }
+
+    // Feed the outcome back to learning persona strategies (e.g. skill-rl).
+    // There is no expert label in production, so `scorePercent` — how well
+    // the methodology's own rubric scored this dialog — is the best available
+    // proxy for "was this a good episode". Strategies without a `learn` hook
+    // ignore this.
+    await pipeline.learn({
+      dialogId: input.dialogId,
+      variantId: loaded.record.variantId,
+      evaluation: result.evaluation,
+      reward: Math.max(0, Math.min(1, result.evaluation.scorePercent / 100)),
+      turnMeta,
+    });
+    await saveSkillPolicy(context.db);
 
     await saveEvaluation(context.db, {
       dialogId: input.dialogId,

@@ -72,7 +72,7 @@ export function fallbackResponder(request: {
     };
   }
 
-  return { criteria: [], toxicTurns: 0 };
+  return { criteria: [], toxicTurns: 0, toxicQuotes: [] };
 }
 
 export interface EngineOptions {

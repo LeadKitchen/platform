@@ -2,6 +2,8 @@ import {
   createEngine,
   createProviderFromEnv,
   type Engine,
+  type SkillStats,
+  skillRlStore,
   type VariantConfig,
 } from "@acme/ai";
 import {
@@ -13,6 +15,7 @@ import {
   GameEvaluation,
   GameEvent,
   GameOrder,
+  GameSkillPolicy,
   GameTask,
   GameVariant,
   sql,
@@ -47,6 +50,56 @@ let cachedProvider: ReturnType<typeof createProviderFromEnv> | undefined;
 function provider() {
   cachedProvider ??= createProviderFromEnv();
   return cachedProvider;
+}
+
+/**
+ * Hydrate the shared `skill-rl` bandit from the database.
+ *
+ * `skillRlStore` (the store behind the `skillRlPersona` singleton in
+ * `@acme/ai`) otherwise lives only in process memory — a restart resets every
+ * (context, skill) value to the optimistic default and the "обучаемая
+ * политика" the variant is named after never actually learns anything in
+ * production. Runs once per process; `saveSkillPolicy` keeps the table in
+ * sync afterwards so the next cold start (or another instance) picks up
+ * where this one left off.
+ */
+let skillPolicyHydrated: Promise<void> | undefined;
+
+function hydrateSkillPolicy(db: Database): Promise<void> {
+  skillPolicyHydrated ??= (async () => {
+    const rows = await db.select().from(GameSkillPolicy);
+    const snapshot: Record<string, SkillStats> = {};
+    for (const row of rows) {
+      snapshot[row.key] = { value: row.value, count: row.count };
+    }
+    skillRlStore.load(snapshot);
+  })();
+  return skillPolicyHydrated;
+}
+
+/** Persist the current bandit state after a dialog fed it a reward. */
+export async function saveSkillPolicy(db: Database): Promise<void> {
+  const snapshot = skillRlStore.snapshot();
+  const entries = Object.entries(snapshot);
+  if (entries.length === 0) return;
+
+  await db
+    .insert(GameSkillPolicy)
+    .values(
+      entries.map(([key, stats]) => ({
+        key,
+        value: stats.value,
+        count: stats.count,
+      })),
+    )
+    .onConflictDoUpdate({
+      target: GameSkillPolicy.key,
+      set: {
+        value: sql`excluded.value`,
+        count: sql`excluded.count`,
+        updatedAt: sql`now()`,
+      },
+    });
 }
 
 export async function loadCatalog(db: Database): Promise<Catalog> {
@@ -123,6 +176,7 @@ export async function loadEngine(db: Database): Promise<Engine> {
   const [catalog, variants] = await Promise.all([
     loadCatalog(db),
     loadVariants(db, { activeOnly: false }),
+    hydrateSkillPolicy(db),
   ]);
   return createEngine({ provider: provider(), catalog, variants });
 }

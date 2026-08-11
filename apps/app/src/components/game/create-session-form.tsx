@@ -45,7 +45,12 @@ export function CreateSessionForm({ variants }: { variants: VariantOption[] }) {
         round: round === "3" ? 3 : 2,
         variantId: variantId || undefined,
       });
-      router.push(`/game/${session?.id}`);
+      if (!session?.id) {
+        setError("Сессия не создана, попробуйте ещё раз");
+        setPending(false);
+        return;
+      }
+      router.push(`/game/${session.id}`);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Не удалось создать");
       setPending(false);

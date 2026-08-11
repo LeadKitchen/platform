@@ -1,4 +1,10 @@
-import { type ManagementStyle, STYLE_LABELS } from "@acme/game";
+import type { ManagementStyle } from "@acme/game";
+// Leaf import on purpose: the `@acme/game` barrel also re-exports the
+// scoring heuristics (Unicode-lookbehind regexes) and the full restaurant
+// catalog. This component runs inside a "use client" boundary
+// (dialog-room.tsx), so pulling the barrel would ship all of that to the
+// browser just for four label strings.
+import { STYLE_LABELS } from "@acme/game/styles";
 import {
   Badge,
   Card,

@@ -118,6 +118,7 @@ function testProvider(replyText = "Поняла, сделаю."): {
         comment: "видно из речи",
       })),
       toxicTurns: 0,
+      toxicQuotes: [],
     };
   });
 

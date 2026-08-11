@@ -172,6 +172,28 @@ export const GameEvent = pgTable(
   ],
 );
 
+/**
+ * Persisted state of the skill-RL contextual bandit (`skill-rl` persona).
+ *
+ * Without this table the policy lived only in a process-local `Map`: every
+ * deploy reset it to the optimistic initial value, so a "learning curve"
+ * shown to the facilitator was really measuring process uptime. Learning is
+ * deliberately shared across every session on the variant — the whole point
+ * of a bandit is that later games benefit from earlier ones — this table just
+ * makes that survive a restart.
+ */
+export const GameSkillPolicy = pgTable("game_skill_policy", (t) => ({
+  /** `${contextKey}::${skillId}`, matches `SkillPolicyStore` in @acme/ai. */
+  key: t.text().primaryKey(),
+  value: t.doublePrecision().notNull(),
+  count: t.integer().notNull(),
+  updatedAt: t
+    .timestamp({ mode: "date", withTimezone: true })
+    .defaultNow()
+    .notNull()
+    .$onUpdateFn(() => sql`now()`),
+}));
+
 export const GameEvaluation = pgTable(
   "game_evaluations",
   (t) => ({
