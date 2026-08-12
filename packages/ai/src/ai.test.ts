@@ -1,5 +1,4 @@
 import { describe, expect, test } from "bun:test";
-
 import {
   type DialogContext,
   defaultCatalog,
@@ -8,11 +7,18 @@ import {
   resolveExpectation,
   resolveShiftLoad,
 } from "@acme/game";
+import { z } from "zod";
 
 import { createEngine } from "./engine";
 import { createMockProvider } from "./provider/mock";
 import type { LlmProvider, LlmRequest } from "./provider/types";
 import { knowledgeRegistry } from "./registries";
+import {
+  criteriaAssessmentSchema,
+  engagementCheckSchema,
+  personaReplySchema,
+  styleAnalysisSchema,
+} from "./schemas";
 import { graphRagKnowledge } from "./strategies/knowledge/graph-rag";
 import { ragKnowledge } from "./strategies/knowledge/rag";
 import {
@@ -396,5 +402,24 @@ describe("variants", () => {
   test("an unknown variant fails loudly", () => {
     const engine = createEngine({ provider: testProvider().provider });
     expect(() => engine.pipeline("does-not-exist")).toThrow();
+  });
+});
+
+describe("structured-output contracts", () => {
+  test("every schema can be rendered into JSON Schema", () => {
+    // Gateways without native structured outputs get the schema stated in the
+    // prompt, so a schema that cannot be serialised (a `.transform()`, for
+    // instance) fails every call on those providers — and it fails at request
+    // time, not at build time, which is how it once cost a whole benchmark run.
+    for (const [name, schema] of Object.entries({
+      personaReplySchema,
+      engagementCheckSchema,
+      styleAnalysisSchema,
+      criteriaAssessmentSchema,
+    })) {
+      expect(() => {
+        z.toJSONSchema(schema, { io: "output" });
+      }, name).not.toThrow();
+    }
   });
 });

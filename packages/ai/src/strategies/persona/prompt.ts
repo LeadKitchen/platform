@@ -34,7 +34,7 @@ export const promptPersona: PersonaStrategy = {
       reply: {
         silent: false,
         reply: result.value.reply,
-        understood: result.value.understood,
+        understood: result.value.understood ?? null,
         readiness: result.value.readiness,
         requests: result.value.requests,
         confirmsCheckpoints: result.value.confirmsCheckpoints,

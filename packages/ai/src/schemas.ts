@@ -21,11 +21,13 @@ export const personaReplySchema = z.object({
   reply: z
     .string()
     .describe("Реплика сотрудника на русском языке, от первого лица"),
+  // No `.transform()` here: zod transforms cannot be rendered into JSON
+  // Schema, and the schema is what gets stated in the prompt for gateways
+  // without native structured outputs. `undefined` is normalised in code.
   understood: z
     .string()
     .nullish()
     .catch(null)
-    .transform((value) => value ?? null)
     .describe(
       "Что сотрудник понял из задачи или переспрос; null, если задача ясна",
     ),
