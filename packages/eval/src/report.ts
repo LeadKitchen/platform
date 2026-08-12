@@ -64,6 +64,17 @@ export function renderMarkdownReport(result: RunResult): string {
     );
   }
 
+  const emptyArms = result.variants.filter((variant) => variant.items === 0);
+  if (emptyArms.length > 0) {
+    lines.push(
+      `> ⛔ Ни одного успешного диалога у: ${emptyArms.map((variant) => `\`${variant.variantId}\``).join(", ")}.`,
+      "> Эти варианты не сравнивались — по ним нет данных, а не нулевая ошибка.",
+      "> Проверьте раздел «Несостоявшиеся сценарии»: если причина внешняя",
+      "> (лимит провайдера, сеть), прогон надо повторить, а не делать выводы.",
+      "",
+    );
+  }
+
   lines.push("## Значимость против контрольного варианта", "");
   lines.push(
     "Парный бутстрап по сценариям, 95% доверительный интервал.",
@@ -109,8 +120,23 @@ export function renderMarkdownReport(result: RunResult): string {
     "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
   );
 
-  const ranked = [...result.variants].sort((a, b) => a.scoreMae - b.scoreMae);
+  // An arm that produced no items has `scoreMae === 0`, which would sort it to
+  // the top and read as a perfect score. Empty arms are listed last and shown
+  // as "нет данных" — a variant that failed everywhere must never look best.
+  const withData = result.variants.filter((variant) => variant.items > 0);
+  const withoutData = result.variants.filter((variant) => variant.items === 0);
+  const ranked = [
+    ...withData.sort((a, b) => a.scoreMae - b.scoreMae),
+    ...withoutData,
+  ];
+
   for (const variant of ranked) {
+    if (variant.items === 0) {
+      lines.push(
+        `| \`${variant.variantId}\` | нет данных | — | — | — | — | — | — | — | — |`,
+      );
+      continue;
+    }
     lines.push(
       `| \`${variant.variantId}\` | ${variant.scoreMae.toFixed(1)} | ${variant.scoreStdDev.toFixed(1)} | ${variant.styleKappa.toFixed(2)} | ${variant.criteriaF1.toFixed(2)} | ${percent(variant.personaAdherence)} | ${percent(variant.personaDriftRate)} | ${percent(variant.silenceAccuracy)} | ${variant.avgLatencyMs} мс | $${variant.avgCostUsd.toFixed(4)} |`,
     );
@@ -182,6 +208,15 @@ export function renderMarkdownReport(result: RunResult): string {
       );
     }
 
+    // Provider-side failures (quota, rate limit, network) say nothing about
+    // the variant. Reporting them together with genuine schema failures would
+    // read as "graph-rag is unreliable" when the account simply ran dry.
+    const external = result.failures.filter((failure) =>
+      /额度|quota|rate.?limit|429|5\d\d|insufficient|balance|credit|overload|ECONNRESET|ETIMEDOUT|fetch failed|квот|лимит|остаток|баланс|предвычет|таймаут|сеть/i.test(
+        failure.message,
+      ),
+    );
+
     lines.push("## Несостоявшиеся сценарии", "");
     lines.push(
       "Эти диалоги не доехали до оценки и исключены из всех метрик выше.",
@@ -189,6 +224,15 @@ export function renderMarkdownReport(result: RunResult): string {
       "смещено: вариант мог «выиграть», уронив именно трудные сценарии.",
       "",
     );
+
+    if (external.length > 0) {
+      lines.push(
+        `> ⛔ Из них ${external.length} — внешние отказы провайдера (лимит, квота, сеть),`,
+        "> а не свойство варианта. Прогон надо повторить: сравнивать по таким",
+        "> результатам нельзя, порядок вариантов в очереди решает исход.",
+        "",
+      );
+    }
     for (const [variantId, count] of [...byVariant].sort(
       (a, b) => b[1] - a[1],
     )) {

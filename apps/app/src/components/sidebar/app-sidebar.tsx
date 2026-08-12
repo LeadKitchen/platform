@@ -39,10 +39,19 @@ const data = {
 
 export function AppSidebar({
   user,
+  isAdmin,
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
   user: { name: string; email: string; avatar: string };
+  isAdmin: boolean;
 }) {
+  const navMain = data.navMain.map((item) => ({
+    ...item,
+    items: item.items.filter(
+      (subItem) => isAdmin || subItem.url !== "/admin/game",
+    ),
+  }));
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -65,7 +74,7 @@ export function AppSidebar({
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={navMain} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>

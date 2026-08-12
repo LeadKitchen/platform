@@ -86,6 +86,7 @@ export function ResetPasswordForm({
         <CardContent>
           <Button
             render={<Link href={paths.auth.forgotPassword} />}
+            nativeButton={false}
             className="w-full"
           >
             Request new link

@@ -9,6 +9,8 @@ import {
   CardTitle,
 } from "@acme/ui";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getSession } from "~/auth/server";
 import { VariantComparison } from "~/components/game";
 import { SiteHeader } from "~/components/layout";
 import { api } from "~/orpc/server";
@@ -20,6 +22,19 @@ function styleLabel(style: string): string {
 export const dynamic = "force-dynamic";
 
 export default async function AdminGamePage() {
+  const session = await getSession();
+  const adminEmails = (process.env.ADMIN_EMAILS ?? "")
+    .split(",")
+    .map((email) => email.trim().toLowerCase())
+    .filter(Boolean);
+
+  if (
+    !session?.user.email ||
+    !adminEmails.includes(session.user.email.toLowerCase())
+  ) {
+    redirect("/game");
+  }
+
   const [analytics, dialogs, variants] = await Promise.all([
     api.admin.game.analytics({ limit: 5000 }),
     api.admin.game.dialogs({ limit: 50, offset: 0 }),

@@ -1,5 +1,11 @@
 import { APP_CONFIG } from "@acme/config";
-import { cn, ThemeProvider, ThemeToggle, Toaster } from "@acme/ui";
+import {
+  cn,
+  themeDetectorScript,
+  ThemeProvider,
+  ThemeToggle,
+  Toaster,
+} from "@acme/ui";
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -41,6 +47,10 @@ const geistMono = Geist_Mono({
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Static trusted script prevents a theme flash before hydration. */}
+        <script dangerouslySetInnerHTML={{ __html: themeDetectorScript }} />
+      </head>
       <body
         className={cn(
           "bg-background text-foreground min-h-screen font-sans antialiased",

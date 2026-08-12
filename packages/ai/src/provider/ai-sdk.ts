@@ -8,6 +8,34 @@ import { z } from "zod";
 import type { LlmProvider, LlmRequest, LlmResult } from "./types";
 
 /**
+ * Pull a JSON object out of an answer that carries prose around it.
+ *
+ * Models on gateways occasionally prefix the object with a stray line — a
+ * pseudo tool call, a "вот результат:" — which makes the SDK's strict parse
+ * fail on output that is otherwise perfectly good. Recovering it here saves a
+ * retry, and in a long benchmark saves the scenario.
+ */
+function salvageJson(text: string): unknown {
+  const fenced = /```(?:json)?\s*([\s\S]*?)```/i.exec(text);
+  const candidates = [fenced?.[1], text].filter(
+    (value): value is string => typeof value === "string",
+  );
+
+  for (const candidate of candidates) {
+    const start = candidate.indexOf("{");
+    const end = candidate.lastIndexOf("}");
+    if (start === -1 || end <= start) continue;
+    try {
+      return JSON.parse(candidate.slice(start, end + 1));
+    } catch {
+      // Try the next candidate.
+    }
+  }
+
+  return undefined;
+}
+
+/**
  * Vendor-neutral provider built on the Vercel AI SDK.
  *
  * One `generateObject` call site covers OpenAI, Anthropic and any
@@ -149,6 +177,29 @@ export function createAiSdkProvider(
           const usage = (cause as { usage?: Record<string, number> }).usage;
           inputTokens += usage?.inputTokens ?? 0;
           outputTokens += usage?.outputTokens ?? 0;
+
+          // Last-ditch: the SDK kept the raw text, and the object is often
+          // sitting inside it behind a line of prose.
+          const text = (cause as { text?: string }).text;
+          if (typeof text === "string") {
+            const salvaged = salvageJson(text);
+            if (salvaged !== undefined) {
+              const parsed = request.schema.safeParse(salvaged);
+              if (parsed.success) {
+                return {
+                  value: parsed.data as T,
+                  usage: {
+                    inputTokens,
+                    outputTokens,
+                    cacheReadInputTokens: cachedTokens,
+                    cacheCreationInputTokens: cacheWriteTokens,
+                  },
+                  latencyMs: Date.now() - startedAt,
+                  model: options.model,
+                };
+              }
+            }
+          }
         }
       }
 

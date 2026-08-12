@@ -37,6 +37,7 @@ export * from "./table";
 export * from "./tabs";
 export * from "./textarea";
 export * from "./theme";
+export * from "./theme-script";
 export * from "./toast";
 export * from "./toggle";
 export * from "./toggle-group";

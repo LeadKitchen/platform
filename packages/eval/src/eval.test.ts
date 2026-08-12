@@ -153,3 +153,43 @@ describe("runEvaluation", () => {
     );
   });
 });
+
+describe("отчёт не выдаёт отсутствие данных за результат", () => {
+  test("вариант без единого диалога не встаёт первым с MAE 0", async () => {
+    const result = await runEvaluation({
+      variantIds: ["baseline"],
+      provider: createSimulatedProvider(),
+      fixtures: FIXTURES.slice(0, 3),
+    });
+
+    // Подмешиваем арм, у которого не получилось ни одного диалога: без
+    // отдельной обработки его scoreMae === 0 отсортировался бы на первое
+    // место и прочитался бы как идеальная точность.
+    const broken = {
+      ...result.variants[0],
+      variantId: "broken",
+      items: 0,
+      scoreMae: 0,
+    } as (typeof result.variants)[number];
+
+    const report = renderMarkdownReport({
+      ...result,
+      variants: [...result.variants, broken],
+      failures: [
+        {
+          fixtureId: "x",
+          variantId: "broken",
+          message: "предвычет квоты не прошёл, остаток $0.001",
+        },
+      ],
+    });
+
+    const table = report.slice(report.indexOf("## Сырые"));
+    expect(table.indexOf("`broken`")).toBeGreaterThan(
+      table.indexOf("`baseline`"),
+    );
+    expect(report).toContain("нет данных");
+    expect(report).toContain("Ни одного успешного диалога");
+    expect(report).toContain("внешние отказы провайдера");
+  });
+});

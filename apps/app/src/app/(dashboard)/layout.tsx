@@ -12,6 +12,12 @@ export default async function DashboardLayout({
   if (!session?.user) {
     return <>{children}</>;
   }
+  const isAdmin = (process.env.ADMIN_EMAILS ?? "")
+    .split(",")
+    .some(
+      (email) =>
+        email.trim().toLowerCase() === session.user.email.toLowerCase(),
+    );
   return (
     <SidebarProvider>
       <AppSidebar
@@ -20,6 +26,7 @@ export default async function DashboardLayout({
           email: session.user.email,
           avatar: session.user.image || "",
         }}
+        isAdmin={isAdmin}
       />
       <SidebarInset>{children}</SidebarInset>
     </SidebarProvider>

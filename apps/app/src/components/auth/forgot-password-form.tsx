@@ -76,6 +76,7 @@ export function ForgotPasswordForm({
             </p>
             <Button
               render={<Link href={paths.auth.login} />}
+              nativeButton={false}
               className="w-full"
               variant="outline"
             >
@@ -123,6 +124,7 @@ export function ForgotPasswordForm({
             </Button>
             <Button
               render={<Link href={paths.auth.login} />}
+              nativeButton={false}
               className="w-full"
               variant="outline"
             >

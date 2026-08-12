@@ -146,7 +146,7 @@ export function DialogRoom(props: DialogRoomProps) {
 
             {turns.map((turn, index) => (
               <div
-                // Реплики неизменяемы и только добавляются в конец.
+                // biome-ignore lint/suspicious/noArrayIndexKey: Реплики неизменяемы и только добавляются в конец.
                 key={`${index}-${turn.role}`}
                 className={
                   turn.role === "manager"
