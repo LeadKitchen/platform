@@ -42,7 +42,10 @@ export async function judgeStyle(
     schemaName: "style_analysis",
     schema: styleAnalysisSchema,
     effort: deps.effort,
-    system: STYLE_JUDGE_SYSTEM,
+    system:
+      typeof deps.params.styleJudgeSystem === "string"
+        ? deps.params.styleJudgeSystem
+        : STYLE_JUDGE_SYSTEM,
     messages: [{ role: "user", content: renderTranscript(dialog) }],
   });
 
@@ -72,7 +75,10 @@ export async function judgeCriteria(
     schemaName: "criteria_assessment",
     schema: criteriaAssessmentSchema,
     effort: deps.effort,
-    system: CRITERIA_JUDGE_SYSTEM,
+    system:
+      typeof deps.params.criteriaJudgeSystem === "string"
+        ? deps.params.criteriaJudgeSystem
+        : CRITERIA_JUDGE_SYSTEM,
     messages: [
       {
         role: "user",

@@ -255,7 +255,9 @@ describe("knowledge strategies", () => {
     for (const strategy of knowledgeRegistry.list()) {
       const result = await strategy.retrieve(
         { dialog: context, expectation, query: "торт с украшением" },
-        stageDeps(provider, { topK: 6, hops: 2 }),
+        // `dense: false` keeps this offline: the leak check is about which
+        // documents a strategy may surface, not about the embedding endpoint.
+        stageDeps(provider, { topK: 6, hops: 2, dense: false }),
       );
       const text = result.snippets
         .map((snippet) => snippet.text)

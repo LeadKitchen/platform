@@ -18,7 +18,13 @@ import {
 export interface KnowledgeDoc {
   id: string;
   text: string;
-  source: "profile" | "competence" | "task" | "methodology" | "shift";
+  source:
+    | "profile"
+    | "competence"
+    | "task"
+    | "methodology"
+    | "shift"
+    | "regulation";
   /**
    * Who may see this document.
    *
@@ -95,6 +101,27 @@ const METHODOLOGY: KnowledgeDoc[] = [
   },
 ];
 
+/**
+ * Standing kitchen rules, independent of who is on shift.
+ *
+ * Unlike profiles and task cards, nothing in the dialog says which of these is
+ * relevant — the manager may mention allergens, a banquet, or a delivery, and
+ * the right rule has to be *found*. This is where a retrieval strategy can
+ * actually beat "put the order card in the prompt".
+ */
+export const REGULATIONS: string[] = [
+  "Аллергены: при заказе с пометкой об аллергии позиция готовится на отдельной доске и в отдельной посуде, шеф уведомляется лично.",
+  "Банкет: подача всех горячих позиций одновременно, отсчёт начинается за 25 минут до объявленного времени.",
+  "Заморозка: повторное замораживание размороженного продукта запрещено, остатки списываются в конце смены.",
+  "Температурный режим: горячее отдаётся при температуре не ниже 65 градусов, холодные закуски — не выше 8.",
+  "Приёмка товара: продукты без маркировки и срока годности не принимаются, накладная подписывается только после сверки.",
+  "Гость с особыми пожеланиями: изменение состава блюда согласуется с шефом, замена ингредиента фиксируется в заказе.",
+  "Смена посуды: разделочные доски для рыбы, мяса и овощей не смешиваются, маркировка по цвету обязательна.",
+  "Опоздание заказа: если позиция задерживается больше чем на 10 минут, официант предупреждается сразу, а не по факту.",
+  "Уборка станции: рабочее место сдаётся чистым до конца смены, иначе станция не передаётся следующему повару.",
+  "Дегустация: каждая новая партия соуса пробуется до отдачи, повторная дегустация после корректировки обязательна.",
+];
+
 export function buildCorpus(catalog: Catalog): KnowledgeDoc[] {
   const docs: KnowledgeDoc[] = [...METHODOLOGY];
 
@@ -127,6 +154,20 @@ export function buildCorpus(catalog: Catalog): KnowledgeDoc[] {
         tags: [employee.id, taskType, competence],
       });
     }
+  }
+
+  // Kitchen regulations: knowledge the character may need but that no order
+  // card points at. This is the only part of the base where retrieval has
+  // anything to do — everything above is keyed by the current dialog and can
+  // be looked up directly.
+  for (const [index, regulation] of REGULATIONS.entries()) {
+    docs.push({
+      id: `regulation:${index}`,
+      text: regulation,
+      source: "regulation",
+      audience: "both",
+      tags: ["regulation"],
+    });
   }
 
   for (const task of catalog.tasks) {

@@ -1,9 +1,8 @@
 import { type Catalog, defaultCatalog } from "@acme/game";
 import { createPipeline, type Pipeline } from "./pipeline";
-import { createAnthropicProvider } from "./provider/anthropic";
+import { type AiSdkVendor, createAiSdkProvider } from "./provider/ai-sdk";
 import { createMockProvider } from "./provider/mock";
-import { createOpenAiProvider } from "./provider/openai";
-import type { LlmEffort, LlmProvider } from "./provider/types";
+import type { LlmProvider } from "./provider/types";
 import { personaReplySchema } from "./schemas";
 import {
   BUILT_IN_VARIANTS,
@@ -11,12 +10,6 @@ import {
   resolveVariant,
   type VariantConfig,
 } from "./variants";
-
-const EFFORTS: LlmEffort[] = ["low", "medium", "high", "xhigh", "max"];
-
-function readEffort(value: string | undefined): LlmEffort | undefined {
-  return EFFORTS.find((effort) => effort === value);
-}
 
 /**
  * Build the provider from the environment.
@@ -42,18 +35,27 @@ export function createProviderFromEnv(
     return createMockProvider(fallbackResponder);
   }
 
-  if (kind === "openai") {
-    return createOpenAiProvider({
-      apiKey: env.OPENAI_API_KEY,
-      baseUrl: env.OPENAI_BASE_URL,
-      model: env.AI_MODEL ?? env.OPENAI_MODEL,
+  if (kind === "anthropic") {
+    return createAiSdkProvider({
+      vendor: "anthropic",
+      model: env.AI_MODEL ?? "claude-opus-5",
+      apiKey: env.ANTHROPIC_API_KEY,
     });
   }
 
-  return createAnthropicProvider({
-    apiKey: env.ANTHROPIC_API_KEY,
-    model: env.AI_MODEL,
-    effort: readEffort(env.AI_EFFORT),
+  // A custom base URL means a gateway, and gateways routinely accept
+  // `response_format` while ignoring it — ask the SDK to state the schema in
+  // the prompt instead of trusting native structured outputs.
+  const baseUrl = env.OPENAI_BASE_URL;
+  const isGateway =
+    Boolean(baseUrl) && !baseUrl?.startsWith("https://api.openai.com");
+
+  return createAiSdkProvider({
+    vendor: (isGateway ? "openai-compatible" : "openai") as AiSdkVendor,
+    model: env.AI_MODEL ?? env.OPENAI_MODEL ?? "gpt-4o-mini",
+    apiKey: env.OPENAI_API_KEY,
+    baseUrl,
+    supportsStructuredOutputs: !isGateway,
   });
 }
 

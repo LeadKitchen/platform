@@ -4,6 +4,8 @@ import { dirname } from "node:path";
 
 import { BUILT_IN_VARIANTS, createProviderFromEnv } from "@acme/ai";
 
+import { FIXTURES } from "./fixtures";
+
 import { renderMarkdownReport } from "./report";
 import { runEvaluation } from "./runner";
 import { createSimulatedProvider } from "./simulated-provider";
@@ -21,6 +23,10 @@ interface Flags {
   variants: string[];
   provider: ProviderKind;
   epochs: number;
+  runs: number;
+  concurrency: number;
+  limit?: number;
+  reference?: string;
   learn: boolean;
   out?: string;
   json?: string;
@@ -31,6 +37,8 @@ function parseFlags(argv: string[]): Flags {
     variants: BUILT_IN_VARIANTS.map((variant) => variant.id),
     provider: "simulated",
     epochs: 1,
+    runs: 1,
+    concurrency: 1,
     learn: false,
   };
 
@@ -51,6 +59,22 @@ function parseFlags(argv: string[]): Flags {
       }
       case "--epochs":
         if (next) flags.epochs = Number.parseInt(next, 10) || 1;
+        index += 1;
+        break;
+      case "--runs":
+        if (next) flags.runs = Number.parseInt(next, 10) || 1;
+        index += 1;
+        break;
+      case "--concurrency":
+        if (next) flags.concurrency = Number.parseInt(next, 10) || 1;
+        index += 1;
+        break;
+      case "--limit":
+        if (next) flags.limit = Number.parseInt(next, 10) || undefined;
+        index += 1;
+        break;
+      case "--reference":
+        if (next) flags.reference = next;
         index += 1;
         break;
       case "--learn":
@@ -85,6 +109,10 @@ function printHelp(): void {
 Флаги:
   --variants a,b,c   какие варианты сравнивать (по умолчанию все встроенные)
   --provider p       simulated | anthropic | openai | env  (по умолч. simulated)
+  --runs N           прогонов на сценарий: даёт разброс модели (реком. 3)
+  --concurrency N    сколько сценариев считать параллельно (для обучаемых — 1)
+  --limit N          взять только первые N сценариев (быстрая проверка)
+  --reference ID     контрольный вариант для сравнения (по умолч. baseline)
   --epochs N         повторов набора сценариев (для обучаемых стратегий)
   --learn            передавать награду стратегиям с обучением
   --out FILE         записать markdown-отчёт
@@ -92,7 +120,7 @@ function printHelp(): void {
 
 Примеры:
   bun --filter @acme/eval eval --variants baseline,rag,graph-rag
-  bun --filter @acme/eval eval --provider anthropic --out reports/run.md
+  bun --filter @acme/eval eval --provider openai --runs 3 --out reports/run.md
   bun --filter @acme/eval eval --variants baseline,skill-rl --epochs 5 --learn`);
 }
 
@@ -108,14 +136,20 @@ async function main(): Promise<void> {
             : { ...process.env, AI_PROVIDER: flags.provider },
         );
 
+  const fixtures = flags.limit ? FIXTURES.slice(0, flags.limit) : FIXTURES;
+
   console.log(
-    `Запуск: варианты ${flags.variants.join(", ")}; провайдер ${provider.id}; эпох ${flags.epochs}`,
+    `Запуск: варианты ${flags.variants.join(", ")}; провайдер ${provider.id} (${provider.model}); сценариев ${fixtures.length}; прогонов ${flags.runs}; эпох ${flags.epochs}`,
   );
 
   const result = await runEvaluation({
     variantIds: flags.variants,
     provider,
+    fixtures,
     epochs: flags.epochs,
+    runsPerFixture: flags.runs,
+    concurrency: flags.concurrency,
+    referenceVariantId: flags.reference,
     learn: flags.learn,
     onProgress: (message) => process.stdout.write(`  ${message}\r`),
   });

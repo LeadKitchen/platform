@@ -22,6 +22,10 @@ export const promptPersona: PersonaStrategy = {
       system: buildPersonaSystemPrompt({
         dialog: request.dialog,
         knowledge: request.knowledge,
+        roleRules:
+          typeof deps.params.roleRules === "string"
+            ? deps.params.roleRules
+            : undefined,
       }),
       messages: buildTranscript(request.dialog.turns, request.utterance),
     });

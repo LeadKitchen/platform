@@ -1,0 +1,2623 @@
+{
+  "startedAt": "2026-08-12T10:07:24.928Z",
+  "finishedAt": "2026-08-12T10:23:18.415Z",
+  "providerId": "ai-sdk:openai-compatible",
+  "model": "gpt-5.1-all",
+  "epochs": 1,
+  "runsPerFixture": 1,
+  "fixtures": 70,
+  "expertLabelledFixtures": 0,
+  "referenceVariantId": "baseline",
+  "variants": [
+    {
+      "variantId": "baseline",
+      "items": 10,
+      "scoreMae": 15.4,
+      "scoreStdDev": 0,
+      "expectedStyleAccuracy": 1,
+      "actualStyleAccuracy": 0.8,
+      "styleKappa": 0.706,
+      "criteriaF1": 0.96,
+      "personaAdherence": 1,
+      "personaDriftRate": 0,
+      "personaDriftSlope": 0,
+      "silenceAccuracy": 1,
+      "avgLatencyMs": 41433,
+      "totalInputTokens": 43066,
+      "totalOutputTokens": 4750,
+      "totalCostUsd": 0.1013,
+      "avgCostUsd": 0.01013
+    },
+    {
+      "variantId": "baseline-judge",
+      "items": 5,
+      "scoreMae": 14.2,
+      "scoreStdDev": 0,
+      "expectedStyleAccuracy": 1,
+      "actualStyleAccuracy": 0.8,
+      "styleKappa": 0.722,
+      "criteriaF1": 0.751,
+      "personaAdherence": 1,
+      "personaDriftRate": 0,
+      "personaDriftSlope": 0,
+      "silenceAccuracy": 1,
+      "avgLatencyMs": 89364,
+      "totalInputTokens": 39383,
+      "totalOutputTokens": 7783,
+      "totalCostUsd": 0.1271,
+      "avgCostUsd": 0.02541
+    },
+    {
+      "variantId": "rag",
+      "items": 10,
+      "scoreMae": 17.7,
+      "scoreStdDev": 0,
+      "expectedStyleAccuracy": 1,
+      "actualStyleAccuracy": 0.9,
+      "styleKappa": 0.844,
+      "criteriaF1": 0.853,
+      "personaAdherence": 1,
+      "personaDriftRate": 0,
+      "personaDriftSlope": 0,
+      "silenceAccuracy": 1,
+      "avgLatencyMs": 102504,
+      "totalInputTokens": 86657,
+      "totalOutputTokens": 19085,
+      "totalCostUsd": 0.2992,
+      "avgCostUsd": 0.02992
+    },
+    {
+      "variantId": "graph-rag",
+      "items": 7,
+      "scoreMae": 17,
+      "scoreStdDev": 0,
+      "expectedStyleAccuracy": 1,
+      "actualStyleAccuracy": 0.429,
+      "styleKappa": 0.3,
+      "criteriaF1": 0.847,
+      "personaAdherence": 1,
+      "personaDriftRate": 0,
+      "personaDriftSlope": 0,
+      "silenceAccuracy": 1,
+      "avgLatencyMs": 44684,
+      "totalInputTokens": 83649,
+      "totalOutputTokens": 14844,
+      "totalCostUsd": 0.253,
+      "avgCostUsd": 0.03614
+    }
+  ],
+  "comparisons": [
+    {
+      "variantId": "baseline-judge",
+      "metrics": [
+        {
+          "metric": "scoreMae",
+          "label": "MAE к эксперту",
+          "direction": "lower",
+          "delta": 2,
+          "ciLow": 0,
+          "ciHigh": 4,
+          "pValue": 1,
+          "pairs": 2,
+          "significant": false
+        },
+        {
+          "metric": "actualStyleAccuracy",
+          "label": "Точность стиля",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 2,
+          "significant": false
+        },
+        {
+          "metric": "criteriaF1",
+          "label": "F1 по критериям",
+          "direction": "higher",
+          "delta": -0.071,
+          "ciLow": -0.143,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 2,
+          "significant": false
+        },
+        {
+          "metric": "personaAdherence",
+          "label": "Удержание роли",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 2,
+          "significant": false
+        },
+        {
+          "metric": "personaDriftRate",
+          "label": "Дрейф персоны",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 2,
+          "significant": false
+        },
+        {
+          "metric": "costUsd",
+          "label": "Стоимость диалога",
+          "direction": "lower",
+          "delta": -0.017,
+          "ciLow": -0.018,
+          "ciHigh": -0.015,
+          "pValue": 0.5115,
+          "pairs": 2,
+          "significant": true
+        }
+      ]
+    },
+    {
+      "variantId": "rag",
+      "metrics": [
+        {
+          "metric": "scoreMae",
+          "label": "MAE к эксперту",
+          "direction": "lower",
+          "delta": -3,
+          "ciLow": -13,
+          "ciHigh": 8,
+          "pValue": 0.7468,
+          "pairs": 3,
+          "significant": false
+        },
+        {
+          "metric": "actualStyleAccuracy",
+          "label": "Точность стиля",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 3,
+          "significant": false
+        },
+        {
+          "metric": "criteriaF1",
+          "label": "F1 по критериям",
+          "direction": "higher",
+          "delta": -0.178,
+          "ciLow": -0.333,
+          "ciHigh": 0,
+          "pValue": 0.4979,
+          "pairs": 3,
+          "significant": false
+        },
+        {
+          "metric": "personaAdherence",
+          "label": "Удержание роли",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 3,
+          "significant": false
+        },
+        {
+          "metric": "personaDriftRate",
+          "label": "Дрейф персоны",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 3,
+          "significant": false
+        },
+        {
+          "metric": "costUsd",
+          "label": "Стоимость диалога",
+          "direction": "lower",
+          "delta": -0.02,
+          "ciLow": -0.023,
+          "ciHigh": -0.018,
+          "pValue": 0.2561,
+          "pairs": 3,
+          "significant": true
+        }
+      ]
+    },
+    {
+      "variantId": "graph-rag",
+      "metrics": [
+        {
+          "metric": "scoreMae",
+          "label": "MAE к эксперту",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "actualStyleAccuracy",
+          "label": "Точность стиля",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "criteriaF1",
+          "label": "F1 по критериям",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "personaAdherence",
+          "label": "Удержание роли",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "personaDriftRate",
+          "label": "Дрейф персоны",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "costUsd",
+          "label": "Стоимость диалога",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        }
+      ]
+    }
+  ],
+  "failures": [
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-directive",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-delegating",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-coaching",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-coaching",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-directive",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r2-delegating",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-coaching",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-delegating",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-delegating",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r2-directive",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-directive",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-directive",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r2-supporting",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r3-coaching",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r3-delegating",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r3-supporting",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-steak-r2-delegating",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r2-directive",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-supporting",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-steak-r2-directive",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r2-delegating",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r2-supporting",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r3-delegating",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r2-coaching",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r3-coaching",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r3-directive",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r3-directive",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-banquet_hot-r2-directive",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r2-delegating",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-banquet_hot-r2-coaching",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r3-supporting",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r2-directive",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r2-supporting",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-banquet_hot-r2-supporting",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r3-coaching",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r2-coaching",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-steak-r2-directive",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-banquet_hot-r2-delegating",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r3-delegating",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r3-directive",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "marina-salads-r2-directive",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "marina-salads-r2-coaching",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-banquet_hot-r2-supporting",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "marina-salads-r2-supporting",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-banquet_hot-r2-directive",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-steak-r2-delegating",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-steak-r2-delegating",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-steak-r2-directive",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-steak-r2-supporting",
+      "variantId": "baseline",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-coaching",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-directive",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-delegating",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-coaching",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-delegating",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-directive",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r2-coaching",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r2-directive",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r2-delegating",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-coaching",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-directive",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-directive",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r2-supporting",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r3-directive",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r3-delegating",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-supporting",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-steak-r2-delegating",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-steak-r2-coaching",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r2-delegating",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r2-supporting",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r3-directive",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r3-supporting",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r2-directive",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r3-delegating",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-banquet_hot-r2-coaching",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r3-supporting",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r3-coaching",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r2-coaching",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-banquet_hot-r2-delegating",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r3-coaching",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r2-delegating",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-banquet_hot-r2-directive",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r2-supporting",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r2-directive",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r3-coaching",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r3-delegating",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-steak-r2-delegating",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r3-supporting",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-steak-r2-supporting",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "marina-salads-r2-delegating",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-steak-r2-directive",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r3-directive",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-banquet_hot-r2-delegating",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-banquet_hot-r2-supporting",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-banquet_hot-r2-supporting",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "marina-salads-r2-directive",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-steak-r2-delegating",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-banquet_hot-r2-directive",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "marina-salads-r2-coaching",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-salads-r2-directive",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-steak-r2-directive",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "marina-salads-r2-supporting",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-salads-r2-supporting",
+      "variantId": "baseline-judge",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-directive",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-coaching",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-directive",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-delegating",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-delegating",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-coaching",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-supporting",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-coaching",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-directive",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-directive",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r2-coaching",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r3-delegating",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r2-delegating",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r3-directive",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r3-supporting",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r2-directive",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r2-supporting",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r2-delegating",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-steak-r2-delegating",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-steak-r2-coaching",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r3-coaching",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-steak-r2-directive",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r2-directive",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r3-supporting",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-banquet_hot-r2-directive",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-banquet_hot-r2-supporting",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r3-directive",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-banquet_hot-r2-coaching",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r3-coaching",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r2-coaching",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r2-supporting",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r2-delegating",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r3-coaching",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r2-directive",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r3-directive",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-steak-r2-delegating",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-steak-r2-directive",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r3-delegating",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-steak-r2-supporting",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-steak-r2-coaching",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-banquet_hot-r2-directive",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-banquet_hot-r2-supporting",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-salads-r2-supporting",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-steak-r2-delegating",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-salads-r2-delegating",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-steak-r2-supporting",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-salads-r2-directive",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-steak-r2-directive",
+      "variantId": "rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-coaching",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-directive",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-delegating",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-directive",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-directive",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-supporting",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r2-coaching",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-directive",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r2-delegating",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r3-coaching",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r2-supporting",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-delegating",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r3-directive",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r2-directive",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-steak-r2-coaching",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r3-supporting",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-salads-r3-delegating",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r2-directive",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r2-supporting",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-steak-r2-directive",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-steak-r2-delegating",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r3-coaching",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r2-delegating",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r3-delegating",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r3-supporting",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-banquet_hot-r2-supporting",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-banquet_hot-r2-delegating",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-banquet_hot-r2-directive",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r2-delegating",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-tiramisu-r3-directive",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r3-delegating",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r3-directive",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r2-directive",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r2-supporting",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-steak-r2-delegating",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r3-supporting",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-steak-r2-coaching",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-steak-r2-supporting",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "igor-steak-r2-directive",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-delegating",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "marina-salads-r2-delegating",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-banquet_hot-r2-delegating",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "marina-salads-r2-directive",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-banquet_hot-r2-directive",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-salads-r2-delegating",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-salads-r2-directive",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-steak-r2-delegating",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-steak-r2-directive",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-salads-r2-supporting",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "marina-salads-r2-coaching",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    },
+    {
+      "fixtureId": "olga-steak-r2-supporting",
+      "variantId": "graph-rag",
+      "message": "Transforms cannot be represented in JSON Schema"
+    }
+  ],
+  "epochSummaries": [
+    {
+      "epoch": 1,
+      "variants": [
+        {
+          "variantId": "baseline",
+          "items": 10,
+          "scoreMae": 15.4,
+          "scoreStdDev": 0,
+          "expectedStyleAccuracy": 1,
+          "actualStyleAccuracy": 0.8,
+          "styleKappa": 0.706,
+          "criteriaF1": 0.96,
+          "personaAdherence": 1,
+          "personaDriftRate": 0,
+          "personaDriftSlope": 0,
+          "silenceAccuracy": 1,
+          "avgLatencyMs": 41433,
+          "totalInputTokens": 43066,
+          "totalOutputTokens": 4750,
+          "totalCostUsd": 0.1013,
+          "avgCostUsd": 0.01013
+        },
+        {
+          "variantId": "baseline-judge",
+          "items": 5,
+          "scoreMae": 14.2,
+          "scoreStdDev": 0,
+          "expectedStyleAccuracy": 1,
+          "actualStyleAccuracy": 0.8,
+          "styleKappa": 0.722,
+          "criteriaF1": 0.751,
+          "personaAdherence": 1,
+          "personaDriftRate": 0,
+          "personaDriftSlope": 0,
+          "silenceAccuracy": 1,
+          "avgLatencyMs": 89364,
+          "totalInputTokens": 39383,
+          "totalOutputTokens": 7783,
+          "totalCostUsd": 0.1271,
+          "avgCostUsd": 0.02541
+        },
+        {
+          "variantId": "rag",
+          "items": 10,
+          "scoreMae": 17.7,
+          "scoreStdDev": 0,
+          "expectedStyleAccuracy": 1,
+          "actualStyleAccuracy": 0.9,
+          "styleKappa": 0.844,
+          "criteriaF1": 0.853,
+          "personaAdherence": 1,
+          "personaDriftRate": 0,
+          "personaDriftSlope": 0,
+          "silenceAccuracy": 1,
+          "avgLatencyMs": 102504,
+          "totalInputTokens": 86657,
+          "totalOutputTokens": 19085,
+          "totalCostUsd": 0.2992,
+          "avgCostUsd": 0.02992
+        },
+        {
+          "variantId": "graph-rag",
+          "items": 7,
+          "scoreMae": 17,
+          "scoreStdDev": 0,
+          "expectedStyleAccuracy": 1,
+          "actualStyleAccuracy": 0.429,
+          "styleKappa": 0.3,
+          "criteriaF1": 0.847,
+          "personaAdherence": 1,
+          "personaDriftRate": 0,
+          "personaDriftSlope": 0,
+          "silenceAccuracy": 1,
+          "avgLatencyMs": 44684,
+          "totalInputTokens": 83649,
+          "totalOutputTokens": 14844,
+          "totalCostUsd": 0.253,
+          "avgCostUsd": 0.03614
+        }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "baseline",
+      "epoch": 1,
+      "score": 100,
+      "expertScore": 90,
+      "absError": 10,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 18403,
+      "inputTokens": 3395,
+      "outputTokens": 320,
+      "costUsd": 0.007443750000000001,
+      "run": 1
+    },
+    {
+      "fixtureId": "anna-steak-r2-coaching",
+      "variantId": "baseline",
+      "epoch": 1,
+      "score": 61,
+      "expertScore": 34,
+      "absError": 27,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "supporting",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 22401,
+      "inputTokens": 4918,
+      "outputTokens": 633,
+      "costUsd": 0.012477499999999999,
+      "run": 1
+    },
+    {
+      "fixtureId": "marina-salads-r2-delegating",
+      "variantId": "baseline",
+      "epoch": 1,
+      "score": 18,
+      "expertScore": 5,
+      "absError": 13,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 21005,
+      "inputTokens": 3357,
+      "outputTokens": 353,
+      "costUsd": 0.00772625,
+      "run": 1
+    },
+    {
+      "fixtureId": "igor-steak-r2-supporting",
+      "variantId": "baseline",
+      "epoch": 1,
+      "score": 100,
+      "expertScore": 90,
+      "absError": 10,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 40539,
+      "inputTokens": 4674,
+      "outputTokens": 556,
+      "costUsd": 0.0114025,
+      "run": 1
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r3-supporting",
+      "variantId": "baseline",
+      "epoch": 1,
+      "score": 32,
+      "expertScore": 13,
+      "absError": 19,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 69697,
+      "inputTokens": 5952,
+      "outputTokens": 841,
+      "costUsd": 0.01585,
+      "run": 1
+    },
+    {
+      "fixtureId": "igor-steak-r2-coaching",
+      "variantId": "baseline",
+      "epoch": 1,
+      "score": 65,
+      "expertScore": 43,
+      "absError": 22,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "supporting",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 70366,
+      "inputTokens": 4760,
+      "outputTokens": 538,
+      "costUsd": 0.01133,
+      "run": 1
+    },
+    {
+      "fixtureId": "olga-banquet_hot-r2-delegating",
+      "variantId": "baseline",
+      "epoch": 1,
+      "score": 92,
+      "expertScore": 84,
+      "absError": 8,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 48789,
+      "inputTokens": 3374,
+      "outputTokens": 293,
+      "costUsd": 0.007147499999999999,
+      "run": 1
+    },
+    {
+      "fixtureId": "olga-salads-r2-delegating",
+      "variantId": "baseline",
+      "epoch": 1,
+      "score": 100,
+      "expertScore": 90,
+      "absError": 10,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 34394,
+      "inputTokens": 3310,
+      "outputTokens": 238,
+      "costUsd": 0.006517499999999999,
+      "run": 1
+    },
+    {
+      "fixtureId": "olga-salads-r2-supporting",
+      "variantId": "baseline",
+      "epoch": 1,
+      "score": 64,
+      "expertScore": 40,
+      "absError": 24,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 35000,
+      "inputTokens": 4630,
+      "outputTokens": 470,
+      "costUsd": 0.0104875,
+      "run": 1
+    },
+    {
+      "fixtureId": "olga-salads-r2-directive",
+      "variantId": "baseline",
+      "epoch": 1,
+      "score": 31,
+      "expertScore": 20,
+      "absError": 11,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 53740,
+      "inputTokens": 4696,
+      "outputTokens": 508,
+      "costUsd": 0.010949999999999998,
+      "run": 1
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-delegating",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 48,
+      "expertScore": 22,
+      "absError": 26,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.5,
+        "recall": 0.5,
+        "f1": 0.5
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 71845,
+      "inputTokens": 6610,
+      "outputTokens": 1270,
+      "costUsd": 0.0209625,
+      "run": 1
+    },
+    {
+      "fixtureId": "anna-steak-r2-directive",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 92,
+      "expertScore": 90,
+      "absError": 2,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 89939,
+      "inputTokens": 8312,
+      "outputTokens": 1627,
+      "costUsd": 0.02666,
+      "run": 1
+    },
+    {
+      "fixtureId": "olga-salads-r2-delegating",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 84,
+      "expertScore": 90,
+      "absError": 6,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 78924,
+      "inputTokens": 6641,
+      "outputTokens": 1328,
+      "costUsd": 0.02158125,
+      "run": 1
+    },
+    {
+      "fixtureId": "igor-steak-r2-coaching",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 65,
+      "expertScore": 43,
+      "absError": 22,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 0.75,
+        "recall": 1,
+        "f1": 0.8571428571428571
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 117855,
+      "inputTokens": 8927,
+      "outputTokens": 1860,
+      "costUsd": 0.02975875,
+      "run": 1
+    },
+    {
+      "fixtureId": "olga-steak-r2-supporting",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 55,
+      "expertScore": 40,
+      "absError": 15,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.3333333333333333,
+        "recall": 0.5,
+        "f1": 0.4
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 88259,
+      "inputTokens": 8893,
+      "outputTokens": 1698,
+      "costUsd": 0.02809625,
+      "run": 1
+    },
+    {
+      "fixtureId": "igor-banquet_hot-r2-delegating",
+      "variantId": "rag",
+      "epoch": 1,
+      "score": 38,
+      "expertScore": 20,
+      "absError": 18,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 59074,
+      "inputTokens": 7748,
+      "outputTokens": 1797,
+      "costUsd": 0.027655,
+      "run": 1
+    },
+    {
+      "fixtureId": "anna-tiramisu-r2-supporting",
+      "variantId": "rag",
+      "epoch": 1,
+      "score": 58,
+      "expertScore": 40,
+      "absError": 18,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 91843,
+      "inputTokens": 9238,
+      "outputTokens": 1855,
+      "costUsd": 0.0300975,
+      "run": 1
+    },
+    {
+      "fixtureId": "anna-tiramisu-r3-delegating",
+      "variantId": "rag",
+      "epoch": 1,
+      "score": 36,
+      "expertScore": 9,
+      "absError": 27,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 88109,
+      "inputTokens": 8267,
+      "outputTokens": 1709,
+      "costUsd": 0.02742375,
+      "run": 1
+    },
+    {
+      "fixtureId": "marina-salads-r2-delegating",
+      "variantId": "rag",
+      "epoch": 1,
+      "score": 31,
+      "expertScore": 5,
+      "absError": 26,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 69398,
+      "inputTokens": 7348,
+      "outputTokens": 1795,
+      "costUsd": 0.027135,
+      "run": 1
+    },
+    {
+      "fixtureId": "olga-banquet_hot-r2-delegating",
+      "variantId": "rag",
+      "epoch": 1,
+      "score": 84,
+      "expertScore": 84,
+      "absError": 0,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 40398,
+      "inputTokens": 7257,
+      "outputTokens": 1622,
+      "costUsd": 0.02529125,
+      "run": 1
+    },
+    {
+      "fixtureId": "marina-salads-r2-coaching",
+      "variantId": "rag",
+      "epoch": 1,
+      "score": 69,
+      "expertScore": 85,
+      "absError": 16,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 71140,
+      "inputTokens": 9434,
+      "outputTokens": 2015,
+      "costUsd": 0.0319425,
+      "run": 1
+    },
+    {
+      "fixtureId": "marina-salads-r2-directive",
+      "variantId": "rag",
+      "epoch": 1,
+      "score": 74,
+      "expertScore": 50,
+      "absError": 24,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 79761,
+      "inputTokens": 9488,
+      "outputTokens": 2098,
+      "costUsd": 0.03284,
+      "run": 1
+    },
+    {
+      "fixtureId": "marina-salads-r2-supporting",
+      "variantId": "rag",
+      "epoch": 1,
+      "score": 40,
+      "expertScore": 25,
+      "absError": 15,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 88757,
+      "inputTokens": 9415,
+      "outputTokens": 2126,
+      "costUsd": 0.033028749999999996,
+      "run": 1
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-delegating",
+      "variantId": "rag",
+      "epoch": 1,
+      "score": 15,
+      "expertScore": 5,
+      "absError": 10,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.5,
+        "f1": 0.6666666666666666
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 303522,
+      "inputTokens": 7317,
+      "outputTokens": 1583,
+      "costUsd": 0.02497625,
+      "run": 1
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r3-supporting",
+      "variantId": "rag",
+      "epoch": 1,
+      "score": 36,
+      "expertScore": 13,
+      "absError": 23,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6,
+        "recall": 0.75,
+        "f1": 0.6666666666666665
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 133039,
+      "inputTokens": 11145,
+      "outputTokens": 2485,
+      "costUsd": 0.03878125,
+      "run": 1
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-coaching",
+      "variantId": "graph-rag",
+      "epoch": 1,
+      "score": 43,
+      "expertScore": 34,
+      "absError": 9,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "coaching",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.75,
+        "f1": 0.8571428571428571
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 35130,
+      "inputTokens": 10885,
+      "outputTokens": 1919,
+      "costUsd": 0.03279625,
+      "run": 1
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-coaching",
+      "variantId": "graph-rag",
+      "epoch": 1,
+      "score": 57,
+      "expertScore": 43,
+      "absError": 14,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.6666666666666666,
+        "f1": 0.6666666666666666
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 36894,
+      "inputTokens": 9164,
+      "outputTokens": 1614,
+      "costUsd": 0.027595,
+      "run": 1
+    },
+    {
+      "fixtureId": "igor-banquet_hot-r2-coaching",
+      "variantId": "graph-rag",
+      "epoch": 1,
+      "score": 46,
+      "expertScore": 15,
+      "absError": 31,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 0.75,
+        "recall": 1,
+        "f1": 0.8571428571428571
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 5,
+      "latencyMs": 42120,
+      "inputTokens": 12707,
+      "outputTokens": 1991,
+      "costUsd": 0.03579375,
+      "run": 1
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r2-coaching",
+      "variantId": "graph-rag",
+      "epoch": 1,
+      "score": 63,
+      "expertScore": 85,
+      "absError": 22,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.8,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 47552,
+      "inputTokens": 11151,
+      "outputTokens": 2110,
+      "costUsd": 0.03503875,
+      "run": 1
+    },
+    {
+      "fixtureId": "marina-salads-r2-supporting",
+      "variantId": "graph-rag",
+      "epoch": 1,
+      "score": 36,
+      "expertScore": 25,
+      "absError": 11,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 37157,
+      "inputTokens": 10080,
+      "outputTokens": 2168,
+      "costUsd": 0.03428,
+      "run": 1
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r3-coaching",
+      "variantId": "graph-rag",
+      "epoch": 1,
+      "score": 67,
+      "expertScore": 83,
+      "absError": 16,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 0.8571428571428571,
+        "recall": 0.8571428571428571,
+        "f1": 0.8571428571428571
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 73374,
+      "inputTokens": 18620,
+      "outputTokens": 3077,
+      "costUsd": 0.054044999999999996,
+      "run": 1
+    },
+    {
+      "fixtureId": "olga-banquet_hot-r2-supporting",
+      "variantId": "graph-rag",
+      "epoch": 1,
+      "score": 53,
+      "expertScore": 37,
+      "absError": 16,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 40561,
+      "inputTokens": 11042,
+      "outputTokens": 1965,
+      "costUsd": 0.033452499999999996,
+      "run": 1
+    }
+  ]
+}

@@ -76,6 +76,18 @@ export const BUILT_IN_VARIANTS: VariantConfig[] = [
     params: { topK: 6, llmWeight: 0.7 },
   },
   {
+    id: "hybrid-rag",
+    name: "Гибридный RAG (BM25 + эмбеддинги)",
+    description:
+      "Поиск объединяет лексический BM25 и плотные эмбеддинги через RRF: первый ловит точные идентификаторы, второй — перефразировки.",
+    engagement: "heuristic",
+    knowledge: "hybrid-rag",
+    persona: "prompt-baseline",
+    evaluation: "hybrid",
+    effort: "medium",
+    params: { topK: 6, llmWeight: 0.7, dense: true },
+  },
+  {
     id: "graph-rag",
     name: "GraphRAG",
     description:

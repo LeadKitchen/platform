@@ -18,7 +18,9 @@
     "lint": "biome lint .",
     "check": "biome check .",
     "test": "bun test",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "optimize": "bun --env-file=../../.env run src/optimize/cli.ts",
+    "scale": "bun --env-file=../../.env run src/scale-cli.ts"
   },
   "dependencies": {
     "@acme/ai": "workspace:*",

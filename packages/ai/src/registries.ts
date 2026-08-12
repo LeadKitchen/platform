@@ -6,6 +6,7 @@ import { llmJudgeEvaluation } from "./strategies/evaluation/llm-judge";
 import { rulesEvaluation } from "./strategies/evaluation/rules";
 import { baselineKnowledge } from "./strategies/knowledge/baseline";
 import { graphRagKnowledge } from "./strategies/knowledge/graph-rag";
+import { hybridRagKnowledge } from "./strategies/knowledge/hybrid-rag";
 import { ragKnowledge } from "./strategies/knowledge/rag";
 import { promptPersona } from "./strategies/persona/prompt";
 import { skillRlPersona } from "./strategies/persona/skill-rl";
@@ -29,6 +30,7 @@ engagementRegistry.register(llmEngagement);
 knowledgeRegistry.register(baselineKnowledge);
 knowledgeRegistry.register(ragKnowledge);
 knowledgeRegistry.register(graphRagKnowledge);
+knowledgeRegistry.register(hybridRagKnowledge);
 
 personaRegistry.register(promptPersona);
 personaRegistry.register(skillRlPersona);

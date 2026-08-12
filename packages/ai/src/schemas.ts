@@ -9,27 +9,41 @@ import { z } from "zod";
  * code instead, so a slightly out-of-range value never fails a whole dialog.
  */
 
+/**
+ * Only `reply` is load-bearing — everything else degrades to a sane default.
+ *
+ * Gateways that lack native structured outputs answer from a prompt-stated
+ * schema, and they miss a field or emit `"1"` instead of `1` often enough that
+ * strict parsing throws away otherwise perfect replies. Failing the whole turn
+ * over `confirmsCheckpoints` costs a retry and, in a long benchmark, the run.
+ */
 export const personaReplySchema = z.object({
   reply: z
     .string()
     .describe("Реплика сотрудника на русском языке, от первого лица"),
   understood: z
     .string()
-    .nullable()
+    .nullish()
+    .catch(null)
+    .transform((value) => value ?? null)
     .describe(
       "Что сотрудник понял из задачи или переспрос; null, если задача ясна",
     ),
   readiness: z
     .enum(["confident", "unsure", "resistant"])
+    .catch("confident")
     .describe("Готовность взяться за задачу"),
   requests: z
     .array(z.string())
+    .catch([])
     .describe("Запросы ресурсов, помощи или уточнений"),
   confirmsCheckpoints: z
     .boolean()
+    .catch(false)
     .describe("Подтвердил ли сотрудник точки контроля"),
-  emotionDelta: z
+  emotionDelta: z.coerce
     .number()
+    .catch(0)
     .describe("Изменение эмоционального состояния от -2 до 2"),
 });
 
@@ -51,10 +65,10 @@ export type EngagementCheckPayload = z.infer<typeof engagementCheckSchema>;
 export const styleAnalysisSchema = z.object({
   distribution: z
     .object({
-      directive: z.number(),
-      coaching: z.number(),
-      supporting: z.number(),
-      delegating: z.number(),
+      directive: z.coerce.number().catch(0),
+      coaching: z.coerce.number().catch(0),
+      supporting: z.coerce.number().catch(0),
+      delegating: z.coerce.number().catch(0),
     })
     .describe("Доли стилей в речи руководителя, в сумме примерно 1"),
   evidence: z
@@ -64,6 +78,7 @@ export const styleAnalysisSchema = z.object({
         quote: z.string().describe("Короткая цитата руководителя"),
       }),
     )
+    .catch([])
     .describe("Опорные цитаты для каждого замеченного стиля"),
 });
 
@@ -79,11 +94,13 @@ export const criteriaAssessmentSchema = z.object({
         .describe("Короткое обоснование на русском языке (1 предложение)"),
     }),
   ),
-  toxicTurns: z
+  toxicTurns: z.coerce
     .number()
+    .catch(0)
     .describe("Сколько реплик руководителя были грубыми или вне сценария"),
   toxicQuotes: z
     .array(z.string())
+    .catch([])
     .describe(
       "Дословные цитаты грубых или неуместных реплик руководителя — по одной на каждую засчитанную в toxicTurns. Пустой массив, если таких реплик не было.",
     ),

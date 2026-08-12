@@ -211,6 +211,10 @@ export function createSkillRlPersona(
           dialog: request.dialog,
           knowledge: request.knowledge,
           extraInstructions: chosen.map((skill) => skill.instruction),
+          roleRules:
+            typeof deps.params.roleRules === "string"
+              ? deps.params.roleRules
+              : undefined,
         }),
         messages: buildTranscript(request.dialog.turns, request.utterance),
       });

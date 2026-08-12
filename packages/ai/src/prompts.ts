@@ -3,7 +3,7 @@ import type { DialogContext, DialogTurn } from "@acme/game";
 import type { LlmMessage } from "./provider/types";
 import type { KnowledgeResult } from "./types";
 
-const ROLE_RULES = `Правила роли (соблюдай строго):
+export const DEFAULT_ROLE_RULES = `Правила роли (соблюдай строго):
 - Ты живой человек на кухне, а не ассистент. Отвечай коротко, разговорно, от первого лица.
 - Никогда не выходи из сцены ресторана. На любые посторонние темы отвечай, что ты на смене и занят.
 - Никогда не называй и не объясняй стили управления, уровни готовности, методологию, проценты и оценки. Ты о них не знаешь.
@@ -42,6 +42,15 @@ export interface PersonaPromptArgs {
   knowledge: KnowledgeResult;
   /** Behavioural instructions injected by the persona strategy. */
   extraInstructions?: string[];
+  /**
+   * Replacement for the role-rules block.
+   *
+   * This is the slot the prompt optimiser writes to: an optimised persona is
+   * an ordinary variant carrying a different string in `params`, so nothing
+   * about the pipeline, the API or the analytics has to know optimisation
+   * happened.
+   */
+  roleRules?: string;
 }
 
 export function buildPersonaSystemPrompt(args: PersonaPromptArgs): string {
@@ -65,7 +74,7 @@ ${emotionLine(dialog.emotion)}
 Что ты знаешь о себе и о заказе:
 ${context}
 
-${ROLE_RULES}
+${args.roleRules ?? DEFAULT_ROLE_RULES}
 
 ${roundRules(dialog)}
 

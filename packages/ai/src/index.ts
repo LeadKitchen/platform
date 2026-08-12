@@ -33,22 +33,19 @@ export {
   buildPersonaSystemPrompt,
   buildTranscript,
   CRITERIA_JUDGE_SYSTEM,
+  DEFAULT_ROLE_RULES,
   STYLE_JUDGE_SYSTEM,
 } from "./prompts";
 export {
-  type AnthropicProviderOptions,
-  createAnthropicProvider,
-} from "./provider/anthropic";
+  type AiSdkProviderOptions,
+  type AiSdkVendor,
+  createAiSdkProvider,
+} from "./provider/ai-sdk";
 export {
   createMockProvider,
   type MockProviderOptions,
   type MockResponder,
 } from "./provider/mock";
-export {
-  createOpenAiProvider,
-  extractJson,
-  type OpenAiProviderOptions,
-} from "./provider/openai";
 export { estimateCostUsd, MODEL_PRICING } from "./provider/pricing";
 export {
   addUsage,
@@ -81,6 +78,7 @@ export {
 export { rulesEvaluation } from "./strategies/evaluation/rules";
 export { baselineKnowledge } from "./strategies/knowledge/baseline";
 export { graphRagKnowledge } from "./strategies/knowledge/graph-rag";
+export { hybridRagKnowledge } from "./strategies/knowledge/hybrid-rag";
 export { ragKnowledge } from "./strategies/knowledge/rag";
 export { promptPersona } from "./strategies/persona/prompt";
 export {
