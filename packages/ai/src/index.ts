@@ -44,6 +44,11 @@ export {
   type MockProviderOptions,
   type MockResponder,
 } from "./provider/mock";
+export {
+  createOpenAiProvider,
+  extractJson,
+  type OpenAiProviderOptions,
+} from "./provider/openai";
 export { estimateCostUsd, MODEL_PRICING } from "./provider/pricing";
 export {
   addUsage,

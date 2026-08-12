@@ -2,6 +2,7 @@ import { type Catalog, defaultCatalog } from "@acme/game";
 import { createPipeline, type Pipeline } from "./pipeline";
 import { createAnthropicProvider } from "./provider/anthropic";
 import { createMockProvider } from "./provider/mock";
+import { createOpenAiProvider } from "./provider/openai";
 import type { LlmEffort, LlmProvider } from "./provider/types";
 import { personaReplySchema } from "./schemas";
 import {
@@ -22,15 +23,31 @@ function readEffort(value: string | undefined): LlmEffort | undefined {
  *
  * `AI_PROVIDER=mock` gives a canned character with no network access — useful
  * for local demos, CI and anyone running the game without an API key.
+ * `openai` covers any OpenAI-compatible endpoint (OpenAI, a gateway, vLLM),
+ * which is what makes cross-model comparison an arm of the experiment rather
+ * than a rewrite.
  */
 export function createProviderFromEnv(
   env: NodeJS.ProcessEnv = process.env,
 ): LlmProvider {
   const kind =
-    env.AI_PROVIDER ?? (env.ANTHROPIC_API_KEY ? "anthropic" : "mock");
+    env.AI_PROVIDER ??
+    (env.ANTHROPIC_API_KEY
+      ? "anthropic"
+      : env.OPENAI_API_KEY
+        ? "openai"
+        : "mock");
 
   if (kind === "mock") {
     return createMockProvider(fallbackResponder);
+  }
+
+  if (kind === "openai") {
+    return createOpenAiProvider({
+      apiKey: env.OPENAI_API_KEY,
+      baseUrl: env.OPENAI_BASE_URL,
+      model: env.AI_MODEL ?? env.OPENAI_MODEL,
+    });
   }
 
   return createAnthropicProvider({

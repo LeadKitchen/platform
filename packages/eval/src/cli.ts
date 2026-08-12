@@ -8,9 +8,18 @@ import { renderMarkdownReport } from "./report";
 import { runEvaluation } from "./runner";
 import { createSimulatedProvider } from "./simulated-provider";
 
+type ProviderKind = "simulated" | "anthropic" | "openai" | "env";
+
+const PROVIDER_KINDS: ProviderKind[] = [
+  "simulated",
+  "anthropic",
+  "openai",
+  "env",
+];
+
 interface Flags {
   variants: string[];
-  provider: "simulated" | "anthropic" | "env";
+  provider: ProviderKind;
   epochs: number;
   learn: boolean;
   out?: string;
@@ -34,12 +43,12 @@ function parseFlags(argv: string[]): Flags {
         if (next) flags.variants = next.split(",").map((id) => id.trim());
         index += 1;
         break;
-      case "--provider":
-        if (next === "anthropic" || next === "simulated" || next === "env") {
-          flags.provider = next;
-        }
+      case "--provider": {
+        const kind = PROVIDER_KINDS.find((value) => value === next);
+        if (kind) flags.provider = kind;
         index += 1;
         break;
+      }
       case "--epochs":
         if (next) flags.epochs = Number.parseInt(next, 10) || 1;
         index += 1;
@@ -75,7 +84,7 @@ function printHelp(): void {
 
 Флаги:
   --variants a,b,c   какие варианты сравнивать (по умолчанию все встроенные)
-  --provider p       simulated | anthropic | env   (по умолчанию simulated)
+  --provider p       simulated | anthropic | openai | env  (по умолч. simulated)
   --epochs N         повторов набора сценариев (для обучаемых стратегий)
   --learn            передавать награду стратегиям с обучением
   --out FILE         записать markdown-отчёт
@@ -94,9 +103,9 @@ async function main(): Promise<void> {
     flags.provider === "simulated"
       ? createSimulatedProvider()
       : createProviderFromEnv(
-          flags.provider === "anthropic"
-            ? { ...process.env, AI_PROVIDER: "anthropic" }
-            : process.env,
+          flags.provider === "env"
+            ? process.env
+            : { ...process.env, AI_PROVIDER: flags.provider },
         );
 
   console.log(
