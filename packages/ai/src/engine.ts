@@ -3,6 +3,8 @@ import { createPipeline, type Pipeline } from "./pipeline";
 import { type AiSdkVendor, createAiSdkProvider } from "./provider/ai-sdk";
 import {
   buildAnthropicCandidates,
+  buildGeminiCandidates,
+  buildGroqCandidates,
   buildOpenAiCandidates,
   buildOpenRouterCandidates,
 } from "./provider/config";
@@ -24,7 +26,8 @@ import {
  * for local demos, CI and anyone running the game without an API key.
  * `openai` covers any OpenAI-compatible endpoint (OpenAI, a gateway, vLLM),
  * which is what makes cross-model comparison an arm of the experiment rather
- * than a rewrite.
+ * than a rewrite. `groq` and `gemini` are the same shape, added because their
+ * free tiers have far more daily headroom than OpenRouter's shared pool.
  */
 export function createProviderFromEnv(
   env: NodeJS.ProcessEnv = process.env,
@@ -33,11 +36,15 @@ export function createProviderFromEnv(
     env.AI_PROVIDER ??
     (env.OPENROUTER_API_KEY || env.OPENROUTER_API_KEYS
       ? "openrouter"
-      : env.ANTHROPIC_API_KEY
-        ? "anthropic"
-        : env.OPENAI_API_KEY
-          ? "openai"
-          : "mock");
+      : env.GROQ_API_KEY || env.GROQ_API_KEYS
+        ? "groq"
+        : env.GEMINI_API_KEY || env.GEMINI_API_KEYS
+          ? "gemini"
+          : env.ANTHROPIC_API_KEY
+            ? "anthropic"
+            : env.OPENAI_API_KEY
+              ? "openai"
+              : "mock");
 
   if (kind === "mock") {
     return createMockProvider(fallbackResponder);
@@ -49,19 +56,25 @@ export function createProviderFromEnv(
   const candidates =
     kind === "openrouter"
       ? buildOpenRouterCandidates({ env })
-      : kind === "anthropic"
-        ? buildAnthropicCandidates(env)
-        : kind === "pool"
-          ? [
-              ...buildOpenRouterCandidates({ env }),
-              ...buildOpenAiCandidates(env),
-              ...buildAnthropicCandidates(env),
-            ]
-          : buildOpenAiCandidates(env);
+      : kind === "groq"
+        ? buildGroqCandidates(env)
+        : kind === "gemini"
+          ? buildGeminiCandidates(env)
+          : kind === "anthropic"
+            ? buildAnthropicCandidates(env)
+            : kind === "pool"
+              ? [
+                  ...buildOpenRouterCandidates({ env }),
+                  ...buildGroqCandidates(env),
+                  ...buildGeminiCandidates(env),
+                  ...buildOpenAiCandidates(env),
+                  ...buildAnthropicCandidates(env),
+                ]
+              : buildOpenAiCandidates(env);
 
   if (candidates.length === 0) {
     throw new Error(
-      `Провайдер "${kind}" выбран, но ключей в окружении нет. Задайте OPENROUTER_API_KEY / OPENAI_API_KEY / ANTHROPIC_API_KEY.`,
+      `Провайдер "${kind}" выбран, но ключей в окружении нет. Задайте OPENROUTER_API_KEY / GROQ_API_KEY / GEMINI_API_KEY / OPENAI_API_KEY / ANTHROPIC_API_KEY.`,
     );
   }
 

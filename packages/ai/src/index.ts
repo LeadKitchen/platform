@@ -43,8 +43,14 @@ export {
 } from "./provider/ai-sdk";
 export {
   buildAnthropicCandidates,
+  buildGeminiCandidates,
+  buildGroqCandidates,
   buildOpenAiCandidates,
   buildOpenRouterCandidates,
+  GEMINI_BASE_URL,
+  GEMINI_FREE_MODELS,
+  GROQ_BASE_URL,
+  GROQ_FREE_MODELS,
   OPENROUTER_BASE_URL,
   OPENROUTER_FREE_MODELS,
   OPENROUTER_REJECTED_MODELS,

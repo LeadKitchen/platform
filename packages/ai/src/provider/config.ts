@@ -176,6 +176,85 @@ export function buildOpenAiCandidates(
   return candidates;
 }
 
+/**
+ * Groq candidates: an OpenAI-compatible endpoint with a 14 400 req/day
+ * account-wide free tier — the only free pool in this file with enough daily
+ * headroom to run the full harness in one sitting.
+ *
+ * Groq's own docs call the endpoint "mostly compatible, not feature-complete",
+ * so `supportsStructuredOutputs` stays `false` here too: whether a given model
+ * actually honours JSON mode is an empirical question, answered by
+ * `probe-models.ts`, not by the vendor's claim.
+ */
+export function buildGroqCandidates(
+  env: NodeJS.ProcessEnv = process.env,
+): PoolCandidate[] {
+  const keys = [
+    ...split(env.GROQ_API_KEYS),
+    ...(env.GROQ_API_KEY ? [env.GROQ_API_KEY] : []),
+  ];
+  if (keys.length === 0) return [];
+
+  const models = split(env.GROQ_MODELS).length
+    ? split(env.GROQ_MODELS)
+    : [...GROQ_FREE_MODELS];
+
+  const candidates: PoolCandidate[] = [];
+  for (const model of models) {
+    for (const [keyIndex, apiKey] of keys.entries()) {
+      candidates.push({
+        id: `groq#${keyIndex + 1}:${model}`,
+        vendor: "openai-compatible" as AiSdkVendor,
+        model,
+        apiKey,
+        baseUrl: env.GROQ_BASE_URL ?? GROQ_BASE_URL,
+        supportsStructuredOutputs: false,
+      });
+    }
+  }
+
+  return candidates;
+}
+
+/**
+ * Gemini candidates via its OpenAI-compatible endpoint.
+ *
+ * The free tier is metered per model, not per account (Flash-Lite and Flash
+ * have separate daily allowances), so each model gets its own `quotaGroup` —
+ * exhausting Flash-Lite must not cool down Flash on the same key.
+ */
+export function buildGeminiCandidates(
+  env: NodeJS.ProcessEnv = process.env,
+): PoolCandidate[] {
+  const keys = [
+    ...split(env.GEMINI_API_KEYS),
+    ...(env.GEMINI_API_KEY ? [env.GEMINI_API_KEY] : []),
+  ];
+  if (keys.length === 0) return [];
+
+  const models = split(env.GEMINI_MODELS).length
+    ? split(env.GEMINI_MODELS)
+    : [...GEMINI_FREE_MODELS];
+
+  const baseUrl = env.GEMINI_BASE_URL ?? GEMINI_BASE_URL;
+  const candidates: PoolCandidate[] = [];
+  for (const model of models) {
+    for (const [keyIndex, apiKey] of keys.entries()) {
+      candidates.push({
+        id: `gemini#${keyIndex + 1}:${model}`,
+        vendor: "openai-compatible" as AiSdkVendor,
+        model,
+        apiKey,
+        baseUrl,
+        supportsStructuredOutputs: false,
+        quotaGroup: `${baseUrl}|${apiKey}|${model}`,
+      });
+    }
+  }
+
+  return candidates;
+}
+
 export function buildAnthropicCandidates(
   env: NodeJS.ProcessEnv = process.env,
 ): PoolCandidate[] {

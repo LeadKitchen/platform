@@ -1,7 +1,11 @@
 import { describe, expect, test } from "bun:test";
 import { z } from "zod";
 
-import { buildOpenRouterCandidates } from "./config";
+import {
+  buildGeminiCandidates,
+  buildGroqCandidates,
+  buildOpenRouterCandidates,
+} from "./config";
 import { createPoolProvider, type PoolCandidate } from "./pool";
 import type { LlmRequest } from "./types";
 
@@ -215,6 +219,50 @@ describe("buildOpenRouterCandidates", () => {
     expect(
       candidates.every((item) => item.supportsStructuredOutputs === false),
     ).toBe(true);
+  });
+});
+
+describe("buildGroqCandidates", () => {
+  test("no key means no candidates", () => {
+    expect(buildGroqCandidates({} as NodeJS.ProcessEnv)).toEqual([]);
+  });
+
+  test("defaults to the curated free models with native JSON left unclaimed", () => {
+    const candidates = buildGroqCandidates({
+      GROQ_API_KEY: "k",
+    } as NodeJS.ProcessEnv);
+
+    expect(candidates.length).toBeGreaterThan(0);
+    expect(
+      candidates.every((item) => item.supportsStructuredOutputs === false),
+    ).toBe(true);
+  });
+
+  test("makes a candidate for every key × model pair", () => {
+    const candidates = buildGroqCandidates({
+      GROQ_API_KEYS: "k1,k2",
+      GROQ_MODELS: "m1,m2",
+    } as NodeJS.ProcessEnv);
+
+    expect(candidates).toHaveLength(4);
+  });
+});
+
+describe("buildGeminiCandidates", () => {
+  test("no key means no candidates", () => {
+    expect(buildGeminiCandidates({} as NodeJS.ProcessEnv)).toEqual([]);
+  });
+
+  test("groups quota per model, not per whole key", () => {
+    // Flash-Lite and Flash meter separately on Gemini's free tier, so
+    // exhausting one must not cool down the other.
+    const candidates = buildGeminiCandidates({
+      GEMINI_API_KEY: "k",
+      GEMINI_MODELS: "gemini-2.5-flash-lite,gemini-2.5-flash",
+    } as NodeJS.ProcessEnv);
+
+    expect(candidates).toHaveLength(2);
+    expect(new Set(candidates.map((item) => item.quotaGroup)).size).toBe(2);
   });
 });
 
