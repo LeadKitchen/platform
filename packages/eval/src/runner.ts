@@ -132,6 +132,17 @@ export interface RunResult {
   comparisons: VariantComparison[];
   /** Scenarios that errored out; excluded from every metric above. */
   failures: RunFailure[];
+  /**
+   * Which pool candidate served how many calls, when a failover pool was used.
+   *
+   * A run that quietly fell back to a weaker endpoint still produces numbers;
+   * this is what lets a reader see that it did.
+   */
+  poolStats?: {
+    servedBy: Record<string, number>;
+    availabilityFailures: Record<string, number>;
+    capabilityFailures: Record<string, number>;
+  };
   /** Per-epoch summaries, so a learning curve is visible. */
   epochSummaries: { epoch: number; variants: VariantSummary[] }[];
   items: ItemResult[];
@@ -365,6 +376,14 @@ export async function runEvaluation(options: RunOptions): Promise<RunResult> {
       })),
     }));
 
+  // The pool exposes `stats()`; a plain provider does not. Duck-typing keeps
+  // the runner independent of which provider it was handed.
+  const withStats = options.provider as unknown as {
+    stats?: () => RunResult["poolStats"];
+  };
+  const poolStats =
+    typeof withStats.stats === "function" ? withStats.stats() : undefined;
+
   return {
     startedAt,
     finishedAt: new Date().toISOString(),
@@ -384,5 +403,6 @@ export async function runEvaluation(options: RunOptions): Promise<RunResult> {
     failures,
     epochSummaries,
     items,
+    poolStats,
   };
 }

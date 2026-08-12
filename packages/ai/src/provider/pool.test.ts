@@ -217,3 +217,97 @@ describe("buildOpenRouterCandidates", () => {
     ).toBe(true);
   });
 });
+
+describe("исчерпание квоты аккаунта", () => {
+  test("дневной лимит выводит из ротации все модели на этом ключе сразу", async () => {
+    // OpenRouter метрит бесплатные запросы по аккаунту: получив
+    // "free-models-per-day" на одной модели, бессмысленно пробовать остальные
+    // на том же ключе — счётчик у них общий.
+    let calls = 0;
+    const fetchImpl = (async () => {
+      calls += 1;
+      return new Response(
+        JSON.stringify({
+          error: {
+            message:
+              "Rate limit exceeded: free-models-per-day. Add 10 credits to unlock",
+          },
+        }),
+        { status: 429, headers: { "content-type": "application/json" } },
+      );
+    }) as unknown as typeof fetch;
+
+    const sameKey = (name: string): PoolCandidate => ({
+      id: name,
+      vendor: "openai-compatible",
+      model: name,
+      apiKey: "shared-key",
+      baseUrl: "https://openrouter.test/v1",
+      supportsStructuredOutputs: false,
+    });
+
+    const provider = createPoolProvider({
+      candidates: [sameKey("a"), sameKey("b"), sameKey("c")],
+      attemptsPerCandidate: 1,
+      fetchImpl,
+    });
+
+    await expect(provider.generate(request())).rejects.toThrow();
+
+    // Первая модель отказала — остальные ушли в кулдаун вместе с ней.
+    const cooling = provider.stats().coolingDown;
+    expect(Object.keys(cooling).sort()).toEqual(["a", "b", "c"]);
+    // И на следующем запросе мы не тратим по вызову на каждую модель заново.
+    const callsAfterFirst = calls;
+    await expect(provider.generate(request())).rejects.toThrow();
+    expect(calls - callsAfterFirst).toBeLessThanOrEqual(3);
+  });
+
+  test("отдельные ключи не тянут друг друга в кулдаун", async () => {
+    const fetchImpl = (async (input: string | URL | Request) => {
+      const url = String(input);
+      if (url.includes("spent")) {
+        return new Response("Rate limit exceeded: free-models-per-day", {
+          status: 429,
+        });
+      }
+      return new Response(
+        JSON.stringify({
+          choices: [
+            { message: { content: JSON.stringify({ answer: "fresh" }) } },
+          ],
+          usage: {},
+        }),
+        { status: 200, headers: { "content-type": "application/json" } },
+      );
+    }) as unknown as typeof fetch;
+
+    const provider = createPoolProvider({
+      candidates: [
+        {
+          id: "spent",
+          vendor: "openai-compatible",
+          model: "m",
+          apiKey: "k1",
+          baseUrl: "https://spent.test/v1",
+          supportsStructuredOutputs: false,
+        },
+        {
+          id: "fresh",
+          vendor: "openai-compatible",
+          model: "m",
+          apiKey: "k2",
+          baseUrl: "https://fresh.test/v1",
+          supportsStructuredOutputs: false,
+        },
+      ],
+      attemptsPerCandidate: 1,
+      fetchImpl,
+    });
+
+    const result = await provider.generate(request());
+
+    expect(result.value.answer).toBe("fresh");
+    expect(provider.stats().coolingDown.fresh).toBeUndefined();
+  });
+});

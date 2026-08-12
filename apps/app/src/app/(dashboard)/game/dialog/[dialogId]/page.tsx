@@ -29,8 +29,26 @@ export default async function DialogPage({
 
   return (
     <>
-      <SiteHeader title={`${data.employee.name} — ${data.task.title}`} />
+      <SiteHeader
+        breadcrumbs={[
+          { label: "Деловая игра", href: "/game" },
+          { label: `Раунд ${data.shift.round}` },
+          { label: `Разговор с ${data.employee.name}` },
+        ]}
+      />
       <div className="flex flex-1 flex-col gap-6 p-4 lg:p-6">
+        <div>
+          <p className="text-muted-foreground text-sm">
+            Тренировка управленческого разговора
+          </p>
+          <h1 className="text-2xl font-semibold">
+            Разговор с {data.employee.name}
+          </h1>
+          <p className="text-muted-foreground text-sm">
+            Сотрудник отвечает в своей роли. Ведите естественный диалог и
+            завершите его, когда договоритесь о задаче.
+          </p>
+        </div>
         <DialogRoom
           dialogId={data.dialog.id}
           variantId={data.dialog.variantId}

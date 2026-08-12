@@ -193,3 +193,43 @@ describe("отчёт не выдаёт отсутствие данных за р
     expect(report).toContain("внешние отказы провайдера");
   });
 });
+
+describe("подмена модели не должна проходить незамеченной", () => {
+  test("отчёт предупреждает, когда армы обслужены разными моделями", async () => {
+    const result = await runEvaluation({
+      variantIds: ["baseline"],
+      provider: createSimulatedProvider(),
+      fixtures: FIXTURES.slice(0, 3),
+    });
+
+    // Пул переключился на другую модель на середине прогона: числа получены,
+    // но сравнивать такие армы между собой нельзя — разница может объясняться
+    // моделью, а не подходом.
+    const swapped = {
+      ...result.variants[0],
+      variantId: "rag",
+      modelMix: { "модель-A": 2, "модель-B": 1 },
+    } as (typeof result.variants)[number];
+
+    const report = renderMarkdownReport({
+      ...result,
+      variants: [...result.variants, swapped],
+    });
+
+    expect(report).toContain("обслужены разными моделями");
+    expect(report).toContain("модель-A");
+    expect(report).toContain("модель-B");
+  });
+
+  test("однородный прогон не поднимает ложную тревогу", async () => {
+    const result = await runEvaluation({
+      variantIds: ["baseline"],
+      provider: createSimulatedProvider(),
+      fixtures: FIXTURES.slice(0, 3),
+    });
+
+    expect(renderMarkdownReport(result)).not.toContain(
+      "обслужены разными моделями",
+    );
+  });
+});

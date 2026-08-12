@@ -207,6 +207,26 @@ export function renderMarkdownReport(result: RunResult): string {
     lines.push("");
   }
 
+  if (result.poolStats) {
+    const served = Object.entries(result.poolStats.servedBy);
+    if (served.length > 0) {
+      lines.push("## Кто обслуживал запросы", "");
+      lines.push("| Кандидат | Успешно | Отказы по лимиту | Не осилил схему |");
+      lines.push("| --- | ---: | ---: | ---: |");
+      const ids = new Set([
+        ...served.map(([id]) => id),
+        ...Object.keys(result.poolStats.availabilityFailures),
+        ...Object.keys(result.poolStats.capabilityFailures),
+      ]);
+      for (const id of [...ids].sort()) {
+        lines.push(
+          `| \`${id}\` | ${result.poolStats.servedBy[id] ?? 0} | ${result.poolStats.availabilityFailures[id] ?? 0} | ${result.poolStats.capabilityFailures[id] ?? 0} |`,
+        );
+      }
+      lines.push("");
+    }
+  }
+
   lines.push("## Худшие расхождения", "");
   lines.push(
     "| Сценарий | Вариант | Авто | Эксперт | Δ | Стиль (авто → метка) |",

@@ -7,6 +7,7 @@ export {
   type OrderRow,
   type TaskOption,
 } from "./order-queue";
+export { RoundOneTraining } from "./round-one-training";
 export { useSpeechRecognition } from "./use-speech-recognition";
 export {
   VariantComparison,

@@ -8,10 +8,14 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
   Input,
-  Label,
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -84,7 +88,7 @@ export function OrderQueue(props: {
     setError(null);
 
     try {
-      await client.game.order.create({
+      const order = await client.game.order.create({
         sessionId: props.sessionId,
         taskId,
         employeeId,
@@ -92,7 +96,10 @@ export function OrderQueue(props: {
         deadlineMinutes:
           Number.parseInt(deadline, 10) || props.defaultDeadlineMinutes,
       });
-      router.refresh();
+      if (!order?.id) throw new Error("Заказ не создан");
+      const dialog = await client.game.dialog.start({ orderId: order.id });
+      if (!dialog?.id) throw new Error("Диалог не открыт");
+      router.push(`/game/dialog/${dialog.id}`);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Не удалось добавить");
     } finally {
@@ -115,79 +122,92 @@ export function OrderQueue(props: {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Очередь заказов</CardTitle>
+        <CardTitle>Начать разговор с сотрудником</CardTitle>
         <CardDescription>
-          Назначьте заказ сотруднику, затем откройте диалог и поставьте задачу
-          голосом или текстом.
+          Выберите рабочую ситуацию. После назначения сразу откроется чат, где
+          вы поставите задачу сотруднику голосом или текстом.
         </CardDescription>
       </CardHeader>
 
       <CardContent className="flex flex-col gap-6">
-        <form
-          onSubmit={addOrder}
-          className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5 lg:items-end"
-        >
-          <div>
-            <Label htmlFor="order-task">Заказ</Label>
-            <Select
-              value={taskId}
-              onValueChange={(value) => setTaskId(value ?? "")}
-            >
-              <SelectTrigger id="order-task">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {props.tasks.map((task) => (
-                  <SelectItem key={task.id} value={task.id}>
-                    {task.title}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+        <form onSubmit={addOrder}>
+          <FieldGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <Field>
+              <FieldLabel htmlFor="order-task">1. Выберите заказ</FieldLabel>
+              <Select
+                value={taskId}
+                onValueChange={(value) => setTaskId(value ?? "")}
+              >
+                <SelectTrigger id="order-task">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {props.tasks.map((task) => (
+                      <SelectItem key={task.id} value={task.id}>
+                        {task.title}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <FieldDescription>
+                Сложность ситуации зависит от опыта сотрудника в этой задаче.
+              </FieldDescription>
+            </Field>
 
-          <div>
-            <Label htmlFor="order-employee">Сотрудник</Label>
-            <Select
-              value={employeeId}
-              onValueChange={(value) => setEmployeeId(value ?? "")}
-            >
-              <SelectTrigger id="order-employee">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {props.employees.map((employee) => (
-                  <SelectItem key={employee.id} value={employee.id}>
-                    {employee.name} — {employee.role}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+            <Field>
+              <FieldLabel htmlFor="order-employee">
+                2. Выберите сотрудника
+              </FieldLabel>
+              <Select
+                value={employeeId}
+                onValueChange={(value) => setEmployeeId(value ?? "")}
+              >
+                <SelectTrigger id="order-employee">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {props.employees.map((employee) => (
+                      <SelectItem key={employee.id} value={employee.id}>
+                        {employee.name} — {employee.role}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <FieldDescription>
+                Учитывайте уровень и опыт именно в выбранной задаче.
+              </FieldDescription>
+            </Field>
 
-          <div>
-            <Label htmlFor="order-portions">Порций</Label>
-            <Input
-              id="order-portions"
-              value={portions}
-              onChange={(event) => setPortions(event.target.value)}
-              inputMode="numeric"
-            />
-          </div>
+            <Field>
+              <FieldLabel htmlFor="order-portions">Порций</FieldLabel>
+              <Input
+                id="order-portions"
+                value={portions}
+                onChange={(event) => setPortions(event.target.value)}
+                inputMode="numeric"
+              />
+            </Field>
 
-          <div>
-            <Label htmlFor="order-deadline">Дедлайн, мин</Label>
-            <Input
-              id="order-deadline"
-              value={deadline}
-              onChange={(event) => setDeadline(event.target.value)}
-              inputMode="numeric"
-            />
-          </div>
+            <Field>
+              <FieldLabel htmlFor="order-deadline">Дедлайн, мин</FieldLabel>
+              <Input
+                id="order-deadline"
+                value={deadline}
+                onChange={(event) => setDeadline(event.target.value)}
+                inputMode="numeric"
+              />
+            </Field>
 
-          <Button type="submit" disabled={pending}>
-            Добавить заказ
-          </Button>
+            <div className="flex items-end sm:col-span-2 lg:col-span-4">
+              <Button type="submit" size="lg" disabled={pending}>
+                {pending ? "Открываем разговор…" : "Перейти к разговору с ИИ"}
+              </Button>
+            </div>
+          </FieldGroup>
         </form>
 
         {error ? <p className="text-destructive text-sm">{error}</p> : null}

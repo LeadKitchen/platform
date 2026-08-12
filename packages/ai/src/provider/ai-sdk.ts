@@ -69,6 +69,45 @@ function salvageJson(text: string): unknown {
 }
 
 /**
+ * Turn a plain-text persona answer into the same safe defaults used by a
+ * structured reply. Some OpenAI-compatible gateways ignore JSON mode even
+ * when the schema is present in the prompt; the spoken line is still useful
+ * to the player and should not make the whole training dialog unavailable.
+ */
+function salvagePersonaReply(text: string): unknown {
+  const cleaned = text
+    .replace(/^```(?:text|markdown)?\s*/i, "")
+    .replace(/```\s*$/i, "")
+    .trim();
+
+  const jsonReply = /"reply"\s*:\s*"((?:\\.|[^"\\])*)"/i.exec(cleaned)?.[1];
+  const labelledReply =
+    /(?:^|\n)\s*reply\s*(?:—|:)\s*([\s\S]*?)(?=\n\s*(?:understood|readiness|requests|confirmsCheckpoints|emotionDelta)\s*(?:—|:)|$)/i.exec(
+      cleaned,
+    )?.[1];
+  let reply = labelledReply?.trim() ?? cleaned;
+
+  if (jsonReply) {
+    try {
+      reply = JSON.parse(`"${jsonReply}"`) as string;
+    } catch {
+      reply = jsonReply;
+    }
+  }
+
+  if (reply.length === 0) return undefined;
+
+  return {
+    reply,
+    understood: null,
+    readiness: "confident",
+    requests: [],
+    confirmsCheckpoints: false,
+    emotionDelta: 0,
+  };
+}
+
+/**
  * Vendor-neutral provider built on the Vercel AI SDK.
  *
  * One `generateObject` call site covers OpenAI, Anthropic and any
@@ -227,6 +266,25 @@ export function createAiSdkProvider(
             const salvaged = salvageJson(text);
             if (salvaged !== undefined) {
               const parsed = request.schema.safeParse(salvaged);
+              if (parsed.success) {
+                return {
+                  value: parsed.data as T,
+                  usage: {
+                    inputTokens,
+                    outputTokens,
+                    cacheReadInputTokens: cachedTokens,
+                    cacheCreationInputTokens: cacheWriteTokens,
+                  },
+                  latencyMs: Date.now() - startedAt,
+                  model: options.model,
+                };
+              }
+            }
+
+            if (request.purpose === "persona.reply") {
+              const parsed = request.schema.safeParse(
+                salvagePersonaReply(text),
+              );
               if (parsed.success) {
                 return {
                   value: parsed.data as T,

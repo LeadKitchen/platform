@@ -2,10 +2,13 @@
 
 import {
   Button,
+  Field,
+  FieldGroup,
+  FieldLabel,
   Input,
-  Label,
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -74,62 +77,67 @@ export function CreateSessionForm({
   }
 
   return (
-    <form
-      onSubmit={submit}
-      className="flex flex-col gap-4 sm:flex-row sm:items-end"
-    >
-      <div className="flex-1">
-        <Label htmlFor="session-title">Название сессии</Label>
-        <Input
-          id="session-title"
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
-          placeholder="Смена 12 марта, команда 1"
-        />
-      </div>
+    <form onSubmit={submit}>
+      <FieldGroup className="grid gap-4 lg:grid-cols-[1fr_190px_240px_auto] lg:items-end">
+        <Field>
+          <FieldLabel htmlFor="session-title">Название команды</FieldLabel>
+          <Input
+            id="session-title"
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+            placeholder="Например, Команда шефов"
+          />
+        </Field>
 
-      <div className="w-40">
-        <Label htmlFor="session-round">Раунд</Label>
-        <Select
-          value={round}
-          onValueChange={(value) => setRound(value as "2" | "3")}
-        >
-          <SelectTrigger id="session-round">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="2">Раунд 2</SelectItem>
-            {defaults.allowRoundThree ? (
-              <SelectItem value="3">Раунд 3 — один в смене</SelectItem>
-            ) : null}
-          </SelectContent>
-        </Select>
-      </div>
+        <Field>
+          <FieldLabel htmlFor="session-round">Практический раунд</FieldLabel>
+          <Select
+            value={round}
+            onValueChange={(value) => setRound(value as "2" | "3")}
+          >
+            <SelectTrigger id="session-round">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="2">Раунд 2 · команда</SelectItem>
+                {defaults.allowRoundThree ? (
+                  <SelectItem value="3">Раунд 3 · один повар</SelectItem>
+                ) : null}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </Field>
 
-      <div className="w-56">
-        <Label htmlFor="session-variant">Вариант ИИ</Label>
-        <Select
-          value={variantId}
-          onValueChange={(value) => setVariantId(value ?? "")}
-        >
-          <SelectTrigger id="session-variant">
-            <SelectValue placeholder="По умолчанию" />
-          </SelectTrigger>
-          <SelectContent>
-            {variants.map((variant) => (
-              <SelectItem key={variant.id} value={variant.id}>
-                {variant.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+        <Field>
+          <FieldLabel htmlFor="session-variant">Тренажёр ИИ</FieldLabel>
+          <Select
+            value={variantId}
+            onValueChange={(value) => setVariantId(value ?? "")}
+          >
+            <SelectTrigger id="session-variant">
+              <SelectValue placeholder="По умолчанию" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {variants.map((variant) => (
+                  <SelectItem key={variant.id} value={variant.id}>
+                    {variant.name}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </Field>
 
-      <Button type="submit" disabled={pending}>
-        Открыть сессию
-      </Button>
+        <Button type="submit" size="lg" disabled={pending}>
+          {pending ? "Создаём…" : "Начать раунд"}
+        </Button>
 
-      {error ? <p className="text-destructive text-sm">{error}</p> : null}
+        {error ? (
+          <p className="text-destructive text-sm lg:col-span-4">{error}</p>
+        ) : null}
+      </FieldGroup>
     </form>
   );
 }

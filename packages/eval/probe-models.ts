@@ -7,8 +7,11 @@
  * that dominate a benchmark — the character's reply and the judge's criteria
  * verdict — and reports which candidates survive both.
  */
-import { createAiSdkProvider } from "@acme/ai";
-import { criteriaAssessmentSchema, personaReplySchema } from "@acme/ai";
+import {
+  createAiSdkProvider,
+  criteriaAssessmentSchema,
+  personaReplySchema,
+} from "@acme/ai";
 
 const KEY = process.env.OPENROUTER_API_KEY;
 const BASE = "https://openrouter.ai/api/v1";
@@ -73,7 +76,8 @@ async function probe(model: string): Promise<Outcome> {
       messages: [
         {
           role: "user",
-          content: "Анна, нужно сделать торт с украшением к 19:00. На твоё усмотрение.",
+          content:
+            "Анна, нужно сделать торт с украшением к 19:00. На твоё усмотрение.",
         },
       ],
     });
@@ -81,13 +85,17 @@ async function probe(model: string): Promise<Outcome> {
     const text = reply.value.reply;
     outcome.persona = `ok: ${text.slice(0, 60)}`;
     // Cyrillic share: a model that answers in English fails the role outright.
-    outcome.russian = /[а-яё]/i.test(text) && text.replace(/[^а-яё]/gi, "").length > text.length * 0.4;
+    outcome.russian =
+      /[а-яё]/i.test(text) &&
+      text.replace(/[^а-яё]/gi, "").length > text.length * 0.4;
     outcome.inRole =
       !/директивн|делегирующ|наставнич|поддерживающ|как ассистент|as an ai/i.test(
         text,
       );
   } catch (cause) {
-    outcome.persona = `FAIL: ${String((cause as Error).message).split("\n")[0].slice(0, 70)}`;
+    outcome.persona = `FAIL: ${String((cause as Error).message)
+      .split("\n")[0]
+      .slice(0, 70)}`;
   }
 
   try {
@@ -100,38 +108,43 @@ async function probe(model: string): Promise<Outcome> {
     });
     outcome.judge = `ok: ${judged.value.criteria.length} критериев`;
   } catch (cause) {
-    outcome.judge = `FAIL: ${String((cause as Error).message).split("\n")[0].slice(0, 70)}`;
+    outcome.judge = `FAIL: ${String((cause as Error).message)
+      .split("\n")[0]
+      .slice(0, 70)}`;
   }
 
   outcome.latencyMs = Date.now() - startedAt;
   return outcome;
 }
 
+function verdictOf(item: Outcome): string {
+  if (!item.persona.startsWith("ok") || !item.judge.startsWith("ok")) {
+    return "❌ не держит схему";
+  }
+  if (!item.russian) return "⚠️ не русский";
+  return item.inRole ? "✅ годится" : "⚠️ ломает роль";
+}
+
+// Print each result as it lands. Probing a dozen endpoints always has a few
+// that hang or time out, and a partial table is still worth having — buffering
+// everything until the end loses the whole run when one candidate stalls.
 const results: Outcome[] = [];
 for (const model of CANDIDATES) {
-  process.stdout.write(`  проверяю ${model}\r`);
-  results.push(await probe(model));
-}
-process.stdout.write("\n");
-
-const passed = results.filter(
-  (item) =>
-    item.persona.startsWith("ok") && item.judge.startsWith("ok") && item.russian,
-);
-
-for (const item of results) {
-  const verdict =
-    item.persona.startsWith("ok") && item.judge.startsWith("ok")
-      ? item.russian
-        ? item.inRole
-          ? "✅ годится"
-          : "⚠️ ломает роль"
-        : "⚠️ не русский"
-      : "❌ не держит схему";
-  console.log(`${verdict.padEnd(18)} ${item.model.padEnd(50)} ${item.latencyMs}мс`);
+  const item = await probe(model);
+  results.push(item);
+  console.log(
+    `${verdictOf(item).padEnd(18)} ${item.model.padEnd(50)} ${item.latencyMs}мс`,
+  );
   console.log(`    персона: ${item.persona}`);
   console.log(`    судья:   ${item.judge}`);
 }
+
+const passed = results.filter(
+  (item) =>
+    item.persona.startsWith("ok") &&
+    item.judge.startsWith("ok") &&
+    item.russian,
+);
 
 console.log(`\nГодных: ${passed.length} из ${results.length}`);
 console.log(passed.map((item) => item.model).join(","));

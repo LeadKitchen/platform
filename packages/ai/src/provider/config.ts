@@ -10,15 +10,68 @@ import type { PoolCandidate } from "./pool";
  * key is tried first.
  */
 
-/** Free models on OpenRouter, in the order worth trying for this task. */
+/**
+ * Free OpenRouter models, ordered by how well they held this task's contracts.
+ *
+ * The order is not the provider's list and not model size — it is the result of
+ * `bun run packages/eval/probe-models.ts`, which checks the two things that
+ * actually matter here: returning a schema-valid object, and staying in a
+ * Russian-speaking role. Models that answer in English or drift into assistant
+ * register are useless for the benchmark no matter how large they are.
+ *
+ * Re-run the probe when adding models; do not extend this list from the
+ * provider's catalogue alone.
+ */
 export const OPENROUTER_FREE_MODELS = [
-  // Large context and general-purpose: the best fit for Russian role-play.
+  "nvidia/nemotron-3-super-120b-a12b:free",
+  "google/gemma-4-26b-a4b-it:free",
+  "nvidia/nemotron-3-nano-30b-a3b:free",
+  "nvidia/nemotron-nano-9b-v2:free",
+] as const;
+
+/**
+ * Free models that failed the probe, kept so they are not re-added by mistake.
+ *
+ * Notably `nemotron-3.5-lightning` (1M context) and `gemma-4-31b-it` are both
+ * larger than several models that passed — context size and parameter count
+ * predicted nothing here. Whether a model returns a schema-valid object and
+ * stays in a Russian role is an empirical question, and this is the answer for
+ * this task as of the last probe.
+ */
+export const OPENROUTER_REJECTED_MODELS = [
   "nvidia/nemotron-3.5-lightning:free",
+  "google/gemma-4-31b-it:free",
+  "openai/gpt-oss-20b:free",
   "inclusionai/ling-3.0-tiny:free",
-  "liquid/lfm-2.5-2.6b:free",
 ] as const;
 
 export const OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1";
+
+/**
+ * Groq's free tier: 14 400 requests/day per account (30 rpm), no credit card.
+ * That is the one free tier in this file with enough daily headroom to run
+ * the full harness (~2000 calls) in a single sitting instead of spreading it
+ * over several days like the OpenRouter free pool.
+ */
+export const GROQ_BASE_URL = "https://api.groq.com/openai/v1";
+export const GROQ_FREE_MODELS = [
+  "llama-3.3-70b-versatile",
+  "openai/gpt-oss-120b",
+  "openai/gpt-oss-20b",
+] as const;
+
+/**
+ * Gemini's OpenAI-compatible endpoint. Free tier is metered per model, not
+ * per account (Flash-Lite: 1000 req/day, Flash: 250 req/day), so pick the
+ * model to match the volume of the run rather than defaulting to the
+ * strongest one.
+ */
+export const GEMINI_BASE_URL =
+  "https://generativelanguage.googleapis.com/v1beta/openai";
+export const GEMINI_FREE_MODELS = [
+  "gemini-2.5-flash-lite",
+  "gemini-2.5-flash",
+] as const;
 
 function split(value: string | undefined): string[] {
   return (value ?? "")
@@ -112,6 +165,10 @@ export function buildOpenAiCandidates(
         apiKey,
         baseUrl,
         supportsStructuredOutputs: !isGateway,
+        // Persona replies are short; keeping the cap modest prevents gateways
+        // that pre-authorise by maximum output size from rejecting a turn even
+        // though the actual answer would only use a few hundred tokens.
+        maxOutputTokens: isGateway ? 800 : undefined,
       });
     }
   }

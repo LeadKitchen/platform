@@ -24,6 +24,16 @@ export interface PoolCandidate {
   supportsStructuredOutputs?: boolean;
   headers?: Record<string, string>;
   maxOutputTokens?: number;
+  /**
+   * Candidates that share one quota bucket.
+   *
+   * Free tiers usually meter the account, not the model: OpenRouter answers
+   * "Rate limit exceeded: free-models-per-day" for *every* free model once the
+   * daily allowance is gone. Cooling down one model at a time would then burn
+   * a failed request per model before giving up, so an account-level refusal
+   * sidelines the whole group at once. Defaults to the key + endpoint.
+   */
+  quotaGroup?: string;
 }
 
 export type PoolFailureKind = "availability" | "capability";
@@ -66,6 +76,15 @@ export interface PoolProvider extends LlmProvider {
  * limits, billing, transport. They deserve a cooldown so the pool stops
  * hammering a candidate that is out of budget for the next hour.
  */
+/**
+ * Refusals that are about the account, not this particular model.
+ *
+ * Distinguishing the two is what stops the pool from walking through every
+ * candidate on an exhausted key.
+ */
+const ACCOUNT_LEVEL_PATTERN =
+  /free-models-per-day|per-day|daily limit|insufficient|balance|credit|额度|quota exceeded/i;
+
 const AVAILABILITY_PATTERN =
   /额度|quota|rate.?limit|too many requests|\b(402|408|429|5\d\d)\b|insufficient|balance|credit|overloaded|unavailable|ECONNRESET|ETIMEDOUT|ENOTFOUND|fetch failed|timeout|aborted/i;
 
@@ -88,6 +107,10 @@ export function createPoolProvider(options: PoolProviderOptions): PoolProvider {
 
   const cooldownMs = options.cooldownMs ?? 5 * 60_000;
   const attemptsPerCandidate = Math.max(1, options.attemptsPerCandidate ?? 2);
+
+  const groupOf = (candidate: PoolCandidate): string =>
+    candidate.quotaGroup ??
+    `${candidate.baseUrl ?? ""}|${candidate.apiKey ?? ""}`;
 
   const providers = options.candidates.map((candidate) => ({
     candidate,
@@ -153,7 +176,17 @@ export function createPoolProvider(options: PoolProviderOptions): PoolProvider {
           if (kind === "availability") {
             availabilityFailures[candidate.id] =
               (availabilityFailures[candidate.id] ?? 0) + 1;
-            coolingDown[candidate.id] = Date.now() + cooldownMs;
+            const until = Date.now() + cooldownMs;
+            coolingDown[candidate.id] = until;
+
+            if (ACCOUNT_LEVEL_PATTERN.test(message)) {
+              // The whole key is spent — every sibling shares the counter.
+              for (const sibling of options.candidates) {
+                if (groupOf(sibling) === groupOf(candidate)) {
+                  coolingDown[sibling.id] = until;
+                }
+              }
+            }
           } else {
             capabilityFailures[candidate.id] =
               (capabilityFailures[candidate.id] ?? 0) + 1;

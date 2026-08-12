@@ -40,10 +40,21 @@ export default async function SessionPage({
     <>
       <SiteHeader title={session.title} />
       <div className="flex flex-1 flex-col gap-6 p-4 lg:p-6">
+        <div>
+          <p className="text-muted-foreground text-sm">
+            Раунд {session.round} · Практика с ИИ
+          </p>
+          <h1 className="text-2xl font-semibold">{session.title}</h1>
+          <p className="text-muted-foreground text-sm">
+            {session.round === 3
+              ? "Повар остался один. Выберите заказ, оцените нагрузку и проведите разговор так, чтобы расставить приоритеты."
+              : "Выберите сотрудника и заказ, затем проведите управленческий разговор с сотрудником-ИИ."}
+          </p>
+        </div>
         <Card>
           <CardHeader>
             <CardTitle className="flex flex-wrap items-center gap-2">
-              {session.title}
+              Сценарий раунда
               <Badge variant="outline">Раунд {session.round}</Badge>
               <Badge variant="secondary">
                 {session.variantId ?? "вариант по умолчанию"}
@@ -67,7 +78,11 @@ export default async function SessionPage({
 
         <Card>
           <CardHeader>
-            <CardTitle>Диалоги</CardTitle>
+            <CardTitle>Прогресс команды</CardTitle>
+            <CardDescription>
+              Завершённые и текущие разговоры. Процент появляется после
+              завершения и отправляется администратору.
+            </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-2">
             {dialogs.length === 0 ? (

@@ -47,6 +47,7 @@ export {
   buildOpenRouterCandidates,
   OPENROUTER_BASE_URL,
   OPENROUTER_FREE_MODELS,
+  OPENROUTER_REJECTED_MODELS,
 } from "./provider/config";
 export {
   createMockProvider,

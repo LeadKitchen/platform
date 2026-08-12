@@ -24,6 +24,25 @@ import {
 } from "../../game/service";
 import { protectedProcedure } from "../../orpc";
 
+function fallbackEmployeeReply(loaded: Awaited<ReturnType<typeof loadDialog>>) {
+  const employee = loaded.context.employee;
+  const task = loaded.context.task;
+  const load = loaded.context.shift.load;
+  const lastManagerTurn = loaded.context.turns
+    .filter((turn) => turn.role === "manager")
+    .at(-1)?.text;
+
+  if (load === "overload" || loaded.context.shift.soloOnShift) {
+    return `Понял задачу по заказу «${task.title}». Сейчас я один и нагрузка высокая — помогите расставить приоритеты и зафиксировать контрольную точку, чтобы я ничего не упустил.`;
+  }
+
+  if (lastManagerTurn) {
+    return `Понял. По задаче «${task.title}» начну работу и сверюсь с вами в обозначенной контрольной точке. Если увижу риск по сроку, сразу сообщу.`;
+  }
+
+  return `${employee.name}: понял задачу по заказу «${task.title}». Уточните срок и ожидаемый результат, пожалуйста.`;
+}
+
 /**
  * Open a dialog with the employee an order was assigned to.
  *
@@ -122,13 +141,38 @@ export const say = protectedProcedure
         utterance: input.text,
       });
     } catch (cause) {
+      const fallbackReply = fallbackEmployeeReply(loaded);
       await appendEvent(context.db, input.dialogId, "error", {
         stage: "persona",
         message: cause instanceof Error ? cause.message : String(cause),
+        recovered: true,
       });
-      throw new ORPCError("INTERNAL_SERVER_ERROR", {
-        message: "Не удалось получить ответ сотрудника, попробуйте ещё раз",
+      await appendEvent(context.db, input.dialogId, "employee_reply", {
+        text: fallbackReply,
+        understood: loaded.context.task.title,
+        readiness: "unsure",
+        requests: ["Уточнить срок и контрольную точку"],
+        confirmsCheckpoints: false,
+        fallback: true,
       });
+
+      await context.db
+        .update(GameDialog)
+        .set({ engaged: true })
+        .where(eq(GameDialog.id, input.dialogId));
+
+      return {
+        silent: false,
+        reply: fallbackReply,
+        understood: loaded.context.task.title,
+        readiness: "unsure" as const,
+        requests: ["Уточнить срок и контрольную точку"],
+        confirmsCheckpoints: false,
+        engaged: true,
+        emotion: loaded.context.emotion,
+        managerToxic,
+        degraded: true,
+      };
     }
 
     if (turn.reply.silent) {

@@ -18,6 +18,10 @@ import { IconChevronRight } from "@tabler/icons-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+function isRouteActive(pathname: string, url: string, exact?: boolean) {
+  return pathname === url || (!exact && pathname.startsWith(`${url}/`));
+}
+
 export function NavMain({
   items,
 }: {
@@ -30,6 +34,7 @@ export function NavMain({
       title: string;
       url: string;
       icon?: Icon;
+      exact?: boolean;
     }[];
   }[];
 }) {
@@ -42,10 +47,8 @@ export function NavMain({
         {items.map((item) => {
           const isItemActive =
             pathname === item.url ||
-            item.items?.some(
-              (subItem) =>
-                pathname === subItem.url ||
-                pathname.startsWith(`${subItem.url}/`),
+            item.items?.some((subItem) =>
+              isRouteActive(pathname, subItem.url, subItem.exact),
             );
 
           return (
@@ -72,10 +75,11 @@ export function NavMain({
                       <SidebarMenuSubItem key={subItem.title}>
                         <SidebarMenuSubButton
                           render={<Link href={subItem.url} />}
-                          isActive={
-                            pathname === subItem.url ||
-                            pathname.startsWith(`${subItem.url}/`)
-                          }
+                          isActive={isRouteActive(
+                            pathname,
+                            subItem.url,
+                            subItem.exact,
+                          )}
                         >
                           {subItem.icon ? <subItem.icon /> : null}
                           <span>{subItem.title}</span>
