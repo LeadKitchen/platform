@@ -8,4 +8,7 @@ export {
   type TaskOption,
 } from "./order-queue";
 export { useSpeechRecognition } from "./use-speech-recognition";
-export { VariantComparison } from "./variant-comparison";
+export {
+  VariantComparison,
+  type VariantStats,
+} from "./variant-comparison";

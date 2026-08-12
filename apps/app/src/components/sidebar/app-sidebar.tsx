@@ -28,7 +28,7 @@ const data = {
       isActive: true,
       items: [
         { title: "Сессии", url: "/game" },
-        { title: "Разборы и подходы", url: "/admin/game" },
+        { title: "Админ-панель", url: "/admin/game" },
       ],
     },
   ],

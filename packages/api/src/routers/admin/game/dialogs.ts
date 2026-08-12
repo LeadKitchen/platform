@@ -3,8 +3,11 @@ import {
   desc,
   eq,
   GameDialog,
+  GameEmployee,
   GameEvaluation,
+  GameEvent,
   GameSession,
+  GameTask,
 } from "@acme/db";
 import { z } from "zod";
 
@@ -40,12 +43,44 @@ export const dialogs = adminProcedure
         dialog: GameDialog,
         evaluation: GameEvaluation,
         sessionTitle: GameSession.title,
+        employeeName: GameEmployee.name,
+        taskTitle: GameTask.title,
       })
       .from(GameDialog)
       .leftJoin(GameEvaluation, eq(GameEvaluation.dialogId, GameDialog.id))
       .innerJoin(GameSession, eq(GameSession.id, GameDialog.sessionId))
+      .innerJoin(GameEmployee, eq(GameEmployee.id, GameDialog.employeeId))
+      .innerJoin(GameTask, eq(GameTask.id, GameDialog.taskId))
       .where(conditions.length > 0 ? and(...conditions) : undefined)
       .orderBy(desc(GameDialog.startedAt))
       .limit(input.limit)
       .offset(input.offset);
+  });
+
+export const detail = adminProcedure
+  .input(z.object({ id: z.string().uuid() }))
+  .handler(async ({ context, input }) => {
+    const [row] = await context.db
+      .select({
+        dialog: GameDialog,
+        evaluation: GameEvaluation,
+        sessionTitle: GameSession.title,
+        employeeName: GameEmployee.name,
+        taskTitle: GameTask.title,
+      })
+      .from(GameDialog)
+      .leftJoin(GameEvaluation, eq(GameEvaluation.dialogId, GameDialog.id))
+      .innerJoin(GameSession, eq(GameSession.id, GameDialog.sessionId))
+      .innerJoin(GameEmployee, eq(GameEmployee.id, GameDialog.employeeId))
+      .innerJoin(GameTask, eq(GameTask.id, GameDialog.taskId))
+      .where(eq(GameDialog.id, input.id))
+      .limit(1);
+
+    if (!row) return null;
+    const events = await context.db
+      .select()
+      .from(GameEvent)
+      .where(eq(GameEvent.dialogId, input.id))
+      .orderBy(GameEvent.seq);
+    return { ...row, events };
   });
