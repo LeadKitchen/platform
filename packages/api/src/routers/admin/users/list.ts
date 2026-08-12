@@ -1,3 +1,4 @@
+import { AppAdmin, desc, eq, user } from "@acme/db";
 import { z } from "zod";
 
 import { adminProcedure } from "../../../orpc";
@@ -15,19 +16,34 @@ export const list = adminProcedure
     }),
   )
   .handler(async ({ context, input }) => {
-    return context.db.query.user.findMany({
-      limit: input.limit,
-      offset: input.offset,
-      orderBy: (users, { desc }) => [desc(users.createdAt)],
-      columns: {
-        id: true,
-        name: true,
-        email: true,
-        username: true,
-        emailVerified: true,
-        language: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+    const bootstrapEmails = new Set(
+      (process.env.ADMIN_EMAILS ?? "")
+        .split(",")
+        .map((email) => email.trim().toLowerCase())
+        .filter(Boolean),
+    );
+    const rows = await context.db
+      .select({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        username: user.username,
+        emailVerified: user.emailVerified,
+        language: user.language,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        adminUserId: AppAdmin.userId,
+      })
+      .from(user)
+      .leftJoin(AppAdmin, eq(AppAdmin.userId, user.id))
+      .orderBy(desc(user.createdAt))
+      .limit(input.limit)
+      .offset(input.offset);
+
+    return rows.map(({ adminUserId, ...row }) => ({
+      ...row,
+      isBootstrapAdmin: bootstrapEmails.has(row.email.toLowerCase()),
+      isAdmin:
+        adminUserId !== null || bootstrapEmails.has(row.email.toLowerCase()),
+    }));
   });

@@ -64,6 +64,32 @@ export function renderMarkdownReport(result: RunResult): string {
     );
   }
 
+  // Failover keeps a run alive, but it can also swap the model under an arm.
+  // Comparing an arm served by one model against an arm served by another is
+  // not an experiment, so this is a hard warning rather than a footnote.
+  const mixedArms = result.variants.filter(
+    (variant) => Object.keys(variant.modelMix).length > 1,
+  );
+  const servedModels = new Set(
+    result.variants.flatMap((variant) => Object.keys(variant.modelMix)),
+  );
+  if (mixedArms.length > 0 || servedModels.size > 1) {
+    lines.push(
+      "> ⚠️ Диалоги обслужены разными моделями — сработало переключение пула.",
+      "> Сравнение вариантов между собой при этом некорректно: разница может",
+      "> объясняться моделью, а не подходом. Модели по вариантам:",
+      ...result.variants
+        .filter((variant) => variant.items > 0)
+        .map(
+          (variant) =>
+            `> - \`${variant.variantId}\`: ${Object.entries(variant.modelMix)
+              .map(([model, count]) => `${model} × ${count}`)
+              .join(", ")}`,
+        ),
+      "",
+    );
+  }
+
   const emptyArms = result.variants.filter((variant) => variant.items === 0);
   if (emptyArms.length > 0) {
     lines.push(

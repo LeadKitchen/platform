@@ -6,7 +6,7 @@ import {
   personaRegistry,
   variantConfigSchema,
 } from "@acme/ai";
-import { asc, eq, GameVariant } from "@acme/db";
+import { asc, eq, GameSettings, GameVariant } from "@acme/db";
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
 
@@ -42,6 +42,18 @@ export const upsert = adminProcedure
     }),
   )
   .handler(async ({ context, input }) => {
+    if (!input.isActive) {
+      const settings = await context.db.query.GameSettings.findFirst({
+        where: eq(GameSettings.id, "global"),
+        columns: { defaultVariantId: true },
+      });
+      if (settings?.defaultVariantId === input.id) {
+        throw new ORPCError("BAD_REQUEST", {
+          message: "Сначала выберите другой вариант ИИ по умолчанию",
+        });
+      }
+    }
+
     for (const [registry, id] of [
       [engagementRegistry, input.engagement],
       [knowledgeRegistry, input.knowledge],
@@ -87,6 +99,18 @@ export const upsert = adminProcedure
 export const setActive = adminProcedure
   .input(z.object({ id: z.string().max(64), isActive: z.boolean() }))
   .handler(async ({ context, input }) => {
+    if (!input.isActive) {
+      const settings = await context.db.query.GameSettings.findFirst({
+        where: eq(GameSettings.id, "global"),
+        columns: { defaultVariantId: true },
+      });
+      if (settings?.defaultVariantId === input.id) {
+        throw new ORPCError("BAD_REQUEST", {
+          message: "Сначала выберите другой вариант ИИ по умолчанию",
+        });
+      }
+    }
+
     const [variant] = await context.db
       .update(GameVariant)
       .set({ isActive: input.isActive })

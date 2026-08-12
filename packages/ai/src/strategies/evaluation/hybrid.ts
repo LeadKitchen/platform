@@ -81,7 +81,7 @@ export const hybridEvaluation: EvaluationStrategy = {
       evaluation,
       usage: addUsage(style.usage, criteria.usage),
       latencyMs: Date.now() - startedAt,
-      meta: { llmWeight, evidence: style.evidence },
+      meta: { llmWeight, evidence: style.evidence, model: style.model },
     };
   },
 };

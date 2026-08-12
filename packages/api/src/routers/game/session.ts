@@ -1,8 +1,9 @@
-import { desc, eq, GameOrder, GameSession } from "@acme/db";
+import { count, desc, eq, GameOrder, GameSession } from "@acme/db";
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
 
 import { loadEngine } from "../../game/service";
+import { loadGameSettings } from "../../game/settings";
 import { protectedProcedure } from "../../orpc";
 
 const roundSchema = z.union([z.literal(2), z.literal(3)]);
@@ -20,13 +21,34 @@ export const create = protectedProcedure
   .input(
     z.object({
       title: z.string().min(1).max(256),
-      round: roundSchema,
+      round: roundSchema.optional(),
       variantId: z.string().max(64).optional(),
     }),
   )
   .handler(async ({ context, input }) => {
-    const engine = await loadEngine(context.db);
-    const variantId = input.variantId ?? engine.defaultVariantId;
+    const [engine, settings] = await Promise.all([
+      loadEngine(context.db),
+      loadGameSettings(context.db),
+    ]);
+    const round = input.round ?? settings.defaultRound;
+    if (round === 3 && !settings.allowRoundThree) {
+      throw new ORPCError("BAD_REQUEST", {
+        message: "Третий раунд отключён администратором",
+      });
+    }
+
+    const [activeSessions] = await context.db
+      .select({ count: count() })
+      .from(GameSession)
+      .where(eq(GameSession.status, "active"));
+    if ((activeSessions?.count ?? 0) >= settings.maxActiveSessions) {
+      throw new ORPCError("BAD_REQUEST", {
+        message: `Достигнут лимит активных сессий: ${settings.maxActiveSessions}`,
+      });
+    }
+
+    const variantId =
+      input.variantId ?? settings.defaultVariantId ?? engine.defaultVariantId;
 
     // Fail here rather than at the first utterance of the first dialog.
     engine.pipeline(variantId);
@@ -35,7 +57,7 @@ export const create = protectedProcedure
       .insert(GameSession)
       .values({
         title: input.title,
-        round: input.round,
+        round,
         variantId,
         createdBy: context.session.user.id,
       })
@@ -102,7 +124,7 @@ export const end = protectedProcedure
   .handler(async ({ context, input }) => {
     const [session] = await context.db
       .update(GameSession)
-      .set({ status: "finished", endedAt: new Date() })
+      .set({ status: "completed", endedAt: new Date() })
       .where(eq(GameSession.id, input.id))
       .returning();
 

@@ -42,10 +42,25 @@ export {
   createAiSdkProvider,
 } from "./provider/ai-sdk";
 export {
+  buildAnthropicCandidates,
+  buildOpenAiCandidates,
+  buildOpenRouterCandidates,
+  OPENROUTER_BASE_URL,
+  OPENROUTER_FREE_MODELS,
+} from "./provider/config";
+export {
   createMockProvider,
   type MockProviderOptions,
   type MockResponder,
 } from "./provider/mock";
+export {
+  createPoolProvider,
+  type PoolCandidate,
+  type PoolEvent,
+  type PoolProvider,
+  type PoolProviderOptions,
+  type PoolStats,
+} from "./provider/pool";
 export { estimateCostUsd, MODEL_PRICING } from "./provider/pricing";
 export {
   addUsage,

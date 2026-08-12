@@ -157,6 +157,14 @@ export interface ItemResult {
   costUsd: number;
   /** Which repetition of the fixture this is, for variance estimates. */
   run: number;
+  /**
+   * Models that actually served this dialog.
+   *
+   * With a failover pool a scenario can be answered by a different model than
+   * the one the run started on. Two arms served by different models are not
+   * comparable, so the mix is carried per item rather than assumed uniform.
+   */
+  models: string[];
 }
 
 export interface VariantSummary {
@@ -190,6 +198,8 @@ export interface VariantSummary {
   totalOutputTokens: number;
   totalCostUsd: number;
   avgCostUsd: number;
+  /** Distinct models that served this arm, with how many dialogs each took. */
+  modelMix: Record<string, number>;
 }
 
 function mean(values: number[]): number {
@@ -259,6 +269,12 @@ export function summarize(
       4,
     ),
     avgCostUsd: round(mean(own.map((item) => item.costUsd)), 5),
+    modelMix: own.reduce<Record<string, number>>((mix, item) => {
+      for (const model of new Set(item.models)) {
+        mix[model] = (mix[model] ?? 0) + 1;
+      }
+      return mix;
+    }, {}),
   };
 }
 

@@ -59,6 +59,7 @@ export default async function SessionPage({
 
         <OrderQueue
           sessionId={session.id}
+          defaultDeadlineMinutes={reference.settings.defaultDeadlineMinutes}
           employees={reference.employees}
           tasks={reference.tasks}
           orders={orders}

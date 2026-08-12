@@ -96,6 +96,14 @@ interface Strategy {
   description?: string;
 }
 
+interface GameSettings {
+  defaultVariantId: string | null;
+  defaultRound: 2 | 3;
+  defaultDeadlineMinutes: number;
+  allowRoundThree: boolean;
+  maxActiveSessions: number;
+}
+
 interface SessionRow {
   session: {
     id: string;
@@ -152,6 +160,7 @@ interface AdminGameData {
       adminEmails: string[];
       appEnvironment: string;
     };
+    settings: GameSettings;
   };
   users: Array<{
     id: string;
@@ -160,6 +169,8 @@ interface AdminGameData {
     username: string | null;
     emailVerified: boolean;
     createdAt: Date | string;
+    isAdmin: boolean;
+    isBootstrapAdmin: boolean;
   }>;
 }
 
@@ -261,6 +272,11 @@ export function AdminGameDashboard({
   const [tasks, setTasks] = useState(initialData.catalog.tasks);
   const [variants, setVariants] = useState(initialData.variants.variants);
   const [sessions, setSessions] = useState(initialData.sessions);
+  const [users, setUsers] = useState(initialData.users);
+  const [userQuery, setUserQuery] = useState("");
+  const [settings, setSettings] = useState<GameSettings>(
+    initialData.system.settings,
+  );
   const [employee, setEmployee] = useState<Employee>(emptyEmployee);
   const [employeeCompetences, setEmployeeCompetences] = useState("{}");
   const [employeePersonality, setEmployeePersonality] = useState("{}");
@@ -274,6 +290,15 @@ export function AdminGameDashboard({
     () => sessions.filter((item) => item.session.status === "completed").length,
     [sessions],
   );
+  const visibleUsers = useMemo(() => {
+    const query = userQuery.trim().toLocaleLowerCase("ru");
+    if (!query) return users;
+    return users.filter((item) =>
+      [item.name, item.email, item.username ?? ""].some((value) =>
+        value.toLocaleLowerCase("ru").includes(query),
+      ),
+    );
+  }, [userQuery, users]);
 
   function chooseEmployee(id: string | null) {
     const selected = employees.find((item) => item.id === id) ?? emptyEmployee;
@@ -393,6 +418,47 @@ export function AdminGameDashboard({
     }
   }
 
+  async function saveSettings(event: React.FormEvent) {
+    event.preventDefault();
+    setPending(true);
+    try {
+      const saved = await client.admin.game.system.updateSettings(settings);
+      if (!saved) throw new Error("API не вернул сохранённые настройки");
+      setSettings({
+        defaultVariantId: saved.defaultVariantId,
+        defaultRound: saved.defaultRound === 3 ? 3 : 2,
+        defaultDeadlineMinutes: saved.defaultDeadlineMinutes,
+        allowRoundThree: saved.allowRoundThree,
+        maxActiveSessions: saved.maxActiveSessions,
+      });
+      toast.success("Игровые настройки сохранены");
+      router.refresh();
+    } catch (cause) {
+      toast.error(cause instanceof Error ? cause.message : "Ошибка сохранения");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  async function updateAdmin(userId: string, isAdmin: boolean) {
+    setPending(true);
+    try {
+      await client.admin.users.setAdmin({ userId, isAdmin });
+      setUsers((current) =>
+        current.map((item) =>
+          item.id === userId ? { ...item, isAdmin } : item,
+        ),
+      );
+      toast.success(
+        isAdmin ? "Администратор назначен" : "Права администратора отозваны",
+      );
+    } catch (cause) {
+      toast.error(cause instanceof Error ? cause.message : "Ошибка обновления");
+    } finally {
+      setPending(false);
+    }
+  }
+
   return (
     <div className="flex flex-1 flex-col gap-6 p-4 lg:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -457,7 +523,7 @@ export function AdminGameDashboard({
             />
             <StatCard
               title="Участники"
-              value={initialData.users.length}
+              value={users.length}
               description="Зарегистрировано в приложении"
             />
             <StatCard
@@ -567,7 +633,7 @@ export function AdminGameDashboard({
                       <TableCell className="font-medium">
                         <Link
                           className="hover:underline"
-                              href={`/admin/game/dialogs/${row.dialog.id}`}
+                          href={`/admin/game/dialogs/${row.dialog.id}`}
                         >
                           {row.sessionTitle}
                         </Link>
@@ -1203,7 +1269,7 @@ export function AdminGameDashboard({
               </div>
               <div className="flex justify-between gap-4">
                 <span className="text-muted-foreground">
-                  Вариант по умолчанию
+                  Fallback-вариант ИИ
                 </span>
                 <span className="font-medium">
                   {initialData.system.runtime.defaultVariant}
@@ -1216,39 +1282,167 @@ export function AdminGameDashboard({
                 </span>
               </div>
               <FieldDescription>
-                Провайдер, модель и драйвер задаются переменными окружения.
-                Параметры игровых вариантов редактируются во вкладке «Варианты
-                ИИ».
+                Провайдер, модель, драйвер и fallback задаются переменными
+                окружения. Игровой вариант по умолчанию можно переопределить
+                справа.
               </FieldDescription>
             </CardContent>
           </Card>
           <Card>
             <CardHeader>
-              <CardTitle>Администраторы</CardTitle>
+              <CardTitle>Игровые настройки</CardTitle>
               <CardDescription>
-                Доступ определяется списком ADMIN_EMAILS.
+                Применяются к новым сессиям и заказам сразу после сохранения.
               </CardDescription>
             </CardHeader>
-            <CardContent className="flex flex-col gap-2">
-              {initialData.system.runtime.adminEmails.map((email) => (
-                <div
-                  key={email}
-                  className="flex items-center justify-between rounded-md border p-3"
-                >
-                  <span>{email}</span>
-                  <Badge>Администратор</Badge>
-                </div>
-              ))}
+            <CardContent>
+              <form onSubmit={saveSettings}>
+                <FieldGroup>
+                  <Field>
+                    <FieldLabel htmlFor="settings-default-variant">
+                      Вариант ИИ по умолчанию
+                    </FieldLabel>
+                    <Select
+                      value={settings.defaultVariantId ?? "__automatic"}
+                      onValueChange={(value) =>
+                        setSettings({
+                          ...settings,
+                          defaultVariantId:
+                            value === "__automatic" ? null : value,
+                        })
+                      }
+                    >
+                      <SelectTrigger id="settings-default-variant">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="__automatic">
+                            Из переменной окружения
+                          </SelectItem>
+                          {variants
+                            .filter((item) => item.isActive)
+                            .map((item) => (
+                              <SelectItem key={item.id} value={item.id}>
+                                {item.name}
+                              </SelectItem>
+                            ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <Field>
+                      <FieldLabel htmlFor="settings-default-round">
+                        Раунд по умолчанию
+                      </FieldLabel>
+                      <Select
+                        value={String(settings.defaultRound)}
+                        onValueChange={(value) =>
+                          setSettings({
+                            ...settings,
+                            defaultRound: value === "3" ? 3 : 2,
+                          })
+                        }
+                      >
+                        <SelectTrigger id="settings-default-round">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem value="2">Раунд 2</SelectItem>
+                            {settings.allowRoundThree ? (
+                              <SelectItem value="3">Раунд 3</SelectItem>
+                            ) : null}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </Field>
+                    <Field>
+                      <FieldLabel htmlFor="settings-deadline">
+                        Дедлайн заказа, мин
+                      </FieldLabel>
+                      <Input
+                        id="settings-deadline"
+                        type="number"
+                        min={5}
+                        max={600}
+                        value={settings.defaultDeadlineMinutes}
+                        onChange={(event) =>
+                          setSettings({
+                            ...settings,
+                            defaultDeadlineMinutes: Number(event.target.value),
+                          })
+                        }
+                      />
+                    </Field>
+                  </div>
+                  <Field>
+                    <FieldLabel htmlFor="settings-max-sessions">
+                      Максимум активных сессий
+                    </FieldLabel>
+                    <Input
+                      id="settings-max-sessions"
+                      type="number"
+                      min={1}
+                      max={100}
+                      value={settings.maxActiveSessions}
+                      onChange={(event) =>
+                        setSettings({
+                          ...settings,
+                          maxActiveSessions: Number(event.target.value),
+                        })
+                      }
+                    />
+                  </Field>
+                  <Field orientation="horizontal">
+                    <FieldLabel htmlFor="settings-round-three">
+                      Разрешить третий раунд
+                    </FieldLabel>
+                    <Switch
+                      id="settings-round-three"
+                      checked={settings.allowRoundThree}
+                      onCheckedChange={(checked) =>
+                        setSettings({
+                          ...settings,
+                          allowRoundThree: checked,
+                          defaultRound:
+                            !checked && settings.defaultRound === 3
+                              ? 2
+                              : settings.defaultRound,
+                        })
+                      }
+                    />
+                  </Field>
+                  <Button type="submit" disabled={pending}>
+                    <IconDeviceFloppy data-icon="inline-start" />
+                    Сохранить настройки
+                  </Button>
+                </FieldGroup>
+              </form>
             </CardContent>
           </Card>
           <Card className="xl:col-span-2">
             <CardHeader>
               <CardTitle>Пользователи</CardTitle>
               <CardDescription>
-                Зарегистрированные участники приложения.
+                Зарегистрированные участники и их доступ к панели.
               </CardDescription>
             </CardHeader>
             <CardContent>
+              <div className="pb-4">
+                <Field>
+                  <FieldLabel htmlFor="users-search">
+                    Поиск пользователей
+                  </FieldLabel>
+                  <Input
+                    id="users-search"
+                    value={userQuery}
+                    onChange={(event) => setUserQuery(event.target.value)}
+                    placeholder="Имя, email или username"
+                  />
+                </Field>
+              </div>
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -1256,11 +1450,13 @@ export function AdminGameDashboard({
                     <TableHead>Email</TableHead>
                     <TableHead>Username</TableHead>
                     <TableHead>Проверен</TableHead>
+                    <TableHead>Доступ</TableHead>
                     <TableHead>Регистрация</TableHead>
+                    <TableHead className="text-right">Действие</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {initialData.users.map((user) => (
+                  {visibleUsers.map((user) => (
                     <TableRow key={user.id}>
                       <TableCell className="font-medium">{user.name}</TableCell>
                       <TableCell>{user.email}</TableCell>
@@ -1272,7 +1468,28 @@ export function AdminGameDashboard({
                           {user.emailVerified ? "Да" : "Нет"}
                         </Badge>
                       </TableCell>
+                      <TableCell>
+                        <span className="flex flex-wrap gap-2">
+                          <Badge variant={user.isAdmin ? "default" : "outline"}>
+                            {user.isAdmin ? "Администратор" : "Участник"}
+                          </Badge>
+                          {user.isBootstrapAdmin ? (
+                            <Badge variant="secondary">Bootstrap</Badge>
+                          ) : null}
+                        </span>
+                      </TableCell>
                       <TableCell>{dateLabel(user.createdAt)}</TableCell>
+                      <TableCell className="text-right">
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant={user.isAdmin ? "outline" : "default"}
+                          disabled={pending || user.isBootstrapAdmin}
+                          onClick={() => updateAdmin(user.id, !user.isAdmin)}
+                        >
+                          {user.isAdmin ? "Отозвать" : "Назначить"}
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

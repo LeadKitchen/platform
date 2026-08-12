@@ -61,12 +61,15 @@ export function OrderQueue(props: {
   employees: EmployeeOption[];
   tasks: TaskOption[];
   orders: OrderRow[];
+  defaultDeadlineMinutes: number;
 }) {
   const router = useRouter();
   const [employeeId, setEmployeeId] = useState(props.employees[0]?.id ?? "");
   const [taskId, setTaskId] = useState(props.tasks[0]?.id ?? "");
   const [portions, setPortions] = useState("1");
-  const [deadline, setDeadline] = useState("60");
+  const [deadline, setDeadline] = useState(
+    String(props.defaultDeadlineMinutes),
+  );
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -86,7 +89,8 @@ export function OrderQueue(props: {
         taskId,
         employeeId,
         portions: Number.parseInt(portions, 10) || 1,
-        deadlineMinutes: Number.parseInt(deadline, 10) || 60,
+        deadlineMinutes:
+          Number.parseInt(deadline, 10) || props.defaultDeadlineMinutes,
       });
       router.refresh();
     } catch (cause) {

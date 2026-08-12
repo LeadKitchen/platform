@@ -15,6 +15,13 @@
       "when": 1786446411660,
       "tag": "0001_adorable_madripoor",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1786536785196,
+      "tag": "0002_curious_archangel",
+      "breakpoints": true
     }
   ]
 }

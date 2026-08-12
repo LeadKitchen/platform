@@ -1,10 +1,10 @@
 import { APP_CONFIG } from "@acme/config";
 import {
   cn,
-  themeDetectorScript,
   ThemeProvider,
   ThemeToggle,
   Toaster,
+  themeDetectorScript,
 } from "@acme/ui";
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";

@@ -8,7 +8,9 @@ export const dynamic = "force-dynamic";
 
 const SESSION_STATUS_LABELS: Record<string, string> = {
   active: "идёт",
+  completed: "завершена",
   finished: "завершена",
+  archived: "в архиве",
 };
 
 export default async function GamePage() {
@@ -27,6 +29,11 @@ export default async function GamePage() {
           </CardHeader>
           <CardContent>
             <CreateSessionForm
+              defaults={{
+                defaultVariantId: catalog.settings.defaultVariantId,
+                defaultRound: catalog.settings.defaultRound,
+                allowRoundThree: catalog.settings.allowRoundThree,
+              }}
               variants={catalog.variants.map((variant) => ({
                 id: variant.id,
                 name: variant.name,

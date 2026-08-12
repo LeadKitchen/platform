@@ -18,7 +18,7 @@
 
 import type { Session } from "@acme/auth";
 import { logger } from "@acme/config";
-import { db } from "@acme/db";
+import { AppAdmin, db, eq } from "@acme/db";
 import { ORPCError, os } from "@orpc/server";
 
 export interface CreateORPCContextOptions {
@@ -101,18 +101,30 @@ export const protectedProcedure = publicProcedure.use(({ context, next }) => {
  *
  * @example ADMIN_EMAILS=admin@example.com,ops@example.com
  */
-export const adminProcedure = protectedProcedure.use(({ context, next }) => {
-  const adminEmails = (process.env.ADMIN_EMAILS ?? "")
-    .split(",")
-    .map((e) => e.trim().toLowerCase())
-    .filter(Boolean);
+export const adminProcedure = protectedProcedure.use(
+  async ({ context, next }) => {
+    const adminEmails = (process.env.ADMIN_EMAILS ?? "")
+      .split(",")
+      .map((e) => e.trim().toLowerCase())
+      .filter(Boolean);
 
-  if (!adminEmails.includes(context.session.user.email.toLowerCase())) {
-    throw new ORPCError("FORBIDDEN", { message: "Admin access required" });
-  }
+    const isBootstrapAdmin = adminEmails.includes(
+      context.session.user.email.toLowerCase(),
+    );
+    const persistedGrant = isBootstrapAdmin
+      ? undefined
+      : await context.db.query.AppAdmin.findFirst({
+          where: eq(AppAdmin.userId, context.session.user.id),
+          columns: { userId: true },
+        });
 
-  return next();
-});
+    if (!isBootstrapAdmin && !persistedGrant) {
+      throw new ORPCError("FORBIDDEN", { message: "Admin access required" });
+    }
+
+    return next();
+  },
+);
 
 // Export the context type for use in other files
 export type ORPCContext = ReturnType<typeof createORPCContext>;

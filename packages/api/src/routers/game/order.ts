@@ -3,6 +3,7 @@ import { ORPCError } from "@orpc/server";
 import { z } from "zod";
 
 import { loadCatalog } from "../../game/service";
+import { loadGameSettings } from "../../game/settings";
 import { protectedProcedure } from "../../orpc";
 
 /**
@@ -20,7 +21,7 @@ export const create = protectedProcedure
       taskId: z.string().min(1).max(64),
       employeeId: z.string().min(1).max(64),
       portions: z.number().int().min(1).max(500).default(1),
-      deadlineMinutes: z.number().int().min(5).max(600).default(60),
+      deadlineMinutes: z.number().int().min(5).max(600).optional(),
       notes: z.string().max(500).optional(),
     }),
   )
@@ -35,7 +36,10 @@ export const create = protectedProcedure
       throw new ORPCError("NOT_FOUND", { message: "Сессия не найдена" });
     }
 
-    const catalog = await loadCatalog(context.db);
+    const [catalog, settings] = await Promise.all([
+      loadCatalog(context.db),
+      loadGameSettings(context.db),
+    ]);
     const employee = catalog.employees.find(
       (item) => item.id === input.employeeId,
     );
@@ -54,7 +58,8 @@ export const create = protectedProcedure
         taskId: input.taskId,
         employeeId: input.employeeId,
         portions: input.portions,
-        deadlineMinutes: input.deadlineMinutes,
+        deadlineMinutes:
+          input.deadlineMinutes ?? settings.defaultDeadlineMinutes,
         notes: input.notes,
       })
       .returning();

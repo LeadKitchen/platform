@@ -8,6 +8,7 @@ import {
   STYLE_LABELS,
 } from "@acme/game";
 import { loadCatalog, loadVariants } from "../../game/service";
+import { loadGameSettings } from "../../game/settings";
 import { protectedProcedure } from "../../orpc";
 
 /**
@@ -17,9 +18,13 @@ import { protectedProcedure } from "../../orpc";
  * @example client.game.catalog.reference()
  */
 export const reference = protectedProcedure.handler(async ({ context }) => {
-  const catalog = await loadCatalog(context.db);
+  const [catalog, settings] = await Promise.all([
+    loadCatalog(context.db),
+    loadGameSettings(context.db),
+  ]);
 
   return {
+    settings,
     employees: catalog.employees.map((employee) => ({
       id: employee.id,
       name: employee.name,
@@ -67,9 +72,16 @@ export const methodology = protectedProcedure.handler(() => ({
  *
  * @example client.game.catalog.variants()
  */
-export const variants = protectedProcedure.handler(async ({ context }) => ({
-  variants: await loadVariants(context.db),
-  strategies: describeStrategies(),
-}));
+export const variants = protectedProcedure.handler(async ({ context }) => {
+  const [availableVariants, settings] = await Promise.all([
+    loadVariants(context.db),
+    loadGameSettings(context.db),
+  ]);
+  return {
+    variants: availableVariants,
+    strategies: describeStrategies(),
+    settings,
+  };
+});
 
 export const gameCatalogRouter = { reference, methodology, variants };

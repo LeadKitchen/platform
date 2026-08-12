@@ -65,6 +65,24 @@ export const GameVariant = pgTable("game_variants", (t) => ({
     .$onUpdateFn(() => sql`now()`),
 }));
 
+/** Singleton configuration edited from the admin panel. */
+export const GameSettings = pgTable("game_settings", (t) => ({
+  /** Always `global`; a key keeps the shape extensible without extra rows. */
+  id: t.text().primaryKey(),
+  defaultVariantId: t.text().references(() => GameVariant.id, {
+    onDelete: "set null",
+  }),
+  defaultRound: t.integer().default(2).notNull(),
+  defaultDeadlineMinutes: t.integer().default(60).notNull(),
+  allowRoundThree: t.boolean().default(true).notNull(),
+  maxActiveSessions: t.integer().default(20).notNull(),
+  updatedAt: t
+    .timestamp({ mode: "date", withTimezone: true })
+    .defaultNow()
+    .notNull()
+    .$onUpdateFn(() => sql`now()`),
+}));
+
 export const GameSession = pgTable(
   "game_sessions",
   (t) => ({

@@ -19,16 +19,32 @@ export interface VariantOption {
   name: string;
 }
 
+export interface SessionDefaults {
+  defaultVariantId: string | null;
+  defaultRound: 2 | 3;
+  allowRoundThree: boolean;
+}
+
 /**
  * Открытие сессии игры. Вариант ИИ-конвейера фиксируется на всю сессию:
  * иначе одну и ту же команду оценивали бы разные подходы, и сравнение
  * подходов потеряло бы смысл.
  */
-export function CreateSessionForm({ variants }: { variants: VariantOption[] }) {
+export function CreateSessionForm({
+  variants,
+  defaults,
+}: {
+  variants: VariantOption[];
+  defaults: SessionDefaults;
+}) {
   const router = useRouter();
   const [title, setTitle] = useState("");
-  const [round, setRound] = useState<"2" | "3">("2");
-  const [variantId, setVariantId] = useState(variants[0]?.id ?? "");
+  const [round, setRound] = useState<"2" | "3">(
+    String(defaults.defaultRound) as "2" | "3",
+  );
+  const [variantId, setVariantId] = useState(
+    defaults.defaultVariantId ?? variants[0]?.id ?? "",
+  );
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -83,7 +99,9 @@ export function CreateSessionForm({ variants }: { variants: VariantOption[] }) {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="2">Раунд 2</SelectItem>
-            <SelectItem value="3">Раунд 3 — один в смене</SelectItem>
+            {defaults.allowRoundThree ? (
+              <SelectItem value="3">Раунд 3 — один в смене</SelectItem>
+            ) : null}
           </SelectContent>
         </Select>
       </div>

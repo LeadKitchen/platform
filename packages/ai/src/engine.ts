@@ -1,7 +1,13 @@
 import { type Catalog, defaultCatalog } from "@acme/game";
 import { createPipeline, type Pipeline } from "./pipeline";
 import { type AiSdkVendor, createAiSdkProvider } from "./provider/ai-sdk";
+import {
+  buildAnthropicCandidates,
+  buildOpenAiCandidates,
+  buildOpenRouterCandidates,
+} from "./provider/config";
 import { createMockProvider } from "./provider/mock";
+import { createPoolProvider } from "./provider/pool";
 import type { LlmProvider } from "./provider/types";
 import { personaReplySchema } from "./schemas";
 import {
@@ -25,37 +31,50 @@ export function createProviderFromEnv(
 ): LlmProvider {
   const kind =
     env.AI_PROVIDER ??
-    (env.ANTHROPIC_API_KEY
-      ? "anthropic"
-      : env.OPENAI_API_KEY
-        ? "openai"
-        : "mock");
+    (env.OPENROUTER_API_KEY || env.OPENROUTER_API_KEYS
+      ? "openrouter"
+      : env.ANTHROPIC_API_KEY
+        ? "anthropic"
+        : env.OPENAI_API_KEY
+          ? "openai"
+          : "mock");
 
   if (kind === "mock") {
     return createMockProvider(fallbackResponder);
   }
 
-  if (kind === "anthropic") {
-    return createAiSdkProvider({
-      vendor: "anthropic",
-      model: env.AI_MODEL ?? "claude-opus-5",
-      apiKey: env.ANTHROPIC_API_KEY,
-    });
+  // Every real provider goes through the pool, even with a single candidate:
+  // one code path means failover behaviour is the same in a benchmark and in
+  // production, instead of only being exercised when it is needed most.
+  const candidates =
+    kind === "openrouter"
+      ? buildOpenRouterCandidates({ env })
+      : kind === "anthropic"
+        ? buildAnthropicCandidates(env)
+        : kind === "pool"
+          ? [
+              ...buildOpenRouterCandidates({ env }),
+              ...buildOpenAiCandidates(env),
+              ...buildAnthropicCandidates(env),
+            ]
+          : buildOpenAiCandidates(env);
+
+  if (candidates.length === 0) {
+    throw new Error(
+      `Провайдер "${kind}" выбран, но ключей в окружении нет. Задайте OPENROUTER_API_KEY / OPENAI_API_KEY / ANTHROPIC_API_KEY.`,
+    );
   }
 
-  // A custom base URL means a gateway, and gateways routinely accept
-  // `response_format` while ignoring it — ask the SDK to state the schema in
-  // the prompt instead of trusting native structured outputs.
-  const baseUrl = env.OPENAI_BASE_URL;
-  const isGateway =
-    Boolean(baseUrl) && !baseUrl?.startsWith("https://api.openai.com");
-
-  return createAiSdkProvider({
-    vendor: (isGateway ? "openai-compatible" : "openai") as AiSdkVendor,
-    model: env.AI_MODEL ?? env.OPENAI_MODEL ?? "gpt-4o-mini",
-    apiKey: env.OPENAI_API_KEY,
-    baseUrl,
-    supportsStructuredOutputs: !isGateway,
+  return createPoolProvider({
+    candidates,
+    cooldownMs: Number(env.AI_POOL_COOLDOWN_MS ?? 300_000),
+    onEvent: (event) => {
+      if (event.kind !== "availability") return;
+      const firstLine = event.message.split("\n")[0] ?? event.message;
+      console.warn(
+        `[пул] ${event.candidateId} выведен из ротации: ${firstLine}`,
+      );
+    },
   });
 }
 

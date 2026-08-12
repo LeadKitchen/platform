@@ -15,3 +15,19 @@ export const user = pgTable("users", {
     .$onUpdate(() => new Date())
     .notNull(),
 });
+
+/**
+ * Persistent administrator grants. ADMIN_EMAILS remains a bootstrap/fallback
+ * mechanism, while day-to-day access is managed through this table.
+ */
+export const AppAdmin = pgTable("app_admins", {
+  userId: text("user_id")
+    .primaryKey()
+    .references(() => user.id, { onDelete: "cascade" }),
+  grantedBy: text("granted_by").references(() => user.id, {
+    onDelete: "set null",
+  }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});

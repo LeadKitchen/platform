@@ -231,6 +231,7 @@ export async function runEvaluation(options: RunOptions): Promise<RunResult> {
             let outputTokens = probe.telemetry.usage.outputTokens;
             let costUsd = probe.telemetry.costUsd;
             const turnMeta: Record<string, unknown>[] = [];
+            const models = new Set<string>([probe.telemetry.model]);
 
             for (const utterance of fixture.script) {
               const turn = await pipeline.respond({ dialog, utterance });
@@ -240,6 +241,7 @@ export async function runEvaluation(options: RunOptions): Promise<RunResult> {
               outputTokens += turn.telemetry.usage.outputTokens;
               costUsd += turn.telemetry.costUsd;
               turnMeta.push(turn.telemetry.meta);
+              models.add(turn.telemetry.model);
             }
 
             const evaluated = await pipeline.evaluate(dialog);
@@ -282,6 +284,7 @@ export async function runEvaluation(options: RunOptions): Promise<RunResult> {
               outputTokens,
               costUsd,
               run,
+              models: [...models].filter(Boolean),
             };
 
             items.push(item);

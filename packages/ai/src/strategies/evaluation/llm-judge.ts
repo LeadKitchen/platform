@@ -36,6 +36,7 @@ export async function judgeStyle(
   distribution: StyleDistribution;
   evidence: { style: ManagementStyle; quote: string }[];
   usage: ReturnType<typeof addUsage>;
+  model: string;
 }> {
   const result = await deps.provider.generate({
     purpose: "evaluation.style",
@@ -53,6 +54,7 @@ export async function judgeStyle(
     distribution: result.value.distribution,
     evidence: result.value.evidence,
     usage: addUsage(result.usage),
+    model: result.model,
   };
 }
 
@@ -155,7 +157,7 @@ export const llmJudgeEvaluation: EvaluationStrategy = {
       evaluation,
       usage: addUsage(style.usage, criteria.usage),
       latencyMs: Date.now() - startedAt,
-      meta: { evidence: style.evidence },
+      meta: { evidence: style.evidence, model: style.model },
     };
   },
 };

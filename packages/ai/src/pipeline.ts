@@ -177,6 +177,15 @@ export function createPipeline(
         knowledgeResult.usage,
         personaResult.usage,
       );
+
+      // With a failover pool `provider.model` is only the nominal first
+      // candidate — the call may well have been served by another one. The
+      // stage reports what actually answered, and that is what the benchmark
+      // must attribute the dialog to.
+      const servedModel =
+        typeof personaResult.meta?.model === "string"
+          ? personaResult.meta.model
+          : deps.provider.model;
       const emotion = Math.max(
         -2,
         Math.min(2, dialog.emotion + personaResult.reply.emotionDelta),
@@ -204,9 +213,9 @@ export function createPipeline(
         managerToxic,
         telemetry: {
           variantId: variant.id,
-          model: deps.provider.model,
+          model: servedModel,
           usage,
-          costUsd: estimateCostUsd(deps.provider.model, usage),
+          costUsd: estimateCostUsd(servedModel, usage),
           totalMs: Date.now() - startedAt,
           knowledgeMs: knowledgeResult.latencyMs,
           personaMs: personaResult.latencyMs,
