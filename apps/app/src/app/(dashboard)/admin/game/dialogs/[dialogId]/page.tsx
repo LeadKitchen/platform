@@ -45,15 +45,21 @@ export default async function AdminDialogPage({
 
   return (
     <>
-      <SiteHeader title="Разбор диалога" />
+      <SiteHeader
+        breadcrumbs={[
+          { label: "Администрирование", href: "/admin/game/overview" },
+          { label: "Диалоги", href: "/admin/game/dialogs" },
+          { label: "Разбор диалога" },
+        ]}
+      />
       <div className="flex flex-1 flex-col gap-6 p-4 lg:p-6">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <Link
-              href="/admin/game"
+              href="/admin/game/dialogs"
               className="text-muted-foreground text-sm hover:underline"
             >
-              ← Назад в админ-панель
+              ← Назад к диалогам
             </Link>
             <h1 className="mt-2 text-2xl font-semibold">{row.sessionTitle}</h1>
             <p className="text-muted-foreground">

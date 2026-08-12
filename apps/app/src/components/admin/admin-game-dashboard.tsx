@@ -29,23 +29,12 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
   Textarea,
 } from "@acme/ui";
 import {
-  IconAdjustments,
-  IconBrain,
-  IconChartBar,
-  IconClipboardList,
   IconDatabase,
   IconDeviceFloppy,
-  IconMessages,
   IconRefresh,
-  IconSettings,
-  IconUsers,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -104,6 +93,54 @@ interface GameSettings {
   maxActiveSessions: number;
 }
 
+export type AdminGameSection =
+  | "overview"
+  | "sessions"
+  | "dialogs"
+  | "employees"
+  | "tasks"
+  | "variants"
+  | "users"
+  | "settings";
+
+const SECTION_COPY: Record<
+  AdminGameSection,
+  { title: string; description: string }
+> = {
+  overview: {
+    title: "Обзор",
+    description: "Ключевые показатели игры и сравнение подходов ИИ.",
+  },
+  sessions: {
+    title: "Игровые сессии",
+    description: "Запуски игры, заказы, диалоги и их текущие статусы.",
+  },
+  dialogs: {
+    title: "Диалоги и оценки",
+    description: "История разговоров и результаты управленческих решений.",
+  },
+  employees: {
+    title: "Сотрудники",
+    description: "Персонажи, компетенции и профили поведения в игре.",
+  },
+  tasks: {
+    title: "Задания",
+    description: "Игровые заказы, сложность, срочность и риски.",
+  },
+  variants: {
+    title: "Варианты ИИ",
+    description: "Конфигурации AI-конвейера и A/B-распределение.",
+  },
+  users: {
+    title: "Пользователи",
+    description: "Участники приложения и доступ к администрированию.",
+  },
+  settings: {
+    title: "Настройки игры",
+    description: "Системная конфигурация и значения для новых сессий.",
+  },
+};
+
 interface SessionRow {
   session: {
     id: string;
@@ -136,7 +173,7 @@ interface DialogRow {
   taskTitle: string;
 }
 
-interface AdminGameData {
+export interface AdminGameData {
   analytics: { dialogs: number; variants: VariantStats[] };
   dialogs: DialogRow[];
   variants: {
@@ -264,8 +301,10 @@ function StatCard({
 
 export function AdminGameDashboard({
   initialData,
+  section = "overview",
 }: {
   initialData: AdminGameData;
+  section?: AdminGameSection;
 }) {
   const router = useRouter();
   const [employees, setEmployees] = useState(initialData.catalog.employees);
@@ -463,10 +502,12 @@ export function AdminGameDashboard({
     <div className="flex flex-1 flex-col gap-6 p-4 lg:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">Панель администратора</h1>
+          <p className="text-muted-foreground text-sm">Администрирование</p>
+          <h1 className="text-2xl font-semibold">
+            {SECTION_COPY[section].title}
+          </h1>
           <p className="text-muted-foreground text-sm">
-            Управление игровыми данными, AI-конвейером и результатами
-            участников.
+            {SECTION_COPY[section].description}
           </p>
         </div>
         <Button variant="outline" onClick={() => router.refresh()}>
@@ -475,41 +516,8 @@ export function AdminGameDashboard({
         </Button>
       </div>
 
-      <Tabs defaultValue="overview">
-        <div className="overflow-x-auto pb-1">
-          <TabsList>
-            <TabsTrigger value="overview">
-              <IconChartBar />
-              Обзор
-            </TabsTrigger>
-            <TabsTrigger value="sessions">
-              <IconClipboardList />
-              Сессии
-            </TabsTrigger>
-            <TabsTrigger value="dialogs">
-              <IconMessages />
-              Диалоги
-            </TabsTrigger>
-            <TabsTrigger value="employees">
-              <IconUsers />
-              Сотрудники
-            </TabsTrigger>
-            <TabsTrigger value="tasks">
-              <IconAdjustments />
-              Задания
-            </TabsTrigger>
-            <TabsTrigger value="variants">
-              <IconBrain />
-              Варианты ИИ
-            </TabsTrigger>
-            <TabsTrigger value="settings">
-              <IconSettings />
-              Настройки
-            </TabsTrigger>
-          </TabsList>
-        </div>
-
-        <TabsContent value="overview" className="flex flex-col gap-6">
+      {section === "overview" ? (
+        <div className="flex flex-col gap-6">
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <StatCard
               title="Сессии"
@@ -533,9 +541,11 @@ export function AdminGameDashboard({
             />
           </div>
           <VariantComparison variants={initialData.analytics.variants} />
-        </TabsContent>
+        </div>
+      ) : null}
 
-        <TabsContent value="sessions">
+      {section === "sessions" ? (
+        <div>
           <Card>
             <CardHeader>
               <CardTitle>Игровые сессии</CardTitle>
@@ -605,9 +615,11 @@ export function AdminGameDashboard({
               </Table>
             </CardContent>
           </Card>
-        </TabsContent>
+        </div>
+      ) : null}
 
-        <TabsContent value="dialogs">
+      {section === "dialogs" ? (
+        <div>
           <Card>
             <CardHeader>
               <CardTitle>Диалоги и оценки</CardTitle>
@@ -668,12 +680,11 @@ export function AdminGameDashboard({
               </Table>
             </CardContent>
           </Card>
-        </TabsContent>
+        </div>
+      ) : null}
 
-        <TabsContent
-          value="employees"
-          className="grid gap-6 xl:grid-cols-[1fr_1fr]"
-        >
+      {section === "employees" ? (
+        <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
           <Card>
             <CardHeader>
               <CardTitle>Каталог сотрудников</CardTitle>
@@ -683,11 +694,12 @@ export function AdminGameDashboard({
             </CardHeader>
             <CardContent className="flex flex-col gap-2">
               {employees.map((item) => (
-                <button
+                <Button
+                  variant="outline"
                   type="button"
                   key={item.id}
                   onClick={() => chooseEmployee(item.id)}
-                  className="hover:bg-muted flex items-center justify-between rounded-md border p-3 text-left"
+                  className="h-auto justify-between p-3 text-left"
                 >
                   <span>
                     <span className="block font-medium">{item.name}</span>
@@ -698,7 +710,7 @@ export function AdminGameDashboard({
                   <Badge variant={item.isActive ? "default" : "secondary"}>
                     {item.isActive ? "Активен" : "Скрыт"}
                   </Badge>
-                </button>
+                </Button>
               ))}
             </CardContent>
           </Card>
@@ -829,12 +841,11 @@ export function AdminGameDashboard({
               </form>
             </CardContent>
           </Card>
-        </TabsContent>
+        </div>
+      ) : null}
 
-        <TabsContent
-          value="tasks"
-          className="grid gap-6 xl:grid-cols-[1fr_1fr]"
-        >
+      {section === "tasks" ? (
+        <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
           <Card>
             <CardHeader>
               <CardTitle>Каталог заданий</CardTitle>
@@ -842,11 +853,12 @@ export function AdminGameDashboard({
             </CardHeader>
             <CardContent className="flex flex-col gap-2">
               {tasks.map((item) => (
-                <button
+                <Button
+                  variant="outline"
                   type="button"
                   key={item.id}
                   onClick={() => chooseTask(item.id)}
-                  className="hover:bg-muted flex items-center justify-between rounded-md border p-3 text-left"
+                  className="h-auto justify-between p-3 text-left"
                 >
                   <span>
                     <span className="block font-medium">{item.title}</span>
@@ -857,7 +869,7 @@ export function AdminGameDashboard({
                   <Badge variant={item.isActive ? "default" : "secondary"}>
                     {item.isActive ? "Активно" : "Скрыто"}
                   </Badge>
-                </button>
+                </Button>
               ))}
             </CardContent>
           </Card>
@@ -1002,12 +1014,11 @@ export function AdminGameDashboard({
               </form>
             </CardContent>
           </Card>
-        </TabsContent>
+        </div>
+      ) : null}
 
-        <TabsContent
-          value="variants"
-          className="grid gap-6 xl:grid-cols-[1fr_1fr]"
-        >
+      {section === "variants" ? (
+        <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
           <Card>
             <CardHeader>
               <CardTitle>Варианты AI-конвейера</CardTitle>
@@ -1017,11 +1028,12 @@ export function AdminGameDashboard({
             </CardHeader>
             <CardContent className="flex flex-col gap-2">
               {variants.map((item) => (
-                <button
+                <Button
+                  variant="outline"
                   type="button"
                   key={item.id}
                   onClick={() => chooseVariant(item.id)}
-                  className="hover:bg-muted flex items-start justify-between gap-3 rounded-md border p-3 text-left"
+                  className="h-auto items-start justify-between gap-3 p-3 text-left"
                 >
                   <span>
                     <span className="block font-medium">{item.name}</span>
@@ -1035,7 +1047,7 @@ export function AdminGameDashboard({
                       {item.isActive ? "Включён" : "Выключен"}
                     </Badge>
                   </span>
-                </button>
+                </Button>
               ))}
             </CardContent>
           </Card>
@@ -1234,9 +1246,11 @@ export function AdminGameDashboard({
               </form>
             </CardContent>
           </Card>
-        </TabsContent>
+        </div>
+      ) : null}
 
-        <TabsContent value="settings" className="grid gap-6 xl:grid-cols-2">
+      {section === "settings" ? (
+        <div className="grid gap-6 xl:grid-cols-2">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -1422,82 +1436,85 @@ export function AdminGameDashboard({
               </form>
             </CardContent>
           </Card>
-          <Card className="xl:col-span-2">
-            <CardHeader>
-              <CardTitle>Пользователи</CardTitle>
-              <CardDescription>
-                Зарегистрированные участники и их доступ к панели.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="pb-4">
-                <Field>
-                  <FieldLabel htmlFor="users-search">
-                    Поиск пользователей
-                  </FieldLabel>
-                  <Input
-                    id="users-search"
-                    value={userQuery}
-                    onChange={(event) => setUserQuery(event.target.value)}
-                    placeholder="Имя, email или username"
-                  />
-                </Field>
-              </div>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Имя</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Username</TableHead>
-                    <TableHead>Проверен</TableHead>
-                    <TableHead>Доступ</TableHead>
-                    <TableHead>Регистрация</TableHead>
-                    <TableHead className="text-right">Действие</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {visibleUsers.map((user) => (
-                    <TableRow key={user.id}>
-                      <TableCell className="font-medium">{user.name}</TableCell>
-                      <TableCell>{user.email}</TableCell>
-                      <TableCell>{user.username ?? "—"}</TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={user.emailVerified ? "default" : "outline"}
-                        >
-                          {user.emailVerified ? "Да" : "Нет"}
+        </div>
+      ) : null}
+
+      {section === "users" ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>Пользователи</CardTitle>
+            <CardDescription>
+              Зарегистрированные участники и их доступ к панели.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="pb-4">
+              <Field>
+                <FieldLabel htmlFor="users-search">
+                  Поиск пользователей
+                </FieldLabel>
+                <Input
+                  id="users-search"
+                  value={userQuery}
+                  onChange={(event) => setUserQuery(event.target.value)}
+                  placeholder="Имя, email или username"
+                />
+              </Field>
+            </div>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Имя</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Username</TableHead>
+                  <TableHead>Проверен</TableHead>
+                  <TableHead>Доступ</TableHead>
+                  <TableHead>Регистрация</TableHead>
+                  <TableHead className="text-right">Действие</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {visibleUsers.map((user) => (
+                  <TableRow key={user.id}>
+                    <TableCell className="font-medium">{user.name}</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>{user.username ?? "—"}</TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={user.emailVerified ? "default" : "outline"}
+                      >
+                        {user.emailVerified ? "Да" : "Нет"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <span className="flex flex-wrap gap-2">
+                        <Badge variant={user.isAdmin ? "default" : "outline"}>
+                          {user.isAdmin ? "Администратор" : "Участник"}
                         </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <span className="flex flex-wrap gap-2">
-                          <Badge variant={user.isAdmin ? "default" : "outline"}>
-                            {user.isAdmin ? "Администратор" : "Участник"}
-                          </Badge>
-                          {user.isBootstrapAdmin ? (
-                            <Badge variant="secondary">Bootstrap</Badge>
-                          ) : null}
-                        </span>
-                      </TableCell>
-                      <TableCell>{dateLabel(user.createdAt)}</TableCell>
-                      <TableCell className="text-right">
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant={user.isAdmin ? "outline" : "default"}
-                          disabled={pending || user.isBootstrapAdmin}
-                          onClick={() => updateAdmin(user.id, !user.isAdmin)}
-                        >
-                          {user.isAdmin ? "Отозвать" : "Назначить"}
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+                        {user.isBootstrapAdmin ? (
+                          <Badge variant="secondary">Bootstrap</Badge>
+                        ) : null}
+                      </span>
+                    </TableCell>
+                    <TableCell>{dateLabel(user.createdAt)}</TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant={user.isAdmin ? "outline" : "default"}
+                        disabled={pending || user.isBootstrapAdmin}
+                        onClick={() => updateAdmin(user.id, !user.isAdmin)}
+                      >
+                        {user.isAdmin ? "Отозвать" : "Назначить"}
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      ) : null}
     </div>
   );
 }

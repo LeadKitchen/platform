@@ -53,6 +53,8 @@ export interface PoolProviderOptions {
   /** Attempts per candidate before moving on. */
   attemptsPerCandidate?: number;
   onEvent?: (event: PoolEvent) => void;
+  /** Injectable transport, shared by every candidate. */
+  fetchImpl?: typeof fetch;
 }
 
 export interface PoolProvider extends LlmProvider {
@@ -69,8 +71,10 @@ const AVAILABILITY_PATTERN =
 
 function classify(error: unknown): PoolFailureKind {
   const statusCode = (error as { statusCode?: number })?.statusCode;
-  if (typeof statusCode === "number" && statusCode !== 400) {
-    return "availability";
+  // 400 is the one status that means "your request was wrong" rather than
+  // "the endpoint is unhappy" — everything else is worth a cooldown.
+  if (typeof statusCode === "number") {
+    return statusCode === 400 ? "capability" : "availability";
   }
 
   const message = error instanceof Error ? error.message : String(error);
@@ -96,6 +100,7 @@ export function createPoolProvider(options: PoolProviderOptions): PoolProvider {
       headers: candidate.headers,
       maxOutputTokens: candidate.maxOutputTokens,
       maxAttempts: attemptsPerCandidate,
+      fetchImpl: options.fetchImpl,
     }),
   }));
 

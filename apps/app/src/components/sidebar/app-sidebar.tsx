@@ -12,9 +12,16 @@ import {
   SidebarRail,
 } from "@acme/ui";
 import {
+  IconAdjustments,
+  IconBrain,
+  IconChartBar,
+  IconClipboardList,
   IconInnerShadowTop,
   IconListDetails,
+  IconMessages,
   IconSettings,
+  IconShieldLock,
+  IconUsers,
 } from "@tabler/icons-react";
 import type * as React from "react";
 import { NavMain, NavSecondary, NavUser } from "~/components/sidebar";
@@ -26,9 +33,53 @@ const data = {
       url: "/game",
       icon: IconListDetails,
       isActive: true,
+      items: [{ title: "Сессии", url: "/game" }],
+    },
+    {
+      title: "Администрирование",
+      url: "/admin/game/overview",
+      icon: IconShieldLock,
       items: [
-        { title: "Сессии", url: "/game" },
-        { title: "Админ-панель", url: "/admin/game" },
+        {
+          title: "Обзор",
+          url: "/admin/game/overview",
+          icon: IconChartBar,
+        },
+        {
+          title: "Сессии",
+          url: "/admin/game/sessions",
+          icon: IconClipboardList,
+        },
+        {
+          title: "Диалоги",
+          url: "/admin/game/dialogs",
+          icon: IconMessages,
+        },
+        {
+          title: "Сотрудники",
+          url: "/admin/game/employees",
+          icon: IconUsers,
+        },
+        {
+          title: "Задания",
+          url: "/admin/game/tasks",
+          icon: IconAdjustments,
+        },
+        {
+          title: "Варианты ИИ",
+          url: "/admin/game/variants",
+          icon: IconBrain,
+        },
+        {
+          title: "Пользователи",
+          url: "/admin/game/users",
+          icon: IconUsers,
+        },
+        {
+          title: "Настройки игры",
+          url: "/admin/game/settings",
+          icon: IconSettings,
+        },
       ],
     },
   ],
@@ -45,12 +96,9 @@ export function AppSidebar({
   user: { name: string; email: string; avatar: string };
   isAdmin: boolean;
 }) {
-  const navMain = data.navMain.map((item) => ({
-    ...item,
-    items: item.items.filter(
-      (subItem) => isAdmin || subItem.url !== "/admin/game",
-    ),
-  }));
+  const navMain = data.navMain.filter(
+    (item) => isAdmin || item.url !== "/admin/game/overview",
+  );
 
   return (
     <Sidebar collapsible="icon" {...props}>

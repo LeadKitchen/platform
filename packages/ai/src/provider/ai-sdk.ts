@@ -8,6 +8,39 @@ import { z } from "zod";
 import type { LlmProvider, LlmRequest, LlmResult } from "./types";
 
 /**
+ * Failure of a single provider call, with the transport status preserved.
+ *
+ * The pool decides between "this endpoint is down" and "this model cannot
+ * follow the schema" from `statusCode`. Wrapping the SDK error in a plain
+ * `Error` erased it, so a quota exhaustion looked like a quality problem and
+ * the candidate was never put on cooldown.
+ */
+export class LlmCallError extends Error {
+  readonly statusCode?: number;
+  readonly responseText?: string;
+
+  constructor(
+    message: string,
+    options: { cause?: unknown; statusCode?: number; responseText?: string },
+  ) {
+    super(message, { cause: options.cause });
+    this.name = "LlmCallError";
+    this.statusCode = options.statusCode;
+    this.responseText = options.responseText;
+  }
+}
+
+/** Dig the HTTP status out of an AI SDK error or any of its causes. */
+function findStatusCode(error: unknown, depth = 0): number | undefined {
+  if (!error || typeof error !== "object" || depth > 4) return undefined;
+  const status = (error as { statusCode?: number; status?: number }).statusCode;
+  if (typeof status === "number") return status;
+  const alt = (error as { status?: number }).status;
+  if (typeof alt === "number") return alt;
+  return findStatusCode((error as { cause?: unknown }).cause, depth + 1);
+}
+
+/**
  * Pull a JSON object out of an answer that carries prose around it.
  *
  * Models on gateways occasionally prefix the object with a stray line — a
@@ -63,6 +96,8 @@ export interface AiSdkProviderOptions {
    */
   supportsStructuredOutputs?: boolean;
   headers?: Record<string, string>;
+  /** Injectable transport: used by tests and by proxied environments. */
+  fetchImpl?: typeof fetch;
 }
 
 function buildModel(options: AiSdkProviderOptions): LanguageModel {
@@ -72,6 +107,7 @@ function buildModel(options: AiSdkProviderOptions): LanguageModel {
         apiKey: options.apiKey,
         baseURL: options.baseUrl,
         headers: options.headers,
+        fetch: options.fetchImpl,
       })(options.model);
 
     case "anthropic":
@@ -79,6 +115,7 @@ function buildModel(options: AiSdkProviderOptions): LanguageModel {
         apiKey: options.apiKey,
         baseURL: options.baseUrl,
         headers: options.headers,
+        fetch: options.fetchImpl,
       })(options.model);
 
     default:
@@ -88,6 +125,7 @@ function buildModel(options: AiSdkProviderOptions): LanguageModel {
         baseURL: options.baseUrl ?? "https://api.openai.com/v1",
         headers: options.headers,
         supportsStructuredOutputs: options.supportsStructuredOutputs ?? false,
+        fetch: options.fetchImpl,
       })(options.model);
   }
 }
@@ -153,6 +191,10 @@ export function createAiSdkProvider(
               content: message.content,
             })),
             maxOutputTokens,
+            // Retries belong to the pool, not to the SDK: an availability
+            // failure should move to the next candidate immediately instead of
+            // backing off against an endpoint that is already out of quota.
+            maxRetries: 0,
           });
 
           inputTokens += result.usage.inputTokens ?? 0;
@@ -211,7 +253,7 @@ export function createAiSdkProvider(
       const detail = (lastError as { cause?: { message?: string } })?.cause
         ?.message;
 
-      throw new Error(
+      throw new LlmCallError(
         [
           `${options.model} не вернула валидный объект для ${request.purpose} за ${maxAttempts} попыток:`,
           lastError instanceof Error ? lastError.message : String(lastError),
@@ -220,6 +262,11 @@ export function createAiSdkProvider(
         ]
           .filter(Boolean)
           .join("\n"),
+        {
+          cause: lastError,
+          statusCode: findStatusCode(lastError),
+          responseText: raw,
+        },
       );
     },
   };
