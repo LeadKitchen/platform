@@ -171,6 +171,45 @@ describe("createPoolProvider", () => {
   test("an empty pool fails loudly at construction", () => {
     expect(() => createPoolProvider({ candidates: [] })).toThrow(/пуст/);
   });
+
+  test("an aborted request stops retries and failover", async () => {
+    let calls = 0;
+    const fetchImpl = (async (
+      input: string | URL | Request,
+      init?: RequestInit,
+    ) => {
+      calls += 1;
+      const signal =
+        init?.signal ?? (input instanceof Request ? input.signal : undefined);
+      return new Promise<Response>((_resolve, reject) => {
+        if (signal?.aborted) {
+          reject(signal.reason);
+          return;
+        }
+        signal?.addEventListener("abort", () => reject(signal.reason), {
+          once: true,
+        });
+      });
+    }) as typeof fetch;
+    const provider = createPoolProvider({
+      candidates: [candidate("first"), candidate("second")],
+      attemptsPerCandidate: 3,
+      fetchImpl,
+    });
+    const controller = new AbortController();
+    const pending = provider.generate({
+      ...request(),
+      signal: controller.signal,
+    });
+
+    await Promise.resolve();
+    controller.abort(new DOMException("Stopped", "AbortError"));
+
+    await expect(pending).rejects.toThrow("Stopped");
+    expect(calls).toBe(1);
+    expect(provider.stats().availabilityFailures).toEqual({});
+    expect(provider.stats().capabilityFailures).toEqual({});
+  });
 });
 
 describe("buildOpenRouterCandidates", () => {
@@ -309,6 +348,37 @@ describe("исчерпание квоты аккаунта", () => {
     const callsAfterFirst = calls;
     await expect(provider.generate(request())).rejects.toThrow();
     expect(calls - callsAfterFirst).toBeLessThanOrEqual(3);
+  });
+
+  test("дневной лимит Groq (TPD, без дефиса в фразе) тоже распознаётся как аккаунтный", async () => {
+    // Groq формулирует иначе, чем OpenRouter: "tokens per day (TPD)", без
+    // дефиса. Пропустив этот вариант, пул принял бы исчерпание за проблему
+    // одной модели и бесполезно пробовал бы остальные кандидаты того же ключа.
+    const fetchImpl = (async () =>
+      new Response(
+        "Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_x` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 99019, Requested 2332.",
+        { status: 429 },
+      )) as unknown as typeof fetch;
+
+    const sameKey = (name: string): PoolCandidate => ({
+      id: name,
+      vendor: "openai-compatible",
+      model: name,
+      apiKey: "shared-groq-key",
+      baseUrl: "https://groq.test/v1",
+      supportsStructuredOutputs: false,
+    });
+
+    const provider = createPoolProvider({
+      candidates: [sameKey("a"), sameKey("b")],
+      attemptsPerCandidate: 1,
+      fetchImpl,
+    });
+
+    await expect(provider.generate(request())).rejects.toThrow();
+
+    const cooling = provider.stats().coolingDown;
+    expect(Object.keys(cooling).sort()).toEqual(["a", "b"]);
   });
 
   test("отдельные ключи не тянут друг друга в кулдаун", async () => {

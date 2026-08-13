@@ -3,6 +3,14 @@
 import {
   Alert,
   AlertDescription,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
   AlertTitle,
   Badge,
   Button,
@@ -28,6 +36,7 @@ import {
   IconArrowRight,
   IconChefHat,
   IconClock,
+  IconFlagCheck,
   IconUser,
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
@@ -55,6 +64,7 @@ export interface OrderRow {
   portions: number;
   deadlineMinutes: number;
   status: string;
+  dialogId?: string;
 }
 
 const STATUS_LABELS: Record<string, string> = {
@@ -85,6 +95,7 @@ export function OrderQueue(props: {
     String(props.defaultDeadlineMinutes),
   );
   const [pending, setPending] = useState(false);
+  const [finishOpen, setFinishOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const employeeById = new Map(props.employees.map((item) => [item.id, item]));
@@ -119,14 +130,35 @@ export function OrderQueue(props: {
     }
   }
 
-  async function openDialog(orderId: string) {
+  async function openDialog(order: OrderRow) {
     setPending(true);
     setError(null);
     try {
-      const dialog = await client.game.dialog.start({ orderId });
+      if (order.dialogId) {
+        router.push(`/game/dialog/${order.dialogId}`);
+        return;
+      }
+      const dialog = await client.game.dialog.start({ orderId: order.id });
       router.push(`/game/dialog/${dialog?.id}`);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Не удалось открыть");
+      setPending(false);
+    }
+  }
+
+  async function endSession() {
+    if (pending) return;
+    setPending(true);
+    setError(null);
+    try {
+      await client.game.session.end({ id: props.sessionId });
+      setFinishOpen(false);
+      router.push("/game");
+      router.refresh();
+    } catch (cause) {
+      setError(
+        cause instanceof Error ? cause.message : "Не удалось завершить смену",
+      );
       setPending(false);
     }
   }
@@ -142,7 +174,19 @@ export function OrderQueue(props: {
               разговор — вы сможете говорить голосом или писать.
             </CardDescription>
           </div>
-          <Badge>Следующий шаг</Badge>
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge>Следующий шаг</Badge>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={pending}
+              onClick={() => setFinishOpen(true)}
+            >
+              <IconFlagCheck data-icon="inline-start" />
+              Завершить смену
+            </Button>
+          </div>
         </div>
       </CardHeader>
 
@@ -297,9 +341,9 @@ export function OrderQueue(props: {
                   size="sm"
                   variant="outline"
                   disabled={pending}
-                  onClick={() => openDialog(order.id)}
+                  onClick={() => openDialog(order)}
                 >
-                  Продолжить
+                  {order.dialogId ? "Продолжить" : "Открыть"}
                   <IconArrowRight data-icon="inline-end" />
                 </Button>
               </li>
@@ -307,6 +351,23 @@ export function OrderQueue(props: {
           </ul>
         </div>
       </CardContent>
+      <AlertDialog open={finishOpen} onOpenChange={setFinishOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Завершить эту смену?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Смена исчезнет из активных. История разговоров и результаты
+              сохранятся в вашем прогрессе.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={pending}>Продолжить</AlertDialogCancel>
+            <AlertDialogAction disabled={pending} onClick={endSession}>
+              {pending ? "Завершаем…" : "Завершить смену"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 }

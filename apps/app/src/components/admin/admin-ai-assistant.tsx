@@ -97,14 +97,10 @@ function DraftCard({
   title,
   description,
   details,
-  pending,
-  onApply,
 }: {
   title: string;
   description: string;
   details: string[];
-  pending: boolean;
-  onApply: () => Promise<void>;
 }) {
   return (
     <Card>
@@ -123,10 +119,6 @@ function DraftCard({
             <li key={detail}>{detail}</li>
           ))}
         </ul>
-        <Button size="sm" disabled={pending} onClick={onApply}>
-          <IconDeviceFloppy data-icon="inline-start" />
-          Проверил — применить
-        </Button>
       </CardContent>
     </Card>
   );
@@ -137,6 +129,10 @@ export function AdminAiAssistant() {
   const [open, setOpen] = useState(false);
   const [request, setRequest] = useState("");
   const [draft, setDraft] = useState<ConfigurationDraft | null>(null);
+  const [changes, setChanges] = useState<
+    Array<{ path: string; before: unknown; after: unknown }>
+  >([]);
+  const [baseRevision, setBaseRevision] = useState<string | null>(null);
   const [meta, setMeta] = useState<{ model: string; latencyMs: number } | null>(
     null,
   );
@@ -150,6 +146,8 @@ export function AdminAiAssistant() {
         request: request.trim(),
       });
       setDraft(result.draft as ConfigurationDraft);
+      setBaseRevision(result.baseRevision);
+      setChanges(result.changes);
       setMeta(result.meta);
       toast.success("Черновик готов — проверьте изменения");
     } catch (cause) {
@@ -161,17 +159,35 @@ export function AdminAiAssistant() {
     }
   }
 
-  async function apply(label: string, action: () => Promise<unknown>) {
+  async function applyDraft() {
+    if (!draft || !baseRevision) return;
     setPending(true);
     try {
-      await action();
-      toast.success(`${label}: изменения применены`);
+      await client.admin.game.assistant.applyConfiguration({
+        request,
+        baseRevision,
+        draft,
+      });
+      toast.success("Все изменения применены одной транзакцией");
+      setDraft(null);
+      setBaseRevision(null);
+      setChanges([]);
       router.refresh();
     } catch (cause) {
       toast.error(cause instanceof Error ? cause.message : "Ошибка сохранения");
     } finally {
       setPending(false);
     }
+  }
+
+  async function rejectDraft() {
+    await client.admin.game.assistant
+      .rejectConfiguration({ changes: changes.length })
+      .catch(() => undefined);
+    setDraft(null);
+    setBaseRevision(null);
+    setChanges([]);
+    toast.info("Черновик отклонён, конфигурация не менялась");
   }
 
   return (
@@ -260,6 +276,58 @@ export function AdminAiAssistant() {
                   </p>
                 </div>
 
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Что изменится</CardTitle>
+                    <CardDescription>
+                      Сравнение текущей конфигурации с предложением LLM.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="flex flex-col gap-3">
+                    {changes.length === 0 ? (
+                      <p className="text-muted-foreground text-sm">
+                        Изменений данных нет.
+                      </p>
+                    ) : (
+                      changes.map((change) => (
+                        <Collapsible key={change.path}>
+                          <div className="rounded-lg border p-3">
+                            <div className="flex items-center justify-between gap-3">
+                              <code className="text-sm">{change.path}</code>
+                              <CollapsibleTrigger
+                                render={<Button variant="ghost" size="sm" />}
+                              >
+                                Показать diff
+                                <IconChevronDown data-icon="inline-end" />
+                              </CollapsibleTrigger>
+                            </div>
+                            <CollapsibleContent>
+                              <div className="mt-3 grid gap-3 lg:grid-cols-2">
+                                <div>
+                                  <p className="text-muted-foreground mb-1 text-xs">
+                                    Было
+                                  </p>
+                                  <pre className="bg-muted max-h-64 overflow-auto rounded-md p-3 text-xs">
+                                    {JSON.stringify(change.before, null, 2)}
+                                  </pre>
+                                </div>
+                                <div>
+                                  <p className="text-muted-foreground mb-1 text-xs">
+                                    Станет
+                                  </p>
+                                  <pre className="bg-muted max-h-64 overflow-auto rounded-md p-3 text-xs">
+                                    {JSON.stringify(change.after, null, 2)}
+                                  </pre>
+                                </div>
+                              </div>
+                            </CollapsibleContent>
+                          </div>
+                        </Collapsible>
+                      ))
+                    )}
+                  </CardContent>
+                </Card>
+
                 {draft.warnings.length > 0 ? (
                   <Alert>
                     <IconAlertTriangle />
@@ -279,20 +347,12 @@ export function AdminAiAssistant() {
                     <DraftCard
                       title="Настройки игры"
                       description="Значения для новых сессий"
-                      pending={pending}
                       details={[
                         `Раунд по умолчанию: ${draft.settings.defaultRound}`,
                         `Дедлайн: ${draft.settings.defaultDeadlineMinutes} мин`,
                         `Раунд 3: ${draft.settings.allowRoundThree ? "доступен" : "отключён"}`,
                         `Активных сессий: до ${draft.settings.maxActiveSessions}`,
                       ]}
-                      onApply={() =>
-                        apply("Настройки", () =>
-                          client.admin.game.system.updateSettings(
-                            draft.settings as SettingsDraft,
-                          ),
-                        )
-                      }
                     />
                   ) : null}
 
@@ -300,7 +360,6 @@ export function AdminAiAssistant() {
                     <DraftCard
                       title={draft.employee.name}
                       description={`${draft.employee.role} · ${draft.employee.level}`}
-                      pending={pending}
                       details={[
                         `ID: ${draft.employee.id}`,
                         `Компетенции: ${Object.keys(draft.employee.competences).join(", ") || "не заданы"}`,
@@ -308,13 +367,6 @@ export function AdminAiAssistant() {
                           ? "Сразу доступен в игре"
                           : "Сохранить выключенным",
                       ]}
-                      onApply={() =>
-                        apply("Сотрудник", () =>
-                          client.admin.game.catalog.upsertEmployee(
-                            draft.employee as EmployeeDraft,
-                          ),
-                        )
-                      }
                     />
                   ) : null}
 
@@ -322,20 +374,12 @@ export function AdminAiAssistant() {
                     <DraftCard
                       title={draft.task.title}
                       description={`Тип: ${draft.task.type}`}
-                      pending={pending}
                       details={[
                         `Сложность: ${draft.task.complexity} из 5`,
                         `Срочность: ${draft.task.timeCriticality} из 5`,
                         `Контрольные точки: ${draft.task.requiresCheckpoints ? "нужны" : "не обязательны"}`,
                         `Рисков: ${draft.task.failureModes.length}`,
                       ]}
-                      onApply={() =>
-                        apply("Задание", () =>
-                          client.admin.game.catalog.upsertTask(
-                            draft.task as TaskDraft,
-                          ),
-                        )
-                      }
                     />
                   ) : null}
 
@@ -343,7 +387,6 @@ export function AdminAiAssistant() {
                     <DraftCard
                       title={draft.variant.name}
                       description={draft.variant.description}
-                      pending={pending}
                       details={[
                         `Вовлечение: ${draft.variant.engagement}`,
                         `Знания: ${draft.variant.knowledge}`,
@@ -351,17 +394,24 @@ export function AdminAiAssistant() {
                         `Оценка: ${draft.variant.evaluation}`,
                         `Вес A/B: ${draft.variant.weight}`,
                       ]}
-                      onApply={() =>
-                        apply("Вариант ИИ", () =>
-                          client.admin.game.variants.upsert({
-                            ...(draft.variant as VariantDraft),
-                            model: draft.variant?.model ?? undefined,
-                            effort: draft.variant?.effort ?? undefined,
-                          }),
-                        )
-                      }
                     />
                   ) : null}
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    disabled={pending || changes.length === 0}
+                    onClick={applyDraft}
+                  >
+                    <IconDeviceFloppy data-icon="inline-start" />
+                    Проверил — применить всё
+                  </Button>
+                  <Button
+                    variant="outline"
+                    disabled={pending}
+                    onClick={rejectDraft}
+                  >
+                    Отклонить черновик
+                  </Button>
                 </div>
               </div>
             ) : null}

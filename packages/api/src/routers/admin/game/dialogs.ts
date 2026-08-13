@@ -11,7 +11,7 @@ import {
 } from "@acme/db";
 import { z } from "zod";
 
-import { adminProcedure } from "../../../orpc";
+import { facilitatorProcedure } from "../../../orpc";
 
 /**
  * Facilitator view: recent dialogs with their scores, filterable by arm and
@@ -19,7 +19,7 @@ import { adminProcedure } from "../../../orpc";
  *
  * @example client.admin.game.dialogs({ variantId: "graph-rag" })
  */
-export const dialogs = adminProcedure
+export const dialogs = facilitatorProcedure
   .input(
     z.object({
       variantId: z.string().max(64).optional(),
@@ -57,7 +57,7 @@ export const dialogs = adminProcedure
       .offset(input.offset);
   });
 
-export const detail = adminProcedure
+export const detail = facilitatorProcedure
   .input(z.object({ id: z.string().uuid() }))
   .handler(async ({ context, input }) => {
     const [row] = await context.db

@@ -1,0 +1,1470 @@
+{
+  "startedAt": "2026-08-13T16:49:04.580Z",
+  "finishedAt": "2026-08-13T17:00:51.180Z",
+  "providerId": "pool",
+  "model": "nvidia/nemotron-3-super-120b-a12b:free",
+  "epochs": 1,
+  "runsPerFixture": 1,
+  "fixtures": 20,
+  "expertLabelledFixtures": 0,
+  "referenceVariantId": "baseline",
+  "variants": [
+    {
+      "variantId": "baseline",
+      "items": 5,
+      "scoreMae": 10.2,
+      "scoreStdDev": 0,
+      "expectedStyleAccuracy": 1,
+      "actualStyleAccuracy": 1,
+      "styleKappa": 1,
+      "criteriaF1": 0.88,
+      "personaAdherence": 1,
+      "personaDriftRate": 0,
+      "personaDriftSlope": 0,
+      "silenceAccuracy": 1,
+      "avgLatencyMs": 9175,
+      "totalInputTokens": 21486,
+      "totalOutputTokens": 1313,
+      "totalCostUsd": 0,
+      "avgCostUsd": 0,
+      "modelMix": {
+        "nvidia/nemotron-3-super-120b-a12b:free": 5,
+        "llama-3.3-70b-versatile": 5
+      }
+    },
+    {
+      "variantId": "baseline-judge",
+      "items": 2,
+      "scoreMae": 11,
+      "scoreStdDev": 0,
+      "expectedStyleAccuracy": 1,
+      "actualStyleAccuracy": 1,
+      "styleKappa": 1,
+      "criteriaF1": 1,
+      "personaAdherence": 1,
+      "personaDriftRate": 0,
+      "personaDriftSlope": 0,
+      "silenceAccuracy": 1,
+      "avgLatencyMs": 10230,
+      "totalInputTokens": 10239,
+      "totalOutputTokens": 1256,
+      "totalCostUsd": 0,
+      "avgCostUsd": 0,
+      "modelMix": {
+        "nvidia/nemotron-3-super-120b-a12b:free": 2,
+        "llama-3.3-70b-versatile": 2
+      }
+    },
+    {
+      "variantId": "llm-first",
+      "items": 0,
+      "scoreMae": 0,
+      "scoreStdDev": 0,
+      "expectedStyleAccuracy": 0,
+      "actualStyleAccuracy": 0,
+      "styleKappa": 0,
+      "criteriaF1": 0,
+      "personaAdherence": 0,
+      "personaDriftRate": 0,
+      "personaDriftSlope": 0,
+      "silenceAccuracy": 0,
+      "avgLatencyMs": 0,
+      "totalInputTokens": 0,
+      "totalOutputTokens": 0,
+      "totalCostUsd": 0,
+      "avgCostUsd": 0,
+      "modelMix": {}
+    },
+    {
+      "variantId": "rag",
+      "items": 0,
+      "scoreMae": 0,
+      "scoreStdDev": 0,
+      "expectedStyleAccuracy": 0,
+      "actualStyleAccuracy": 0,
+      "styleKappa": 0,
+      "criteriaF1": 0,
+      "personaAdherence": 0,
+      "personaDriftRate": 0,
+      "personaDriftSlope": 0,
+      "silenceAccuracy": 0,
+      "avgLatencyMs": 0,
+      "totalInputTokens": 0,
+      "totalOutputTokens": 0,
+      "totalCostUsd": 0,
+      "avgCostUsd": 0,
+      "modelMix": {}
+    },
+    {
+      "variantId": "hybrid-rag",
+      "items": 0,
+      "scoreMae": 0,
+      "scoreStdDev": 0,
+      "expectedStyleAccuracy": 0,
+      "actualStyleAccuracy": 0,
+      "styleKappa": 0,
+      "criteriaF1": 0,
+      "personaAdherence": 0,
+      "personaDriftRate": 0,
+      "personaDriftSlope": 0,
+      "silenceAccuracy": 0,
+      "avgLatencyMs": 0,
+      "totalInputTokens": 0,
+      "totalOutputTokens": 0,
+      "totalCostUsd": 0,
+      "avgCostUsd": 0,
+      "modelMix": {}
+    },
+    {
+      "variantId": "graph-rag",
+      "items": 0,
+      "scoreMae": 0,
+      "scoreStdDev": 0,
+      "expectedStyleAccuracy": 0,
+      "actualStyleAccuracy": 0,
+      "styleKappa": 0,
+      "criteriaF1": 0,
+      "personaAdherence": 0,
+      "personaDriftRate": 0,
+      "personaDriftSlope": 0,
+      "silenceAccuracy": 0,
+      "avgLatencyMs": 0,
+      "totalInputTokens": 0,
+      "totalOutputTokens": 0,
+      "totalCostUsd": 0,
+      "avgCostUsd": 0,
+      "modelMix": {}
+    }
+  ],
+  "comparisons": [
+    {
+      "variantId": "baseline-judge",
+      "metrics": [
+        {
+          "metric": "scoreMae",
+          "label": "MAE к эксперту",
+          "direction": "lower",
+          "delta": 7,
+          "ciLow": 7,
+          "ciHigh": 7,
+          "pValue": 1,
+          "pairs": 1,
+          "significant": false
+        },
+        {
+          "metric": "actualStyleAccuracy",
+          "label": "Точность стиля",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 1,
+          "significant": false
+        },
+        {
+          "metric": "criteriaF1",
+          "label": "F1 по критериям",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 1,
+          "significant": false
+        },
+        {
+          "metric": "personaAdherence",
+          "label": "Удержание роли",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 1,
+          "significant": false
+        },
+        {
+          "metric": "personaDriftRate",
+          "label": "Дрейф персоны",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 1,
+          "significant": false
+        },
+        {
+          "metric": "costUsd",
+          "label": "Стоимость диалога",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 1,
+          "significant": false
+        }
+      ]
+    },
+    {
+      "variantId": "llm-first",
+      "metrics": [
+        {
+          "metric": "scoreMae",
+          "label": "MAE к эксперту",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "actualStyleAccuracy",
+          "label": "Точность стиля",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "criteriaF1",
+          "label": "F1 по критериям",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "personaAdherence",
+          "label": "Удержание роли",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "personaDriftRate",
+          "label": "Дрейф персоны",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "costUsd",
+          "label": "Стоимость диалога",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        }
+      ]
+    },
+    {
+      "variantId": "rag",
+      "metrics": [
+        {
+          "metric": "scoreMae",
+          "label": "MAE к эксперту",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "actualStyleAccuracy",
+          "label": "Точность стиля",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "criteriaF1",
+          "label": "F1 по критериям",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "personaAdherence",
+          "label": "Удержание роли",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "personaDriftRate",
+          "label": "Дрейф персоны",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "costUsd",
+          "label": "Стоимость диалога",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        }
+      ]
+    },
+    {
+      "variantId": "hybrid-rag",
+      "metrics": [
+        {
+          "metric": "scoreMae",
+          "label": "MAE к эксперту",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "actualStyleAccuracy",
+          "label": "Точность стиля",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "criteriaF1",
+          "label": "F1 по критериям",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "personaAdherence",
+          "label": "Удержание роли",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "personaDriftRate",
+          "label": "Дрейф персоны",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "costUsd",
+          "label": "Стоимость диалога",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        }
+      ]
+    },
+    {
+      "variantId": "graph-rag",
+      "metrics": [
+        {
+          "metric": "scoreMae",
+          "label": "MAE к эксперту",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "actualStyleAccuracy",
+          "label": "Точность стиля",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "criteriaF1",
+          "label": "F1 по критериям",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "personaAdherence",
+          "label": "Удержание роли",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "personaDriftRate",
+          "label": "Дрейф персоны",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "costUsd",
+          "label": "Стоимость диалога",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        }
+      ]
+    }
+  ],
+  "failures": [
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "baseline",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "baseline",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "baseline",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "baseline",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "baseline",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "baseline",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "baseline",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "baseline",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-directive",
+      "variantId": "baseline",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-coaching",
+      "variantId": "baseline",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-delegating",
+      "variantId": "baseline",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-directive",
+      "variantId": "baseline",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-coaching",
+      "variantId": "baseline",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-directive",
+      "variantId": "baseline",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-coaching",
+      "variantId": "baseline",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "baseline-judge",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "baseline-judge",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "baseline-judge",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "baseline-judge",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "baseline-judge",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "baseline-judge",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "baseline-judge",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "baseline-judge",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "baseline-judge",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "baseline-judge",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "baseline-judge",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-directive",
+      "variantId": "baseline-judge",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-coaching",
+      "variantId": "baseline-judge",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-directive",
+      "variantId": "baseline-judge",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-coaching",
+      "variantId": "baseline-judge",
+      "message": "Все кандидаты пула отказали для evaluation.criteria:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для evaluation.criteria за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для evaluation.criteria за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для evaluation.criteria за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-delegating",
+      "variantId": "baseline-judge",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-directive",
+      "variantId": "baseline-judge",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-coaching",
+      "variantId": "baseline-judge",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "llm-first",
+      "message": "Все кандидаты пула отказали для evaluation.criteria:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для evaluation.criteria за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для evaluation.criteria за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для evaluation.criteria за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "llm-first",
+      "message": "Все кандидаты пула отказали для evaluation.criteria:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для evaluation.criteria за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для evaluation.criteria за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для evaluation.criteria за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "llm-first",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "llm-first",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "llm-first",
+      "message": "Все кандидаты пула отказали для evaluation.style:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для evaluation.style за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для evaluation.style за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для evaluation.style за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "llm-first",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "llm-first",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "llm-first",
+      "message": "Все кандидаты пула отказали для evaluation.criteria:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для evaluation.criteria за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для evaluation.criteria за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для evaluation.criteria за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "llm-first",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "llm-first",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "llm-first",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "llm-first",
+      "message": "Все кандидаты пула отказали для evaluation.criteria:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для evaluation.criteria за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для evaluation.criteria за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для evaluation.criteria за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-directive",
+      "variantId": "llm-first",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-coaching",
+      "variantId": "llm-first",
+      "message": "Все кандидаты пула отказали для evaluation.style:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для evaluation.style за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для evaluation.style за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для evaluation.style за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-delegating",
+      "variantId": "llm-first",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-directive",
+      "variantId": "llm-first",
+      "message": "Все кандидаты пула отказали для persona.reply:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-coaching",
+      "variantId": "llm-first",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-delegating",
+      "variantId": "llm-first",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-directive",
+      "variantId": "llm-first",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-coaching",
+      "variantId": "llm-first",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-directive",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-coaching",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-delegating",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-directive",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-coaching",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-delegating",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-directive",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-coaching",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "hybrid-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "hybrid-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "hybrid-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "hybrid-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "hybrid-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "hybrid-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "hybrid-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "hybrid-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "hybrid-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "hybrid-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "hybrid-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "hybrid-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-directive",
+      "variantId": "hybrid-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-coaching",
+      "variantId": "hybrid-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-delegating",
+      "variantId": "hybrid-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-directive",
+      "variantId": "hybrid-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-coaching",
+      "variantId": "hybrid-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-delegating",
+      "variantId": "hybrid-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-directive",
+      "variantId": "hybrid-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-coaching",
+      "variantId": "hybrid-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "graph-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "graph-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "graph-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "graph-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "graph-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "graph-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "graph-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "graph-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "graph-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "graph-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "graph-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "graph-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-directive",
+      "variantId": "graph-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-coaching",
+      "variantId": "graph-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-delegating",
+      "variantId": "graph-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-directive",
+      "variantId": "graph-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-coaching",
+      "variantId": "graph-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-delegating",
+      "variantId": "graph-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-directive",
+      "variantId": "graph-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-coaching",
+      "variantId": "graph-rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:\ngroq#1:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#2:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#3:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\ngroq#4:llama-3.3-70b-versatile: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:\nopenai#1:gpt-5.1-all: gpt-5.1-all не вернула валидный объект для persona.reply за 2 попыток:"
+    }
+  ],
+  "epochSummaries": [
+    {
+      "epoch": 1,
+      "variants": [
+        {
+          "variantId": "baseline",
+          "items": 5,
+          "scoreMae": 10.2,
+          "scoreStdDev": 0,
+          "expectedStyleAccuracy": 1,
+          "actualStyleAccuracy": 1,
+          "styleKappa": 1,
+          "criteriaF1": 0.88,
+          "personaAdherence": 1,
+          "personaDriftRate": 0,
+          "personaDriftSlope": 0,
+          "silenceAccuracy": 1,
+          "avgLatencyMs": 9175,
+          "totalInputTokens": 21486,
+          "totalOutputTokens": 1313,
+          "totalCostUsd": 0,
+          "avgCostUsd": 0,
+          "modelMix": {
+            "nvidia/nemotron-3-super-120b-a12b:free": 5,
+            "llama-3.3-70b-versatile": 5
+          }
+        },
+        {
+          "variantId": "baseline-judge",
+          "items": 2,
+          "scoreMae": 11,
+          "scoreStdDev": 0,
+          "expectedStyleAccuracy": 1,
+          "actualStyleAccuracy": 1,
+          "styleKappa": 1,
+          "criteriaF1": 1,
+          "personaAdherence": 1,
+          "personaDriftRate": 0,
+          "personaDriftSlope": 0,
+          "silenceAccuracy": 1,
+          "avgLatencyMs": 10230,
+          "totalInputTokens": 10239,
+          "totalOutputTokens": 1256,
+          "totalCostUsd": 0,
+          "avgCostUsd": 0,
+          "modelMix": {
+            "nvidia/nemotron-3-super-120b-a12b:free": 2,
+            "llama-3.3-70b-versatile": 2
+          }
+        },
+        {
+          "variantId": "llm-first",
+          "items": 0,
+          "scoreMae": 0,
+          "scoreStdDev": 0,
+          "expectedStyleAccuracy": 0,
+          "actualStyleAccuracy": 0,
+          "styleKappa": 0,
+          "criteriaF1": 0,
+          "personaAdherence": 0,
+          "personaDriftRate": 0,
+          "personaDriftSlope": 0,
+          "silenceAccuracy": 0,
+          "avgLatencyMs": 0,
+          "totalInputTokens": 0,
+          "totalOutputTokens": 0,
+          "totalCostUsd": 0,
+          "avgCostUsd": 0,
+          "modelMix": {}
+        },
+        {
+          "variantId": "rag",
+          "items": 0,
+          "scoreMae": 0,
+          "scoreStdDev": 0,
+          "expectedStyleAccuracy": 0,
+          "actualStyleAccuracy": 0,
+          "styleKappa": 0,
+          "criteriaF1": 0,
+          "personaAdherence": 0,
+          "personaDriftRate": 0,
+          "personaDriftSlope": 0,
+          "silenceAccuracy": 0,
+          "avgLatencyMs": 0,
+          "totalInputTokens": 0,
+          "totalOutputTokens": 0,
+          "totalCostUsd": 0,
+          "avgCostUsd": 0,
+          "modelMix": {}
+        },
+        {
+          "variantId": "hybrid-rag",
+          "items": 0,
+          "scoreMae": 0,
+          "scoreStdDev": 0,
+          "expectedStyleAccuracy": 0,
+          "actualStyleAccuracy": 0,
+          "styleKappa": 0,
+          "criteriaF1": 0,
+          "personaAdherence": 0,
+          "personaDriftRate": 0,
+          "personaDriftSlope": 0,
+          "silenceAccuracy": 0,
+          "avgLatencyMs": 0,
+          "totalInputTokens": 0,
+          "totalOutputTokens": 0,
+          "totalCostUsd": 0,
+          "avgCostUsd": 0,
+          "modelMix": {}
+        },
+        {
+          "variantId": "graph-rag",
+          "items": 0,
+          "scoreMae": 0,
+          "scoreStdDev": 0,
+          "expectedStyleAccuracy": 0,
+          "actualStyleAccuracy": 0,
+          "styleKappa": 0,
+          "criteriaF1": 0,
+          "personaAdherence": 0,
+          "personaDriftRate": 0,
+          "personaDriftSlope": 0,
+          "silenceAccuracy": 0,
+          "avgLatencyMs": 0,
+          "totalInputTokens": 0,
+          "totalOutputTokens": 0,
+          "totalCostUsd": 0,
+          "avgCostUsd": 0,
+          "modelMix": {}
+        }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "baseline",
+      "epoch": 1,
+      "score": 100,
+      "expertScore": 90,
+      "absError": 10,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 20472,
+      "inputTokens": 3432,
+      "outputTokens": 205,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "nvidia/nemotron-3-super-120b-a12b:free",
+        "llama-3.3-70b-versatile"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "baseline",
+      "epoch": 1,
+      "score": 31,
+      "expertScore": 20,
+      "absError": 11,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 2452,
+      "inputTokens": 4688,
+      "outputTokens": 290,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "nvidia/nemotron-3-super-120b-a12b:free",
+        "llama-3.3-70b-versatile"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "baseline",
+      "epoch": 1,
+      "score": 64,
+      "expertScore": 40,
+      "absError": 24,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 5002,
+      "inputTokens": 4785,
+      "outputTokens": 309,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "nvidia/nemotron-3-super-120b-a12b:free",
+        "llama-3.3-70b-versatile"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "baseline",
+      "epoch": 1,
+      "score": 7,
+      "expertScore": 5,
+      "absError": 2,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 8745,
+      "inputTokens": 4664,
+      "outputTokens": 242,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "nvidia/nemotron-3-super-120b-a12b:free",
+        "llama-3.3-70b-versatile"
+      ]
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-delegating",
+      "variantId": "baseline",
+      "epoch": 1,
+      "score": 9,
+      "expertScore": 5,
+      "absError": 4,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 9206,
+      "inputTokens": 3917,
+      "outputTokens": 267,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "nvidia/nemotron-3-super-120b-a12b:free",
+        "llama-3.3-70b-versatile"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 87,
+      "expertScore": 90,
+      "absError": 3,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 10641,
+      "inputTokens": 5068,
+      "outputTokens": 587,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "nvidia/nemotron-3-super-120b-a12b:free",
+        "llama-3.3-70b-versatile"
+      ]
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-delegating",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 24,
+      "expertScore": 5,
+      "absError": 19,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 9819,
+      "inputTokens": 5171,
+      "outputTokens": 669,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "nvidia/nemotron-3-super-120b-a12b:free",
+        "llama-3.3-70b-versatile"
+      ]
+    }
+  ],
+  "poolStats": {
+    "servedBy": {
+      "groq#3:llama-3.3-70b-versatile": 93,
+      "groq#4:llama-3.3-70b-versatile": 73,
+      "groq#2:llama-3.3-70b-versatile": 1,
+      "groq#1:llama-3.3-70b-versatile": 1
+    },
+    "availabilityFailures": {
+      "openrouter#1:nvidia/nemotron-3-super-120b-a12b:free": 253,
+      "openrouter#1:nvidia/nemotron-nano-9b-v2:free": 253,
+      "groq#1:llama-3.3-70b-versatile": 252,
+      "groq#2:llama-3.3-70b-versatile": 251,
+      "groq#3:llama-3.3-70b-versatile": 182,
+      "groq#4:llama-3.3-70b-versatile": 157,
+      "openai#1:gpt-5.1-all": 118
+    },
+    "capabilityFailures": {},
+    "coolingDown": {
+      "openrouter#1:nvidia/nemotron-3-super-120b-a12b:free": 1786640749101,
+      "openrouter#1:nvidia/nemotron-nano-9b-v2:free": 1786640749101,
+      "openai#1:gpt-5.1-all": 1786640751153,
+      "groq#2:llama-3.3-70b-versatile": 1786640749987,
+      "groq#1:llama-3.3-70b-versatile": 1786640749510,
+      "groq#3:llama-3.3-70b-versatile": 1786640750435,
+      "groq#4:llama-3.3-70b-versatile": 1786640750827
+    }
+  }
+}

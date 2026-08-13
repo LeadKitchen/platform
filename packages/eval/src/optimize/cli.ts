@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 import { mkdir, writeFile } from "node:fs/promises";
-import { dirname } from "node:path";
+import { dirname, resolve } from "node:path";
 
 import {
   CRITERIA_JUDGE_SYSTEM,
@@ -115,7 +115,7 @@ async function main(): Promise<void> {
 
   const out = read("--out");
   if (out) {
-    await mkdir(dirname(out), { recursive: true });
+    await mkdir(dirname(resolve(out)), { recursive: true });
     await writeFile(
       out,
       JSON.stringify(

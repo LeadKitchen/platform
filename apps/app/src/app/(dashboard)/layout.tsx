@@ -23,9 +23,15 @@ export default async function DashboardLayout({
     ? undefined
     : await db.query.AppAdmin.findFirst({
         where: eq(AppAdmin.userId, session.user.id),
-        columns: { userId: true },
+        columns: { userId: true, role: true },
       });
-  const isAdmin = isBootstrapAdmin || Boolean(persistedAdmin);
+  const adminRole = isBootstrapAdmin
+    ? "admin"
+    : (persistedAdmin?.role as
+        | "admin"
+        | "methodologist"
+        | "facilitator"
+        | undefined);
   return (
     <SidebarProvider>
       <AppSidebar
@@ -34,7 +40,7 @@ export default async function DashboardLayout({
           email: session.user.email,
           avatar: session.user.image || "",
         }}
-        isAdmin={isAdmin}
+        adminRole={adminRole}
       />
       <SidebarInset>{children}</SidebarInset>
     </SidebarProvider>

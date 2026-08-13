@@ -30,8 +30,10 @@ export function createMockProvider(
     id: options.id ?? "mock",
     model: options.model ?? "mock-model",
     async generate<T>(request: LlmRequest<T>): Promise<LlmResult<T>> {
+      request.signal?.throwIfAborted();
       const raw = responder(request as LlmRequest<unknown>);
       const value = request.schema.parse(raw);
+      request.signal?.throwIfAborted();
 
       const promptChars =
         request.system.length +

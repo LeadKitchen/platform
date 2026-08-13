@@ -89,7 +89,11 @@ export default async function SessionPage({
           defaultDeadlineMinutes={reference.settings.defaultDeadlineMinutes}
           employees={reference.employees}
           tasks={reference.tasks}
-          orders={orders}
+          orders={orders.map((order) => ({
+            ...order,
+            dialogId: dialogs.find((row) => row.dialog.orderId === order.id)
+              ?.dialog.id,
+          }))}
         />
 
         <Card>

@@ -6,12 +6,16 @@ import {
   GameEvaluation,
   GameEvent,
   GameOrder,
-  GameSession,
+  GameProductEvent,
 } from "@acme/db";
-import { detectToxicity } from "@acme/game";
+import { detectCriteria, detectToxicity, resolveExpectation } from "@acme/game";
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
-
+import {
+  requireOwnedDialog,
+  requireOwnedOrder,
+  requireOwnedSession,
+} from "../../game/access";
 import {
   appendEvent,
   countActiveOrders,
@@ -55,16 +59,18 @@ function fallbackEmployeeReply(loaded: Awaited<ReturnType<typeof loadDialog>>) {
 export const start = protectedProcedure
   .input(z.object({ orderId: z.uuid() }))
   .handler(async ({ context, input }) => {
-    const [row] = await context.db
-      .select({ order: GameOrder, session: GameSession })
-      .from(GameOrder)
-      .innerJoin(GameSession, eq(GameSession.id, GameOrder.sessionId))
-      .where(eq(GameOrder.id, input.orderId))
+    const row = await requireOwnedOrder(
+      context.db,
+      input.orderId,
+      context.session.user.id,
+    );
+    const [existing] = await context.db
+      .select()
+      .from(GameDialog)
+      .where(eq(GameDialog.orderId, row.order.id))
+      .orderBy(desc(GameDialog.startedAt))
       .limit(1);
-
-    if (!row) {
-      throw new ORPCError("NOT_FOUND", { message: "Заказ не найден" });
-    }
+    if (existing) return existing;
 
     const engine = await loadEngine(context.db);
     const variantId = row.session.variantId ?? engine.defaultVariantId;
@@ -76,30 +82,43 @@ export const start = protectedProcedure
       row.order.employeeId,
     );
 
-    const [dialog] = await context.db
-      .insert(GameDialog)
-      .values({
+    const dialog = await context.db.transaction(async (tx) => {
+      const [created] = await tx
+        .insert(GameDialog)
+        .values({
+          sessionId: row.session.id,
+          orderId: row.order.id,
+          employeeId: row.order.employeeId,
+          taskId: row.order.taskId,
+          round,
+          variantId,
+          activeOrders: Math.max(1, activeOrders),
+          soloOnShift: round === 3,
+        })
+        .returning();
+      if (!created) return undefined;
+      await tx
+        .update(GameOrder)
+        .set({ status: "in_progress" })
+        .where(eq(GameOrder.id, row.order.id));
+      await tx.insert(GameProductEvent).values({
+        userId: context.session.user.id,
         sessionId: row.session.id,
-        orderId: row.order.id,
-        employeeId: row.order.employeeId,
-        taskId: row.order.taskId,
-        round,
-        variantId,
-        activeOrders: Math.max(1, activeOrders),
-        soloOnShift: round === 3,
-      })
-      .returning();
+        dialogId: created.id,
+        name: "dialog_started",
+        properties: {
+          taskId: row.order.taskId,
+          employeeId: row.order.employeeId,
+        },
+      });
+      return created;
+    });
 
     if (!dialog) {
       throw new ORPCError("INTERNAL_SERVER_ERROR", {
         message: "Не удалось создать диалог",
       });
     }
-
-    await context.db
-      .update(GameOrder)
-      .set({ status: "in_progress" })
-      .where(eq(GameOrder.id, row.order.id));
 
     return dialog;
   });
@@ -120,7 +139,12 @@ export const say = protectedProcedure
       text: z.string().min(1).max(2000),
     }),
   )
-  .handler(async ({ context, input }) => {
+  .handler(async ({ context, input, signal }) => {
+    await requireOwnedDialog(
+      context.db,
+      input.dialogId,
+      context.session.user.id,
+    );
     const loaded = await requireOpenDialog(context.db, input.dialogId);
     const engine = await loadEngine(context.db);
     const pipeline = engine.pipeline(loaded.record.variantId);
@@ -139,8 +163,18 @@ export const say = protectedProcedure
       turn = await pipeline.respond({
         dialog: loaded.context,
         utterance: input.text,
+        signal,
       });
     } catch (cause) {
+      if (signal?.aborted) {
+        await appendEvent(context.db, input.dialogId, "error", {
+          stage: "persona",
+          message: "Ответ остановлен игроком",
+          recovered: false,
+          aborted: true,
+        });
+        throw cause;
+      }
       const fallbackReply = fallbackEmployeeReply(loaded);
       await appendEvent(context.db, input.dialogId, "error", {
         stage: "persona",
@@ -220,6 +254,11 @@ export const say = protectedProcedure
 export const finish = protectedProcedure
   .input(z.object({ dialogId: z.uuid() }))
   .handler(async ({ context, input }) => {
+    await requireOwnedDialog(
+      context.db,
+      input.dialogId,
+      context.session.user.id,
+    );
     const loaded = await requireOpenDialog(context.db, input.dialogId);
     const engine = await loadEngine(context.db);
     const pipeline = engine.pipeline(loaded.record.variantId);
@@ -293,12 +332,123 @@ export const finish = protectedProcedure
           result.evaluation.outcome.status === "failed" ? "failed" : "done",
       })
       .where(eq(GameOrder.id, loaded.record.orderId));
+    await context.db
+      .insert(GameProductEvent)
+      .values({
+        userId: context.session.user.id,
+        sessionId: loaded.record.sessionId,
+        dialogId: input.dialogId,
+        name: "dialog_completed",
+        properties: { score: result.evaluation.scorePercent },
+      })
+      .catch(() => undefined);
 
     return {
       evaluation: result.evaluation,
       variantId: loaded.record.variantId,
       telemetry: { latencyMs, inputTokens, outputTokens, costUsd },
     };
+  });
+
+export const preflight = protectedProcedure
+  .input(z.object({ dialogId: z.uuid() }))
+  .handler(async ({ context, input }) => {
+    await requireOwnedDialog(
+      context.db,
+      input.dialogId,
+      context.session.user.id,
+    );
+    const loaded = await requireOpenDialog(context.db, input.dialogId);
+    const expectation = resolveExpectation(
+      loaded.context.employee,
+      loaded.context.task,
+      loaded.context.shift,
+    );
+    const met = detectCriteria(loaded.context.turns);
+    const criteria = expectation.requiredCriteria.map((criterion) => ({
+      id: criterion.id,
+      title: criterion.title,
+      met: met.has(criterion.id),
+    }));
+    const critical = new Set([
+      "clarify_task",
+      "set_deadline",
+      "check_understanding",
+    ]);
+    const missingCritical = criteria.filter(
+      (criterion) => critical.has(criterion.id) && !criterion.met,
+    );
+    return {
+      ready: missingCritical.length === 0,
+      criteria,
+      missingCritical,
+      managerTurns: loaded.context.turns.filter(
+        (turn) => turn.role === "manager",
+      ).length,
+    };
+  });
+
+export const replay = protectedProcedure
+  .input(z.object({ dialogId: z.uuid() }))
+  .handler(async ({ context, input }) => {
+    const owned = await requireOwnedDialog(
+      context.db,
+      input.dialogId,
+      context.session.user.id,
+    );
+    const [sourceOrder] = await context.db
+      .select()
+      .from(GameOrder)
+      .where(eq(GameOrder.id, owned.dialog.orderId))
+      .limit(1);
+    if (!sourceOrder) {
+      throw new ORPCError("NOT_FOUND", { message: "Исходный заказ не найден" });
+    }
+    const activeOrders = await countActiveOrders(
+      context.db,
+      owned.session.id,
+      sourceOrder.employeeId,
+    );
+    const dialog = await context.db.transaction(async (tx) => {
+      const [order] = await tx
+        .insert(GameOrder)
+        .values({
+          sessionId: sourceOrder.sessionId,
+          taskId: sourceOrder.taskId,
+          employeeId: sourceOrder.employeeId,
+          portions: sourceOrder.portions,
+          deadlineMinutes: sourceOrder.deadlineMinutes,
+          notes: sourceOrder.notes,
+          status: "in_progress",
+        })
+        .returning();
+      if (!order) throw new Error("Не удалось повторить заказ");
+      const [created] = await tx
+        .insert(GameDialog)
+        .values({
+          sessionId: owned.session.id,
+          orderId: order.id,
+          employeeId: order.employeeId,
+          taskId: order.taskId,
+          round: owned.dialog.round,
+          variantId: owned.dialog.variantId,
+          activeOrders: Math.max(1, activeOrders + 1),
+          soloOnShift: owned.dialog.soloOnShift,
+        })
+        .returning();
+      if (created) {
+        await tx.insert(GameProductEvent).values({
+          userId: context.session.user.id,
+          sessionId: owned.session.id,
+          dialogId: input.dialogId,
+          name: "situation_replayed",
+          properties: { newDialogId: created.id },
+        });
+      }
+      return created;
+    });
+    if (!dialog) throw new Error("Не удалось открыть повторный разговор");
+    return dialog;
   });
 
 /**
@@ -309,6 +459,11 @@ export const finish = protectedProcedure
 export const byId = protectedProcedure
   .input(z.object({ dialogId: z.uuid() }))
   .handler(async ({ context, input }) => {
+    await requireOwnedDialog(
+      context.db,
+      input.dialogId,
+      context.session.user.id,
+    );
     const loaded = await loadDialog(context.db, input.dialogId);
 
     const [evaluation] = await context.db
@@ -343,14 +498,19 @@ export const byId = protectedProcedure
  */
 export const list = protectedProcedure
   .input(z.object({ sessionId: z.uuid() }))
-  .handler(async ({ context, input }) =>
-    context.db
+  .handler(async ({ context, input }) => {
+    await requireOwnedSession(
+      context.db,
+      input.sessionId,
+      context.session.user.id,
+    );
+    return context.db
       .select({ dialog: GameDialog, evaluation: GameEvaluation })
       .from(GameDialog)
       .leftJoin(GameEvaluation, eq(GameEvaluation.dialogId, GameDialog.id))
       .where(eq(GameDialog.sessionId, input.sessionId))
-      .orderBy(desc(GameDialog.startedAt)),
-  );
+      .orderBy(desc(GameDialog.startedAt));
+  });
 
 /**
  * Cheap guardrail the platform can call before sending audio transcripts on,
@@ -362,4 +522,13 @@ export const screen = protectedProcedure
   .input(z.object({ text: z.string().max(2000) }))
   .handler(({ input }) => ({ toxic: detectToxicity(input.text) }));
 
-export const gameDialogRouter = { start, say, finish, byId, list, screen };
+export const gameDialogRouter = {
+  start,
+  say,
+  finish,
+  preflight,
+  replay,
+  byId,
+  list,
+  screen,
+};

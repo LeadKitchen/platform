@@ -25,6 +25,8 @@ export interface LlmRequest<T> {
   schemaName: string;
   maxTokens?: number;
   effort?: LlmEffort;
+  /** Cancels the underlying model request and every retry/failover attempt. */
+  signal?: AbortSignal;
 }
 
 export interface LlmResult<T> {

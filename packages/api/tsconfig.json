@@ -2,7 +2,7 @@
   "extends": "@acme/tsconfig/compiled-package.json",
   "compilerOptions": {
     "rootDir": "./src",
-    "types": ["node"]
+    "types": ["node", "bun"]
   },
   "include": ["src"],
   "exclude": ["node_modules"]

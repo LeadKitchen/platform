@@ -15,6 +15,7 @@ export {
 } from "./metrics";
 export { renderMarkdownReport } from "./report";
 export {
+  buildComparisons,
   type MetricComparison,
   type RunOptions,
   type RunResult,

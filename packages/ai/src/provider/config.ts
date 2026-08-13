@@ -21,28 +21,38 @@ import type { PoolCandidate } from "./pool";
  *
  * Re-run the probe when adding models; do not extend this list from the
  * provider's catalogue alone.
+ *
+ * `gemma-4-26b-a4b-it` and `nemotron-3-nano-30b-a3b` passed that probe but
+ * were dropped after the first real harness run: both failed
+ * `persona.reply`'s schema consistently against the actual production system
+ * prompt (longer and stricter than the probe's simplified one), from the very
+ * first jobs — not a rate-limit artefact. The probe's shorter prompt was not a
+ * faithful stand-in for these two; production evidence overrides it. See
+ * `OPENROUTER_REJECTED_MODELS` and `docs/model-pool.md`.
  */
 export const OPENROUTER_FREE_MODELS = [
   "nvidia/nemotron-3-super-120b-a12b:free",
-  "google/gemma-4-26b-a4b-it:free",
-  "nvidia/nemotron-3-nano-30b-a3b:free",
   "nvidia/nemotron-nano-9b-v2:free",
 ] as const;
 
 /**
- * Free models that failed the probe, kept so they are not re-added by mistake.
+ * Free models that failed either the probe or a real harness run, kept so
+ * they are not re-added by mistake.
  *
  * Notably `nemotron-3.5-lightning` (1M context) and `gemma-4-31b-it` are both
  * larger than several models that passed — context size and parameter count
  * predicted nothing here. Whether a model returns a schema-valid object and
  * stays in a Russian role is an empirical question, and this is the answer for
- * this task as of the last probe.
+ * this task as of the last check.
  */
 export const OPENROUTER_REJECTED_MODELS = [
   "nvidia/nemotron-3.5-lightning:free",
   "google/gemma-4-31b-it:free",
   "openai/gpt-oss-20b:free",
   "inclusionai/ling-3.0-tiny:free",
+  // Passed probe-models.ts, failed against the real production prompt:
+  "google/gemma-4-26b-a4b-it:free",
+  "nvidia/nemotron-3-nano-30b-a3b:free",
 ] as const;
 
 export const OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1";

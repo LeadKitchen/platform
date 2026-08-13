@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 import { mkdir, writeFile } from "node:fs/promises";
-import { dirname } from "node:path";
+import { dirname, resolve } from "node:path";
 
 import { BUILT_IN_VARIANTS, createProviderFromEnv } from "@acme/ai";
 
@@ -159,13 +159,13 @@ async function main(): Promise<void> {
   console.log(report);
 
   if (flags.out) {
-    await mkdir(dirname(flags.out), { recursive: true });
+    await mkdir(dirname(resolve(flags.out)), { recursive: true });
     await writeFile(flags.out, report, "utf8");
     console.log(`\nОтчёт записан: ${flags.out}`);
   }
 
   if (flags.json) {
-    await mkdir(dirname(flags.json), { recursive: true });
+    await mkdir(dirname(resolve(flags.json)), { recursive: true });
     await writeFile(flags.json, JSON.stringify(result, null, 2), "utf8");
     console.log(`Сырые результаты: ${flags.json}`);
   }

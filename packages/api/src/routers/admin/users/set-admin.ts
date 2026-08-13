@@ -6,7 +6,15 @@ import { adminProcedure } from "../../../orpc";
 
 /** Grant or revoke persistent admin access for a registered user. */
 export const setAdmin = adminProcedure
-  .input(z.object({ userId: z.string().min(1), isAdmin: z.boolean() }))
+  .input(
+    z.object({
+      userId: z.string().min(1),
+      isAdmin: z.boolean(),
+      role: z
+        .enum(["admin", "methodologist", "facilitator"])
+        .default("facilitator"),
+    }),
+  )
   .handler(async ({ context, input }) => {
     const [target] = await context.db
       .select({ id: user.id, email: user.email })
@@ -34,15 +42,31 @@ export const setAdmin = adminProcedure
         message: "Нельзя отозвать собственный доступ администратора",
       });
     }
+    if (
+      input.isAdmin &&
+      target.id === context.session.user.id &&
+      input.role !== "admin"
+    ) {
+      throw new ORPCError("BAD_REQUEST", {
+        message: "Нельзя понизить собственную роль администратора",
+      });
+    }
 
     if (input.isAdmin) {
       await context.db
         .insert(AppAdmin)
-        .values({ userId: target.id, grantedBy: context.session.user.id })
-        .onConflictDoNothing();
+        .values({
+          userId: target.id,
+          grantedBy: context.session.user.id,
+          role: input.role,
+        })
+        .onConflictDoUpdate({
+          target: AppAdmin.userId,
+          set: { role: input.role, grantedBy: context.session.user.id },
+        });
     } else {
       await context.db.delete(AppAdmin).where(eq(AppAdmin.userId, target.id));
     }
 
-    return { userId: target.id, isAdmin: input.isAdmin };
+    return { userId: target.id, isAdmin: input.isAdmin, role: input.role };
   });

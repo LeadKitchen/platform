@@ -35,19 +35,12 @@ export interface SessionDefaults {
  * иначе одну и ту же команду оценивали бы разные подходы, и сравнение
  * подходов потеряло бы смысл.
  */
-export function CreateSessionForm({
-  variants,
-  defaults,
-}: {
-  variants: VariantOption[];
-  defaults: SessionDefaults;
-}) {
+export function CreateSessionForm({ defaults }: { defaults: SessionDefaults }) {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [round, setRound] = useState<"2" | "3">(
     String(defaults.defaultRound) as "2" | "3",
   );
-  const variantId = defaults.defaultVariantId ?? variants[0]?.id ?? "";
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -67,7 +60,6 @@ export function CreateSessionForm({
             month: "long",
           }).format(new Date())}`,
         round: round === "3" ? 3 : 2,
-        variantId: variantId || undefined,
       });
       if (!session?.id) {
         setError("Сессия не создана, попробуйте ещё раз");

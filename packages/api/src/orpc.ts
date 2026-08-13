@@ -101,8 +101,11 @@ export const protectedProcedure = publicProcedure.use(({ context, next }) => {
  *
  * @example ADMIN_EMAILS=admin@example.com,ops@example.com
  */
-export const adminProcedure = protectedProcedure.use(
-  async ({ context, next }) => {
+export const ADMIN_ROLES = ["admin", "methodologist", "facilitator"] as const;
+export type AdminRole = (typeof ADMIN_ROLES)[number];
+
+function roleProcedure(allowed: readonly AdminRole[]) {
+  return protectedProcedure.use(async ({ context, next }) => {
     const adminEmails = (process.env.ADMIN_EMAILS ?? "")
       .split(",")
       .map((e) => e.trim().toLowerCase())
@@ -115,16 +118,32 @@ export const adminProcedure = protectedProcedure.use(
       ? undefined
       : await context.db.query.AppAdmin.findFirst({
           where: eq(AppAdmin.userId, context.session.user.id),
-          columns: { userId: true },
+          columns: { userId: true, role: true },
         });
 
     if (!isBootstrapAdmin && !persistedGrant) {
       throw new ORPCError("FORBIDDEN", { message: "Admin access required" });
     }
 
-    return next();
-  },
-);
+    const role = (isBootstrapAdmin ? "admin" : persistedGrant?.role) as
+      | AdminRole
+      | undefined;
+    if (!role || !allowed.includes(role)) {
+      throw new ORPCError("FORBIDDEN", {
+        message: "Недостаточно прав для этого действия",
+      });
+    }
+
+    return next({ context: { adminRole: role } });
+  });
+}
+
+/** Read game operations and analytics. */
+export const facilitatorProcedure = roleProcedure(ADMIN_ROLES);
+/** Edit methodology, scenarios and LLM settings. */
+export const methodologistProcedure = roleProcedure(["admin", "methodologist"]);
+/** Manage access and runtime-sensitive configuration. */
+export const adminProcedure = roleProcedure(["admin"]);
 
 // Export the context type for use in other files
 export type ORPCContext = ReturnType<typeof createORPCContext>;

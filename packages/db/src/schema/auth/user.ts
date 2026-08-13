@@ -27,6 +27,8 @@ export const AppAdmin = pgTable("app_admins", {
   grantedBy: text("granted_by").references(() => user.id, {
     onDelete: "set null",
   }),
+  /** admin = access control, methodologist = game config, facilitator = runs. */
+  role: text("role").default("admin").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),

@@ -20,6 +20,7 @@ import {
 import {
   IconArrowRight,
   IconCheck,
+  IconRefresh,
   IconTarget,
   IconTrendingUp,
   IconX,
@@ -70,9 +71,13 @@ function styleLabel(style: string): string {
  */
 export function EvaluationCard({
   evaluation,
+  pending,
+  onReplay,
 }: {
   evaluation: EvaluationView;
   variantId?: string;
+  pending?: boolean;
+  onReplay?: () => void;
 }) {
   const distribution = Object.entries(evaluation.styleDistribution)
     .filter(([, share]) => share > 0.01)
@@ -245,8 +250,18 @@ export function EvaluationCard({
           <span>Штрафы: {evaluation.breakdown.penalties}</span>
         </div>
       </CardContent>
-      <CardFooter className="border-t">
-        <Button render={<Link href="/game" />} nativeButton={false}>
+      <CardFooter className="flex flex-wrap gap-2 border-t">
+        {onReplay ? (
+          <Button disabled={pending} onClick={onReplay}>
+            <IconRefresh data-icon="inline-start" />
+            Повторить эту ситуацию
+          </Button>
+        ) : null}
+        <Button
+          variant="outline"
+          render={<Link href="/game" />}
+          nativeButton={false}
+        >
           Выбрать следующую ситуацию
           <IconArrowRight data-icon="inline-end" />
         </Button>

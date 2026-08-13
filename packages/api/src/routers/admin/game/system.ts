@@ -12,10 +12,11 @@ import {
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
 
+import { mutateConfig } from "../../../game/config-version";
 import { loadGameSettings } from "../../../game/settings";
-import { adminProcedure } from "../../../orpc";
+import { facilitatorProcedure, methodologistProcedure } from "../../../orpc";
 
-export const overview = adminProcedure.handler(async ({ context }) => {
+export const overview = facilitatorProcedure.handler(async ({ context }) => {
   const [sessions, dialogs, evaluations, employees, tasks, variants, settings] =
     await Promise.all([
       context.db.select({ count: count() }).from(GameSession),
@@ -42,10 +43,11 @@ export const overview = adminProcedure.handler(async ({ context }) => {
       variants: variants[0]?.count ?? 0,
     },
     runtime: {
+      adminRole: context.adminRole,
       provider: process.env.AI_PROVIDER ?? "auto",
       model: process.env.AI_MODEL ?? process.env.OPENAI_MODEL ?? "по умолчанию",
       defaultVariant: process.env.AI_DEFAULT_VARIANT ?? "baseline",
-      databaseDriver: process.env.DB_DRIVER ?? "auto",
+      databaseDriver: "node-postgres",
       adminEmails,
       appEnvironment: process.env.NODE_ENV ?? "development",
     },
@@ -53,7 +55,7 @@ export const overview = adminProcedure.handler(async ({ context }) => {
   };
 });
 
-export const updateSettings = adminProcedure
+export const updateSettings = methodologistProcedure
   .input(
     z.object({
       defaultVariantId: z.string().min(1).max(64).nullable(),
@@ -70,24 +72,35 @@ export const updateSettings = adminProcedure
       });
     }
 
-    if (input.defaultVariantId) {
-      const [variant] = await context.db
-        .select({ id: GameVariant.id, isActive: GameVariant.isActive })
-        .from(GameVariant)
-        .where(eq(GameVariant.id, input.defaultVariantId))
-        .limit(1);
-      if (!variant?.isActive) {
-        throw new ORPCError("BAD_REQUEST", {
-          message: "Вариант по умолчанию должен быть активным",
-        });
-      }
-    }
-
-    const [settings] = await context.db
-      .insert(GameSettings)
-      .values({ id: "global", ...input })
-      .onConflictDoUpdate({ target: GameSettings.id, set: input })
-      .returning();
+    const audit = await mutateConfig(
+      context.db,
+      {
+        actorId: context.session.user.id,
+        source: "form",
+        summary: "Обновлены игровые настройки",
+      },
+      async (tx) => {
+        if (input.defaultVariantId) {
+          const [variant] = await tx
+            .select({ id: GameVariant.id, isActive: GameVariant.isActive })
+            .from(GameVariant)
+            .where(eq(GameVariant.id, input.defaultVariantId))
+            .limit(1);
+          if (!variant?.isActive) {
+            throw new ORPCError("BAD_REQUEST", {
+              message: "Вариант по умолчанию должен быть активным",
+            });
+          }
+        }
+        const [settings] = await tx
+          .insert(GameSettings)
+          .values({ id: "global", ...input })
+          .onConflictDoUpdate({ target: GameSettings.id, set: input })
+          .returning();
+        return settings;
+      },
+    );
+    const settings = audit.result;
 
     if (!settings) {
       throw new ORPCError("INTERNAL_SERVER_ERROR", {

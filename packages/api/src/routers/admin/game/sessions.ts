@@ -11,9 +11,9 @@ import {
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
 
-import { adminProcedure } from "../../../orpc";
+import { facilitatorProcedure } from "../../../orpc";
 
-export const list = adminProcedure
+export const list = facilitatorProcedure
   .input(
     z.object({
       limit: z.number().int().min(1).max(200).default(100),
@@ -56,7 +56,7 @@ export const list = adminProcedure
     }));
   });
 
-export const setStatus = adminProcedure
+export const setStatus = facilitatorProcedure
   .input(
     z.object({
       id: z.string().uuid(),

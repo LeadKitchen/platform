@@ -80,10 +80,13 @@ export interface PoolProvider extends LlmProvider {
  * Refusals that are about the account, not this particular model.
  *
  * Distinguishing the two is what stops the pool from walking through every
- * candidate on an exhausted key.
+ * candidate on an exhausted key. Phrasing varies by vendor: OpenRouter says
+ * "free-models-per-day", Groq says "tokens per day (TPD)" — the pattern needs
+ * both the hyphenated and spaced forms, or a same-key sibling wastes a call
+ * finding out its quota is gone too instead of being cooled down immediately.
  */
 const ACCOUNT_LEVEL_PATTERN =
-  /free-models-per-day|per-day|daily limit|insufficient|balance|credit|额度|quota exceeded/i;
+  /free-models-per-day|per[- ]day|\bTPD\b|\bRPD\b|daily limit|insufficient|balance|credit|额度|quota exceeded/i;
 
 const AVAILABILITY_PATTERN =
   /额度|quota|rate.?limit|too many requests|\b(402|408|429|5\d\d)\b|insufficient|balance|credit|overloaded|unavailable|ECONNRESET|ETIMEDOUT|ENOTFOUND|fetch failed|timeout|aborted/i;
@@ -162,12 +165,14 @@ export function createPoolProvider(options: PoolProviderOptions): PoolProvider {
       ];
 
       for (const { candidate, provider } of ordered) {
+        request.signal?.throwIfAborted();
         try {
           const result = await provider.generate(request);
           servedBy[candidate.id] = (servedBy[candidate.id] ?? 0) + 1;
           delete coolingDown[candidate.id];
           return result;
         } catch (cause) {
+          if (request.signal?.aborted) throw cause;
           const kind = classify(cause);
           const message =
             cause instanceof Error ? cause.message : String(cause);

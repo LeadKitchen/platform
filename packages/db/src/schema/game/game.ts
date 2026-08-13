@@ -100,6 +100,46 @@ export const GameSession = pgTable(
   (table) => [index("game_sessions_variant_idx").on(table.variantId)],
 );
 
+/** Product events are separate from the replayable in-dialog event stream. */
+export const GameProductEvent = pgTable(
+  "game_product_events",
+  (t) => ({
+    id: t.uuid().primaryKey().defaultRandom(),
+    userId: t.text().references(() => user.id, { onDelete: "set null" }),
+    sessionId: t.uuid().references(() => GameSession.id, {
+      onDelete: "cascade",
+    }),
+    dialogId: t.uuid(),
+    name: t.varchar({ length: 64 }).notNull(),
+    properties: t
+      .jsonb()
+      .$type<Record<string, unknown>>()
+      .default({})
+      .notNull(),
+    createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+  }),
+  (table) => [
+    index("game_product_events_name_idx").on(table.name),
+    index("game_product_events_user_idx").on(table.userId),
+  ],
+);
+
+/** Immutable before/after snapshots for every game-configuration mutation. */
+export const GameConfigVersion = pgTable(
+  "game_config_versions",
+  (t) => ({
+    id: t.uuid().primaryKey().defaultRandom(),
+    actorId: t.text().references(() => user.id, { onDelete: "set null" }),
+    source: t.varchar({ length: 32 }).notNull(),
+    summary: t.varchar({ length: 600 }).notNull(),
+    beforeSnapshot: t.jsonb().$type<Record<string, unknown>>().notNull(),
+    afterSnapshot: t.jsonb().$type<Record<string, unknown>>().notNull(),
+    revertedVersionId: t.uuid(),
+    createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+  }),
+  (table) => [index("game_config_versions_created_idx").on(table.createdAt)],
+);
+
 export const GameOrder = pgTable(
   "game_orders",
   (t) => ({

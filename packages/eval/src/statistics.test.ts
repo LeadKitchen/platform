@@ -52,6 +52,19 @@ describe("comparePaired", () => {
     expect(second).toEqual(first);
   });
 
+  test("a single pair is never called significant, however large the gap", () => {
+    // With one pair, every bootstrap resample draws that same difference, so
+    // the CI collapses onto it and "excludes zero" no matter what — that used
+    // to make a one-scenario run report a confident "лучше".
+    const baseline = series({ a: 90 });
+    const candidate = series({ a: 10 });
+
+    const result = comparePaired({ baseline, candidate, direction: "lower" });
+
+    expect(result.pairs).toBe(1);
+    expect(result.significant).toBe(false);
+  });
+
   test("fixtures missing from one arm are dropped, not counted as zero", () => {
     const baseline = series({ a: 10, b: 20, c: 30 });
     const candidate = series({ a: 5, b: 10 });

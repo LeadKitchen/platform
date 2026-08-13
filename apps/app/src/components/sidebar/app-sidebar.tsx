@@ -100,15 +100,40 @@ const data = {
 
 export function AppSidebar({
   user,
-  isAdmin,
+  adminRole,
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
   user: { name: string; email: string; avatar: string };
-  isAdmin: boolean;
+  adminRole?: "admin" | "methodologist" | "facilitator";
 }) {
-  const navMain = data.navMain.filter(
-    (item) => isAdmin || item.url !== "/admin/game/overview",
-  );
+  const navMain = data.navMain
+    .filter((item) => adminRole || item.url !== "/admin/game/overview")
+    .map((item) => {
+      if (item.url !== "/admin/game/overview" || !adminRole) return item;
+      const allowed = new Set(
+        adminRole === "admin"
+          ? item.items?.map((subItem) => subItem.url)
+          : adminRole === "methodologist"
+            ? [
+                "/admin/game/overview",
+                "/admin/game/sessions",
+                "/admin/game/dialogs",
+                "/admin/game/employees",
+                "/admin/game/tasks",
+                "/admin/game/variants",
+                "/admin/game/settings",
+              ]
+            : [
+                "/admin/game/overview",
+                "/admin/game/sessions",
+                "/admin/game/dialogs",
+              ],
+      );
+      return {
+        ...item,
+        items: item.items?.filter((subItem) => allowed.has(subItem.url)),
+      };
+    });
 
   return (
     <Sidebar collapsible="icon" {...props}>

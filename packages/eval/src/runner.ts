@@ -109,6 +109,35 @@ const COMPARED_METRICS: {
   },
 ];
 
+/**
+ * Paired comparison of every arm against the reference, over one set of items.
+ *
+ * Exported (not just used inline by `runEvaluation`) so a report can be
+ * recomputed from a saved `items` array — e.g. after a statistics fix —
+ * without re-running the arm through the provider and spending quota again.
+ */
+export function buildComparisons(
+  items: ItemResult[],
+  variantIds: string[],
+  referenceVariantId: string,
+): VariantComparison[] {
+  return variantIds
+    .filter((variantId) => variantId !== referenceVariantId)
+    .map((variantId) => ({
+      variantId,
+      metrics: COMPARED_METRICS.map((definition) => ({
+        metric: definition.metric,
+        label: definition.label,
+        direction: definition.direction,
+        ...comparePaired({
+          baseline: seriesByFixture(items, referenceVariantId, definition.select),
+          candidate: seriesByFixture(items, variantId, definition.select),
+          direction: definition.direction,
+        }),
+      })),
+    }));
+}
+
 /** A scenario that could not be completed, kept out of the metrics. */
 export interface RunFailure {
   fixtureId: string;
@@ -352,29 +381,11 @@ export async function runEvaluation(options: RunOptions): Promise<RunResult> {
       ? "baseline"
       : (options.variantIds[0] ?? "baseline"));
 
-  const comparisons: VariantComparison[] = options.variantIds
-    .filter((variantId) => variantId !== referenceVariantId)
-    .map((variantId) => ({
-      variantId,
-      metrics: COMPARED_METRICS.map((definition) => ({
-        metric: definition.metric,
-        label: definition.label,
-        direction: definition.direction,
-        ...comparePaired({
-          baseline: seriesByFixture(
-            finalEpochItems,
-            referenceVariantId,
-            definition.select,
-          ),
-          candidate: seriesByFixture(
-            finalEpochItems,
-            variantId,
-            definition.select,
-          ),
-          direction: definition.direction,
-        }),
-      })),
-    }));
+  const comparisons = buildComparisons(
+    finalEpochItems,
+    options.variantIds,
+    referenceVariantId,
+  );
 
   // The pool exposes `stats()`; a plain provider does not. Duck-typing keeps
   // the runner independent of which provider it was handed.

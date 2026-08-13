@@ -19,6 +19,7 @@ export const promptPersona: PersonaStrategy = {
       schemaName: "persona_reply",
       schema: personaReplySchema,
       effort: deps.effort,
+      signal: deps.signal,
       system: buildPersonaSystemPrompt({
         dialog: request.dialog,
         knowledge: request.knowledge,

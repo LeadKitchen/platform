@@ -20,7 +20,8 @@ import {
   SelectValue,
 } from "@acme/ui";
 import { IconCheck, IconRefresh, IconSchool } from "@tabler/icons-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { client } from "~/orpc/react";
 
 const LEVELS = [
   { id: "L1", label: "L1 — не умеет и не уверен" },
@@ -83,6 +84,7 @@ export function RoundOneTraining() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [results, setResults] = useState<Record<string, boolean>>({});
   const [currentIndex, setCurrentIndex] = useState(0);
+  const completedTracked = useRef(false);
 
   const score = useMemo(
     () => Object.values(results).filter(Boolean).length,
@@ -94,6 +96,23 @@ export function RoundOneTraining() {
   );
   const checked = Object.hasOwn(results, item.id);
   const finished = Object.keys(results).length === CASES.length;
+
+  useEffect(() => {
+    void client.game.activity
+      .track({ name: "warmup_started", properties: {} })
+      .catch(() => undefined);
+  }, []);
+
+  useEffect(() => {
+    if (!finished || completedTracked.current) return;
+    completedTracked.current = true;
+    void client.game.activity
+      .track({
+        name: "warmup_completed",
+        properties: { score, total: CASES.length },
+      })
+      .catch(() => undefined);
+  }, [finished, score]);
 
   function reset() {
     setAnswers({});

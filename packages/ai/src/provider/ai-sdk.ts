@@ -213,10 +213,14 @@ export function createAiSdkProvider(
       let lastError: unknown;
 
       for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
-        // First attempt goes through the SDK's own negotiation; later ones
-        // spell the contract out, since a failure means it was not honoured.
+        request.signal?.throwIfAborted();
+        // Endpoints without native structured outputs get the schema spelled
+        // out from the first attempt, not just on retry: several of them (Groq
+        // among them) 400 outright on `json_object` mode unless the word
+        // "json" appears somewhere in the prompt, so waiting for a retry to
+        // add it means the first call is a guaranteed, wasted failure.
         const system =
-          attempt === 1
+          attempt === 1 && options.supportsStructuredOutputs !== false
             ? request.system
             : request.system + schemaHint(request.schema);
 
@@ -234,6 +238,7 @@ export function createAiSdkProvider(
             // failure should move to the next candidate immediately instead of
             // backing off against an endpoint that is already out of quota.
             maxRetries: 0,
+            abortSignal: request.signal,
           });
 
           inputTokens += result.usage.inputTokens ?? 0;
@@ -254,6 +259,7 @@ export function createAiSdkProvider(
             model: options.model,
           };
         } catch (cause) {
+          if (request.signal?.aborted) throw cause;
           lastError = cause;
           const usage = (cause as { usage?: Record<string, number> }).usage;
           inputTokens += usage?.inputTokens ?? 0;

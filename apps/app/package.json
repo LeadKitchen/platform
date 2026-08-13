@@ -10,6 +10,8 @@
     "lint": "biome lint .",
     "check": "biome check .",
     "start": "bun --env-file=../../.env run next start",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -47,6 +49,8 @@
   "devDependencies": {
     "@acme/tailwind-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.62.1",
     "@types/node": "26.2.0",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.4",

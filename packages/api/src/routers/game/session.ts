@@ -1,12 +1,36 @@
-import { count, desc, eq, GameOrder, GameSession } from "@acme/db";
+import {
+  and,
+  count,
+  desc,
+  eq,
+  GameOrder,
+  GameProductEvent,
+  GameSession,
+  GameVariant,
+} from "@acme/db";
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
-
+import { requireOwnedSession } from "../../game/access";
 import { loadEngine } from "../../game/service";
 import { loadGameSettings } from "../../game/settings";
 import { protectedProcedure } from "../../orpc";
 
 const roundSchema = z.union([z.literal(2), z.literal(3)]);
+
+export function selectWeightedVariant(
+  variants: Array<{ id: string; weight: number }>,
+  random = Math.random,
+): string | undefined {
+  const available = variants.filter((item) => item.weight > 0);
+  const total = available.reduce((sum, item) => sum + item.weight, 0);
+  if (total <= 0) return undefined;
+  let cursor = random() * total;
+  for (const item of available) {
+    cursor -= item.weight;
+    if (cursor < 0) return item.id;
+  }
+  return available.at(-1)?.id;
+}
 
 /**
  * Open a game session for a team.
@@ -22,7 +46,6 @@ export const create = protectedProcedure
     z.object({
       title: z.string().min(1).max(256),
       round: roundSchema.optional(),
-      variantId: z.string().max(64).optional(),
     }),
   )
   .handler(async ({ context, input }) => {
@@ -47,23 +70,39 @@ export const create = protectedProcedure
       });
     }
 
+    const weightedVariants = settings.defaultVariantId
+      ? []
+      : await context.db
+          .select({ id: GameVariant.id, weight: GameVariant.weight })
+          .from(GameVariant)
+          .where(eq(GameVariant.isActive, true));
     const variantId =
-      input.variantId ?? settings.defaultVariantId ?? engine.defaultVariantId;
+      settings.defaultVariantId ??
+      selectWeightedVariant(weightedVariants) ??
+      engine.defaultVariantId;
 
     // Fail here rather than at the first utterance of the first dialog.
     engine.pipeline(variantId);
 
-    const [session] = await context.db
-      .insert(GameSession)
-      .values({
-        title: input.title,
-        round,
-        variantId,
-        createdBy: context.session.user.id,
-      })
-      .returning();
-
-    return session;
+    return context.db.transaction(async (tx) => {
+      const [session] = await tx
+        .insert(GameSession)
+        .values({
+          title: input.title,
+          round,
+          variantId,
+          createdBy: context.session.user.id,
+        })
+        .returning();
+      if (!session) throw new Error("Не удалось создать сессию");
+      await tx.insert(GameProductEvent).values({
+        userId: context.session.user.id,
+        sessionId: session.id,
+        name: "session_created",
+        properties: { round: session.round },
+      });
+      return session;
+    });
   });
 
 /**
@@ -82,6 +121,7 @@ export const list = protectedProcedure
     context.db
       .select()
       .from(GameSession)
+      .where(eq(GameSession.createdBy, context.session.user.id))
       .orderBy(desc(GameSession.createdAt))
       .limit(input.limit)
       .offset(input.offset),
@@ -95,15 +135,11 @@ export const list = protectedProcedure
 export const byId = protectedProcedure
   .input(z.object({ id: z.uuid() }))
   .handler(async ({ context, input }) => {
-    const [session] = await context.db
-      .select()
-      .from(GameSession)
-      .where(eq(GameSession.id, input.id))
-      .limit(1);
-
-    if (!session) {
-      throw new ORPCError("NOT_FOUND", { message: "Сессия не найдена" });
-    }
+    const session = await requireOwnedSession(
+      context.db,
+      input.id,
+      context.session.user.id,
+    );
 
     const orders = await context.db
       .select()
@@ -125,7 +161,12 @@ export const end = protectedProcedure
     const [session] = await context.db
       .update(GameSession)
       .set({ status: "completed", endedAt: new Date() })
-      .where(eq(GameSession.id, input.id))
+      .where(
+        and(
+          eq(GameSession.id, input.id),
+          eq(GameSession.createdBy, context.session.user.id),
+        ),
+      )
       .returning();
 
     if (!session) {

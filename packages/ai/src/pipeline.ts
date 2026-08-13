@@ -63,6 +63,7 @@ export interface Pipeline {
   respond(input: {
     dialog: DialogContext;
     utterance: string;
+    signal?: AbortSignal;
   }): Promise<TurnResult>;
   evaluate(dialog: DialogContext): Promise<EvaluateResult>;
   learn(feedback: PersonaFeedback): Promise<void>;
@@ -107,7 +108,8 @@ export function createPipeline(
   return {
     variant,
 
-    async respond({ dialog, utterance }) {
+    async respond({ dialog, utterance, signal }) {
+      const requestDeps: StageDeps = { ...stageDeps, signal };
       const startedAt = Date.now();
       const expectation = resolveExpectation(
         dialog.employee,
@@ -129,7 +131,7 @@ export function createPipeline(
       // not consulted again — the character does not fall back asleep.
       const gate = dialog.engaged
         ? { engaged: true, reason: "диалог уже идёт", latencyMs: 0 }
-        : await engagement.check({ dialog, utterance }, stageDeps);
+        : await engagement.check({ dialog, utterance }, requestDeps);
 
       if (!gate.engaged) {
         const gateUsage = addUsage(gate.usage);
@@ -159,7 +161,7 @@ export function createPipeline(
 
       const knowledgeResult = await knowledge.retrieve(
         { dialog, expectation, query: utterance },
-        stageDeps,
+        requestDeps,
       );
 
       const personaResult = await persona.respond(
@@ -169,7 +171,7 @@ export function createPipeline(
           knowledge: knowledgeResult,
           utterance,
         },
-        stageDeps,
+        requestDeps,
       );
 
       const usage = addUsage(

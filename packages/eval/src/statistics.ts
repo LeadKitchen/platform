@@ -8,6 +8,18 @@
  * sample size would happily "confirm" pure noise.
  */
 
+/**
+ * Below this many paired observations, a bootstrap CI is not evidence.
+ *
+ * At `pairs === 1` every resample draws the same single difference, so the
+ * interval collapses onto that one point and "excludes zero" trivially,
+ * whatever the true effect is — the check would call a coin flip significant.
+ * A handful of pairs is not much better: too few distinct values for the
+ * resampling to explore real variance. Refusing to call anything significant
+ * below this floor is what keeps a thin run from reporting a false "лучше".
+ */
+const MIN_PAIRS_FOR_SIGNIFICANCE = 5;
+
 /** Deterministic PRNG so a report can be reproduced exactly. */
 function mulberry32(seed: number): () => number {
   let state = seed;
@@ -113,7 +125,8 @@ export function comparePaired(input: PairedInput): PairedComparison {
     // which keeps the p-value from ever being reported as exactly 0.
     pValue: round((atLeastAsExtreme + 1) / (iterations + 1), 4),
     pairs,
-    significant: ciLow > 0 || ciHigh < 0,
+    significant:
+      pairs >= MIN_PAIRS_FOR_SIGNIFICANCE && (ciLow > 0 || ciHigh < 0),
   };
 }
 

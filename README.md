@@ -157,7 +157,7 @@ bun install
 ### Setup
 
 > [!NOTE]
-> The database driver is selected automatically: a `*.neon.tech` URL uses the Neon HTTP driver, anything else (local Docker Postgres, Supabase, self-hosted) uses `node-postgres`. Override with `DB_DRIVER=node|neon-http`. A local Postgres, MinIO (S3) and inbucket (email) are provided via `docker-compose.yml`.
+> The main application uses the transaction-capable `node-postgres` driver for every PostgreSQL host, including Neon (prefer its pooled URL). Edge-only readers can use the separate `dbEdge` export. A local Postgres, MinIO (S3) and inbucket (email) are provided via `docker-compose.yml`.
 
 **Step 1: Install dependencies & configure environment**
 
@@ -313,8 +313,7 @@ This project is optimized for **zero-config deployment** on Vercel.
 ```bash
 # Database
 POSTGRES_URL=postgresql://user:pass@host/db
-# Optional: force a driver ("node" or "neon-http"); auto-detected otherwise
-# DB_DRIVER=
+# The main application uses node-postgres so interactive transactions work.
 
 # Authentication
 AUTH_SECRET=your-secret-key

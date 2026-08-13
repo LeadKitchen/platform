@@ -28,6 +28,7 @@ export interface StageDeps {
   /** Extra parameters from the variant, e.g. `{ topK: 6 }`. */
   params: Record<string, unknown>;
   effort?: LlmEffort;
+  signal?: AbortSignal;
 }
 
 export interface EngagementRequest {

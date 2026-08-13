@@ -34,6 +34,7 @@ export const llmEngagement: EngagementStrategy = {
         schemaName: "engagement_check",
         schema: engagementCheckSchema,
         effort: "low",
+        signal: deps.signal,
         system: ENGAGEMENT_JUDGE_SYSTEM,
         messages: [
           {
@@ -49,7 +50,8 @@ export const llmEngagement: EngagementStrategy = {
         usage: result.usage,
         latencyMs: Date.now() - startedAt,
       };
-    } catch {
+    } catch (cause) {
+      if (deps.signal?.aborted) throw cause;
       // Гейт не должен ронять диалог: при сбое модели считаем, что к
       // сотруднику обратились — лучше лишняя реплика, чем застрявшая игра.
       return {

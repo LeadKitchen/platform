@@ -3,6 +3,14 @@
 import {
   Alert,
   AlertDescription,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
   AlertTitle,
   Avatar,
   AvatarFallback,
@@ -21,6 +29,7 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
+  Progress,
   ScrollArea,
   Separator,
   Textarea,
@@ -32,10 +41,13 @@ import {
   IconChevronDown,
   IconLoader2,
   IconMicrophone,
+  IconPlayerPause,
   IconPlayerStop,
+  IconRefresh,
   IconSend,
   IconUser,
 } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { client } from "~/orpc/react";
 import { EvaluationCard, type EvaluationView } from "./evaluation-card";
@@ -71,6 +83,7 @@ export interface DialogRoomProps {
  * как руководитель к нему обратился.
  */
 export function DialogRoom(props: DialogRoomProps) {
+  const router = useRouter();
   const [turns, setTurns] = useState<Turn[]>(props.initialTurns);
   const [draft, setDraft] = useState("");
   const [pending, setPending] = useState(false);
@@ -80,14 +93,30 @@ export function DialogRoom(props: DialogRoomProps) {
   );
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [failedDraft, setFailedDraft] = useState<string | null>(null);
+  const [finishCheck, setFinishCheck] = useState<null | {
+    missingCritical: Array<{ id: string; title: string; met: boolean }>;
+  }>(null);
+  const [recordingSeconds, setRecordingSeconds] = useState(0);
   const endRef = useRef<HTMLDivElement>(null);
+  const draftLoaded = useRef(false);
+  const evaluationTracked = useRef(false);
+  const requestController = useRef<AbortController | null>(null);
+  const draftKey = `sitruk:dialog-draft:${props.dialogId}`;
   const latestActivity = `${turns.length}:${pending}`;
+  const managerTurns = turns.filter((turn) => turn.role === "manager").length;
+  const conversationStep = finished ? 3 : managerTurns >= 2 ? 2 : 1;
+  const conversationProgress = finished ? 100 : conversationStep * 33;
 
-  useEffect(() => {
-    if (latestActivity) {
-      endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  function stepClass(step: number) {
+    if (step === conversationStep) {
+      return "bg-primary text-primary-foreground flex items-center gap-3 rounded-lg p-3";
     }
-  }, [latestActivity]);
+    if (step < conversationStep) {
+      return "bg-primary/5 flex items-center gap-3 rounded-lg border border-primary/20 p-3";
+    }
+    return "bg-muted flex items-center gap-3 rounded-lg border p-3";
+  }
 
   const speech = useSpeechRecognition({
     onFinal: useCallback((text: string) => {
@@ -95,20 +124,68 @@ export function DialogRoom(props: DialogRoomProps) {
     }, []),
   });
 
-  async function send() {
-    const text = draft.trim();
+  useEffect(() => {
+    if (latestActivity) {
+      endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }, [latestActivity]);
+
+  useEffect(() => {
+    const saved = window.localStorage.getItem(draftKey);
+    if (saved) setDraft(saved);
+    draftLoaded.current = true;
+  }, [draftKey]);
+
+  useEffect(() => {
+    if (!draftLoaded.current) return;
+    if (draft) window.localStorage.setItem(draftKey, draft);
+    else window.localStorage.removeItem(draftKey);
+  }, [draft, draftKey]);
+
+  useEffect(() => {
+    if (!speech.listening) {
+      setRecordingSeconds(0);
+      return;
+    }
+    const timer = window.setInterval(
+      () => setRecordingSeconds((current) => current + 1),
+      1000,
+    );
+    return () => window.clearInterval(timer);
+  }, [speech.listening]);
+
+  useEffect(() => {
+    if (!evaluation || evaluationTracked.current) return;
+    evaluationTracked.current = true;
+    void client.game.activity
+      .track({
+        name: "evaluation_viewed",
+        dialogId: props.dialogId,
+        properties: {},
+      })
+      .catch(() => undefined);
+  }, [evaluation, props.dialogId]);
+
+  async function send(textOverride?: string) {
+    const text = (textOverride ?? draft).trim();
     if (text.length === 0 || pending || finished) return;
 
+    const controller = new AbortController();
+    requestController.current = controller;
     setPending(true);
     setError(null);
     setNotice(null);
+    setFailedDraft(null);
     setDraft("");
 
     try {
-      const result = await client.game.dialog.say({
-        dialogId: props.dialogId,
-        text,
-      });
+      const result = await client.game.dialog.say(
+        {
+          dialogId: props.dialogId,
+          text,
+        },
+        { signal: controller.signal },
+      );
 
       setTurns((current) => [
         ...current,
@@ -129,14 +206,38 @@ export function DialogRoom(props: DialogRoomProps) {
         );
       }
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Не удалось отправить");
-      setDraft(text);
+      if (controller.signal.aborted) {
+        try {
+          const current = await client.game.dialog.byId({
+            dialogId: props.dialogId,
+          });
+          setTurns(current.turns);
+        } catch {
+          setTurns((current) => [...current, { role: "manager", text }]);
+        }
+        setNotice(
+          "Ответ сотрудника остановлен. Ваша отправленная реплика осталась в разговоре.",
+        );
+      } else {
+        setDraft(text);
+        setError(
+          cause instanceof Error ? cause.message : "Не удалось отправить",
+        );
+        setFailedDraft(text);
+      }
     } finally {
+      if (requestController.current === controller) {
+        requestController.current = null;
+      }
       setPending(false);
     }
   }
 
-  async function finish() {
+  function cancelSend() {
+    requestController.current?.abort();
+  }
+
+  async function completeFinish() {
     if (pending || finished) return;
     setPending(true);
     setError(null);
@@ -147,9 +248,56 @@ export function DialogRoom(props: DialogRoomProps) {
       });
       setEvaluation(result.evaluation as unknown as EvaluationView);
       setFinished(true);
+      window.localStorage.removeItem(draftKey);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Не удалось завершить");
     } finally {
+      setPending(false);
+    }
+  }
+
+  async function requestFinish() {
+    if (pending || finished) return;
+    setPending(true);
+    setError(null);
+    try {
+      const check = await client.game.dialog.preflight({
+        dialogId: props.dialogId,
+      });
+      if (check.ready) {
+        setPending(false);
+        await completeFinish();
+      } else {
+        setFinishCheck({ missingCritical: check.missingCritical });
+        setPending(false);
+      }
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Не удалось проверить");
+      setPending(false);
+    }
+  }
+
+  async function startSpeech() {
+    await client.game.activity
+      .track({
+        name: "voice_used",
+        dialogId: props.dialogId,
+        properties: {},
+      })
+      .catch(() => undefined);
+    speech.start();
+  }
+
+  async function replay() {
+    setPending(true);
+    try {
+      const dialog = await client.game.dialog.replay({
+        dialogId: props.dialogId,
+      });
+      if (!dialog?.id) throw new Error("Повторный разговор не открыт");
+      router.push(`/game/dialog/${dialog.id}`);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Не удалось повторить");
       setPending(false);
     }
   }
@@ -166,17 +314,33 @@ export function DialogRoom(props: DialogRoomProps) {
 
   return (
     <div className="flex flex-col gap-6">
+      <div className="flex items-center gap-3">
+        <Progress
+          aria-label="Прогресс разговора"
+          value={conversationProgress}
+          className="flex-1"
+        />
+        <span className="text-muted-foreground min-w-10 text-right text-sm">
+          {conversationProgress}%
+        </span>
+      </div>
       <div className="grid gap-2 sm:grid-cols-3">
-        <div className="bg-primary text-primary-foreground flex items-center gap-3 rounded-lg p-3">
-          <Badge variant="secondary">1</Badge>
+        <div className={stepClass(1)}>
+          <Badge variant={conversationStep === 1 ? "secondary" : "outline"}>
+            {conversationStep > 1 ? <IconCheck /> : "1"}
+          </Badge>
           <span className="text-sm font-medium">Поставьте задачу</span>
         </div>
-        <div className="bg-muted flex items-center gap-3 rounded-lg border p-3">
-          <Badge variant="outline">2</Badge>
+        <div className={stepClass(2)}>
+          <Badge variant={conversationStep === 2 ? "secondary" : "outline"}>
+            {conversationStep > 2 ? <IconCheck /> : "2"}
+          </Badge>
           <span className="text-sm font-medium">Проверьте понимание</span>
         </div>
-        <div className="bg-muted flex items-center gap-3 rounded-lg border p-3">
-          <Badge variant="outline">3</Badge>
+        <div className={stepClass(3)}>
+          <Badge variant={conversationStep === 3 ? "secondary" : "outline"}>
+            3
+          </Badge>
           <span className="text-sm font-medium">
             Завершите и получите разбор
           </span>
@@ -270,8 +434,8 @@ export function DialogRoom(props: DialogRoomProps) {
                   key={`${index}-${turn.role}`}
                   className={
                     turn.role === "manager"
-                      ? "bg-primary/10 ml-auto max-w-[80%] rounded-lg px-3 py-2"
-                      : "bg-muted mr-auto max-w-[80%] rounded-lg px-3 py-2"
+                      ? "bg-primary/10 ml-auto max-w-[92%] rounded-lg px-3 py-2 sm:max-w-[80%]"
+                      : "bg-muted mr-auto max-w-[92%] rounded-lg px-3 py-2 sm:max-w-[80%]"
                   }
                 >
                   <div className="mb-1 flex items-center gap-2">
@@ -296,7 +460,10 @@ export function DialogRoom(props: DialogRoomProps) {
                 </p>
               ) : null}
               {pending ? (
-                <div className="bg-muted mr-auto flex items-center gap-2 rounded-lg px-3 py-2 text-sm">
+                <div
+                  aria-live="polite"
+                  className="bg-muted mr-auto flex items-center gap-2 rounded-lg px-3 py-2 text-sm"
+                >
                   <IconLoader2 className="animate-spin" />
                   {props.employee.name} отвечает…
                 </div>
@@ -306,17 +473,27 @@ export function DialogRoom(props: DialogRoomProps) {
           </ScrollArea>
 
           {notice ? (
-            <Alert>
+            <Alert aria-live="polite">
               <IconAlertTriangle />
               <AlertTitle>Обратите внимание</AlertTitle>
               <AlertDescription>{notice}</AlertDescription>
             </Alert>
           ) : null}
           {error ? (
-            <Alert variant="destructive">
+            <Alert aria-live="assertive" variant="destructive">
               <IconAlertTriangle />
               <AlertTitle>Не удалось продолжить разговор</AlertTitle>
               <AlertDescription>{error}</AlertDescription>
+              {failedDraft ? (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => void send(failedDraft)}
+                >
+                  <IconRefresh data-icon="inline-start" />
+                  Повторить отправку
+                </Button>
+              ) : null}
             </Alert>
           ) : null}
           {speech.error ? (
@@ -367,27 +544,39 @@ export function DialogRoom(props: DialogRoomProps) {
                   }
                 }}
               />
+              <p className="text-muted-foreground text-xs">
+                Черновик сохраняется автоматически в этом браузере.
+              </p>
               <div className="flex flex-wrap items-center gap-2">
                 <Button
-                  onClick={send}
+                  onClick={() => void send()}
                   disabled={pending || draft.trim() === ""}
                 >
                   <IconSend data-icon="inline-start" />
                   Отправить
                 </Button>
 
+                {pending && requestController.current ? (
+                  <Button type="button" variant="outline" onClick={cancelSend}>
+                    <IconPlayerPause data-icon="inline-start" />
+                    Остановить ответ
+                  </Button>
+                ) : null}
+
                 {speech.supported ? (
                   <Button
                     type="button"
                     variant={speech.listening ? "destructive" : "outline"}
-                    onClick={speech.listening ? speech.stop : speech.start}
+                    onClick={speech.listening ? speech.stop : startSpeech}
                   >
                     {speech.listening ? (
                       <IconPlayerStop data-icon="inline-start" />
                     ) : (
                       <IconMicrophone data-icon="inline-start" />
                     )}
-                    {speech.listening ? "Остановить запись" : "Говорить"}
+                    {speech.listening
+                      ? `Остановить · ${String(Math.floor(recordingSeconds / 60)).padStart(2, "0")}:${String(recordingSeconds % 60).padStart(2, "0")}`
+                      : "Говорить"}
                   </Button>
                 ) : (
                   <span className="text-muted-foreground self-center text-xs">
@@ -408,7 +597,7 @@ export function DialogRoom(props: DialogRoomProps) {
                 <Button
                   type="button"
                   variant="secondary"
-                  onClick={finish}
+                  onClick={requestFinish}
                   disabled={pending || turns.length === 0}
                 >
                   <IconCheck data-icon="inline-start" />
@@ -421,8 +610,47 @@ export function DialogRoom(props: DialogRoomProps) {
       </Card>
 
       {evaluation ? (
-        <EvaluationCard evaluation={evaluation} variantId={props.variantId} />
+        <EvaluationCard
+          evaluation={evaluation}
+          variantId={props.variantId}
+          pending={pending}
+          onReplay={replay}
+        />
       ) : null}
+
+      <AlertDialog
+        open={finishCheck !== null}
+        onOpenChange={(open) => {
+          if (!open) setFinishCheck(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              В разговоре не хватает договорённостей
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Перед завершением можно вернуться и закрыть ключевые пункты:
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <ul className="flex list-disc flex-col gap-1 pl-5 text-sm">
+            {finishCheck?.missingCritical.map((criterion) => (
+              <li key={criterion.id}>{criterion.title}</li>
+            ))}
+          </ul>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Продолжить разговор</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                setFinishCheck(null);
+                void completeFinish();
+              }}
+            >
+              Всё равно завершить
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

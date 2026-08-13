@@ -27,15 +27,43 @@ export async function AdminGamePage({
     redirect("/game");
   }
 
-  const [analytics, dialogs, variants, catalog, sessions, users] =
-    await Promise.all([
-      api.admin.game.analytics({ limit: 5000 }),
-      api.admin.game.dialogs({ limit: 100, offset: 0 }),
-      api.admin.game.variants.list(),
-      api.admin.game.catalog.list(),
-      api.admin.game.sessions.list({ limit: 100, offset: 0 }),
-      api.admin.users.list({ limit: 100, offset: 0 }),
-    ]);
+  const role = system.runtime.adminRole;
+  const allowedSections = new Set<AdminGameSection>(
+    role === "admin"
+      ? (Object.keys(SECTION_TITLES) as AdminGameSection[])
+      : role === "methodologist"
+        ? [
+            "overview",
+            "sessions",
+            "dialogs",
+            "employees",
+            "tasks",
+            "variants",
+            "settings",
+          ]
+        : ["overview", "sessions", "dialogs"],
+  );
+  if (!allowedSections.has(section)) redirect("/admin/game/overview");
+
+  const [
+    analytics,
+    productAnalytics,
+    dialogs,
+    variants,
+    catalog,
+    sessions,
+    users,
+  ] = await Promise.all([
+    api.admin.game.analytics({ limit: 5000 }),
+    api.admin.game.productAnalytics({ limit: 10000 }),
+    api.admin.game.dialogs({ limit: 100, offset: 0 }),
+    api.admin.game.variants.list(),
+    api.admin.game.catalog.list(),
+    api.admin.game.sessions.list({ limit: 100, offset: 0 }),
+    role === "admin"
+      ? api.admin.users.list({ limit: 100, offset: 0 })
+      : Promise.resolve([]),
+  ]);
 
   return (
     <>
@@ -49,6 +77,7 @@ export async function AdminGamePage({
         section={section}
         initialData={{
           analytics,
+          productAnalytics,
           dialogs,
           variants,
           catalog,

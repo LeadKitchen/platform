@@ -10,7 +10,8 @@ import { asc, eq, GameSettings, GameVariant } from "@acme/db";
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
 
-import { adminProcedure } from "../../../orpc";
+import { mutateConfig } from "../../../game/config-version";
+import { facilitatorProcedure, methodologistProcedure } from "../../../orpc";
 
 /**
  * Every experiment arm, active or not, plus the strategies available to build
@@ -18,7 +19,7 @@ import { adminProcedure } from "../../../orpc";
  *
  * @example client.admin.game.variants.list()
  */
-export const list = adminProcedure.handler(async ({ context }) => ({
+export const list = facilitatorProcedure.handler(async ({ context }) => ({
   variants: await context.db
     .select()
     .from(GameVariant)
@@ -34,7 +35,7 @@ export const list = adminProcedure.handler(async ({ context }) => ({
  *
  * @example client.admin.game.variants.upsert({ id: "rag-v2", knowledge: "rag-lexical", ... })
  */
-export const upsert = adminProcedure
+export const upsert = methodologistProcedure
   .input(
     variantConfigSchema.extend({
       isActive: z.boolean().default(true),
@@ -82,13 +83,31 @@ export const upsert = adminProcedure
       weight: input.weight,
     };
 
-    const [variant] = await context.db
-      .insert(GameVariant)
-      .values(values)
-      .onConflictDoUpdate({ target: GameVariant.id, set: values })
-      .returning();
-
-    return variant;
+    const audit = await mutateConfig(
+      context.db,
+      {
+        actorId: context.session.user.id,
+        source: "form",
+        summary: `Вариант ИИ: ${input.name}`,
+      },
+      async (tx, before) => {
+        if (
+          !values.isActive &&
+          before.settings.defaultVariantId === values.id
+        ) {
+          throw new ORPCError("BAD_REQUEST", {
+            message: "Сначала выберите другой вариант ИИ по умолчанию",
+          });
+        }
+        const [variant] = await tx
+          .insert(GameVariant)
+          .values(values)
+          .onConflictDoUpdate({ target: GameVariant.id, set: values })
+          .returning();
+        return variant;
+      },
+    );
+    return audit.result;
   });
 
 /**
@@ -96,26 +115,31 @@ export const upsert = adminProcedure
  *
  * @example client.admin.game.variants.setActive({ id: "graph-rag", isActive: false })
  */
-export const setActive = adminProcedure
+export const setActive = methodologistProcedure
   .input(z.object({ id: z.string().max(64), isActive: z.boolean() }))
   .handler(async ({ context, input }) => {
-    if (!input.isActive) {
-      const settings = await context.db.query.GameSettings.findFirst({
-        where: eq(GameSettings.id, "global"),
-        columns: { defaultVariantId: true },
-      });
-      if (settings?.defaultVariantId === input.id) {
-        throw new ORPCError("BAD_REQUEST", {
-          message: "Сначала выберите другой вариант ИИ по умолчанию",
-        });
-      }
-    }
-
-    const [variant] = await context.db
-      .update(GameVariant)
-      .set({ isActive: input.isActive })
-      .where(eq(GameVariant.id, input.id))
-      .returning();
+    const audit = await mutateConfig(
+      context.db,
+      {
+        actorId: context.session.user.id,
+        source: "form",
+        summary: `${input.isActive ? "Включён" : "Выключен"} вариант ${input.id}`,
+      },
+      async (tx, before) => {
+        if (!input.isActive && before.settings.defaultVariantId === input.id) {
+          throw new ORPCError("BAD_REQUEST", {
+            message: "Сначала выберите другой вариант ИИ по умолчанию",
+          });
+        }
+        const [variant] = await tx
+          .update(GameVariant)
+          .set({ isActive: input.isActive })
+          .where(eq(GameVariant.id, input.id))
+          .returning();
+        return variant;
+      },
+    );
+    const variant = audit.result;
 
     if (!variant) {
       throw new ORPCError("NOT_FOUND", { message: "Вариант не найден" });

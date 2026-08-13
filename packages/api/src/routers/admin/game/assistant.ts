@@ -1,10 +1,27 @@
-import { createProviderFromEnv, describeStrategies } from "@acme/ai";
-import { asc, GameEmployee, GameTask, GameVariant } from "@acme/db";
+import {
+  createProviderFromEnv,
+  describeStrategies,
+  engagementRegistry,
+  evaluationRegistry,
+  knowledgeRegistry,
+  personaRegistry,
+} from "@acme/ai";
+import {
+  eq,
+  GameEmployee,
+  GameProductEvent,
+  GameSettings,
+  GameTask,
+  GameVariant,
+} from "@acme/db";
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
-
-import { loadGameSettings } from "../../../game/settings";
-import { adminProcedure } from "../../../orpc";
+import {
+  configRevision,
+  loadConfigSnapshot,
+  mutateConfig,
+} from "../../../game/config-version";
+import { methodologistProcedure } from "../../../orpc";
 
 const settingsDraftSchema = z.object({
   defaultVariantId: z.string().min(1).max(64).nullable(),
@@ -72,20 +89,75 @@ export const configurationDraftSchema = z.object({
   warnings: z.array(z.string().min(1).max(400)).max(8),
 });
 
+type ConfigurationDraft = z.infer<typeof configurationDraftSchema>;
+
+function previewChanges(
+  current: {
+    settings: unknown;
+    employees: Array<{ id: string }>;
+    tasks: Array<{ id: string }>;
+    variants: Array<{ id: string }>;
+  },
+  draft: ConfigurationDraft,
+) {
+  const changes: Array<{ path: string; before: unknown; after: unknown }> = [];
+  if (draft.settings) {
+    changes.push({
+      path: "settings.global",
+      before: current.settings,
+      after: draft.settings,
+    });
+  }
+  for (const [kind, value, rows] of [
+    ["employees", draft.employee, current.employees],
+    ["tasks", draft.task, current.tasks],
+    ["variants", draft.variant, current.variants],
+  ] as const) {
+    if (!value) continue;
+    changes.push({
+      path: `${kind}.${value.id}`,
+      before: rows.find((row) => row.id === value.id) ?? null,
+      after: value,
+    });
+  }
+  return changes;
+}
+
+function validateVariant(draft: ConfigurationDraft["variant"]): void {
+  if (!draft) return;
+  for (const [registry, id] of [
+    [engagementRegistry, draft.engagement],
+    [knowledgeRegistry, draft.knowledge],
+    [personaRegistry, draft.persona],
+    [evaluationRegistry, draft.evaluation],
+  ] as const) {
+    if (!registry.has(id)) {
+      throw new ORPCError("BAD_REQUEST", {
+        message: `Неизвестная стратегия ${id} для этапа ${registry.kind}`,
+      });
+    }
+  }
+}
+
 /**
  * Turns an administrator's plain-language request into a validated draft.
  * Nothing is persisted here: applying the proposal stays an explicit action
  * in the corresponding editor, which keeps LLM mistakes reversible.
  */
-export const draftConfiguration = adminProcedure
+export const draftConfiguration = methodologistProcedure
   .input(z.object({ request: z.string().trim().min(10).max(4000) }))
   .handler(async ({ context, input }) => {
-    const [settings, employees, tasks, variants] = await Promise.all([
-      loadGameSettings(context.db),
-      context.db.select().from(GameEmployee).orderBy(asc(GameEmployee.name)),
-      context.db.select().from(GameTask).orderBy(asc(GameTask.title)),
-      context.db.select().from(GameVariant).orderBy(asc(GameVariant.id)),
-    ]);
+    const snapshot = await loadConfigSnapshot(context.db);
+    const settings = snapshot.settings;
+    const employees = [...snapshot.employees].sort((left, right) =>
+      left.name.localeCompare(right.name),
+    );
+    const tasks = [...snapshot.tasks].sort((left, right) =>
+      left.title.localeCompare(right.title),
+    );
+    const variants = [...snapshot.variants].sort((left, right) =>
+      left.id.localeCompare(right.id),
+    );
 
     const strategies = describeStrategies();
     const provider = createProviderFromEnv();
@@ -122,8 +194,19 @@ export const draftConfiguration = adminProcedure
         ],
       });
 
+      await context.db.insert(GameProductEvent).values({
+        userId: context.session.user.id,
+        name: "llm_draft_created",
+        properties: { model: result.model },
+      });
+
       return {
         draft: result.value,
+        baseRevision: configRevision(snapshot),
+        changes: previewChanges(
+          { settings, employees, tasks, variants },
+          result.value,
+        ),
         meta: {
           model: result.model,
           latencyMs: result.latencyMs,
@@ -137,4 +220,112 @@ export const draftConfiguration = adminProcedure
             : "LLM-помощник временно недоступен",
       });
     }
+  });
+
+/** Apply every card from one reviewed draft atomically and write one audit version. */
+export const applyConfiguration = methodologistProcedure
+  .input(
+    z.object({
+      request: z.string().trim().min(10).max(4000),
+      baseRevision: z.string().length(64),
+      draft: configurationDraftSchema,
+    }),
+  )
+  .handler(async ({ context, input }) => {
+    validateVariant(input.draft.variant);
+    const audit = await mutateConfig(
+      context.db,
+      {
+        actorId: context.session.user.id,
+        source: "llm",
+        summary: input.draft.summary,
+      },
+      async (tx, before) => {
+        if (configRevision(before) !== input.baseRevision) {
+          throw new ORPCError("CONFLICT", {
+            message:
+              "Конфигурация изменилась после подготовки черновика. Создайте новый черновик и проверьте diff ещё раз.",
+          });
+        }
+        if (input.draft.employee) {
+          await tx
+            .insert(GameEmployee)
+            .values(input.draft.employee)
+            .onConflictDoUpdate({
+              target: GameEmployee.id,
+              set: input.draft.employee,
+            });
+        }
+        if (input.draft.task) {
+          await tx
+            .insert(GameTask)
+            .values(input.draft.task)
+            .onConflictDoUpdate({
+              target: GameTask.id,
+              set: input.draft.task,
+            });
+        }
+        if (input.draft.variant) {
+          await tx
+            .insert(GameVariant)
+            .values(input.draft.variant)
+            .onConflictDoUpdate({
+              target: GameVariant.id,
+              set: input.draft.variant,
+            });
+        }
+        if (input.draft.settings) {
+          if (
+            input.draft.settings.defaultRound === 3 &&
+            !input.draft.settings.allowRoundThree
+          ) {
+            throw new ORPCError("BAD_REQUEST", {
+              message: "Нельзя выбрать отключённый третий раунд",
+            });
+          }
+          await tx
+            .insert(GameSettings)
+            .values({ id: "global", ...input.draft.settings })
+            .onConflictDoUpdate({
+              target: GameSettings.id,
+              set: input.draft.settings,
+            });
+          const defaultId = input.draft.settings.defaultVariantId;
+          if (defaultId) {
+            const [variant] = await tx
+              .select({ id: GameVariant.id, isActive: GameVariant.isActive })
+              .from(GameVariant)
+              .where(eq(GameVariant.id, defaultId))
+              .limit(1);
+            if (!variant?.isActive) {
+              throw new ORPCError("BAD_REQUEST", {
+                message: "Вариант по умолчанию должен быть активным",
+              });
+            }
+          }
+        }
+        await tx.insert(GameProductEvent).values({
+          userId: context.session.user.id,
+          name: "llm_draft_applied",
+          properties: {},
+        });
+        return { request: input.request };
+      },
+    );
+    return { versionId: audit.versionId, changes: audit.changes };
+  });
+
+/** Record an explicit human rejection without allowing public event spoofing. */
+export const rejectConfiguration = methodologistProcedure
+  .input(z.object({ changes: z.number().int().min(0).max(100) }))
+  .handler(async ({ context, input }) => {
+    const [event] = await context.db
+      .insert(GameProductEvent)
+      .values({
+        userId: context.session.user.id,
+        name: "llm_draft_rejected",
+        properties: { changes: input.changes },
+      })
+      .returning({ id: GameProductEvent.id });
+    return event;
   });

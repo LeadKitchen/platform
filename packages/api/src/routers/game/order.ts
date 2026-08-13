@@ -1,7 +1,7 @@
-import { asc, eq, GameOrder, GameSession } from "@acme/db";
+import { and, asc, eq, GameOrder, GameSession } from "@acme/db";
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
-
+import { requireOwnedSession } from "../../game/access";
 import { loadCatalog } from "../../game/service";
 import { loadGameSettings } from "../../game/settings";
 import { protectedProcedure } from "../../orpc";
@@ -26,15 +26,11 @@ export const create = protectedProcedure
     }),
   )
   .handler(async ({ context, input }) => {
-    const [session] = await context.db
-      .select()
-      .from(GameSession)
-      .where(eq(GameSession.id, input.sessionId))
-      .limit(1);
-
-    if (!session) {
-      throw new ORPCError("NOT_FOUND", { message: "Сессия не найдена" });
-    }
+    await requireOwnedSession(
+      context.db,
+      input.sessionId,
+      context.session.user.id,
+    );
 
     const [catalog, settings] = await Promise.all([
       loadCatalog(context.db),
@@ -74,13 +70,18 @@ export const create = protectedProcedure
  */
 export const list = protectedProcedure
   .input(z.object({ sessionId: z.uuid() }))
-  .handler(async ({ context, input }) =>
-    context.db
+  .handler(async ({ context, input }) => {
+    await requireOwnedSession(
+      context.db,
+      input.sessionId,
+      context.session.user.id,
+    );
+    return context.db
       .select()
       .from(GameOrder)
       .where(eq(GameOrder.sessionId, input.sessionId))
-      .orderBy(asc(GameOrder.createdAt)),
-  );
+      .orderBy(asc(GameOrder.createdAt));
+  });
 
 /**
  * Mark an order done or failed — this is what changes the queue length that
@@ -96,6 +97,20 @@ export const setStatus = protectedProcedure
     }),
   )
   .handler(async ({ context, input }) => {
+    const owned = await context.db
+      .select({ id: GameOrder.id })
+      .from(GameOrder)
+      .innerJoin(GameSession, eq(GameSession.id, GameOrder.sessionId))
+      .where(
+        and(
+          eq(GameOrder.id, input.id),
+          eq(GameSession.createdBy, context.session.user.id),
+        ),
+      )
+      .limit(1);
+    if (!owned[0]) {
+      throw new ORPCError("NOT_FOUND", { message: "Заказ не найден" });
+    }
     const [order] = await context.db
       .update(GameOrder)
       .set({ status: input.status })

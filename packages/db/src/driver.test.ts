@@ -11,22 +11,22 @@ describe("selectDbDriver", () => {
     ).toBe("node");
   });
 
-  test("auto-detects neon-http for *.neon.tech URLs", () => {
+  test("uses transaction-capable node-postgres for Neon URLs", () => {
     expect(
       selectDbDriver(
         "postgres://user:pass@ep-cool-name-123456.eu-central-1.aws.neon.tech/db",
         undefined,
       ),
-    ).toBe("neon-http");
+    ).toBe("node");
   });
 
-  test("explicit override wins over auto-detection", () => {
+  test("does not allow the main client to opt out of transactions", () => {
     expect(
       selectDbDriver("postgres://user:pass@something.neon.tech/db", "node"),
     ).toBe("node");
     expect(
       selectDbDriver("postgres://postgres@localhost:5432/acme", "neon-http"),
-    ).toBe("neon-http");
+    ).toBe("node");
   });
 
   test("ignores an unknown override value", () => {

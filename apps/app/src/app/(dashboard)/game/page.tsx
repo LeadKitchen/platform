@@ -17,6 +17,7 @@ import {
   IconMessages,
   IconPlayerPlay,
   IconSchool,
+  IconTrendingUp,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { CreateSessionForm } from "~/components/game";
@@ -33,9 +34,10 @@ const SESSION_STATUS_LABELS: Record<string, string> = {
 };
 
 export default async function GamePage() {
-  const [sessions, catalog] = await Promise.all([
+  const [sessions, catalog, playerProgress] = await Promise.all([
     api.game.session.list({ limit: 20, offset: 0 }),
     api.game.catalog.variants(),
+    api.game.activity.progress(),
   ]);
   const activeSession = sessions.find((session) => session.status === "active");
   const completedCount = sessions.filter((session) =>
@@ -95,6 +97,47 @@ export default async function GamePage() {
             </Button>
           </CardContent>
         </Card>
+
+        {playerProgress.dialogs > 0 ? (
+          <Card>
+            <CardHeader>
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <IconTrendingUp /> Ваш прогресс
+                  </CardTitle>
+                  <CardDescription>
+                    Результаты последних управленческих разговоров.
+                  </CardDescription>
+                </div>
+                <Badge variant="secondary">
+                  {playerProgress.improvement >= 0 ? "+" : ""}
+                  {playerProgress.improvement} п.п. к первым попыткам
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="grid gap-4 sm:grid-cols-3">
+              <div>
+                <p className="text-muted-foreground text-sm">Разговоров</p>
+                <p className="text-2xl font-semibold tabular-nums">
+                  {playerProgress.dialogs}
+                </p>
+              </div>
+              <div>
+                <p className="text-muted-foreground text-sm">Средняя оценка</p>
+                <p className="text-2xl font-semibold tabular-nums">
+                  {playerProgress.averageScore}%
+                </p>
+              </div>
+              <div>
+                <p className="text-muted-foreground text-sm">Следующий фокус</p>
+                <p className="font-medium">
+                  {playerProgress.criteria[0]?.title ?? "Новая ситуация"}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        ) : null}
 
         <div className="grid gap-4 md:grid-cols-3">
           <Card>
@@ -163,10 +206,6 @@ export default async function GamePage() {
                 defaultRound: catalog.settings.defaultRound,
                 allowRoundThree: catalog.settings.allowRoundThree,
               }}
-              variants={catalog.variants.map((variant) => ({
-                id: variant.id,
-                name: variant.name,
-              }))}
             />
           </CardContent>
         </Card>

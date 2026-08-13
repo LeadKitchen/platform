@@ -1,6 +1,5 @@
 import { type Catalog, defaultCatalog } from "@acme/game";
 import { createPipeline, type Pipeline } from "./pipeline";
-import { type AiSdkVendor, createAiSdkProvider } from "./provider/ai-sdk";
 import {
   buildAnthropicCandidates,
   buildGeminiCandidates,
@@ -99,6 +98,33 @@ export function fallbackResponder(request: {
   purpose: string;
   messages: { content: string }[];
 }): unknown {
+  if (request.purpose === "admin.configuration.draft") {
+    return {
+      summary: "Безопасный демонстрационный черновик",
+      explanation:
+        "Mock-провайдер не интерпретирует свободный текст, поэтому конфигурация оставлена без изменений.",
+      settings: null,
+      employee: null,
+      task: null,
+      variant: null,
+      warnings: [
+        "Подключите реальный LLM-провайдер, чтобы преобразовать запрос в изменения.",
+      ],
+    };
+  }
+
+  if (request.purpose === "admin.analytics.insights") {
+    return {
+      answer:
+        "Mock-провайдер подтверждает доступность аналитического сценария, но не интерпретирует агрегаты.",
+      findings: [],
+      suggestedQuestions: [
+        "Какие управленческие действия чаще всего пропускают?",
+        "Чем отличаются результаты второго и третьего раундов?",
+      ],
+    };
+  }
+
   if (request.purpose === "persona.reply") {
     return personaReplySchema.parse({
       reply:

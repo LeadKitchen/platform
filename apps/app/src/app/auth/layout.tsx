@@ -9,7 +9,9 @@ export default async function AuthLayout({
 }: {
   children: ReactNode;
 }) {
-  const session = await getSession();
+  // Keep the sign-in screen available during a temporary database outage.
+  // The actual sign-in request will still report the infrastructure error.
+  const session = await getSession().catch(() => null);
 
   // If user is already authenticated, redirect to dashboard
   if (session?.user) {

@@ -43,6 +43,7 @@ export async function judgeStyle(
     schemaName: "style_analysis",
     schema: styleAnalysisSchema,
     effort: deps.effort,
+    signal: deps.signal,
     system:
       typeof deps.params.styleJudgeSystem === "string"
         ? deps.params.styleJudgeSystem
@@ -77,6 +78,7 @@ export async function judgeCriteria(
     schemaName: "criteria_assessment",
     schema: criteriaAssessmentSchema,
     effort: deps.effort,
+    signal: deps.signal,
     system:
       typeof deps.params.criteriaJudgeSystem === "string"
         ? deps.params.criteriaJudgeSystem
