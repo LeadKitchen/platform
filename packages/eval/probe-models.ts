@@ -10,11 +10,29 @@
 import {
   createAiSdkProvider,
   criteriaAssessmentSchema,
+  GEMINI_BASE_URL,
+  GROQ_BASE_URL,
+  OPENROUTER_BASE_URL,
   personaReplySchema,
 } from "@acme/ai";
 
-const KEY = process.env.OPENROUTER_API_KEY;
-const BASE = "https://openrouter.ai/api/v1";
+/**
+ * Which endpoint to probe. Every free pool needs the same empirical check —
+ * a vendor's claimed feature support says nothing about whether a specific
+ * model actually holds this task's schema and role.
+ */
+const PROVIDER = process.env.PROBE_PROVIDER ?? "openrouter";
+
+const { KEY, BASE } = (() => {
+  switch (PROVIDER) {
+    case "groq":
+      return { KEY: process.env.GROQ_API_KEY, BASE: GROQ_BASE_URL };
+    case "gemini":
+      return { KEY: process.env.GEMINI_API_KEY, BASE: GEMINI_BASE_URL };
+    default:
+      return { KEY: process.env.OPENROUTER_API_KEY, BASE: OPENROUTER_BASE_URL };
+  }
+})();
 
 const CANDIDATES = process.argv.slice(2);
 

@@ -52,12 +52,30 @@ export const OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1";
  * That is the one free tier in this file with enough daily headroom to run
  * the full harness (~2000 calls) in a single sitting instead of spreading it
  * over several days like the OpenRouter free pool.
+ *
+ * Probe-verified (`PROBE_PROVIDER=groq bun run packages/eval/probe-models.ts`):
+ * the `openai/gpt-oss-*` models look attractive on paper (native
+ * `structured_outputs`, large context) but fail in practice for two unrelated
+ * reasons — neither is a role/language problem, both are hard blockers:
+ *  - native structured outputs 400s because `criteriaAssessmentSchema`'s
+ *    optional fields aren't listed in the JSON Schema `required` array, which
+ *    Groq's strict mode demands;
+ *  - the prompt-based fallback then hits an 8 000 TPM cap on the free/on-demand
+ *    tier — these are reasoning models, so the hidden reasoning tokens alone
+ *    can exceed that budget before any answer is emitted.
+ * `llama-3.1-8b-instant` and both `groq/compound*` also failed the schema
+ * check. Only `llama-3.3-70b-versatile` passed cleanly.
  */
 export const GROQ_BASE_URL = "https://api.groq.com/openai/v1";
-export const GROQ_FREE_MODELS = [
-  "llama-3.3-70b-versatile",
+export const GROQ_FREE_MODELS = ["llama-3.3-70b-versatile"] as const;
+
+/** Groq models that failed the probe — see the comment on {@link GROQ_FREE_MODELS}. */
+export const GROQ_REJECTED_MODELS = [
   "openai/gpt-oss-120b",
   "openai/gpt-oss-20b",
+  "llama-3.1-8b-instant",
+  "groq/compound",
+  "groq/compound-mini",
 ] as const;
 
 /**
