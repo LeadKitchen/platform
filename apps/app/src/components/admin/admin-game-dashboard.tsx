@@ -42,6 +42,7 @@ import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { VariantComparison, type VariantStats } from "~/components/game";
 import { client } from "~/orpc/react";
+import { AdminAiAssistant } from "./admin-ai-assistant";
 
 interface Employee {
   id: string;
@@ -515,6 +516,8 @@ export function AdminGameDashboard({
           Обновить данные
         </Button>
       </div>
+
+      <AdminAiAssistant />
 
       {section === "overview" ? (
         <div className="flex flex-col gap-6">

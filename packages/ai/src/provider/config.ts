@@ -142,6 +142,10 @@ export function buildOpenRouterCandidates(
         // OpenRouter proxies many backends; structured-output support varies
         // per model, so the schema always goes into the prompt.
         supportsStructuredOutputs: false,
+        // Free routed models are slow, and an uncapped 16k budget lets a
+        // rambling or reasoning-heavy backend burn minutes on a call that only
+        // needs a short reply or a handful of criteria verdicts.
+        maxOutputTokens: 1500,
         headers: {
           // OpenRouter attributes usage by these; harmless elsewhere.
           "HTTP-Referer": env.OPENROUTER_SITE_URL ?? "http://localhost:3000",
@@ -227,6 +231,9 @@ export function buildGroqCandidates(
         apiKey,
         baseUrl: env.GROQ_BASE_URL ?? GROQ_BASE_URL,
         supportsStructuredOutputs: false,
+        // llama-3.3-70b-versatile sits on an 12k TPM window on the free tier;
+        // a short cap keeps one call from eating most of that budget.
+        maxOutputTokens: 1500,
       });
     }
   }

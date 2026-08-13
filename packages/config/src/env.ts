@@ -30,8 +30,18 @@ export const env = createEnv({
 
     // AI module (деловая игра «Ситуационное руководство»)
     ANTHROPIC_API_KEY: z.string().optional(),
-    /** "anthropic" | "mock" — по умолчанию anthropic, если задан ключ. */
-    AI_PROVIDER: z.enum(["anthropic", "mock"]).optional(),
+    /** Провайдер или отказоустойчивый пул, поддерживаемый @acme/ai. */
+    AI_PROVIDER: z
+      .enum([
+        "anthropic",
+        "openai",
+        "openrouter",
+        "groq",
+        "gemini",
+        "pool",
+        "mock",
+      ])
+      .optional(),
     AI_MODEL: z.string().optional(),
     AI_EFFORT: z.enum(["low", "medium", "high", "xhigh", "max"]).optional(),
     /** Вариант конвейера по умолчанию для новых сессий. */

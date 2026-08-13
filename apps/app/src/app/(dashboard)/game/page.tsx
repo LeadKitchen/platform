@@ -2,17 +2,21 @@ import {
   Badge,
   Button,
   Card,
+  CardAction,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@acme/ui";
 import {
   IconArrowRight,
+  IconCheck,
   IconChefHat,
+  IconClock,
   IconMessages,
+  IconPlayerPlay,
   IconSchool,
-  IconUser,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { CreateSessionForm } from "~/components/game";
@@ -33,83 +37,123 @@ export default async function GamePage() {
     api.game.session.list({ limit: 20, offset: 0 }),
     api.game.catalog.variants(),
   ]);
+  const activeSession = sessions.find((session) => session.status === "active");
+  const completedCount = sessions.filter((session) =>
+    ["completed", "finished"].includes(session.status),
+  ).length;
 
   return (
     <>
       <SiteHeader />
       <div className="flex flex-1 flex-col gap-6 p-4 lg:p-6">
-        <div>
-          <p className="text-muted-foreground text-sm">Учебный симулятор</p>
-          <h1 className="text-2xl font-semibold">Ситуационное руководство</h1>
-          <p className="text-muted-foreground max-w-3xl text-sm">
-            Управляйте командой ресторана: определяйте готовность сотрудников,
-            выбирайте стиль руководства и отрабатывайте разговор с
-            сотрудником-ИИ голосом или текстом.
-          </p>
-        </div>
+        <Card className="bg-muted/30 overflow-hidden">
+          <CardHeader>
+            <Badge variant="secondary" className="w-fit">
+              Тренажёр руководителя
+            </Badge>
+            <CardTitle className="max-w-3xl text-2xl leading-tight sm:text-3xl">
+              Проведите смену так, чтобы команда поняла задачу и сохранила
+              мотивацию
+            </CardTitle>
+            <CardDescription className="max-w-2xl text-base">
+              Выберите ситуацию, поговорите с сотрудником голосом или текстом и
+              получите разбор конкретных управленческих действий.
+            </CardDescription>
+            {activeSession ? (
+              <CardAction>
+                <Badge>Смена уже идёт</Badge>
+              </CardAction>
+            ) : null}
+          </CardHeader>
+          <CardContent className="flex flex-wrap gap-3">
+            {activeSession ? (
+              <Button
+                size="lg"
+                render={<Link href={`/game/${activeSession.id}`} />}
+                nativeButton={false}
+              >
+                <IconPlayerPlay data-icon="inline-start" />
+                Продолжить «{activeSession.title}»
+              </Button>
+            ) : (
+              <Button
+                size="lg"
+                render={<a href="#start-practice" />}
+                nativeButton={false}
+              >
+                <IconPlayerPlay data-icon="inline-start" />
+                Начать практику
+              </Button>
+            )}
+            <Button
+              size="lg"
+              variant="outline"
+              render={<Link href="/game/round-1" />}
+              nativeButton={false}
+            >
+              Сначала потренироваться на примерах
+            </Button>
+          </CardContent>
+        </Card>
 
-        <div className="grid gap-4 lg:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-3">
           <Card>
             <CardHeader>
-              <Badge variant="outline" className="w-fit">
-                Без ИИ
-              </Badge>
-              <CardTitle className="flex items-center gap-2">
+              <div className="flex items-center justify-between gap-3">
+                <Badge variant="outline">Шаг 1</Badge>
                 <IconSchool />
-                Раунд 1
-              </CardTitle>
+              </div>
+              <CardTitle>Разберитесь в стилях</CardTitle>
               <CardDescription>
-                Познакомьтесь с уровнями готовности и стилями руководства.
+                4 коротких ситуации без ИИ · около 5 минут
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardFooter>
               <Button
                 variant="outline"
                 render={<Link href="/game/round-1" />}
                 nativeButton={false}
               >
-                Пройти теоретический раунд
+                Пройти разминку
                 <IconArrowRight data-icon="inline-end" />
               </Button>
-            </CardContent>
+            </CardFooter>
           </Card>
           <Card>
             <CardHeader>
-              <Badge className="w-fit">Чат с ИИ</Badge>
-              <CardTitle className="flex items-center gap-2">
+              <div className="flex items-center justify-between gap-3">
+                <Badge variant="outline">Шаг 2</Badge>
                 <IconMessages />
-                Раунд 2
-              </CardTitle>
+              </div>
+              <CardTitle>Поставьте задачу</CardTitle>
               <CardDescription>
-                Распределите заказ и поставьте задачу сотруднику голосом или
-                текстом, используя подходящий стиль.
+                Выберите сотрудника и проведите живой разговор с ИИ
               </CardDescription>
             </CardHeader>
           </Card>
           <Card>
             <CardHeader>
-              <Badge className="w-fit">Чат с ИИ</Badge>
-              <CardTitle className="flex items-center gap-2">
-                <IconUser />
-                Раунд 3
-              </CardTitle>
+              <div className="flex items-center justify-between gap-3">
+                <Badge variant="outline">Шаг 3</Badge>
+                <IconCheck />
+              </div>
+              <CardTitle>Получите разбор</CardTitle>
               <CardDescription>
-                Повар остался один в смене. Управляйте приоритетами и нагрузкой,
-                не теряя мотивацию сотрудника.
+                Увидите, что сработало и что попробовать в следующей смене
               </CardDescription>
             </CardHeader>
           </Card>
         </div>
 
-        <Card>
+        <Card id="start-practice">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <IconChefHat />
-              Начать практику с ИИ
+              Новая смена
             </CardTitle>
             <CardDescription>
-              Создайте игровую смену для второго или третьего раунда. После
-              выбора заказа вы сразу перейдёте к разговору с сотрудником.
+              Два простых поля — и можно начинать. Технические настройки
+              тренажёра система выберет сама.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -129,7 +173,17 @@ export default async function GamePage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Сессии</CardTitle>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <CardTitle>Ваши смены</CardTitle>
+                <CardDescription>
+                  Возвращайтесь к незавершённым или пересматривайте результаты.
+                </CardDescription>
+              </div>
+              {sessions.length > 0 ? (
+                <Badge variant="secondary">{completedCount} завершено</Badge>
+              ) : null}
+            </div>
           </CardHeader>
           <CardContent className="flex flex-col gap-2">
             {sessions.length === 0 ? (
@@ -144,15 +198,17 @@ export default async function GamePage() {
                 href={`/game/${session.id}`}
                 className="hover:bg-muted flex flex-wrap items-center justify-between gap-2 rounded-md border px-3 py-2"
               >
-                <span className="font-medium">{session.title}</span>
+                <span>
+                  <span className="block font-medium">{session.title}</span>
+                  <span className="text-muted-foreground flex items-center gap-1 text-xs">
+                    <IconClock /> Раунд {session.round}
+                  </span>
+                </span>
                 <span className="flex flex-wrap items-center gap-2">
-                  <Badge variant="outline">Раунд {session.round}</Badge>
-                  <Badge variant="secondary">
-                    {session.variantId ?? "по умолчанию"}
-                  </Badge>
                   <Badge variant="outline">
                     {SESSION_STATUS_LABELS[session.status] ?? session.status}
                   </Badge>
+                  <IconArrowRight />
                 </span>
               </Link>
             ))}

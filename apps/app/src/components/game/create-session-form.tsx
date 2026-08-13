@@ -1,8 +1,10 @@
 "use client";
 
 import {
+  Badge,
   Button,
   Field,
+  FieldDescription,
   FieldGroup,
   FieldLabel,
   Input,
@@ -45,22 +47,25 @@ export function CreateSessionForm({
   const [round, setRound] = useState<"2" | "3">(
     String(defaults.defaultRound) as "2" | "3",
   );
-  const [variantId, setVariantId] = useState(
-    defaults.defaultVariantId ?? variants[0]?.id ?? "",
-  );
+  const variantId = defaults.defaultVariantId ?? variants[0]?.id ?? "";
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
-    if (pending || title.trim() === "") return;
+    if (pending) return;
 
     setPending(true);
     setError(null);
 
     try {
       const session = await client.game.session.create({
-        title: title.trim(),
+        title:
+          title.trim() ||
+          `Моя команда · ${new Intl.DateTimeFormat("ru-RU", {
+            day: "numeric",
+            month: "long",
+          }).format(new Date())}`,
         round: round === "3" ? 3 : 2,
         variantId: variantId || undefined,
       });
@@ -78,15 +83,20 @@ export function CreateSessionForm({
 
   return (
     <form onSubmit={submit}>
-      <FieldGroup className="grid gap-4 lg:grid-cols-[1fr_190px_240px_auto] lg:items-end">
+      <FieldGroup className="grid gap-4 lg:grid-cols-[1fr_260px_auto] lg:items-end">
         <Field>
-          <FieldLabel htmlFor="session-title">Название команды</FieldLabel>
+          <FieldLabel htmlFor="session-title">
+            Название команды <Badge variant="outline">необязательно</Badge>
+          </FieldLabel>
           <Input
             id="session-title"
             value={title}
             onChange={(event) => setTitle(event.target.value)}
             placeholder="Например, Команда шефов"
           />
+          <FieldDescription>
+            Если оставить поле пустым, мы назовём смену автоматически.
+          </FieldDescription>
         </Field>
 
         <Field>
@@ -109,33 +119,12 @@ export function CreateSessionForm({
           </Select>
         </Field>
 
-        <Field>
-          <FieldLabel htmlFor="session-variant">Тренажёр ИИ</FieldLabel>
-          <Select
-            value={variantId}
-            onValueChange={(value) => setVariantId(value ?? "")}
-          >
-            <SelectTrigger id="session-variant">
-              <SelectValue placeholder="По умолчанию" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {variants.map((variant) => (
-                  <SelectItem key={variant.id} value={variant.id}>
-                    {variant.name}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </Field>
-
         <Button type="submit" size="lg" disabled={pending}>
-          {pending ? "Создаём…" : "Начать раунд"}
+          {pending ? "Готовим смену…" : "Начать практику"}
         </Button>
 
         {error ? (
-          <p className="text-destructive text-sm lg:col-span-4">{error}</p>
+          <p className="text-destructive text-sm lg:col-span-3">{error}</p>
         ) : null}
       </FieldGroup>
     </form>

@@ -1,6 +1,9 @@
 "use client";
 
 import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
   Badge,
   Button,
   Card,
@@ -78,61 +81,73 @@ const CASES = [
 
 export function RoundOneTraining() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [checked, setChecked] = useState(false);
+  const [results, setResults] = useState<Record<string, boolean>>({});
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const score = useMemo(
-    () =>
-      CASES.filter(
-        (item) =>
-          answers[`${item.id}:level`] === item.answer &&
-          answers[`${item.id}:style`] === item.styleId,
-      ).length,
-    [answers],
+    () => Object.values(results).filter(Boolean).length,
+    [results],
   );
-  const complete = Object.keys(answers).length === CASES.length * 2;
+  const item = CASES[currentIndex] ?? CASES[0];
+  const currentComplete = Boolean(
+    answers[`${item.id}:level`] && answers[`${item.id}:style`],
+  );
+  const checked = Object.hasOwn(results, item.id);
+  const finished = Object.keys(results).length === CASES.length;
 
   function reset() {
     setAnswers({});
-    setChecked(false);
+    setResults({});
+    setCurrentIndex(0);
   }
 
   return (
     <div className="flex flex-col gap-6">
-      <Card>
+      <Card className="overflow-hidden">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <IconSchool />
-            Раунд 1 · Определите уровень готовности
-          </CardTitle>
-          <CardDescription>
-            В этом раунде ИИ не используется. Прочитайте описание сотрудника,
-            выберите его уровень и сопоставьте с подходящим стилем руководства.
-          </CardDescription>
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <IconSchool />
+                Разминка: выберите подход руководителя
+              </CardTitle>
+              <CardDescription>
+                По одной ситуации за раз. Сначала оцените готовность, затем
+                выберите стиль руководства.
+              </CardDescription>
+            </div>
+            <Badge variant="secondary">
+              {currentIndex + 1} из {CASES.length}
+            </Badge>
+          </div>
         </CardHeader>
-        <CardContent className="flex flex-col gap-5">
-          {CASES.map((item, index) => {
-            const correct =
-              answers[`${item.id}:level`] === item.answer &&
-              answers[`${item.id}:style`] === item.styleId;
-            return (
-              <Card key={item.id}>
-                <CardHeader>
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <CardTitle className="text-base">
-                        {index + 1}. {item.name}
-                      </CardTitle>
-                      <CardDescription>{item.role}</CardDescription>
-                    </div>
-                    {checked ? (
-                      <Badge variant={correct ? "default" : "destructive"}>
-                        {correct ? "Верно" : "Нужно повторить"}
-                      </Badge>
-                    ) : null}
-                  </div>
-                </CardHeader>
-                <CardContent className="grid gap-4 lg:grid-cols-[1fr_240px_240px] lg:items-center">
-                  <p className="text-sm">{item.description}</p>
+        <CardContent className="flex flex-col gap-6">
+          <Progress
+            value={((currentIndex + (checked ? 1 : 0)) / CASES.length) * 100}
+          />
+
+          <Card className="bg-muted/30">
+            <CardHeader>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <CardTitle>{item.name}</CardTitle>
+                  <CardDescription>{item.role}</CardDescription>
+                </div>
+                {checked ? (
+                  <Badge variant={results[item.id] ? "default" : "destructive"}>
+                    {results[item.id] ? "Верно" : "Есть что улучшить"}
+                  </Badge>
+                ) : null}
+              </div>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-5">
+              <p className="max-w-3xl text-base leading-relaxed">
+                {item.description}
+              </p>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="flex flex-col gap-2">
+                  <p className="text-sm font-medium">1. Уровень готовности</p>
                   <Select
                     value={answers[`${item.id}:level`] ?? ""}
                     onValueChange={(value) => {
@@ -140,7 +155,11 @@ export function RoundOneTraining() {
                         ...answers,
                         [`${item.id}:level`]: value ?? "",
                       });
-                      setChecked(false);
+                      setResults((current) => {
+                        const next = { ...current };
+                        delete next[item.id];
+                        return next;
+                      });
                     }}
                   >
                     <SelectTrigger
@@ -158,6 +177,10 @@ export function RoundOneTraining() {
                       </SelectGroup>
                     </SelectContent>
                   </Select>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <p className="text-sm font-medium">2. Стиль руководства</p>
                   <Select
                     value={answers[`${item.id}:style`] ?? ""}
                     onValueChange={(value) => {
@@ -165,7 +188,11 @@ export function RoundOneTraining() {
                         ...answers,
                         [`${item.id}:style`]: value ?? "",
                       });
-                      setChecked(false);
+                      setResults((current) => {
+                        const next = { ...current };
+                        delete next[item.id];
+                        return next;
+                      });
                     }}
                   >
                     <SelectTrigger
@@ -183,32 +210,74 @@ export function RoundOneTraining() {
                       </SelectGroup>
                     </SelectContent>
                   </Select>
-                  {checked ? (
-                    <p className="text-muted-foreground text-sm lg:col-span-3">
-                      Правильная связка: {item.answer} · {item.style} стиль.
-                    </p>
-                  ) : null}
-                </CardContent>
-              </Card>
-            );
-          })}
+                </div>
+              </div>
+
+              {checked ? (
+                <Alert>
+                  <IconCheck />
+                  <AlertTitle>
+                    Правильная связка: {item.answer} · {item.style}
+                  </AlertTitle>
+                  <AlertDescription>
+                    {results[item.id]
+                      ? "Отлично: оценка готовности и выбранный стиль совпали."
+                      : "Сравните связку со своим ответом. В практике важно оценивать готовность именно к конкретной задаче."}
+                  </AlertDescription>
+                </Alert>
+              ) : null}
+            </CardContent>
+          </Card>
 
           <div className="flex flex-wrap items-center gap-3">
-            <Button disabled={!complete} onClick={() => setChecked(true)}>
-              <IconCheck data-icon="inline-start" />
-              Проверить ответы
-            </Button>
-            <Button variant="outline" onClick={reset}>
+            {!checked ? (
+              <Button
+                disabled={!currentComplete}
+                onClick={() =>
+                  setResults({
+                    ...results,
+                    [item.id]:
+                      answers[`${item.id}:level`] === item.answer &&
+                      answers[`${item.id}:style`] === item.styleId,
+                  })
+                }
+              >
+                <IconCheck data-icon="inline-start" />
+                Проверить
+              </Button>
+            ) : currentIndex < CASES.length - 1 ? (
+              <Button onClick={() => setCurrentIndex(currentIndex + 1)}>
+                Следующая ситуация
+              </Button>
+            ) : null}
+
+            {currentIndex > 0 ? (
+              <Button
+                variant="outline"
+                onClick={() => setCurrentIndex(currentIndex - 1)}
+              >
+                Назад
+              </Button>
+            ) : null}
+
+            <Button variant="ghost" onClick={reset}>
               <IconRefresh data-icon="inline-start" />
               Начать заново
             </Button>
-            {checked ? (
-              <span className="text-sm font-medium">
-                Результат: {score} из {CASES.length}
-              </span>
-            ) : null}
           </div>
-          {checked ? <Progress value={(score / CASES.length) * 100} /> : null}
+
+          {finished ? (
+            <Alert>
+              <IconSchool />
+              <AlertTitle>
+                Разминка завершена: {score} из {CASES.length}
+              </AlertTitle>
+              <AlertDescription>
+                Теперь переходите к практике: там готовность зависит от
+                сочетания сотрудника и конкретного заказа.
+              </AlertDescription>
+            </Alert>
+          ) : null}
         </CardContent>
       </Card>
     </div>

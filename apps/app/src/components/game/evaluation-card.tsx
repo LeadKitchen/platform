@@ -7,14 +7,24 @@ import type { ManagementStyle } from "@acme/game";
 import { STYLE_LABELS } from "@acme/game/styles";
 import {
   Badge,
+  Button,
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
   Progress,
   Separator,
 } from "@acme/ui";
+import {
+  IconArrowRight,
+  IconCheck,
+  IconTarget,
+  IconTrendingUp,
+  IconX,
+} from "@tabler/icons-react";
+import Link from "next/link";
 
 export interface EvaluationView {
   scorePercent: number;
@@ -60,7 +70,6 @@ function styleLabel(style: string): string {
  */
 export function EvaluationCard({
   evaluation,
-  variantId,
 }: {
   evaluation: EvaluationView;
   variantId?: string;
@@ -75,23 +84,85 @@ export function EvaluationCard({
       : evaluation.outcome.status === "partial"
         ? "secondary"
         : "destructive";
+  const metCriteria = evaluation.criteria.filter((criterion) => criterion.met);
+  const missedCriteria = evaluation.criteria.filter(
+    (criterion) => !criterion.met,
+  );
+  const scoreLabel =
+    evaluation.scorePercent >= 80
+      ? "Сильный разговор"
+      : evaluation.scorePercent >= 60
+        ? "Хорошая основа"
+        : "Есть точки роста";
 
   return (
-    <Card>
+    <Card className="overflow-hidden">
       <CardHeader>
-        <CardTitle className="flex items-center justify-between gap-4">
-          <span>Оценка диалога</span>
-          <span className="text-3xl font-semibold tabular-nums">
-            {evaluation.scorePercent}%
-          </span>
-        </CardTitle>
-        <CardDescription>
-          {variantId ? `Вариант ИИ-конвейера: ${variantId}. ` : ""}
-          {evaluation.summary}
-        </CardDescription>
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <Badge variant="secondary" className="mb-3">
+              Персональный разбор
+            </Badge>
+            <CardTitle className="text-2xl">{scoreLabel}</CardTitle>
+          </div>
+          <div className="text-right">
+            <span className="block text-4xl font-semibold tabular-nums">
+              {evaluation.scorePercent}%
+            </span>
+            <span className="text-muted-foreground text-xs">общая оценка</span>
+          </div>
+        </div>
+        <CardDescription>{evaluation.summary}</CardDescription>
       </CardHeader>
 
       <CardContent className="flex flex-col gap-6">
+        <Progress value={evaluation.scorePercent} />
+
+        <div className="grid gap-4 lg:grid-cols-2">
+          <div className="flex flex-col gap-3 rounded-lg border p-4">
+            <div className="flex items-center gap-2 font-semibold">
+              <IconCheck /> Что уже получается
+            </div>
+            {metCriteria.length > 0 ? (
+              <ul className="flex flex-col gap-2 text-sm">
+                {metCriteria.slice(0, 4).map((criterion) => (
+                  <li key={criterion.id} className="flex items-start gap-2">
+                    <IconCheck className="mt-0.5" />
+                    <span>{criterion.title}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-muted-foreground text-sm">
+                Начните с чёткого результата и проверки понимания.
+              </p>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-3 rounded-lg border p-4">
+            <div className="flex items-center gap-2 font-semibold">
+              <IconTrendingUp /> Что попробовать в следующий раз
+            </div>
+            {missedCriteria.length > 0 ? (
+              <ul className="flex flex-col gap-2 text-sm">
+                {missedCriteria.slice(0, 4).map((criterion) => (
+                  <li key={criterion.id} className="flex items-start gap-2">
+                    <IconTarget className="mt-0.5" />
+                    <span>
+                      {criterion.title}
+                      {criterion.comment ? ` — ${criterion.comment}` : ""}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-muted-foreground text-sm">
+                Все ключевые действия выполнены — усложните следующую ситуацию.
+              </p>
+            )}
+          </div>
+        </div>
+
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <p className="text-muted-foreground text-sm">Ожидаемый стиль</p>
@@ -122,7 +193,7 @@ export function EvaluationCard({
 
         <div className="flex flex-col gap-2">
           <p className="text-muted-foreground text-sm">
-            Управленческие действия
+            Полный чек-лист разговора
           </p>
           <ul className="flex flex-col gap-1">
             {evaluation.criteria.map((criterion) => (
@@ -140,7 +211,8 @@ export function EvaluationCard({
                   ) : null}
                 </span>
                 <Badge variant={criterion.met ? "default" : "outline"}>
-                  {criterion.met ? "выполнено" : "нет"}
+                  {criterion.met ? <IconCheck /> : <IconX />}
+                  {criterion.met ? "выполнено" : "пропущено"}
                 </Badge>
               </li>
             ))}
@@ -173,6 +245,12 @@ export function EvaluationCard({
           <span>Штрафы: {evaluation.breakdown.penalties}</span>
         </div>
       </CardContent>
+      <CardFooter className="border-t">
+        <Button render={<Link href="/game" />} nativeButton={false}>
+          Выбрать следующую ситуацию
+          <IconArrowRight data-icon="inline-end" />
+        </Button>
+      </CardFooter>
     </Card>
   );
 }

@@ -1,14 +1,7 @@
 import { APP_CONFIG } from "@acme/config";
-import {
-  cn,
-  ThemeProvider,
-  ThemeToggle,
-  Toaster,
-  themeDetectorScript,
-} from "@acme/ui";
+import { ThemeProvider, ThemeToggle, Toaster } from "@acme/ui";
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import { env } from "~/env";
 import { ORPCReactProvider } from "~/orpc/react";
 
@@ -18,13 +11,15 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     env.VERCEL_ENV === "production" ? APP_CONFIG.url : "http://localhost:3000",
   ),
-  title: "Bun Turbo Starter",
-  description: "Simple monorepo with shared backend for web & mobile apps",
+  title: "СитРук — тренажёр ситуационного руководства",
+  description:
+    "Интерактивная деловая игра для тренировки управленческих разговоров.",
   openGraph: {
-    title: "Bun Turbo Starter",
-    description: "Simple monorepo with shared backend for web & mobile apps",
+    title: "СитРук — тренажёр ситуационного руководства",
+    description:
+      "Интерактивная деловая игра для тренировки управленческих разговоров.",
     url: APP_CONFIG.url,
-    siteName: "Bun Turbo Starter",
+    siteName: APP_CONFIG.name,
   },
 };
 
@@ -35,29 +30,10 @@ export const viewport: Viewport = {
   ],
 };
 
-const geistSans = Geist({
-  subsets: ["latin"],
-  variable: "--font-geist-sans",
-});
-const geistMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-geist-mono",
-});
-
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Static trusted script prevents a theme flash before hydration. */}
-        <script dangerouslySetInnerHTML={{ __html: themeDetectorScript }} />
-      </head>
-      <body
-        className={cn(
-          "bg-background text-foreground min-h-screen font-sans antialiased",
-          geistSans.variable,
-          geistMono.variable,
-        )}
-      >
+    <html lang="ru" suppressHydrationWarning>
+      <body className="bg-background text-foreground min-h-screen font-sans antialiased">
         <ThemeProvider>
           <ORPCReactProvider>{props.children}</ORPCReactProvider>
           <div className="absolute right-4 bottom-4">

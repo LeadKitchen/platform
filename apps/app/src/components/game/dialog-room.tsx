@@ -13,24 +13,30 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
   Empty,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
   ScrollArea,
+  Separator,
   Textarea,
 } from "@acme/ui";
 import {
   IconAlertTriangle,
+  IconBulb,
   IconCheck,
+  IconChevronDown,
+  IconLoader2,
   IconMicrophone,
   IconPlayerStop,
   IconSend,
-  IconSparkles,
   IconUser,
 } from "@tabler/icons-react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { client } from "~/orpc/react";
 import { EvaluationCard, type EvaluationView } from "./evaluation-card";
 import { useSpeechRecognition } from "./use-speech-recognition";
@@ -39,6 +45,12 @@ interface Turn {
   role: "manager" | "employee";
   text: string;
 }
+
+const CONVERSATION_STARTERS = [
+  "Обратиться по имени",
+  "Объяснить ожидаемый результат",
+  "Уточнить, всё ли понятно",
+] as const;
 
 export interface DialogRoomProps {
   dialogId: string;
@@ -68,6 +80,14 @@ export function DialogRoom(props: DialogRoomProps) {
   );
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const endRef = useRef<HTMLDivElement>(null);
+  const latestActivity = `${turns.length}:${pending}`;
+
+  useEffect(() => {
+    if (latestActivity) {
+      endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }, [latestActivity]);
 
   const speech = useSpeechRecognition({
     onFinal: useCallback((text: string) => {
@@ -134,8 +154,35 @@ export function DialogRoom(props: DialogRoomProps) {
     }
   }
 
+  function insertStarter(starter: (typeof CONVERSATION_STARTERS)[number]) {
+    const text =
+      starter === "Обратиться по имени"
+        ? `${props.employee.name}, давайте обсудим задачу «${props.task.title}».`
+        : starter === "Объяснить ожидаемый результат"
+          ? `Ожидаемый результат: задача «${props.task.title}» должна быть выполнена качественно и в согласованный срок.`
+          : "Расскажите, пожалуйста, как вы поняли задачу и что вам нужно для её выполнения?";
+    setDraft((current) => (current ? `${current} ${text}` : text));
+  }
+
   return (
     <div className="flex flex-col gap-6">
+      <div className="grid gap-2 sm:grid-cols-3">
+        <div className="bg-primary text-primary-foreground flex items-center gap-3 rounded-lg p-3">
+          <Badge variant="secondary">1</Badge>
+          <span className="text-sm font-medium">Поставьте задачу</span>
+        </div>
+        <div className="bg-muted flex items-center gap-3 rounded-lg border p-3">
+          <Badge variant="outline">2</Badge>
+          <span className="text-sm font-medium">Проверьте понимание</span>
+        </div>
+        <div className="bg-muted flex items-center gap-3 rounded-lg border p-3">
+          <Badge variant="outline">3</Badge>
+          <span className="text-sm font-medium">
+            Завершите и получите разбор
+          </span>
+        </div>
+      </div>
+
       <Card className="overflow-hidden">
         <CardHeader>
           <div className="flex flex-wrap items-start justify-between gap-4">
@@ -151,7 +198,13 @@ export function DialogRoom(props: DialogRoomProps) {
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Badge>Сотрудник · ИИ</Badge>
+              <Badge>
+                <span className="relative mr-1 flex size-2">
+                  <span className="bg-primary-foreground absolute inline-flex size-full animate-ping rounded-full opacity-75" />
+                  <span className="bg-primary-foreground relative inline-flex size-2 rounded-full" />
+                </span>
+                В роли · ИИ
+              </Badge>
               <Badge variant="outline">Раунд {props.shift.round}</Badge>
               {props.shift.soloOnShift ? (
                 <Badge variant="secondary">Один в смене</Badge>
@@ -168,15 +221,25 @@ export function DialogRoom(props: DialogRoomProps) {
         </CardHeader>
 
         <CardContent className="flex flex-col gap-4">
-          <Alert>
-            <IconSparkles />
-            <AlertTitle>Ваша цель</AlertTitle>
-            <AlertDescription>
-              Выберите подходящий стиль руководства, договоритесь о результате и
-              сроке. Для сложной или новой задачи могут понадобиться шаги,
-              контрольные точки и проверка понимания.
-            </AlertDescription>
-          </Alert>
+          <Collapsible>
+            <Alert>
+              <IconBulb />
+              <AlertTitle>Цель разговора</AlertTitle>
+              <AlertDescription>
+                Договоритесь о результате, сроке и способе контроля.
+                <CollapsibleTrigger
+                  render={<Button variant="ghost" size="sm" />}
+                >
+                  Подсказка
+                  <IconChevronDown data-icon="inline-end" />
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  Для новой или сложной задачи сотруднику могут понадобиться
+                  пошаговая инструкция, контрольные точки и проверка понимания.
+                </CollapsibleContent>
+              </AlertDescription>
+            </Alert>
+          </Collapsible>
 
           <ScrollArea className="h-[420px] rounded-lg border p-4">
             <div className="flex flex-col gap-4">
@@ -232,6 +295,13 @@ export function DialogRoom(props: DialogRoomProps) {
                   {speech.interim}…
                 </p>
               ) : null}
+              {pending ? (
+                <div className="bg-muted mr-auto flex items-center gap-2 rounded-lg px-3 py-2 text-sm">
+                  <IconLoader2 className="animate-spin" />
+                  {props.employee.name} отвечает…
+                </div>
+              ) : null}
+              <div ref={endRef} />
             </div>
           </ScrollArea>
 
@@ -258,11 +328,28 @@ export function DialogRoom(props: DialogRoomProps) {
           ) : null}
 
           {finished ? (
-            <p className="text-muted-foreground text-sm">
-              Диалог завершён, оценка отправлена администратору.
-            </p>
+            <Alert>
+              <IconCheck />
+              <AlertTitle>Разговор завершён</AlertTitle>
+              <AlertDescription>
+                Ниже — ваш персональный разбор. Он также доступен ведущему игры.
+              </AlertDescription>
+            </Alert>
           ) : (
             <div className="flex flex-col gap-2">
+              <div className="flex flex-wrap gap-2">
+                {CONVERSATION_STARTERS.map((starter) => (
+                  <Button
+                    key={starter}
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => insertStarter(starter)}
+                  >
+                    {starter}
+                  </Button>
+                ))}
+              </div>
               <Textarea
                 aria-label="Сообщение сотруднику"
                 value={draft}
@@ -270,8 +357,17 @@ export function DialogRoom(props: DialogRoomProps) {
                 placeholder="Что вы говорите сотруднику?"
                 rows={3}
                 disabled={pending}
+                onKeyDown={(event) => {
+                  if (
+                    (event.ctrlKey || event.metaKey) &&
+                    event.key === "Enter"
+                  ) {
+                    event.preventDefault();
+                    void send();
+                  }
+                }}
               />
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <Button
                   onClick={send}
                   disabled={pending || draft.trim() === ""}
@@ -300,6 +396,15 @@ export function DialogRoom(props: DialogRoomProps) {
                   </span>
                 )}
 
+                <span className="text-muted-foreground mr-auto hidden text-xs sm:inline">
+                  Ctrl + Enter — отправить
+                </span>
+
+                <Separator
+                  orientation="vertical"
+                  className="hidden h-8 sm:block"
+                />
+
                 <Button
                   type="button"
                   variant="secondary"
@@ -307,7 +412,7 @@ export function DialogRoom(props: DialogRoomProps) {
                   disabled={pending || turns.length === 0}
                 >
                   <IconCheck data-icon="inline-start" />
-                  Завершить и оценить
+                  Завершить разговор
                 </Button>
               </div>
             </div>

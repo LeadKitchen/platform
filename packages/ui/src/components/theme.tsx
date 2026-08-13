@@ -86,6 +86,7 @@ export function ThemeProvider({ children }: React.PropsWithChildren) {
   const [themeMode, setThemeMode] = React.useState(getStoredThemeMode);
 
   React.useEffect(() => {
+    updateThemeClass(themeMode);
     if (themeMode !== "auto") return;
     return setupPreferredListener();
   }, [themeMode]);
