@@ -200,6 +200,88 @@ export function fallbackResponder(request: {
     };
   }
 
+  if (request.purpose === "admin.characters.simulate") {
+    const payload = (() => {
+      try {
+        return JSON.parse(request.messages.at(-1)?.content ?? "{}") as {
+          scenario?: string;
+          mode?: "standard" | "peak" | "conflict";
+          characters?: Array<{
+            profile?: {
+              id?: string;
+              name?: string;
+              personality?: {
+                tone?: "confident" | "anxious" | "independent";
+              };
+            };
+          }>;
+        };
+      } catch {
+        return {};
+      }
+    })();
+    const pressure = payload.mode === "peak" || payload.mode === "conflict";
+    return {
+      scenarioSummary:
+        payload.scenario?.slice(0, 500) ??
+        "Команда реагирует на изменение приоритета в рабочей смене.",
+      responses: (payload.characters ?? []).map((character, index) => {
+        const tone = character.profile?.personality?.tone;
+        const reply =
+          tone === "anxious"
+            ? pressure
+              ? "Я боюсь не успеть всё одновременно. Назовите один главный приоритет, и я начну с него."
+              : "Я начну сейчас, но хочу свериться после первого шага, чтобы не допустить ошибку."
+            : tone === "independent"
+              ? pressure
+                ? "Я перестрою очередь сама. Сообщите только крайний срок и не меняйте приоритет ещё раз."
+                : "Задачу понял. Возьму ответственность и вернусь с готовым результатом к обозначенному сроку."
+              : pressure
+                ? "Вижу риск задержки. Зафиксируйте главный заказ, остальные я распределю по очереди."
+                : "Принято. Сначала проверю ресурсы, затем выполню задачу и сообщу о результате.";
+        return {
+          characterId: character.profile?.id ?? `demo_character_${index + 1}`,
+          reply,
+          emotion: pressure ? "напряжён и сосредоточен" : "спокоен и собран",
+          inferredNeed:
+            tone === "anxious"
+              ? "короткая контрольная точка и подтверждение приоритета"
+              : "ясный ожидаемый результат и стабильный приоритет",
+          behavioralRisk: pressure
+            ? "при повторной смене приоритета может потерять темп"
+            : "существенных рисков в стандартном режиме не показывает",
+        };
+      }),
+    };
+  }
+
+  if (request.purpose === "admin.characters.judge") {
+    const payload = (() => {
+      try {
+        return JSON.parse(request.messages.at(-1)?.content ?? "{}") as {
+          simulation?: { responses?: Array<{ characterId?: string }> };
+        };
+      } catch {
+        return {};
+      }
+    })();
+    return {
+      summary:
+        "Демонстрационный судья подтвердил различимость реакций и соответствие профилям персонажей.",
+      verdicts: (payload.simulation?.responses ?? []).map((response) => ({
+        characterId: response.characterId ?? "unknown_character",
+        personaConsistency: 92,
+        scenarioFit: 90,
+        naturalness: 88,
+        safety: 100,
+        evidence:
+          "Реплика опирается на заданный характер, рабочий контекст и режим нагрузки.",
+        recommendation:
+          "Персонаж готов к игровому тесту; проверьте его ещё на альтернативном сценарии.",
+      })),
+    };
+  }
+
   if (request.purpose === "admin.configuration.draft") {
     return {
       summary: "Безопасный демонстрационный черновик",

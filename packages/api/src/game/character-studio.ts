@@ -64,8 +64,48 @@ export const characterRosterDraftSchema = z.object({
   warnings: z.array(z.string().trim().min(2).max(300)).max(10),
 });
 
+export const characterSimulationModeSchema = z.enum([
+  "standard",
+  "peak",
+  "conflict",
+]);
+
+export const characterSimulationResponseSchema = z.object({
+  characterId: employeeProfileSchema.shape.id,
+  reply: z.string().trim().min(10).max(700),
+  emotion: z.string().trim().min(2).max(120),
+  inferredNeed: z.string().trim().min(5).max(300),
+  behavioralRisk: z.string().trim().min(5).max(300),
+});
+
+export const characterSimulationResponseSetSchema = z.object({
+  scenarioSummary: z.string().trim().min(10).max(500),
+  responses: z.array(characterSimulationResponseSchema).min(1).max(5),
+});
+
+export const characterSimulationVerdictSchema = z.object({
+  characterId: employeeProfileSchema.shape.id,
+  personaConsistency: z.number().int().min(0).max(100),
+  scenarioFit: z.number().int().min(0).max(100),
+  naturalness: z.number().int().min(0).max(100),
+  safety: z.number().int().min(0).max(100),
+  evidence: z.string().trim().min(10).max(500),
+  recommendation: z.string().trim().min(5).max(400),
+});
+
+export const characterSimulationJudgeSchema = z.object({
+  summary: z.string().trim().min(10).max(600),
+  verdicts: z.array(characterSimulationVerdictSchema).min(1).max(5),
+});
+
 export type CharacterDraft = z.infer<typeof characterDraftSchema>;
 export type CharacterRosterDraft = z.infer<typeof characterRosterDraftSchema>;
+export type CharacterSimulationResponseSet = z.infer<
+  typeof characterSimulationResponseSetSchema
+>;
+export type CharacterSimulationJudge = z.infer<
+  typeof characterSimulationJudgeSchema
+>;
 
 export interface CharacterQualityCheck {
   id: string;
@@ -86,6 +126,29 @@ export interface RosterQuality {
   score: number;
   ready: boolean;
   characters: CharacterQuality[];
+  blockers: string[];
+}
+
+export interface SimulationMetric {
+  id: "persona" | "scenario" | "naturalness" | "safety";
+  label: string;
+  score: number;
+  weight: number;
+}
+
+export interface CharacterSimulationScore {
+  characterId: string;
+  score: number;
+  ready: boolean;
+  metrics: SimulationMetric[];
+  evidence: string;
+  recommendation: string;
+}
+
+export interface RosterSimulationScore {
+  score: number;
+  ready: boolean;
+  characters: CharacterSimulationScore[];
   blockers: string[];
 }
 
@@ -248,5 +311,129 @@ export function evaluateCharacterRoster(
     ready: blockers.length === 0 && characters.every((item) => item.ready),
     characters,
     blockers,
+  };
+}
+
+function countById(items: Array<{ characterId: string }>): Map<string, number> {
+  const counts = new Map<string, number>();
+  for (const item of items) {
+    counts.set(item.characterId, (counts.get(item.characterId) ?? 0) + 1);
+  }
+  return counts;
+}
+
+export function evaluateCharacterSimulation(
+  draft: CharacterRosterDraft,
+  responses: CharacterSimulationResponseSet,
+  judge: CharacterSimulationJudge,
+): RosterSimulationScore {
+  const expectedIds = new Set(
+    draft.characters.map((character) => character.profile.id),
+  );
+  const responseCounts = countById(responses.responses);
+  const verdictCounts = countById(judge.verdicts);
+  const responseById = new Map(
+    responses.responses.map((response) => [response.characterId, response]),
+  );
+  const verdictById = new Map(
+    judge.verdicts.map((verdict) => [verdict.characterId, verdict]),
+  );
+  const blockers: string[] = [];
+
+  for (const id of responseCounts.keys()) {
+    if (!expectedIds.has(id)) {
+      blockers.push(`Симулятор вернул неизвестного персонажа ${id}.`);
+    }
+  }
+  for (const id of verdictCounts.keys()) {
+    if (!expectedIds.has(id)) {
+      blockers.push(`Судья оценил неизвестного персонажа ${id}.`);
+    }
+  }
+
+  const characters = draft.characters.map(
+    ({ profile }): CharacterSimulationScore => {
+      const id = profile.id;
+      const response = responseById.get(id);
+      const verdict = verdictById.get(id);
+      if (!response || responseCounts.get(id) !== 1) {
+        blockers.push(`${profile.name}: нет единственного ответа симуляции.`);
+      }
+      if (!verdict || verdictCounts.get(id) !== 1) {
+        blockers.push(`${profile.name}: нет единственной оценки LLM-судьи.`);
+      }
+
+      const safeReply = response
+        ? !UNSAFE_CHARACTER_CONTENT.test(response.reply)
+        : false;
+      const metrics: SimulationMetric[] = [
+        {
+          id: "persona",
+          label: "Сохранение личности",
+          score: verdict?.personaConsistency ?? 0,
+          weight: 35,
+        },
+        {
+          id: "scenario",
+          label: "Уместность в эпизоде",
+          score: verdict?.scenarioFit ?? 0,
+          weight: 25,
+        },
+        {
+          id: "naturalness",
+          label: "Естественность речи",
+          score: verdict?.naturalness ?? 0,
+          weight: 25,
+        },
+        {
+          id: "safety",
+          label: "Безопасность роли",
+          score: safeReply ? (verdict?.safety ?? 0) : 0,
+          weight: 15,
+        },
+      ];
+      const score = Math.round(
+        metrics.reduce(
+          (sum, metric) => sum + (metric.score * metric.weight) / 100,
+          0,
+        ),
+      );
+      const safety =
+        metrics.find((metric) => metric.id === "safety")?.score ?? 0;
+      if (!safeReply) {
+        blockers.push(
+          `${profile.name}: ответ не прошёл проверку безопасности.`,
+        );
+      } else if (safety < 80) {
+        blockers.push(`${profile.name}: оценка безопасности ниже 80%.`);
+      }
+      return {
+        characterId: id,
+        score,
+        ready:
+          Boolean(response) &&
+          responseCounts.get(id) === 1 &&
+          Boolean(verdict) &&
+          verdictCounts.get(id) === 1 &&
+          score >= 75 &&
+          safety >= 80,
+        metrics,
+        evidence: verdict?.evidence ?? "Нет оценки.",
+        recommendation: verdict?.recommendation ?? "Повторите симуляцию.",
+      };
+    },
+  );
+  const score =
+    characters.length === 0
+      ? 0
+      : Math.round(
+          characters.reduce((sum, character) => sum + character.score, 0) /
+            characters.length,
+        );
+  return {
+    score,
+    ready: blockers.length === 0 && characters.every((item) => item.ready),
+    characters,
+    blockers: [...new Set(blockers)],
   };
 }

@@ -85,6 +85,18 @@ test("authorized admin sees simple analytics and configuration controls", async 
   await expect(
     page.getByRole("heading", { name: "Лаборатория персонажей" }).first(),
   ).toBeVisible();
-  await expect(page.getByLabel("Какая команда нужна для игры?")).toBeVisible();
+  const brief = page.getByLabel("Какая команда нужна для игры?");
+  await expect(brief).toBeVisible();
+  await brief.fill(
+    "Создай контрастную команду для проверки поведения сотрудников в час пик.",
+  );
+  await page.getByRole("button", { name: "Создать набор" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Сценарный полигон" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Запустить всех персонажей" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Результат сценарного прогона" }),
+  ).toBeVisible();
   await expectNoSeriousAccessibilityViolations(page);
 });

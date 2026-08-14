@@ -30,12 +30,17 @@ import {
   TabsList,
   TabsTrigger,
   Textarea,
+  ToggleGroup,
+  ToggleGroupItem,
 } from "@acme/ui";
 import {
   IconAlertTriangle,
+  IconBrain,
   IconCheck,
   IconFlask,
+  IconPlayerPlay,
   IconRocket,
+  IconShieldCheck,
   IconSparkles,
   IconUsersPlus,
 } from "@tabler/icons-react";
@@ -47,6 +52,10 @@ import { client } from "~/orpc/react";
 type DraftResult = Awaited<
   ReturnType<typeof client.admin.game.characters.draftRoster>
 >;
+type SimulationResult = Awaited<
+  ReturnType<typeof client.admin.game.characters.simulateRoster>
+>;
+type SimulationMode = "standard" | "peak" | "conflict";
 
 const EXAMPLES = [
   "Создай команду открытия нового ресторана: сильный, но резкий су-шеф; тревожный новичок и опытный кондитер, который не любит микроменеджмент.",
@@ -60,6 +69,18 @@ const COMPETENCE_LABELS: Record<string, string> = {
   capable: "самостоятелен",
   expert: "эксперт",
 };
+
+const SIMULATION_MODES: ReadonlyArray<{
+  value: SimulationMode;
+  label: string;
+}> = [
+  { value: "standard", label: "Обычная смена" },
+  { value: "peak", label: "Час пик" },
+  { value: "conflict", label: "Конфликт" },
+];
+
+const DEFAULT_SCENARIO =
+  "Во время пиковой загрузки важный заказ задерживается на 15 минут. Руководитель резко меняет приоритет и просит сотрудника немедленно переключиться.";
 
 function scoreBadge(score: number) {
   if (score >= 90) return "Готов к игре";
@@ -75,9 +96,15 @@ export function AdminCharacterStudio(props: {
   const [count, setCount] = useState("3");
   const [pending, setPending] = useState(false);
   const [result, setResult] = useState<DraftResult | null>(null);
+  const [simulationScenario, setSimulationScenario] =
+    useState(DEFAULT_SCENARIO);
+  const [simulationMode, setSimulationMode] = useState<SimulationMode>("peak");
+  const [simulationPending, setSimulationPending] = useState(false);
+  const [simulation, setSimulation] = useState<SimulationResult | null>(null);
+  const busy = pending || simulationPending;
 
   async function generate() {
-    if (pending || brief.trim().length < 20) return;
+    if (busy || brief.trim().length < 20) return;
     setPending(true);
     try {
       const draft = await client.admin.game.characters.draftRoster({
@@ -85,6 +112,7 @@ export function AdminCharacterStudio(props: {
         count: Number(count),
       });
       setResult(draft);
+      setSimulation(null);
       toast.success("Набор создан и проверен автоматически");
     } catch (cause) {
       toast.error(
@@ -95,8 +123,41 @@ export function AdminCharacterStudio(props: {
     }
   }
 
+  async function simulate() {
+    if (
+      !result ||
+      pending ||
+      simulationPending ||
+      simulationScenario.trim().length < 20
+    ) {
+      return;
+    }
+    setSimulationPending(true);
+    try {
+      const simulated = await client.admin.game.characters.simulateRoster({
+        scenario: simulationScenario.trim(),
+        mode: simulationMode,
+        draft: result.draft,
+      });
+      setSimulation(simulated);
+      if (simulated.quality.ready) {
+        toast.success("Все персонажи прошли сценарную проверку");
+      } else {
+        toast.warning("Симуляция нашла персонажей, которых стоит доработать");
+      }
+    } catch (cause) {
+      toast.error(
+        cause instanceof Error
+          ? cause.message
+          : "Не удалось запустить симуляцию",
+      );
+    } finally {
+      setSimulationPending(false);
+    }
+  }
+
   async function publish() {
-    if (!result?.quality.ready || pending) return;
+    if (!result?.quality.ready || busy) return;
     setPending(true);
     try {
       const published = await client.admin.game.characters.publishRoster({
@@ -167,11 +228,12 @@ export function AdminCharacterStudio(props: {
                 id="character-brief"
                 rows={5}
                 value={brief}
-                disabled={pending}
+                disabled={busy}
                 aria-invalid={brief.length > 0 && brief.trim().length < 20}
                 onChange={(event) => {
                   setBrief(event.target.value);
                   setResult(null);
+                  setSimulation(null);
                 }}
                 placeholder="Опишите роли, рабочую среду, типичные конфликты, уровень сложности и поведение, которое важно потренировать…"
               />
@@ -187,9 +249,11 @@ export function AdminCharacterStudio(props: {
                 </FieldLabel>
                 <Select
                   value={count}
+                  disabled={busy}
                   onValueChange={(value) => {
                     setCount(value ?? "3");
                     setResult(null);
+                    setSimulation(null);
                   }}
                 >
                   <SelectTrigger id="character-count">
@@ -209,7 +273,7 @@ export function AdminCharacterStudio(props: {
               <Button
                 className="justify-self-start"
                 size="lg"
-                disabled={pending || brief.trim().length < 20}
+                disabled={busy || brief.trim().length < 20}
                 onClick={generate}
               >
                 <IconSparkles data-icon="inline-start" />
@@ -225,10 +289,11 @@ export function AdminCharacterStudio(props: {
                 type="button"
                 size="sm"
                 variant="outline"
-                disabled={pending}
+                disabled={busy}
                 onClick={() => {
                   setBrief(example);
                   setResult(null);
+                  setSimulation(null);
                 }}
               >
                 {example}
@@ -296,6 +361,236 @@ export function AdminCharacterStudio(props: {
               ) : null}
             </CardContent>
           </Card>
+
+          <Card>
+            <CardHeader>
+              <CardAction>
+                {simulation ? (
+                  <Badge
+                    variant={simulation.quality.ready ? "default" : "secondary"}
+                  >
+                    {simulation.quality.score}%
+                  </Badge>
+                ) : (
+                  <Badge variant="outline">A/B-проверка</Badge>
+                )}
+              </CardAction>
+              <CardTitle>Сценарный полигон</CardTitle>
+              <CardDescription>
+                Запустите всех персонажей в одном эпизоде и сравните реакции до
+                публикации. Отдельный LLM-судья проверит качество ответов.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-5">
+              <Alert>
+                <IconBrain />
+                <AlertTitle>Два изолированных контура</AlertTitle>
+                <AlertDescription>
+                  Генератор играет роли, затем второй вызов получает только
+                  профили и готовые ответы. Финальный взвешенный балл
+                  рассчитывает сервер, включая независимую защиту от выхода из
+                  роли.
+                </AlertDescription>
+              </Alert>
+
+              <FieldGroup>
+                <Field>
+                  <FieldLabel htmlFor="simulation-scenario">
+                    Контрольный игровой эпизод
+                  </FieldLabel>
+                  <Textarea
+                    id="simulation-scenario"
+                    rows={4}
+                    value={simulationScenario}
+                    disabled={busy}
+                    aria-invalid={simulationScenario.trim().length < 20}
+                    onChange={(event) => {
+                      setSimulationScenario(event.target.value);
+                      setSimulation(null);
+                    }}
+                  />
+                  <FieldDescription>
+                    Один и тот же контекст используется для всех персонажей —
+                    различия в ответах объясняются их профилями.
+                  </FieldDescription>
+                </Field>
+                <Field>
+                  <FieldLabel>Режим нагрузки</FieldLabel>
+                  <ToggleGroup
+                    aria-label="Режим нагрузки симуляции"
+                    variant="outline"
+                    value={[simulationMode]}
+                    disabled={busy}
+                    onValueChange={(values) => {
+                      const nextMode = values[0] as SimulationMode | undefined;
+                      if (!nextMode) return;
+                      setSimulationMode(nextMode);
+                      setSimulation(null);
+                    }}
+                  >
+                    {SIMULATION_MODES.map((mode) => (
+                      <ToggleGroupItem key={mode.value} value={mode.value}>
+                        {mode.label}
+                      </ToggleGroupItem>
+                    ))}
+                  </ToggleGroup>
+                </Field>
+              </FieldGroup>
+            </CardContent>
+            <CardFooter>
+              <Button
+                size="lg"
+                disabled={busy || simulationScenario.trim().length < 20}
+                onClick={simulate}
+              >
+                <IconPlayerPlay data-icon="inline-start" />
+                {simulationPending
+                  ? "Персонажи отвечают, судья проверяет…"
+                  : simulation
+                    ? "Повторить симуляцию"
+                    : "Запустить всех персонажей"}
+              </Button>
+            </CardFooter>
+          </Card>
+
+          {simulation ? (
+            <Card>
+              <CardHeader>
+                <CardAction>
+                  <Badge
+                    variant={simulation.quality.ready ? "default" : "secondary"}
+                  >
+                    {simulation.quality.ready
+                      ? "Симуляция пройдена"
+                      : "Нужна доработка"}
+                  </Badge>
+                </CardAction>
+                <CardTitle>Результат сценарного прогона</CardTitle>
+                <CardDescription>{simulation.judgeSummary}</CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-5">
+                <Alert>
+                  <IconPlayerPlay />
+                  <AlertTitle>
+                    Как модель поняла эпизод ·{" "}
+                    {
+                      SIMULATION_MODES.find(
+                        (mode) => mode.value === simulationMode,
+                      )?.label
+                    }
+                  </AlertTitle>
+                  <AlertDescription>{simulation.scenario}</AlertDescription>
+                </Alert>
+                <div className="flex items-center justify-between gap-3 text-sm">
+                  <span className="font-medium">Средний балл команды</span>
+                  <span className="text-muted-foreground tabular-nums">
+                    {simulation.quality.score}% ·{" "}
+                    {(simulation.meta.latencyMs / 1000).toFixed(1)} с ·{" "}
+                    {simulation.meta.inputTokens + simulation.meta.outputTokens}{" "}
+                    токенов
+                  </span>
+                </div>
+                <Progress value={simulation.quality.score} />
+
+                {simulation.quality.blockers.length > 0 ? (
+                  <Alert variant="destructive">
+                    <IconAlertTriangle />
+                    <AlertTitle>Обнаружены блокирующие риски</AlertTitle>
+                    <AlertDescription>
+                      <ul className="flex list-disc flex-col gap-1 pl-4">
+                        {simulation.quality.blockers.map((blocker) => (
+                          <li key={blocker}>{blocker}</li>
+                        ))}
+                      </ul>
+                    </AlertDescription>
+                  </Alert>
+                ) : null}
+
+                <div className="grid gap-4 xl:grid-cols-2">
+                  {simulation.responses.map((response) => {
+                    const character = result.draft.characters.find(
+                      (item) => item.profile.id === response.characterId,
+                    );
+                    const quality = simulation.quality.characters.find(
+                      (item) => item.characterId === response.characterId,
+                    );
+                    return (
+                      <Card key={response.characterId}>
+                        <CardHeader>
+                          <CardAction>
+                            <Badge
+                              variant={quality?.ready ? "default" : "secondary"}
+                            >
+                              {quality?.score ?? 0}%
+                            </Badge>
+                          </CardAction>
+                          <CardTitle>
+                            {character?.profile.name ?? response.characterId}
+                          </CardTitle>
+                          <CardDescription>
+                            {character?.profile.role ?? "Неизвестная роль"} ·{" "}
+                            {response.emotion}
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent className="flex flex-col gap-4">
+                          <p className="bg-muted/40 rounded-lg p-3 text-sm leading-relaxed">
+                            «{response.reply}»
+                          </p>
+
+                          <div className="grid gap-3 sm:grid-cols-2">
+                            <div>
+                              <p className="text-muted-foreground text-xs">
+                                Скрытая потребность
+                              </p>
+                              <p className="text-sm">{response.inferredNeed}</p>
+                            </div>
+                            <div>
+                              <p className="text-muted-foreground text-xs">
+                                Поведенческий риск
+                              </p>
+                              <p className="text-sm">
+                                {response.behavioralRisk}
+                              </p>
+                            </div>
+                          </div>
+
+                          <Separator />
+                          <div className="grid gap-3 sm:grid-cols-2">
+                            {quality?.metrics.map((metric) => (
+                              <div
+                                key={metric.id}
+                                className="flex items-center justify-between gap-2 text-sm"
+                              >
+                                <span>{metric.label}</span>
+                                <Badge variant="outline">
+                                  {metric.score}% · {metric.weight}%
+                                </Badge>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="flex items-start gap-2 text-sm">
+                            <IconShieldCheck className="text-muted-foreground" />
+                            <div className="flex flex-col gap-1">
+                              <p>{quality?.evidence}</p>
+                              <p className="text-muted-foreground">
+                                {quality?.recommendation}
+                              </p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+
+                <p className="text-muted-foreground text-xs">
+                  Генератор: {simulation.meta.generatorModel} · судья:{" "}
+                  {simulation.meta.judgeModel}. Результат симуляции не изменяет
+                  каталог и безопасен для повторных прогонов.
+                </p>
+              </CardContent>
+            </Card>
+          ) : null}
 
           <div className="grid gap-5 xl:grid-cols-2">
             {result.draft.characters.map((character, index) => {
@@ -409,7 +704,7 @@ export function AdminCharacterStudio(props: {
             <CardFooter className="flex flex-wrap gap-2">
               <Button
                 size="lg"
-                disabled={pending || !result.quality.ready}
+                disabled={busy || !result.quality.ready}
                 onClick={publish}
               >
                 <IconRocket data-icon="inline-start" />
@@ -417,8 +712,11 @@ export function AdminCharacterStudio(props: {
               </Button>
               <Button
                 variant="outline"
-                disabled={pending}
-                onClick={() => setResult(null)}
+                disabled={busy}
+                onClick={() => {
+                  setResult(null);
+                  setSimulation(null);
+                }}
               >
                 Создать другой вариант
               </Button>
