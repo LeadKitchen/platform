@@ -80,4 +80,11 @@ test("authorized admin sees simple analytics and configuration controls", async 
   await expect(page.getByText("Спросить об аналитике")).toBeVisible();
   await expect(page.getByText("История конфигурации")).toBeVisible();
   await expectNoSeriousAccessibilityViolations(page);
+
+  await page.goto("/admin/game/characters");
+  await expect(
+    page.getByRole("heading", { name: "Лаборатория персонажей" }).first(),
+  ).toBeVisible();
+  await expect(page.getByLabel("Какая команда нужна для игры?")).toBeVisible();
+  await expectNoSeriousAccessibilityViolations(page);
 });

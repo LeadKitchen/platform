@@ -20,9 +20,11 @@ import {
   IconInnerShadowTop,
   IconListDetails,
   IconMessages,
+  IconReportAnalytics,
   IconSchool,
   IconSettings,
   IconShieldLock,
+  IconSparkles,
   IconUsers,
 } from "@tabler/icons-react";
 import type * as React from "react";
@@ -71,6 +73,11 @@ const data = {
           icon: IconUsers,
         },
         {
+          title: "Лаборатория персонажей",
+          url: "/admin/game/characters",
+          icon: IconSparkles,
+        },
+        {
           title: "Задания",
           url: "/admin/game/tasks",
           icon: IconAdjustments,
@@ -79,6 +86,11 @@ const data = {
           title: "Варианты ИИ",
           url: "/admin/game/variants",
           icon: IconBrain,
+        },
+        {
+          title: "Отчёты о качестве",
+          url: "/admin/game/benchmarks",
+          icon: IconReportAnalytics,
         },
         {
           title: "Пользователи",
@@ -119,8 +131,10 @@ export function AppSidebar({
                 "/admin/game/sessions",
                 "/admin/game/dialogs",
                 "/admin/game/employees",
+                "/admin/game/characters",
                 "/admin/game/tasks",
                 "/admin/game/variants",
+                "/admin/game/benchmarks",
                 "/admin/game/settings",
               ]
             : [

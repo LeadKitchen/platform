@@ -3,22 +3,22 @@
 - Провайдер: `pool` (модель `nvidia/nemotron-3-super-120b-a12b:free`)
 - Сценариев: 20, прогонов на сценарий: 1, эпох: 1
 - Контрольный вариант: `baseline`
-- Запуск: 2026-08-13T16:49:04.580Z → 2026-08-13T17:00:51.180Z
+- Запуск: 2026-08-14T05:37:56.713Z → 2026-08-14T05:49:11.872Z
 
 > ⚠️ Экспертными метками подписано 0 из 20 сценариев,
 > остальные 20 — предварительные. Колонка «MAE к эксперту» показывает
 > расхождение с временной калибровкой, а не с методологом: она годится, чтобы
 > ловить регрессии, и не годится как основание внедрять подход.
 
-> ⚠️ Всего 1 парных наблюдений. Этого мало: доверительные интервалы
+> ⚠️ Всего 19 парных наблюдений. Этого мало: доверительные интервалы
 > будут широкими, и почти любой результат окажется статистически недоказанным.
 > Для решения о внедрении нужно 60+ размеченных сценариев.
 
 > ⚠️ Диалоги обслужены разными моделями — сработало переключение пула.
 > Сравнение вариантов между собой при этом некорректно: разница может
 > объясняться моделью, а не подходом. Модели по вариантам:
-> - `baseline`: nvidia/nemotron-3-super-120b-a12b:free × 5, llama-3.3-70b-versatile × 5
-> - `baseline-judge`: nvidia/nemotron-3-super-120b-a12b:free × 2, llama-3.3-70b-versatile × 2
+> - `baseline`: nvidia/nemotron-3-super-120b-a12b:free × 20, llama-3.3-70b-versatile × 8
+> - `baseline-judge`: nvidia/nemotron-3-super-120b-a12b:free × 19, llama-3.3-70b-versatile × 18
 
 > ⛔ Ни одного успешного диалога у: `llm-first`, `rag`, `hybrid-rag`, `graph-rag`.
 > Эти варианты не сравнивались — по ним нет данных, а не нулевая ошибка.
@@ -34,9 +34,9 @@
 
 | Метрика | Δ | 95% ДИ | p | Вывод |
 | --- | ---: | :---: | ---: | --- |
-| MAE к эксперту | +7.00 | [7.00; 7.00] | 1.000 | не доказано |
-| Точность стиля | +0.00 | [0.00; 0.00] | 1.000 | не доказано |
-| F1 по критериям | +0.00 | [0.00; 0.00] | 1.000 | не доказано |
+| MAE к эксперту | -5.05 | [-8.84; -1.26] | 0.023 | **хуже** |
+| Точность стиля | -0.05 | [-0.16; 0.00] | 1.000 | не доказано |
+| F1 по критериям | +0.01 | [-0.04; 0.05] | 0.820 | не доказано |
 | Удержание роли | +0.00 | [0.00; 0.00] | 1.000 | не доказано |
 | Дрейф персоны | +0.00 | [0.00; 0.00] | 1.000 | не доказано |
 | Стоимость диалога | +0.0000 | [0.0000; 0.0000] | 1.000 | не доказано |
@@ -91,14 +91,14 @@
 
 | Вариант | MAE | σ внутри сценария | κ по стилю | F1 критериев | Роль | Дрейф | Молчание | Задержка | $/диалог |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| `baseline` | 10.2 | 0.0 | 1.00 | 0.88 | 100% | 0% | 100% | 9175 мс | $0.0000 |
-| `baseline-judge` | 11.0 | 0.0 | 1.00 | 1.00 | 100% | 0% | 100% | 10230 мс | $0.0000 |
+| `baseline` | 13.6 | 0.0 | 0.61 | 0.94 | 100% | 0% | 100% | 9919 мс | $0.0000 |
+| `baseline-judge` | 18.2 | 0.0 | 0.55 | 0.95 | 100% | 0% | 100% | 7822 мс | $0.0000 |
 | `llm-first` | нет данных | — | — | — | — | — | — | — | — |
 | `rag` | нет данных | — | — | — | — | — | — | — | — |
 | `hybrid-rag` | нет данных | — | — | — | — | — | — | — | — |
 | `graph-rag` | нет данных | — | — | — | — | — | — | — | — |
 
-Согласие со стилем эксперта у контрольного варианта: κ = 1.00 (почти полное).
+Согласие со стилем эксперта у контрольного варианта: κ = 0.61 (существенное).
 
 > Прогон один на сценарий, поэтому колонка «σ внутри сценария» пуста.
 > Запустите с `--runs 3`, чтобы отделить реальный эффект от разброса модели.
@@ -107,25 +107,30 @@
 
 | Кандидат | Успешно | Отказы по лимиту | Не осилил схему |
 | --- | ---: | ---: | ---: |
-| `groq#1:llama-3.3-70b-versatile` | 1 | 252 | 0 |
-| `groq#2:llama-3.3-70b-versatile` | 1 | 251 | 0 |
-| `groq#3:llama-3.3-70b-versatile` | 93 | 182 | 0 |
-| `groq#4:llama-3.3-70b-versatile` | 73 | 157 | 0 |
-| `openai#1:gpt-5.1-all` | 0 | 118 | 0 |
-| `openrouter#1:nvidia/nemotron-3-super-120b-a12b:free` | 0 | 253 | 0 |
-| `openrouter#1:nvidia/nemotron-nano-9b-v2:free` | 0 | 253 | 0 |
+| `groq#1:llama-3.3-70b-versatile` | 29 | 147 | 0 |
+| `groq#2:llama-3.3-70b-versatile` | 23 | 143 | 0 |
+| `groq#3:llama-3.3-70b-versatile` | 30 | 128 | 0 |
+| `groq#4:llama-3.3-70b-versatile` | 25 | 120 | 0 |
+| `groq#5:llama-3.3-70b-versatile` | 27 | 113 | 0 |
+| `groq#6:llama-3.3-70b-versatile` | 46 | 90 | 0 |
+| `openai#1:gpt-5.1-all` | 0 | 87 | 0 |
+| `openrouter#1:nvidia/nemotron-3-super-120b-a12b:free` | 57 | 162 | 0 |
+| `openrouter#1:nvidia/nemotron-nano-9b-v2:free` | 0 | 162 | 0 |
 
 ## Худшие расхождения
 
 | Сценарий | Вариант | Авто | Эксперт | Δ | Стиль (авто → метка) |
 | --- | --- | ---: | ---: | ---: | --- |
-| anna-apple_pies-r2-supporting | `baseline` | 64 | 40 | 24 | supporting → supporting |
-| anna-decorated_cake-r2-delegating | `baseline-judge` | 24 | 5 | 19 | delegating → delegating |
-| anna-apple_pies-r2-directive | `baseline` | 31 | 20 | 11 | directive → directive |
-| anna-apple_pies-r2-delegating | `baseline` | 100 | 90 | 10 | delegating → delegating |
-| anna-decorated_cake-r3-delegating | `baseline` | 9 | 5 | 4 | delegating → delegating |
-| anna-apple_pies-r2-delegating | `baseline-judge` | 87 | 90 | 3 | delegating → delegating |
-| anna-banquet_hot-r2-delegating | `baseline` | 7 | 5 | 2 | delegating → delegating |
+| anna-decorated_cake-r3-coaching | `baseline-judge` | 65 | 15 | 50 | directive → coaching |
+| anna-apple_pies-r3-coaching | `baseline` | 64 | 28 | 36 | supporting → coaching |
+| anna-banquet_hot-r3-coaching | `baseline` | 45 | 15 | 30 | supporting → coaching |
+| anna-decorated_cake-r3-coaching | `baseline` | 45 | 15 | 30 | supporting → coaching |
+| anna-banquet_hot-r3-coaching | `baseline-judge` | 45 | 15 | 30 | directive → coaching |
+| anna-decorated_cake-r2-coaching | `baseline-judge` | 64 | 34 | 30 | directive → coaching |
+| anna-apple_pies-r3-directive | `baseline` | 34 | 5 | 29 | directive → directive |
+| anna-banquet_hot-r2-coaching | `baseline-judge` | 62 | 34 | 28 | supporting → coaching |
+| anna-apple_pies-r2-supporting | `baseline-judge` | 67 | 40 | 27 | supporting → supporting |
+| anna-apple_pies-r3-directive | `baseline-judge` | 32 | 5 | 27 | directive → directive |
 
 ## Несостоявшиеся сценарии
 
@@ -137,11 +142,10 @@
 - `rag`: 20
 - `hybrid-rag`: 20
 - `graph-rag`: 20
-- `baseline-judge`: 18
-- `baseline`: 15
+- `baseline-judge`: 1
 
+  - anna-prep_veggies-r2-coaching: Все кандидаты пула отказали для persona.reply:
+  - anna-apple_pies-r2-delegating: Все кандидаты пула отказали для persona.reply:
+  - anna-apple_pies-r2-directive: Все кандидаты пула отказали для persona.reply:
+  - anna-apple_pies-r2-supporting: Все кандидаты пула отказали для persona.reply:
   - anna-apple_pies-r3-coaching: Все кандидаты пула отказали для persona.reply:
-  - anna-apple_pies-r3-delegating: Все кандидаты пула отказали для persona.reply:
-  - anna-apple_pies-r3-directive: Все кандидаты пула отказали для persona.reply:
-  - anna-apple_pies-r3-supporting: Все кандидаты пула отказали для persona.reply:
-  - anna-banquet_hot-r2-coaching: Все кандидаты пула отказали для persona.reply:

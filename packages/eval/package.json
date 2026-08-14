@@ -14,6 +14,7 @@
     "clean": "git clean -xdf .cache .turbo dist node_modules reports",
     "dev": "tsc",
     "eval": "bun --env-file=../../.env run src/cli.ts",
+    "publish": "bun --env-file=../../.env run publish-report.ts",
     "format": "biome format .",
     "lint": "biome lint .",
     "check": "biome check .",
@@ -24,6 +25,7 @@
   },
   "dependencies": {
     "@acme/ai": "workspace:*",
+    "@acme/db": "workspace:*",
     "@acme/game": "workspace:*",
     "zod": "4.4.3"
   },

@@ -29,6 +29,13 @@
       "when": 1786638091227,
       "tag": "0003_illegal_lord_hawal",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1786688821285,
+      "tag": "0004_tearful_terror",
+      "breakpoints": true
     }
   ]
 }

@@ -57,6 +57,12 @@ export interface EmployeePersonality {
   typicalErrors: string[];
   motivators: string[];
   demotivators: string[];
+  /** Optional immersive traits created by the character studio. */
+  biography?: string;
+  communicationStyle?: string;
+  stressBehavior?: string;
+  speechPatterns?: string[];
+  boundaries?: string[];
 }
 
 export interface Employee {

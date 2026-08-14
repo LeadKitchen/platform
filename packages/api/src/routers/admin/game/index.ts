@@ -4,7 +4,9 @@ import {
   draftConfiguration,
   rejectConfiguration,
 } from "./assistant";
+import { adminGameBenchmarksRouter } from "./benchmarks";
 import { adminGameCatalogRouter } from "./catalog";
+import { adminGameCharactersRouter } from "./characters";
 import { detail as dialogDetail, dialogs } from "./dialogs";
 import { analyze as analyzeInsights } from "./insights";
 import { productAnalytics } from "./product-analytics";
@@ -15,6 +17,7 @@ import { adminGameVersionsRouter } from "./versions";
 
 export const adminGameRouter = {
   analytics,
+  benchmarks: adminGameBenchmarksRouter,
   productAnalytics,
   insights: { analyze: analyzeInsights },
   assistant: {
@@ -23,6 +26,7 @@ export const adminGameRouter = {
     rejectConfiguration,
   },
   catalog: adminGameCatalogRouter,
+  characters: adminGameCharactersRouter,
   dialogs,
   dialogDetail,
   sessions: adminGameSessionsRouter,

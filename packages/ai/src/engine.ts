@@ -98,6 +98,108 @@ export function fallbackResponder(request: {
   purpose: string;
   messages: { content: string }[];
 }): unknown {
+  if (request.purpose === "admin.characters.draft") {
+    const payload = (() => {
+      try {
+        return JSON.parse(request.messages.at(-1)?.content ?? "{}") as {
+          count?: number;
+          activeTasks?: Array<{ type?: string }>;
+          existingCharacters?: Array<{ id?: string }>;
+        };
+      } catch {
+        return {};
+      }
+    })();
+    const count = Math.max(1, Math.min(5, payload.count ?? 3));
+    const taskTypes = [
+      ...new Set(
+        (payload.activeTasks ?? [])
+          .map((task) => task.type)
+          .filter((type): type is string => Boolean(type)),
+      ),
+    ];
+    const availableTypes =
+      taskTypes.length > 0 ? taskTypes : ["prep", "hot_line", "baking"];
+    const existingIds = new Set(
+      (payload.existingCharacters ?? []).flatMap((item) =>
+        item.id ? [item.id] : [],
+      ),
+    );
+    const archetypes = [
+      { name: "Нина Волкова", role: "Повар смены", level: "L3" },
+      { name: "Роман Беляев", role: "Стажёр горячего цеха", level: "L1" },
+      { name: "Лейла Ахметова", role: "Су-шеф", level: "L4" },
+      { name: "Виктор Цой", role: "Повар-заготовщик", level: "L2" },
+      { name: "Софья Орлова", role: "Кондитер", level: "L3" },
+    ] as const;
+    const characters = archetypes.slice(0, count).map((archetype, index) => {
+      let id = `demo_character_${index + 1}`;
+      while (existingIds.has(id)) id = `${id}_new`;
+      existingIds.add(id);
+      const competences = Object.fromEntries(
+        availableTypes.map((type, typeIndex) => [
+          type,
+          ["novice", "learning", "capable", "expert"][(index + typeIndex) % 4],
+        ]),
+      );
+      return {
+        profile: {
+          id,
+          name: archetype.name,
+          role: archetype.role,
+          level: archetype.level,
+          competences,
+          personality: {
+            tone:
+              index % 3 === 0
+                ? "confident"
+                : index % 3 === 1
+                  ? "anxious"
+                  : "independent",
+            reactionToDirective: index % 2 === 0 ? "neutral" : "accepts",
+            reactionToSupport: index % 2 === 0 ? "neutral" : "needs",
+            typicalErrors: [
+              "теряет приоритет при резкой смене задачи",
+              "слишком поздно сообщает о риске",
+            ],
+            motivators: ["ясный результат", "признание прогресса"],
+            demotivators: ["противоречивые указания", "публичное давление"],
+            biography:
+              "Работает в ресторане больше года, знает ритм смены и хочет расти через реальные сложные задачи.",
+            communicationStyle:
+              "Отвечает коротко и предметно, использует профессиональную кухонную лексику.",
+            stressBehavior:
+              "При перегрузке ускоряется, начинает перескакивать между заказами и просит расставить приоритеты.",
+            speechPatterns: [
+              "Давайте по порядку",
+              "Скажите, что сейчас главное",
+            ],
+            boundaries: ["не принимает публичные замечания при всей команде"],
+          },
+        },
+        designIntent:
+          "Демонстрационный персонаж создаёт контраст между знакомыми и новыми задачами и меняет реакцию под нагрузкой.",
+        preview: {
+          normal:
+            "Понял задачу. С чего лучше начать и какой результат нужен к выдаче?",
+          underPressure:
+            "У меня сейчас три заказа одновременно. Назовите главный, иначе начну терять темп.",
+          afterSupport:
+            "Спасибо, теперь спокойнее. Сделаю первый этап и подойду свериться через десять минут.",
+        },
+      };
+    });
+    return {
+      teamName: "Демонстрационная команда",
+      summary:
+        "Набор контрастных персонажей для демонстрации масштабируемого LLM-конструирования игровых ролей.",
+      characters,
+      warnings: [
+        "Использован mock-провайдер: подключите реальную модель для интерпретации свободного брифа.",
+      ],
+    };
+  }
+
   if (request.purpose === "admin.configuration.draft") {
     return {
       summary: "Безопасный демонстрационный черновик",

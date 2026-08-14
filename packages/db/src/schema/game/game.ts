@@ -252,6 +252,29 @@ export const GameSkillPolicy = pgTable("game_skill_policy", (t) => ({
     .$onUpdateFn(() => sql`now()`),
 }));
 
+/**
+ * One offline benchmark run (`@acme/eval`'s harness), published for the admin
+ * panel.
+ *
+ * The harness itself only ever produces local `reports/*.json` files — this
+ * table is what makes a run visible to a customer without giving them shell
+ * access. `result` stores the harness's `RunResult` verbatim (comparisons,
+ * per-variant summaries, pool stats, failures) so the report page never has
+ * to duplicate the harness's own scoring or significance logic.
+ */
+export const GameBenchmarkRun = pgTable(
+  "game_benchmark_runs",
+  (t) => ({
+    id: t.uuid().primaryKey().defaultRandom(),
+    /** Short human label, e.g. the source report's file name. */
+    label: t.varchar({ length: 128 }).notNull(),
+    /** `RunResult` from `@acme/eval`, stored as-is. */
+    result: t.jsonb().$type<Record<string, unknown>>().notNull(),
+    createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+  }),
+  (table) => [index("game_benchmark_runs_created_idx").on(table.createdAt)],
+);
+
 export const GameEvaluation = pgTable(
   "game_evaluations",
   (t) => ({

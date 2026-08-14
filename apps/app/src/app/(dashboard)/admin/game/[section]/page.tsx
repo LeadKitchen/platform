@@ -9,8 +9,10 @@ const SECTIONS = new Set<AdminGameSection>([
   "sessions",
   "dialogs",
   "employees",
+  "characters",
   "tasks",
   "variants",
+  "benchmarks",
   "users",
   "settings",
 ]);

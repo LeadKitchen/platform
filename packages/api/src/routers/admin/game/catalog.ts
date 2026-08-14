@@ -2,22 +2,11 @@ import { asc, eq, GameEmployee, GameTask } from "@acme/db";
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
 
+import { employeeProfileSchema } from "../../../game/character-studio";
 import { mutateConfig } from "../../../game/config-version";
 import { facilitatorProcedure, methodologistProcedure } from "../../../orpc";
 
-const employeeInput = z.object({
-  id: z
-    .string()
-    .min(1)
-    .max(64)
-    .regex(/^[a-z0-9_-]+$/),
-  name: z.string().min(1).max(128),
-  role: z.string().min(1).max(128),
-  level: z.enum(["L1", "L2", "L3", "L4"]),
-  competences: z.record(z.string(), z.string()),
-  personality: z.record(z.string(), z.unknown()),
-  isActive: z.boolean(),
-});
+const employeeInput = employeeProfileSchema.extend({ isActive: z.boolean() });
 
 const taskInput = z.object({
   id: z

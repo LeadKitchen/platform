@@ -1,6 +1,10 @@
 "use client";
 
-import type { ManagementStyle } from "@acme/game";
+import type {
+  CompetenceState,
+  EmployeePersonality,
+  ManagementStyle,
+} from "@acme/game";
 import { STYLE_LABELS } from "@acme/game/styles";
 import {
   Badge,
@@ -44,6 +48,11 @@ import { VariantComparison, type VariantStats } from "~/components/game";
 import { client } from "~/orpc/react";
 import { AdminAiAssistant } from "./admin-ai-assistant";
 import { AdminAnalyticsAssistant } from "./admin-analytics-assistant";
+import {
+  AdminBenchmarkReports,
+  type BenchmarkRun,
+} from "./admin-benchmark-reports";
+import { AdminCharacterStudio } from "./admin-character-studio";
 import { AdminConfigHistory } from "./admin-config-history";
 
 interface Employee {
@@ -101,8 +110,10 @@ export type AdminGameSection =
   | "sessions"
   | "dialogs"
   | "employees"
+  | "characters"
   | "tasks"
   | "variants"
+  | "benchmarks"
   | "users"
   | "settings";
 
@@ -126,6 +137,11 @@ const SECTION_COPY: Record<
     title: "Сотрудники",
     description: "Персонажи, компетенции и профили поведения в игре.",
   },
+  characters: {
+    title: "Лаборатория персонажей",
+    description:
+      "Пакетное LLM-проектирование, синтетические прогоны и автоматический контроль качества.",
+  },
   tasks: {
     title: "Задания",
     description: "Игровые заказы, сложность, срочность и риски.",
@@ -133,6 +149,10 @@ const SECTION_COPY: Record<
   variants: {
     title: "Варианты ИИ",
     description: "Конфигурации AI-конвейера и A/B-распределение.",
+  },
+  benchmarks: {
+    title: "Отчёты о качестве",
+    description: "Офлайн-замеры подходов на размеченных сценариях.",
   },
   users: {
     title: "Пользователи",
@@ -222,6 +242,7 @@ export interface AdminGameData {
     isBootstrapAdmin: boolean;
     role: "admin" | "methodologist" | "facilitator";
   }>;
+  benchmarks: BenchmarkRun[];
 }
 
 const emptyEmployee: Employee = {
@@ -230,7 +251,14 @@ const emptyEmployee: Employee = {
   role: "",
   level: "L2",
   competences: {},
-  personality: {},
+  personality: {
+    tone: "confident",
+    reactionToDirective: "neutral",
+    reactionToSupport: "neutral",
+    typicalErrors: ["поздно сообщает о риске"],
+    motivators: ["понятный результат"],
+    demotivators: ["противоречивые указания"],
+  },
   isActive: true,
 };
 
@@ -380,9 +408,12 @@ export function AdminGameDashboard({
         level: employee.level as "L1" | "L2" | "L3" | "L4",
         competences: parseObject(employeeCompetences, "Компетенции") as Record<
           string,
-          string
+          CompetenceState
         >,
-        personality: parseObject(employeePersonality, "Профиль личности"),
+        personality: parseObject(
+          employeePersonality,
+          "Профиль личности",
+        ) as unknown as EmployeePersonality,
       });
       setEmployees((current) =>
         [...current.filter((item) => item.id !== saved.id), saved].sort(
@@ -886,6 +917,15 @@ export function AdminGameDashboard({
         </div>
       ) : null}
 
+      {section === "characters" ? (
+        <AdminCharacterStudio
+          taskTypes={tasks.map((task) => ({
+            type: task.type,
+            title: task.title,
+          }))}
+        />
+      ) : null}
+
       {section === "tasks" ? (
         <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
           <Card>
@@ -1289,6 +1329,10 @@ export function AdminGameDashboard({
             </CardContent>
           </Card>
         </div>
+      ) : null}
+
+      {section === "benchmarks" ? (
+        <AdminBenchmarkReports runs={initialData.benchmarks} />
       ) : null}
 
       {section === "settings" ? (

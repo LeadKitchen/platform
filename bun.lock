@@ -181,6 +181,7 @@
       "name": "@acme/eval",
       "dependencies": {
         "@acme/ai": "workspace:*",
+        "@acme/db": "workspace:*",
         "@acme/game": "workspace:*",
         "zod": "4.4.3",
       },

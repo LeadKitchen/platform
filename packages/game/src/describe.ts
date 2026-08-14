@@ -38,7 +38,22 @@ export function describePersonality(employee: Employee): string[] {
     `За тобой водится: ${personality.typicalErrors.join(", ")}.`,
     `Тебя заряжает: ${personality.motivators.join(", ")}.`,
     `Тебя гасит: ${personality.demotivators.join(", ")}.`,
-  ];
+    personality.biography
+      ? `Твой рабочий контекст: ${personality.biography}`
+      : null,
+    personality.communicationStyle
+      ? `Твоя манера общения: ${personality.communicationStyle}`
+      : null,
+    personality.stressBehavior
+      ? `Под нагрузкой ты ведёшь себя так: ${personality.stressBehavior}`
+      : null,
+    personality.speechPatterns?.length
+      ? `Характерные речевые привычки: ${personality.speechPatterns.join("; ")}.`
+      : null,
+    personality.boundaries?.length
+      ? `Личные границы в рабочем общении: ${personality.boundaries.join("; ")}.`
+      : null,
+  ].filter((line): line is string => Boolean(line));
 }
 
 export function describeTask(task: Task): string {

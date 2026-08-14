@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import type { BenchmarkRun } from "~/components/admin/admin-benchmark-reports";
 import type { AdminGameSection } from "~/components/admin/admin-game-dashboard";
 import { AdminGameDashboard } from "~/components/admin/admin-game-dashboard";
 import { SiteHeader } from "~/components/layout";
@@ -9,8 +10,10 @@ const SECTION_TITLES: Record<AdminGameSection, string> = {
   sessions: "Сессии",
   dialogs: "Диалоги",
   employees: "Сотрудники",
+  characters: "Лаборатория персонажей",
   tasks: "Задания",
   variants: "Варианты ИИ",
+  benchmarks: "Отчёты о качестве",
   users: "Пользователи",
   settings: "Настройки",
 };
@@ -37,8 +40,10 @@ export async function AdminGamePage({
             "sessions",
             "dialogs",
             "employees",
+            "characters",
             "tasks",
             "variants",
+            "benchmarks",
             "settings",
           ]
         : ["overview", "sessions", "dialogs"],
@@ -53,6 +58,7 @@ export async function AdminGamePage({
     catalog,
     sessions,
     users,
+    benchmarks,
   ] = await Promise.all([
     api.admin.game.analytics({ limit: 5000 }),
     api.admin.game.productAnalytics({ limit: 10000 }),
@@ -62,6 +68,9 @@ export async function AdminGamePage({
     api.admin.game.sessions.list({ limit: 100, offset: 0 }),
     role === "admin"
       ? api.admin.users.list({ limit: 100, offset: 0 })
+      : Promise.resolve([]),
+    allowedSections.has("benchmarks")
+      ? api.admin.game.benchmarks.list({ limit: 20 })
       : Promise.resolve([]),
   ]);
 
@@ -84,6 +93,7 @@ export async function AdminGamePage({
           sessions,
           system,
           users,
+          benchmarks: benchmarks as unknown as BenchmarkRun[],
         }}
       />
     </>
