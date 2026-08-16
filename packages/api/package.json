@@ -28,7 +28,7 @@
     "@acme/validators": "workspace:*",
     "@orpc/contract": "^1.15.0",
     "@orpc/server": "^1.15.0",
-    "better-auth": "1.6.26",
+    "better-auth": "1.6.29",
     "superjson": "2.2.6",
     "zod": "4.4.3"
   },

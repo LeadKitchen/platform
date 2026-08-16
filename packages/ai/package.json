@@ -21,10 +21,10 @@
   },
   "dependencies": {
     "@acme/game": "workspace:*",
-    "@ai-sdk/anthropic": "4.0.38",
-    "@ai-sdk/openai": "4.0.40",
+    "@ai-sdk/anthropic": "4.0.39",
+    "@ai-sdk/openai": "4.0.42",
     "@ai-sdk/openai-compatible": "3.0.30",
-    "ai": "7.0.62",
+    "ai": "7.0.66",
     "zod": "4.4.3"
   },
   "devDependencies": {
