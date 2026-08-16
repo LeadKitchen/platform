@@ -10,26 +10,50 @@
  * Usage: bun run publish reports/wave1-stateless.json [--label "Волна 1"]
  */
 import { readFile } from "node:fs/promises";
-import { basename } from "node:path";
+import { basename, dirname, isAbsolute, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { db, GameBenchmarkRun } from "@acme/db";
 
+/**
+ * `bun --filter @acme/eval publish <path>` runs with this package's directory
+ * as cwd, not the repo root the user typed the path from — a plain
+ * `reports/run.json` then resolves to `packages/eval/reports/run.json` and
+ * 404s. Trying the repo root (two levels up from this script) as a fallback
+ * base is what makes the path work the way it reads on the command line.
+ */
+async function resolveReportPath(input: string): Promise<string> {
+  if (isAbsolute(input)) return input;
+
+  const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
+  const candidates = [resolve(process.cwd(), input), resolve(repoRoot, input)];
+
+  for (const candidate of candidates) {
+    if (await Bun.file(candidate).exists()) return candidate;
+  }
+
+  throw new Error(
+    `Файл не найден ни по одному из путей:\n${candidates.join("\n")}`,
+  );
+}
+
 async function main(): Promise<void> {
   const argv = process.argv.slice(2);
-  const path = argv.find((arg) => !arg.startsWith("--"));
-  if (!path) {
+  const pathArg = argv.find((arg) => !arg.startsWith("--"));
+  if (!pathArg) {
     console.error("Использование: bun run publish <report.json> [--label X]");
     process.exit(1);
   }
 
   const labelFlag = argv.indexOf("--label");
   const label =
-    labelFlag !== -1 ? argv[labelFlag + 1] : basename(path, ".json");
+    labelFlag !== -1 ? argv[labelFlag + 1] : basename(pathArg, ".json");
   if (!label) {
     console.error("Пустая метка отчёта");
     process.exit(1);
   }
 
+  const path = await resolveReportPath(pathArg);
   const raw = await readFile(path, "utf8");
   const result = JSON.parse(raw) as Record<string, unknown>;
 
