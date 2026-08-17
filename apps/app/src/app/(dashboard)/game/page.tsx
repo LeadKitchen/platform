@@ -18,6 +18,7 @@ import {
   IconPlayerPlay,
   IconSchool,
   IconTrendingUp,
+  IconVideo,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { CreateSessionForm } from "~/components/game";
@@ -94,6 +95,15 @@ export default async function GamePage() {
               nativeButton={false}
             >
               Сначала потренироваться на примерах
+            </Button>
+            <Button
+              size="lg"
+              variant="ghost"
+              render={<Link href="/game/demo" />}
+              nativeButton={false}
+            >
+              <IconVideo data-icon="inline-start" />
+              Посмотреть демо
             </Button>
           </CardContent>
         </Card>
