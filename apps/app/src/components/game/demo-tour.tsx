@@ -131,13 +131,14 @@ export function DemoTour() {
   const speed =
     SPEED_OPTIONS.find((option) => option.id === speedId) ?? SPEED_OPTIONS[0];
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: visibleCount нужен в зависимостях, чтобы таймер переставлялся после каждой реплики, хотя в теле эффекта не читается.
   useEffect(() => {
     if (!playing || finished) return;
     const timer = window.setTimeout(() => {
       setVisibleCount((count) => Math.min(count + 1, SCRIPT.length));
     }, speed.ms);
     return () => window.clearTimeout(timer);
-  }, [playing, finished, speed.ms]);
+  }, [playing, finished, speed.ms, visibleCount]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: должен переисполняться при каждой новой реплике.
   useEffect(() => {

@@ -1,5 +1,5 @@
 import { APP_CONFIG } from "@acme/config";
-import { ThemeProvider, ThemeToggle, Toaster } from "@acme/ui";
+import { ThemeProvider, Toaster } from "@acme/ui";
 import type { Metadata, Viewport } from "next";
 import { env } from "~/env";
 import { ORPCReactProvider } from "~/orpc/react";
@@ -35,9 +35,6 @@ export default function RootLayout(props: { children: React.ReactNode }) {
       <body className="bg-background text-foreground min-h-screen font-sans antialiased">
         <ThemeProvider>
           <ORPCReactProvider>{props.children}</ORPCReactProvider>
-          <div className="absolute right-4 bottom-4">
-            <ThemeToggle />
-          </div>
           <Toaster />
         </ThemeProvider>
       </body>
