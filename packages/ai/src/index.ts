@@ -69,7 +69,11 @@ export {
   type PoolProviderOptions,
   type PoolStats,
 } from "./provider/pool";
-export { estimateCostUsd, MODEL_PRICING } from "./provider/pricing";
+export {
+  estimateCostUsd,
+  hasKnownPricing,
+  MODEL_PRICING,
+} from "./provider/pricing";
 export {
   addUsage,
   emptyUsage,

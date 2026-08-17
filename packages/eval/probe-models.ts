@@ -29,6 +29,11 @@ const { KEY, BASE } = (() => {
       return { KEY: process.env.GROQ_API_KEY, BASE: GROQ_BASE_URL };
     case "gemini":
       return { KEY: process.env.GEMINI_API_KEY, BASE: GEMINI_BASE_URL };
+    // Any other OpenAI-compatible gateway (paid resellers included): point
+    // PROBE_BASE_URL/PROBE_API_KEY at it rather than hardcoding one more case
+    // per vendor.
+    case "custom":
+      return { KEY: process.env.PROBE_API_KEY, BASE: process.env.PROBE_BASE_URL };
     default:
       return { KEY: process.env.OPENROUTER_API_KEY, BASE: OPENROUTER_BASE_URL };
   }

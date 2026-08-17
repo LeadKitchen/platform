@@ -94,6 +94,8 @@ interface RunResult {
     availabilityFailures: Record<string, number>;
     capabilityFailures: Record<string, number>;
   };
+  /** Absent on reports published before this field existed. */
+  unpricedModels?: string[];
 }
 
 export interface BenchmarkRun {
@@ -319,6 +321,19 @@ export function AdminBenchmarkReports({ runs }: { runs: BenchmarkRun[] }) {
             {emptyArms.map((v) => v.variantId).join(", ")} — по ним нет данных,
             а не нулевая ошибка. Смотрите «Несостоявшиеся сценарии» ниже: если
             причина внешняя (лимит провайдера, сеть), прогон надо повторить.
+          </AlertDescription>
+        </Alert>
+      ) : null}
+
+      {result.unpricedModels && result.unpricedModels.length > 0 ? (
+        <Alert>
+          <IconAlertTriangle />
+          <AlertTitle>
+            Цена неизвестна: {result.unpricedModels.join(", ")}
+          </AlertTitle>
+          <AlertDescription>
+            «$/диалог» показывает 0 для этих моделей — это отсутствующая цена в
+            прайс-листе, а не подтверждённо бесплатный вызов.
           </AlertDescription>
         </Alert>
       ) : null}

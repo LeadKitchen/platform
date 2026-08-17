@@ -90,6 +90,16 @@ export function renderMarkdownReport(result: RunResult): string {
     );
   }
 
+  if (result.unpricedModels.length > 0) {
+    lines.push(
+      `> ⚠️ Цена неизвестна для: ${result.unpricedModels.join(", ")}.`,
+      "> Колонка «$/диалог» показывает 0 для этих моделей — это отсутствующая",
+      "> цена в MODEL_PRICING, а не подтверждённо бесплатный вызов. Добавьте",
+      "> модель в packages/ai/src/provider/pricing.ts, если тариф известен.",
+      "",
+    );
+  }
+
   const emptyArms = result.variants.filter((variant) => variant.items === 0);
   if (emptyArms.length > 0) {
     lines.push(

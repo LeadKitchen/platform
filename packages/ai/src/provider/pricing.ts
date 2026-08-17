@@ -1,6 +1,14 @@
 import type { LlmUsage } from "./types";
 
-/** USD per million tokens. Kept in one place so cost metrics stay honest. */
+/**
+ * USD per million tokens. Kept in one place so cost metrics stay honest.
+ *
+ * Free-tier candidates are listed explicitly at `{ input: 0, output: 0 }`
+ * rather than just being absent — that is what lets {@link hasKnownPricing}
+ * tell "confirmed free" apart from "never priced, cost unknown". A reseller
+ * gateway model that's simply missing from this table would otherwise report
+ * $0.0000 and read as free when the calls were in fact billed.
+ */
 export const MODEL_PRICING: Record<string, { input: number; output: number }> =
   {
     "claude-opus-5": { input: 5, output: 25 },
@@ -12,7 +20,19 @@ export const MODEL_PRICING: Record<string, { input: number; output: number }> =
     "gpt-4o": { input: 2.5, output: 10 },
     "gpt-4o-mini": { input: 0.15, output: 0.6 },
     "mock-model": { input: 0, output: 0 },
+    // Confirmed free tiers (see docs/model-pool.md) — zero is the real price,
+    // not a missing entry.
+    "nvidia/nemotron-3-super-120b-a12b:free": { input: 0, output: 0 },
+    "nvidia/nemotron-nano-9b-v2:free": { input: 0, output: 0 },
+    "llama-3.3-70b-versatile": { input: 0, output: 0 },
+    "gemini-2.5-flash-lite": { input: 0, output: 0 },
+    "gemini-2.5-flash": { input: 0, output: 0 },
   };
+
+/** Whether a model's price is a confirmed number, not just an absent lookup. */
+export function hasKnownPricing(model: string): boolean {
+  return model in MODEL_PRICING;
+}
 
 /** Rough USD cost of a call; cached reads are billed at ~10% of input. */
 export function estimateCostUsd(model: string, usage: LlmUsage): number {

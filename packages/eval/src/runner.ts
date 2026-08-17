@@ -1,4 +1,9 @@
-import { createEngine, type LlmProvider, type VariantConfig } from "@acme/ai";
+import {
+  createEngine,
+  hasKnownPricing,
+  type LlmProvider,
+  type VariantConfig,
+} from "@acme/ai";
 import {
   type Catalog,
   type DialogContext,
@@ -130,7 +135,11 @@ export function buildComparisons(
         label: definition.label,
         direction: definition.direction,
         ...comparePaired({
-          baseline: seriesByFixture(items, referenceVariantId, definition.select),
+          baseline: seriesByFixture(
+            items,
+            referenceVariantId,
+            definition.select,
+          ),
           candidate: seriesByFixture(items, variantId, definition.select),
           direction: definition.direction,
         }),
@@ -175,6 +184,13 @@ export interface RunResult {
   /** Per-epoch summaries, so a learning curve is visible. */
   epochSummaries: { epoch: number; variants: VariantSummary[] }[];
   items: ItemResult[];
+  /**
+   * Models that served at least one call but have no entry in
+   * `MODEL_PRICING`. Their `$/диалог` reads as `0`, same as a confirmed free
+   * tier — this is what tells the two apart in the report instead of a paid
+   * gateway silently looking free.
+   */
+  unpricedModels: string[];
 }
 
 function buildDialog(fixture: EvalFixture, catalog: Catalog): DialogContext {
@@ -395,6 +411,16 @@ export async function runEvaluation(options: RunOptions): Promise<RunResult> {
   const poolStats =
     typeof withStats.stats === "function" ? withStats.stats() : undefined;
 
+  const variants = options.variantIds.map((variantId) =>
+    summarize(variantId, items),
+  );
+  const servedModels = new Set(
+    variants.flatMap((variant) => Object.keys(variant.modelMix)),
+  );
+  const unpricedModels = [...servedModels].filter(
+    (model) => !hasKnownPricing(model),
+  );
+
   return {
     startedAt,
     finishedAt: new Date().toISOString(),
@@ -407,13 +433,12 @@ export async function runEvaluation(options: RunOptions): Promise<RunResult> {
       (fixture) => fixture.labelSource === "expert",
     ).length,
     referenceVariantId,
-    variants: options.variantIds.map((variantId) =>
-      summarize(variantId, items),
-    ),
+    variants,
     comparisons,
     failures,
     epochSummaries,
     items,
+    unpricedModels,
     poolStats,
   };
 }
