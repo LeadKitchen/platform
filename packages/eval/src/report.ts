@@ -90,6 +90,17 @@ export function renderMarkdownReport(result: RunResult): string {
     );
   }
 
+  if (result.evaluationStrategyMismatch.length > 0) {
+    lines.push(
+      `> ⚠️ Разная стратегия оценки против \`${result.referenceVariantId}\`: ` +
+        `${result.evaluationStrategyMismatch.map((id) => `\`${id}\``).join(", ")}.`,
+      "> Сценарии размечены (близко к) правилами, а эти варианты судит LLM —",
+      "> «F1 критериев» и «точность стиля» для них меряют в основном шум",
+      "> судьи против источника разметки, а не эффект знания/персоны.",
+      "",
+    );
+  }
+
   if (result.unpricedModels.length > 0) {
     lines.push(
       `> ⚠️ Цена неизвестна для: ${result.unpricedModels.join(", ")}.`,

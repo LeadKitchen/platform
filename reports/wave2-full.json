@@ -44802,5 +44802,12 @@
       "groq#5:llama-3.3-70b-versatile": 1786976156210,
       "groq#6:llama-3.3-70b-versatile": 1786976180086
     }
-  }
+  },
+  "evaluationStrategyMismatch": [
+    "baseline-judge",
+    "llm-first",
+    "rag",
+    "hybrid-rag",
+    "graph-rag"
+  ]
 }

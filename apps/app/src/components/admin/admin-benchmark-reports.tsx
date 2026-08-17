@@ -96,6 +96,8 @@ interface RunResult {
   };
   /** Absent on reports published before this field existed. */
   unpricedModels?: string[];
+  /** Absent on reports published before this field existed. */
+  evaluationStrategyMismatch?: string[];
 }
 
 export interface BenchmarkRun {
@@ -321,6 +323,27 @@ export function AdminBenchmarkReports({ runs }: { runs: BenchmarkRun[] }) {
             {emptyArms.map((v) => v.variantId).join(", ")} — по ним нет данных,
             а не нулевая ошибка. Смотрите «Несостоявшиеся сценарии» ниже: если
             причина внешняя (лимит провайдера, сеть), прогон надо повторить.
+          </AlertDescription>
+        </Alert>
+      ) : null}
+
+      {result.evaluationStrategyMismatch &&
+      result.evaluationStrategyMismatch.length > 0 ? (
+        <Alert variant="destructive">
+          <IconAlertTriangle />
+          <AlertTitle>
+            Разная стратегия оценки против{" "}
+            <code>{result.referenceVariantId}</code>
+          </AlertTitle>
+          <AlertDescription>
+            {result.evaluationStrategyMismatch.map((id) => (
+              <code key={id} className="mr-1">
+                {id}
+              </code>
+            ))}
+            — сценарии размечены (близко к) правилами, а эти варианты судит LLM.
+            «F1 критериев» и «точность стиля» для них меряют в основном шум
+            судьи против источника разметки, а не эффект знания/персоны.
           </AlertDescription>
         </Alert>
       ) : null}
