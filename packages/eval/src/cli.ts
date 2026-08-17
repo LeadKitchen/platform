@@ -121,7 +121,21 @@ function printHelp(): void {
 Примеры:
   bun --filter @acme/eval eval --variants baseline,rag,graph-rag
   bun --filter @acme/eval eval --provider openai --runs 3 --out reports/run.md
-  bun --filter @acme/eval eval --variants baseline,skill-rl --epochs 5 --learn`);
+  bun --filter @acme/eval eval --variants baseline,skill-rl --epochs 5 --learn
+
+Изолированные сравнения передовых техник (рекомендуется --runs 3+):
+  # Retrieval: одинаковые persona и evaluation, меняется только knowledge
+  bun --filter @acme/eval eval --provider env --variants hybrid-rag,hyde-rag,contextual-rag,rerank-rag,corrective-rag --reference hybrid-rag --runs 3 --out reports/retrieval.md
+
+  # Persona: меняется только способ генерации реплики
+  bun --filter @acme/eval eval --provider env --variants baseline,self-consistency --reference baseline --runs 3 --out reports/persona.md
+
+  # Judge: меняется только single-judge на debate
+  bun --filter @acme/eval eval --provider env --variants baseline-judge,debate-judge --reference baseline-judge --runs 3 --out reports/judge.md
+
+Примечание: contextual-rag при первом запуске обогащает каждый чанк через LLM;
+стоимость прогрева учитывается в первом диалоге. Повторяйте все arms одинаковое
+число раз и не смешивайте модели в одном сравнении.`);
 }
 
 async function main(): Promise<void> {

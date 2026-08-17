@@ -111,6 +111,88 @@ export const BUILT_IN_VARIANTS: VariantConfig[] = [
     effort: "medium",
     params: { hops: 2, llmWeight: 0.7 },
   },
+  {
+    id: "hyde-rag",
+    name: "HyDE RAG",
+    description:
+      "Перед retrieval модель пишет гипотетический документ; сравнивать с hybrid-rag, чтобы измерить вклад query expansion.",
+    engagement: "heuristic",
+    knowledge: "hyde-rag",
+    persona: "prompt-baseline",
+    evaluation: "hybrid",
+    effort: "medium",
+    params: { topK: 6, llmWeight: 0.7, dense: true },
+  },
+  {
+    id: "contextual-rag",
+    name: "Contextual Retrieval",
+    description:
+      "Чанки один раз обогащаются LLM-контекстом перед индексацией; сравнивать с hybrid-rag.",
+    engagement: "heuristic",
+    knowledge: "contextual-rag",
+    persona: "prompt-baseline",
+    evaluation: "hybrid",
+    effort: "medium",
+    params: {
+      topK: 6,
+      llmWeight: 0.7,
+      dense: true,
+      buildConcurrency: 4,
+    },
+  },
+  {
+    id: "rerank-rag",
+    name: "Hybrid RAG + LLM reranker",
+    description:
+      "Широкий hybrid-поиск и LLM cross-encoder-подобный reranking; сравнивать с hybrid-rag.",
+    engagement: "heuristic",
+    knowledge: "rerank-rag",
+    persona: "prompt-baseline",
+    evaluation: "hybrid",
+    effort: "medium",
+    params: { topK: 6, llmWeight: 0.7, dense: true, candidateMultiplier: 3 },
+  },
+  {
+    id: "corrective-rag",
+    name: "Corrective RAG (CRAG)",
+    description:
+      "Hybrid retrieval с LLM-проверкой релевантности и одним query rewrite; сравнивать с hybrid-rag.",
+    engagement: "heuristic",
+    knowledge: "corrective-rag",
+    persona: "prompt-baseline",
+    evaluation: "hybrid",
+    effort: "medium",
+    params: {
+      topK: 6,
+      llmWeight: 0.7,
+      dense: true,
+      gradeThreshold: 0.65,
+    },
+  },
+  {
+    id: "self-consistency",
+    name: "Self-consistency persona",
+    description:
+      "Три независимых ответа на ход агрегируются majority vote; сравнивать с baseline для измерения вклада test-time compute.",
+    engagement: "heuristic",
+    knowledge: "prompt-baseline",
+    persona: "self-consistency",
+    evaluation: "rules",
+    effort: "low",
+    params: { selfConsistencySamples: 3 },
+  },
+  {
+    id: "debate-judge",
+    name: "Multi-agent debate judge",
+    description:
+      "Критик, защитник и арбитр классифицируют стиль; сравнивать с baseline-judge.",
+    engagement: "heuristic",
+    knowledge: "prompt-baseline",
+    persona: "prompt-baseline",
+    evaluation: "debate-judge",
+    effort: "medium",
+    params: {},
+  },
 ];
 
 export function resolveVariant(

@@ -112,6 +112,79 @@ export type CriteriaAssessmentPayload = z.infer<
   typeof criteriaAssessmentSchema
 >;
 
+/**
+ * HyDE: гипотетический документ, который модель считает правдоподобным
+ * ответом на реплику руководителя. Не используется как реплика — только как
+ * расширенный семантический запрос для ретривала.
+ */
+export const hypotheticalDocumentSchema = z.object({
+  document: z
+    .string()
+    .describe(
+      "1-3 предложения на русском — предполагаемая справка, регламент или профильный факт, ответ на который ищется в базе знаний. Пиши в утвердительной форме, без обращения к руководителю.",
+    ),
+});
+
+export type HypotheticalDocumentPayload = z.infer<
+  typeof hypotheticalDocumentSchema
+>;
+
+/**
+ * Судья-грейдер релевантности сниппетов (CRAG).
+ *
+ * Оценивает каждый сниппет по шкале 0..1 и возвращает флаг:
+ *   correct    — есть уверенно релевантный сниппет
+ *   ambiguous  — сниппеты близки, но не точны
+ *   incorrect  — релевантных сниппетов нет, нужна переформулировка запроса
+ */
+export const retrievalGradeSchema = z.object({
+  verdict: z.enum(["correct", "ambiguous", "incorrect"]),
+  bestScore: z.coerce.number().catch(0),
+  rewrittenQuery: z
+    .string()
+    .nullish()
+    .catch(null)
+    .describe(
+      "Переформулированный запрос, если релевантных сниппетов не нашлось; null иначе.",
+    ),
+});
+
+export type RetrievalGradePayload = z.infer<typeof retrievalGradeSchema>;
+
+/**
+ * Ранжирующий вердикт cross-encoder-подобного LLM-реранкера.
+ *
+ * Модель получает список сниппетов и запрос, возвращает индексы в новом
+ * порядке — только те, что действительно нужны. Индексы вне диапазона молча
+ * отбрасываются вызывающим кодом.
+ */
+export const rerankingSchema = z.object({
+  order: z
+    .array(z.coerce.number().int())
+    .catch([])
+    .describe(
+      "Индексы сниппетов, отсортированные от самого релевантного к наименее; неподходящие сниппеты можно опустить.",
+    ),
+});
+
+export type RerankingPayload = z.infer<typeof rerankingSchema>;
+
+/**
+ * Дебаты для судьи стиля управления.
+ *
+ * Критик и защитник по очереди выдвигают гипотезу стиля с цитатой; арбитр
+ * фиксирует распределение стилей.
+ */
+export const debateArgumentSchema = z.object({
+  style: z.enum(MANAGEMENT_STYLES),
+  argument: z
+    .string()
+    .describe("Одно предложение почему именно этот стиль подходит."),
+  quote: z.string().describe("Дословная цитата руководителя, подтверждающая."),
+});
+
+export type DebateArgumentPayload = z.infer<typeof debateArgumentSchema>;
+
 export function clamp(value: number, min: number, max: number): number {
   if (Number.isNaN(value)) return min;
   return Math.min(max, Math.max(min, value));

@@ -95,6 +95,7 @@ export { createRegistry, type Registry } from "./registry";
 export * from "./schemas";
 export { heuristicEngagement } from "./strategies/engagement/heuristic";
 export { llmEngagement } from "./strategies/engagement/llm";
+export { debateJudgeEvaluation } from "./strategies/evaluation/debate-judge";
 export { hybridEvaluation } from "./strategies/evaluation/hybrid";
 export {
   judgeCriteria,
@@ -104,10 +105,15 @@ export {
 } from "./strategies/evaluation/llm-judge";
 export { rulesEvaluation } from "./strategies/evaluation/rules";
 export { baselineKnowledge } from "./strategies/knowledge/baseline";
+export { contextualKnowledge } from "./strategies/knowledge/contextual-rag";
+export { correctiveRagKnowledge } from "./strategies/knowledge/crag";
 export { graphRagKnowledge } from "./strategies/knowledge/graph-rag";
 export { hybridRagKnowledge } from "./strategies/knowledge/hybrid-rag";
+export { hydeKnowledge } from "./strategies/knowledge/hyde-rag";
 export { ragKnowledge } from "./strategies/knowledge/rag";
+export { rerankRagKnowledge } from "./strategies/knowledge/rerank-rag";
 export { promptPersona } from "./strategies/persona/prompt";
+export { selfConsistencyPersona } from "./strategies/persona/self-consistency";
 export {
   createInMemorySkillStore,
   createSkillRlPersona,
