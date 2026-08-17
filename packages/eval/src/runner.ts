@@ -2,6 +2,7 @@ import {
   createEngine,
   hasKnownPricing,
   type LlmProvider,
+  resolveVariant,
   type VariantConfig,
 } from "@acme/ai";
 import {
@@ -191,6 +192,18 @@ export interface RunResult {
    * gateway silently looking free.
    */
   unpricedModels: string[];
+  /**
+   * Non-reference variants whose `evaluation` strategy differs from the
+   * reference's.
+   *
+   * Fixtures are labelled by (or close to) the rules engine, so a variant
+   * scored by `llm-judge`/`hybrid` disagreeing with a rules-scored reference
+   * on criteria F1 mostly measures judge noise against the label source, not
+   * the knowledge/persona change under test. `criteriaF1` and
+   * `actualStyleAccuracy` are not safe to read as an effect of the variant
+   * for these arms.
+   */
+  evaluationStrategyMismatch: string[];
 }
 
 function buildDialog(fixture: EvalFixture, catalog: Catalog): DialogContext {
@@ -421,6 +434,17 @@ export async function runEvaluation(options: RunOptions): Promise<RunResult> {
     (model) => !hasKnownPricing(model),
   );
 
+  const referenceEvaluation = resolveVariant(
+    referenceVariantId,
+    options.variants,
+  ).evaluation;
+  const evaluationStrategyMismatch = options.variantIds.filter(
+    (variantId) =>
+      variantId !== referenceVariantId &&
+      resolveVariant(variantId, options.variants).evaluation !==
+        referenceEvaluation,
+  );
+
   return {
     startedAt,
     finishedAt: new Date().toISOString(),
@@ -439,6 +463,7 @@ export async function runEvaluation(options: RunOptions): Promise<RunResult> {
     epochSummaries,
     items,
     unpricedModels,
+    evaluationStrategyMismatch,
     poolStats,
   };
 }

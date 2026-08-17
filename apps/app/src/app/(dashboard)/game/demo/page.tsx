@@ -6,6 +6,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  Skeleton,
   Table,
   TableBody,
   TableCell,
@@ -20,6 +21,7 @@ import {
   IconSettings,
 } from "@tabler/icons-react";
 import Link from "next/link";
+import { Suspense } from "react";
 import { DemoTour } from "~/components/game";
 import { SiteHeader } from "~/components/layout";
 
@@ -46,6 +48,20 @@ const STYLE_ROWS = [
   },
 ] as const;
 
+function DemoTourFallback() {
+  return (
+    <div className="flex flex-col gap-4">
+      <Skeleton className="h-9 w-full max-w-sm" />
+      <Skeleton className="h-9 w-full max-w-md" />
+      <Card>
+        <CardContent className="py-10">
+          <Skeleton className="h-48 w-full" />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
 export default function GameDemoPage() {
   return (
     <>
@@ -59,21 +75,24 @@ export default function GameDemoPage() {
         <Card className="bg-muted/30">
           <CardHeader>
             <Badge variant="secondary" className="w-fit">
-              Демо-тур · около 2 минут
+              Демо-тур · 9 сценариев
             </Badge>
             <CardTitle className="text-2xl leading-tight sm:text-3xl">
-              Как проходит смена — на примере одного разговора
+              Как проходит смена — на примере разных разговоров
             </CardTitle>
             <CardDescription className="max-w-2xl text-base">
-              Ниже — пример реального разговора руководителя с сотрудником и
-              разбор, который игрок получает в конце. В настоящей игре вы пишете
-              реплики сами (или говорите голосом), здесь можно просто
-              посмотреть.
+              Ниже — набор готовых разговоров руководителя с сотрудниками:
+              правильные примеры по каждому уровню, типичные ошибки для
+              контраста и один сценарий из третьего раунда. В настоящей игре вы
+              пишете реплики сами (или говорите голосом), здесь можно просто
+              посмотреть и сравнить.
             </CardDescription>
           </CardHeader>
         </Card>
 
-        <DemoTour />
+        <Suspense fallback={<DemoTourFallback />}>
+          <DemoTour />
+        </Suspense>
 
         <Card>
           <CardHeader>

@@ -365,4 +365,327 @@ $ bun --env-file=../../.env run src/cli.ts --provider env --variants "baseline,b
 [пул] openrouter#1:nvidia/nemotron-nano-9b-v2:free выведен из ротации: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:
 [пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
 [пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
-  эпоха 1/1 · 63/210 · hybrid-rag · anna-prep_veggies-r2-delegating
+  эпоха 1/1 · 63/210 · hybrid-rag · anna-prep_veggies-r2-delegating[пул] groq#1:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#3:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#3:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · 64/210 · hybrid-rag · anna-prep_veggies-r2-directive  эпоха 1/1 · 65/210 · hybrid-rag · anna-prep_veggies-r2-directive  эпоха 1/1 · 66/210 · hybrid-rag · anna-prep_veggies-r2-directive  эпоха 1/1 · 67/210 · hybrid-rag · anna-prep_veggies-r2-supporting  эпоха 1/1 · 68/210 · hybrid-rag · anna-prep_veggies-r2-supporting  эпоха 1/1 · 69/210 · hybrid-rag · anna-prep_veggies-r2-supporting  эпоха 1/1 · 70/210 · hybrid-rag · anna-salads-r2-coaching  эпоха 1/1 · 71/210 · hybrid-rag · anna-salads-r2-coaching  эпоха 1/1 · 72/210 · hybrid-rag · anna-salads-r2-coaching  эпоха 1/1 · 73/210 · hybrid-rag · anna-salads-r2-delegating  эпоха 1/1 · 74/210 · hybrid-rag · anna-salads-r2-delegating  эпоха 1/1 · 75/210 · hybrid-rag · anna-salads-r2-delegating  эпоха 1/1 · 76/210 · hybrid-rag · anna-salads-r2-directive  эпоха 1/1 · 77/210 · hybrid-rag · anna-salads-r2-directive  эпоха 1/1 · 78/210 · hybrid-rag · anna-salads-r2-directive  эпоха 1/1 · 79/210 · hybrid-rag · anna-salads-r2-supporting  эпоха 1/1 · 80/210 · hybrid-rag · anna-salads-r2-supporting  эпоха 1/1 · 81/210 · hybrid-rag · anna-salads-r2-supporting  эпоха 1/1 · 82/210 · hybrid-rag · anna-salads-r3-coaching  эпоха 1/1 · 83/210 · hybrid-rag · anna-salads-r3-coaching  эпоха 1/1 · 84/210 · hybrid-rag · anna-salads-r3-coaching  эпоха 1/1 · 85/210 · hybrid-rag · anna-salads-r3-delegating  эпоха 1/1 · 86/210 · hybrid-rag · anna-salads-r3-delegating  эпоха 1/1 · 87/210 · hybrid-rag · anna-salads-r3-delegating  эпоха 1/1 · 88/210 · hybrid-rag · anna-salads-r3-directive  эпоха 1/1 · 89/210 · hybrid-rag · anna-salads-r3-directive  эпоха 1/1 · 90/210 · hybrid-rag · anna-salads-r3-directive  эпоха 1/1 · 91/210 · hybrid-rag · anna-salads-r3-supporting  эпоха 1/1 · 92/210 · hybrid-rag · anna-salads-r3-supporting  эпоха 1/1 · 93/210 · hybrid-rag · anna-salads-r3-supporting  эпоха 1/1 · 94/210 · hybrid-rag · anna-steak-r2-coaching  эпоха 1/1 · 95/210 · hybrid-rag · anna-steak-r2-coaching  эпоха 1/1 · 96/210 · hybrid-rag · anna-steak-r2-coaching  эпоха 1/1 · 97/210 · hybrid-rag · anna-steak-r2-delegating[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:
+[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:
+  эпоха 1/1 · 98/210 · hybrid-rag · anna-steak-r2-delegating[пул] openrouter#1:nvidia/nemotron-3-super-120b-a12b:free выведен из ротации: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для evaluation.style за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-3-super-120b-a12b:free выведен из ротации: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-nano-9b-v2:free выведен из ротации: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для evaluation.style за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-nano-9b-v2:free выведен из ротации: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-3-super-120b-a12b:free выведен из ротации: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для evaluation.criteria за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-nano-9b-v2:free выведен из ротации: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для evaluation.criteria за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:
+[пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#1:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · 99/210 · hybrid-rag · anna-steak-r2-delegating[пул] groq#3:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · 100/210 · hybrid-rag · anna-steak-r2-directive[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:
+[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:
+[пул] groq#3:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · 101/210 · hybrid-rag · anna-steak-r2-directive  эпоха 1/1 · 102/210 · hybrid-rag · anna-steak-r2-directive  эпоха 1/1 · 103/210 · hybrid-rag · anna-tiramisu-r2-delegating  эпоха 1/1 · 104/210 · hybrid-rag · anna-tiramisu-r2-delegating  эпоха 1/1 · 105/210 · hybrid-rag · anna-tiramisu-r2-delegating  эпоха 1/1 · 106/210 · hybrid-rag · anna-tiramisu-r2-directive  эпоха 1/1 · 107/210 · hybrid-rag · anna-tiramisu-r2-directive  эпоха 1/1 · 108/210 · hybrid-rag · anna-tiramisu-r2-directive  эпоха 1/1 · 109/210 · hybrid-rag · anna-tiramisu-r2-supporting  эпоха 1/1 · 110/210 · hybrid-rag · anna-tiramisu-r2-supporting  эпоха 1/1 · 111/210 · hybrid-rag · anna-tiramisu-r2-supporting  эпоха 1/1 · 112/210 · hybrid-rag · anna-tiramisu-r3-coaching  эпоха 1/1 · 113/210 · hybrid-rag · anna-tiramisu-r3-coaching  эпоха 1/1 · 114/210 · hybrid-rag · anna-tiramisu-r3-coaching  эпоха 1/1 · 115/210 · hybrid-rag · anna-tiramisu-r3-delegating  эпоха 1/1 · 116/210 · hybrid-rag · anna-tiramisu-r3-delegating  эпоха 1/1 · 117/210 · hybrid-rag · anna-tiramisu-r3-delegating  эпоха 1/1 · 118/210 · hybrid-rag · anna-tiramisu-r3-directive  эпоха 1/1 · 119/210 · hybrid-rag · anna-tiramisu-r3-directive  эпоха 1/1 · 120/210 · hybrid-rag · anna-tiramisu-r3-directive  эпоха 1/1 · 121/210 · hybrid-rag · anna-tiramisu-r3-supporting  эпоха 1/1 · 122/210 · hybrid-rag · anna-tiramisu-r3-supporting  эпоха 1/1 · 123/210 · hybrid-rag · anna-tiramisu-r3-supporting  эпоха 1/1 · 124/210 · hybrid-rag · igor-banquet_hot-r2-coaching  эпоха 1/1 · 125/210 · hybrid-rag · igor-banquet_hot-r2-coaching  эпоха 1/1 · 126/210 · hybrid-rag · igor-banquet_hot-r2-coaching  эпоха 1/1 · 127/210 · hybrid-rag · igor-banquet_hot-r2-delegating  эпоха 1/1 · 128/210 · hybrid-rag · igor-banquet_hot-r2-delegating  эпоха 1/1 · 129/210 · hybrid-rag · igor-banquet_hot-r2-delegating  эпоха 1/1 · 130/210 · hybrid-rag · igor-banquet_hot-r2-directive  эпоха 1/1 · 131/210 · hybrid-rag · igor-banquet_hot-r2-directive  эпоха 1/1 · 132/210 · hybrid-rag · igor-banquet_hot-r2-directive  эпоха 1/1 · 133/210 · hybrid-rag · igor-banquet_hot-r2-supporting[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:
+[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-3-super-120b-a12b:free выведен из ротации: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-nano-9b-v2:free выведен из ротации: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · 134/210 · hybrid-rag · igor-banquet_hot-r2-supporting[пул] groq#1:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#3:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:
+[пул] groq#3:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:
+[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:
+[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:
+  эпоха 1/1 · 135/210 · hybrid-rag · igor-banquet_hot-r2-supporting  эпоха 1/1 · 136/210 · hybrid-rag · igor-new_menu_dish-r2-coaching  эпоха 1/1 · 137/210 · hybrid-rag · igor-new_menu_dish-r2-coaching  эпоха 1/1 · 138/210 · hybrid-rag · igor-new_menu_dish-r2-coaching  эпоха 1/1 · 139/210 · hybrid-rag · igor-new_menu_dish-r2-delegating  эпоха 1/1 · 140/210 · hybrid-rag · igor-new_menu_dish-r2-delegating  эпоха 1/1 · 141/210 · hybrid-rag · igor-new_menu_dish-r2-delegating  эпоха 1/1 · 142/210 · hybrid-rag · igor-new_menu_dish-r2-directive  эпоха 1/1 · 143/210 · hybrid-rag · igor-new_menu_dish-r2-directive  эпоха 1/1 · 144/210 · hybrid-rag · igor-new_menu_dish-r2-directive  эпоха 1/1 · 145/210 · hybrid-rag · igor-new_menu_dish-r2-supporting  эпоха 1/1 · 146/210 · hybrid-rag · igor-new_menu_dish-r2-supporting  эпоха 1/1 · 147/210 · hybrid-rag · igor-new_menu_dish-r2-supporting  эпоха 1/1 · 148/210 · hybrid-rag · igor-new_menu_dish-r3-coaching  эпоха 1/1 · 149/210 · hybrid-rag · igor-new_menu_dish-r3-coaching  эпоха 1/1 · 150/210 · hybrid-rag · igor-new_menu_dish-r3-coaching  эпоха 1/1 · 151/210 · hybrid-rag · igor-new_menu_dish-r3-delegating  эпоха 1/1 · 152/210 · hybrid-rag · igor-new_menu_dish-r3-delegating  эпоха 1/1 · 153/210 · hybrid-rag · igor-new_menu_dish-r3-delegating  эпоха 1/1 · 154/210 · hybrid-rag · igor-new_menu_dish-r3-directive  эпоха 1/1 · 155/210 · hybrid-rag · igor-new_menu_dish-r3-directive  эпоха 1/1 · 156/210 · hybrid-rag · igor-new_menu_dish-r3-directive  эпоха 1/1 · 157/210 · hybrid-rag · igor-new_menu_dish-r3-supporting  эпоха 1/1 · 158/210 · hybrid-rag · igor-new_menu_dish-r3-supporting  эпоха 1/1 · 159/210 · hybrid-rag · igor-new_menu_dish-r3-supporting  эпоха 1/1 · 160/210 · hybrid-rag · igor-steak-r2-coaching  эпоха 1/1 · 161/210 · hybrid-rag · igor-steak-r2-coaching  эпоха 1/1 · 162/210 · hybrid-rag · igor-steak-r2-coaching  эпоха 1/1 · 163/210 · hybrid-rag · igor-steak-r2-delegating  эпоха 1/1 · 164/210 · hybrid-rag · igor-steak-r2-delegating[пул] openrouter#1:nvidia/nemotron-3-super-120b-a12b:free выведен из ротации: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-3-super-120b-a12b:free выведен из ротации: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-3-super-120b-a12b:free выведен из ротации: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-3-super-120b-a12b:free выведен из ротации: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-nano-9b-v2:free выведен из ротации: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-nano-9b-v2:free выведен из ротации: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-nano-9b-v2:free выведен из ротации: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-nano-9b-v2:free выведен из ротации: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#1:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#3:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:
+[пул] groq#3:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:
+[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:
+[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:
+  эпоха 1/1 · 165/210 · hybrid-rag · igor-steak-r2-delegating  эпоха 1/1 · 166/210 · hybrid-rag · igor-steak-r2-directive[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · 167/210 · hybrid-rag · igor-steak-r2-directive[пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · 168/210 · hybrid-rag · igor-steak-r2-directive  эпоха 1/1 · 169/210 · hybrid-rag · igor-steak-r2-supporting  эпоха 1/1 · 170/210 · hybrid-rag · igor-steak-r2-supporting  эпоха 1/1 · 171/210 · hybrid-rag · igor-steak-r2-supporting  эпоха 1/1 · 172/210 · hybrid-rag · marina-salads-r2-coaching  эпоха 1/1 · 173/210 · hybrid-rag · marina-salads-r2-coaching  эпоха 1/1 · 174/210 · hybrid-rag · marina-salads-r2-coaching  эпоха 1/1 · 175/210 · hybrid-rag · marina-salads-r2-delegating  эпоха 1/1 · 176/210 · hybrid-rag · marina-salads-r2-delegating  эпоха 1/1 · 177/210 · hybrid-rag · marina-salads-r2-delegating  эпоха 1/1 · 178/210 · hybrid-rag · marina-salads-r2-directive  эпоха 1/1 · 179/210 · hybrid-rag · marina-salads-r2-directive  эпоха 1/1 · 180/210 · hybrid-rag · marina-salads-r2-directive  эпоха 1/1 · 181/210 · hybrid-rag · marina-salads-r2-supporting  эпоха 1/1 · 182/210 · hybrid-rag · marina-salads-r2-supporting  эпоха 1/1 · 183/210 · hybrid-rag · marina-salads-r2-supporting  эпоха 1/1 · 184/210 · hybrid-rag · olga-banquet_hot-r2-delegating  эпоха 1/1 · 185/210 · hybrid-rag · olga-banquet_hot-r2-delegating  эпоха 1/1 · 186/210 · hybrid-rag · olga-banquet_hot-r2-delegating  эпоха 1/1 · 187/210 · hybrid-rag · olga-banquet_hot-r2-directive  эпоха 1/1 · 188/210 · hybrid-rag · olga-banquet_hot-r2-directive  эпоха 1/1 · 189/210 · hybrid-rag · olga-banquet_hot-r2-directive  эпоха 1/1 · 190/210 · hybrid-rag · olga-banquet_hot-r2-supporting  эпоха 1/1 · 191/210 · hybrid-rag · olga-banquet_hot-r2-supporting  эпоха 1/1 · 192/210 · hybrid-rag · olga-banquet_hot-r2-supporting  эпоха 1/1 · 193/210 · hybrid-rag · olga-salads-r2-delegating  эпоха 1/1 · 194/210 · hybrid-rag · olga-salads-r2-delegating  эпоха 1/1 · 195/210 · hybrid-rag · olga-salads-r2-delegating  эпоха 1/1 · 196/210 · hybrid-rag · olga-salads-r2-directive  эпоха 1/1 · 197/210 · hybrid-rag · olga-salads-r2-directive  эпоха 1/1 · 198/210 · hybrid-rag · olga-salads-r2-directive  эпоха 1/1 · 199/210 · hybrid-rag · olga-salads-r2-supporting  эпоха 1/1 · 200/210 · hybrid-rag · olga-salads-r2-supporting  эпоха 1/1 · 201/210 · hybrid-rag · olga-salads-r2-supporting  эпоха 1/1 · 202/210 · hybrid-rag · olga-steak-r2-delegating  эпоха 1/1 · 203/210 · hybrid-rag · olga-steak-r2-delegating  эпоха 1/1 · 204/210 · hybrid-rag · olga-steak-r2-delegating  эпоха 1/1 · 205/210 · hybrid-rag · olga-steak-r2-directive  эпоха 1/1 · 206/210 · hybrid-rag · olga-steak-r2-directive[пул] openrouter#1:nvidia/nemotron-3-super-120b-a12b:free выведен из ротации: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-3-super-120b-a12b:free выведен из ротации: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-nano-9b-v2:free выведен из ротации: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-nano-9b-v2:free выведен из ротации: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#1:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:
+[пул] groq#1:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:
+[пул] groq#3:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:
+[пул] groq#3:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:
+[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:
+[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:
+  эпоха 1/1 · 207/210 · hybrid-rag · olga-steak-r2-directive  эпоха 1/1 · 208/210 · hybrid-rag · olga-steak-r2-supporting[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · 209/210 · hybrid-rag · olga-steak-r2-supporting  эпоха 1/1 · 210/210 · hybrid-rag · olga-steak-r2-supporting  эпоха 1/1 · 1/210 · graph-rag · anna-apple_pies-r2-delegating  эпоха 1/1 · 2/210 · graph-rag · anna-apple_pies-r2-delegating  эпоха 1/1 · 3/210 · graph-rag · anna-apple_pies-r2-delegating  эпоха 1/1 · 4/210 · graph-rag · anna-apple_pies-r2-directive  эпоха 1/1 · 5/210 · graph-rag · anna-apple_pies-r2-directive  эпоха 1/1 · 6/210 · graph-rag · anna-apple_pies-r2-directive  эпоха 1/1 · 7/210 · graph-rag · anna-apple_pies-r2-supporting  эпоха 1/1 · 8/210 · graph-rag · anna-apple_pies-r2-supporting  эпоха 1/1 · 9/210 · graph-rag · anna-apple_pies-r2-supporting  эпоха 1/1 · 10/210 · graph-rag · anna-apple_pies-r3-coaching  эпоха 1/1 · 11/210 · graph-rag · anna-apple_pies-r3-coaching  эпоха 1/1 · 12/210 · graph-rag · anna-apple_pies-r3-coaching  эпоха 1/1 · 13/210 · graph-rag · anna-apple_pies-r3-delegating  эпоха 1/1 · 14/210 · graph-rag · anna-apple_pies-r3-delegating  эпоха 1/1 · 15/210 · graph-rag · anna-apple_pies-r3-delegating  эпоха 1/1 · 16/210 · graph-rag · anna-apple_pies-r3-directive  эпоха 1/1 · 17/210 · graph-rag · anna-apple_pies-r3-directive  эпоха 1/1 · 18/210 · graph-rag · anna-apple_pies-r3-directive  эпоха 1/1 · 19/210 · graph-rag · anna-apple_pies-r3-supporting  эпоха 1/1 · 20/210 · graph-rag · anna-apple_pies-r3-supporting  эпоха 1/1 · 21/210 · graph-rag · anna-apple_pies-r3-supporting  эпоха 1/1 · 22/210 · graph-rag · anna-banquet_hot-r2-coaching  эпоха 1/1 · 23/210 · graph-rag · anna-banquet_hot-r2-coaching  эпоха 1/1 · 24/210 · graph-rag · anna-banquet_hot-r2-coaching  эпоха 1/1 · 25/210 · graph-rag · anna-banquet_hot-r2-delegating  эпоха 1/1 · 26/210 · graph-rag · anna-banquet_hot-r2-delegating  эпоха 1/1 · 27/210 · graph-rag · anna-banquet_hot-r2-delegating[пул] openrouter#1:nvidia/nemotron-3-super-120b-a12b:free выведен из ротации: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-nano-9b-v2:free выведен из ротации: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · 28/210 · graph-rag · anna-banquet_hot-r2-directive  эпоха 1/1 · 29/210 · graph-rag · anna-banquet_hot-r2-directive[пул] groq#1:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#1:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#1:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#3:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · 30/210 · graph-rag · anna-banquet_hot-r2-directive  эпоха 1/1 · 31/210 · graph-rag · anna-banquet_hot-r3-coaching  эпоха 1/1 · 32/210 · graph-rag · anna-banquet_hot-r3-coaching  эпоха 1/1 · 33/210 · graph-rag · anna-banquet_hot-r3-coaching  эпоха 1/1 · 34/210 · graph-rag · anna-banquet_hot-r3-delegating  эпоха 1/1 · 35/210 · graph-rag · anna-banquet_hot-r3-delegating  эпоха 1/1 · 36/210 · graph-rag · anna-banquet_hot-r3-delegating  эпоха 1/1 · 37/210 · graph-rag · anna-banquet_hot-r3-directive  эпоха 1/1 · 38/210 · graph-rag · anna-banquet_hot-r3-directive  эпоха 1/1 · 39/210 · graph-rag · anna-banquet_hot-r3-directive  эпоха 1/1 · 40/210 · graph-rag · anna-decorated_cake-r2-coaching  эпоха 1/1 · 41/210 · graph-rag · anna-decorated_cake-r2-coaching  эпоха 1/1 · 42/210 · graph-rag · anna-decorated_cake-r2-coaching  эпоха 1/1 · 43/210 · graph-rag · anna-decorated_cake-r2-delegating  эпоха 1/1 · 44/210 · graph-rag · anna-decorated_cake-r2-delegating  эпоха 1/1 · 45/210 · graph-rag · anna-decorated_cake-r2-delegating  эпоха 1/1 · 46/210 · graph-rag · anna-decorated_cake-r2-directive  эпоха 1/1 · 47/210 · graph-rag · anna-decorated_cake-r2-directive  эпоха 1/1 · 48/210 · graph-rag · anna-decorated_cake-r2-directive  эпоха 1/1 · 49/210 · graph-rag · anna-decorated_cake-r3-coaching  эпоха 1/1 · 50/210 · graph-rag · anna-decorated_cake-r3-coaching  эпоха 1/1 · 51/210 · graph-rag · anna-decorated_cake-r3-coaching  эпоха 1/1 · 52/210 · graph-rag · anna-decorated_cake-r3-delegating  эпоха 1/1 · 53/210 · graph-rag · anna-decorated_cake-r3-delegating  эпоха 1/1 · 54/210 · graph-rag · anna-decorated_cake-r3-delegating  эпоха 1/1 · 55/210 · graph-rag · anna-decorated_cake-r3-directive  эпоха 1/1 · 56/210 · graph-rag · anna-decorated_cake-r3-directive  эпоха 1/1 · 57/210 · graph-rag · anna-decorated_cake-r3-directive  эпоха 1/1 · 58/210 · graph-rag · anna-prep_veggies-r2-coaching  эпоха 1/1 · 59/210 · graph-rag · anna-prep_veggies-r2-coaching  эпоха 1/1 · 60/210 · graph-rag · anna-prep_veggies-r2-coaching[пул] openrouter#1:nvidia/nemotron-3-super-120b-a12b:free выведен из ротации: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для evaluation.criteria за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-3-super-120b-a12b:free выведен из ротации: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для evaluation.style за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-nano-9b-v2:free выведен из ротации: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для evaluation.criteria за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-nano-9b-v2:free выведен из ротации: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для evaluation.style за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-3-super-120b-a12b:free выведен из ротации: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-nano-9b-v2:free выведен из ротации: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#1:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · 61/210 · graph-rag · anna-prep_veggies-r2-delegating[пул] groq#3:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:
+[пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:
+[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:
+  эпоха 1/1 · 62/210 · graph-rag · anna-prep_veggies-r2-delegating  эпоха 1/1 · 63/210 · graph-rag · anna-prep_veggies-r2-delegating[пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:
+  эпоха 1/1 · 64/210 · graph-rag · anna-prep_veggies-r2-directive  эпоха 1/1 · 65/210 · graph-rag · anna-prep_veggies-r2-directive  эпоха 1/1 · 66/210 · graph-rag · anna-prep_veggies-r2-directive  эпоха 1/1 · 67/210 · graph-rag · anna-prep_veggies-r2-supporting  эпоха 1/1 · 68/210 · graph-rag · anna-prep_veggies-r2-supporting  эпоха 1/1 · 69/210 · graph-rag · anna-prep_veggies-r2-supporting  эпоха 1/1 · 70/210 · graph-rag · anna-salads-r2-coaching  эпоха 1/1 · 71/210 · graph-rag · anna-salads-r2-coaching  эпоха 1/1 · 72/210 · graph-rag · anna-salads-r2-coaching  эпоха 1/1 · 73/210 · graph-rag · anna-salads-r2-delegating  эпоха 1/1 · 74/210 · graph-rag · anna-salads-r2-delegating  эпоха 1/1 · 75/210 · graph-rag · anna-salads-r2-delegating  эпоха 1/1 · 76/210 · graph-rag · anna-salads-r2-directive  эпоха 1/1 · 77/210 · graph-rag · anna-salads-r2-directive  эпоха 1/1 · 78/210 · graph-rag · anna-salads-r2-directive  эпоха 1/1 · 79/210 · graph-rag · anna-salads-r2-supporting  эпоха 1/1 · 80/210 · graph-rag · anna-salads-r2-supporting  эпоха 1/1 · 81/210 · graph-rag · anna-salads-r2-supporting  эпоха 1/1 · 82/210 · graph-rag · anna-salads-r3-coaching  эпоха 1/1 · 83/210 · graph-rag · anna-salads-r3-coaching  эпоха 1/1 · 84/210 · graph-rag · anna-salads-r3-coaching  эпоха 1/1 · 85/210 · graph-rag · anna-salads-r3-delegating  эпоха 1/1 · 86/210 · graph-rag · anna-salads-r3-delegating  эпоха 1/1 · 87/210 · graph-rag · anna-salads-r3-delegating  эпоха 1/1 · 88/210 · graph-rag · anna-salads-r3-directive  эпоха 1/1 · 89/210 · graph-rag · anna-salads-r3-directive  эпоха 1/1 · 90/210 · graph-rag · anna-salads-r3-directive  эпоха 1/1 · 91/210 · graph-rag · anna-salads-r3-supporting  эпоха 1/1 · 92/210 · graph-rag · anna-salads-r3-supporting  эпоха 1/1 · 93/210 · graph-rag · anna-salads-r3-supporting  эпоха 1/1 · 94/210 · graph-rag · anna-steak-r2-coaching  эпоха 1/1 · 95/210 · graph-rag · anna-steak-r2-coaching  эпоха 1/1 · 96/210 · graph-rag · anna-steak-r2-coaching  эпоха 1/1 · 97/210 · graph-rag · anna-steak-r2-delegating  эпоха 1/1 · 98/210 · graph-rag · anna-steak-r2-delegating[пул] openrouter#1:nvidia/nemotron-3-super-120b-a12b:free выведен из ротации: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-nano-9b-v2:free выведен из ротации: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · 99/210 · graph-rag · anna-steak-r2-delegating[пул] groq#1:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#3:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · 100/210 · graph-rag · anna-steak-r2-directive  эпоха 1/1 · 101/210 · graph-rag · anna-steak-r2-directive[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:
+[пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:
+  эпоха 1/1 · 102/210 · graph-rag · anna-steak-r2-directive[пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:
+[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:
+[пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:
+  эпоха 1/1 · 103/210 · graph-rag · anna-tiramisu-r2-delegating  эпоха 1/1 · 104/210 · graph-rag · anna-tiramisu-r2-delegating  эпоха 1/1 · 105/210 · graph-rag · anna-tiramisu-r2-delegating  эпоха 1/1 · 106/210 · graph-rag · anna-tiramisu-r2-directive  эпоха 1/1 · 107/210 · graph-rag · anna-tiramisu-r2-directive  эпоха 1/1 · 108/210 · graph-rag · anna-tiramisu-r2-directive  эпоха 1/1 · 109/210 · graph-rag · anna-tiramisu-r2-supporting  эпоха 1/1 · 110/210 · graph-rag · anna-tiramisu-r2-supporting  эпоха 1/1 · 111/210 · graph-rag · anna-tiramisu-r2-supporting  эпоха 1/1 · 112/210 · graph-rag · anna-tiramisu-r3-coaching  эпоха 1/1 · 113/210 · graph-rag · anna-tiramisu-r3-coaching  эпоха 1/1 · 114/210 · graph-rag · anna-tiramisu-r3-coaching  эпоха 1/1 · 115/210 · graph-rag · anna-tiramisu-r3-delegating  эпоха 1/1 · 116/210 · graph-rag · anna-tiramisu-r3-delegating  эпоха 1/1 · 117/210 · graph-rag · anna-tiramisu-r3-delegating  эпоха 1/1 · 118/210 · graph-rag · anna-tiramisu-r3-directive  эпоха 1/1 · 119/210 · graph-rag · anna-tiramisu-r3-directive  эпоха 1/1 · 120/210 · graph-rag · anna-tiramisu-r3-directive  эпоха 1/1 · 121/210 · graph-rag · anna-tiramisu-r3-supporting  эпоха 1/1 · 122/210 · graph-rag · anna-tiramisu-r3-supporting  эпоха 1/1 · 123/210 · graph-rag · anna-tiramisu-r3-supporting  эпоха 1/1 · 124/210 · graph-rag · igor-banquet_hot-r2-coaching  эпоха 1/1 · 125/210 · graph-rag · igor-banquet_hot-r2-coaching  эпоха 1/1 · 126/210 · graph-rag · igor-banquet_hot-r2-coaching  эпоха 1/1 · 127/210 · graph-rag · igor-banquet_hot-r2-delegating  эпоха 1/1 · 128/210 · graph-rag · igor-banquet_hot-r2-delegating  эпоха 1/1 · 129/210 · graph-rag · igor-banquet_hot-r2-delegating  эпоха 1/1 · 130/210 · graph-rag · igor-banquet_hot-r2-directive  эпоха 1/1 · 131/210 · graph-rag · igor-banquet_hot-r2-directive  эпоха 1/1 · 132/210 · graph-rag · igor-banquet_hot-r2-directive  эпоха 1/1 · 133/210 · graph-rag · igor-banquet_hot-r2-supporting  эпоха 1/1 · 134/210 · graph-rag · igor-banquet_hot-r2-supporting  эпоха 1/1 · 135/210 · graph-rag · igor-banquet_hot-r2-supporting  эпоха 1/1 · 136/210 · graph-rag · igor-new_menu_dish-r2-coaching  эпоха 1/1 · 137/210 · graph-rag · igor-new_menu_dish-r2-coaching[пул] openrouter#1:nvidia/nemotron-3-super-120b-a12b:free выведен из ротации: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-nano-9b-v2:free выведен из ротации: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#1:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · 138/210 · graph-rag · igor-new_menu_dish-r2-coaching[пул] groq#3:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#3:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · 139/210 · graph-rag · igor-new_menu_dish-r2-delegating[пул] openrouter#1:nvidia/nemotron-3-super-120b-a12b:free выведен из ротации: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-nano-9b-v2:free выведен из ротации: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-nano-9b-v2:free выведен из ротации: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · 140/210 · graph-rag · igor-new_menu_dish-r2-delegating[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · 141/210 · graph-rag · igor-new_menu_dish-r2-delegating  эпоха 1/1 · 142/210 · graph-rag · igor-new_menu_dish-r2-directive  эпоха 1/1 · 143/210 · graph-rag · igor-new_menu_dish-r2-directive  эпоха 1/1 · 144/210 · graph-rag · igor-new_menu_dish-r2-directive  эпоха 1/1 · 145/210 · graph-rag · igor-new_menu_dish-r2-supporting  эпоха 1/1 · 146/210 · graph-rag · igor-new_menu_dish-r2-supporting  эпоха 1/1 · 147/210 · graph-rag · igor-new_menu_dish-r2-supporting  эпоха 1/1 · 148/210 · graph-rag · igor-new_menu_dish-r3-coaching  эпоха 1/1 · 149/210 · graph-rag · igor-new_menu_dish-r3-coaching  эпоха 1/1 · 150/210 · graph-rag · igor-new_menu_dish-r3-coaching  эпоха 1/1 · 151/210 · graph-rag · igor-new_menu_dish-r3-delegating  эпоха 1/1 · 152/210 · graph-rag · igor-new_menu_dish-r3-delegating  эпоха 1/1 · 153/210 · graph-rag · igor-new_menu_dish-r3-delegating  эпоха 1/1 · 154/210 · graph-rag · igor-new_menu_dish-r3-directive  эпоха 1/1 · 155/210 · graph-rag · igor-new_menu_dish-r3-directive  эпоха 1/1 · 156/210 · graph-rag · igor-new_menu_dish-r3-directive  эпоха 1/1 · 157/210 · graph-rag · igor-new_menu_dish-r3-supporting  эпоха 1/1 · 158/210 · graph-rag · igor-new_menu_dish-r3-supporting  эпоха 1/1 · 159/210 · graph-rag · igor-new_menu_dish-r3-supporting  эпоха 1/1 · 160/210 · graph-rag · igor-steak-r2-coaching  эпоха 1/1 · 161/210 · graph-rag · igor-steak-r2-coaching  эпоха 1/1 · 162/210 · graph-rag · igor-steak-r2-coaching  эпоха 1/1 · 163/210 · graph-rag · igor-steak-r2-delegating  эпоха 1/1 · 164/210 · graph-rag · igor-steak-r2-delegating  эпоха 1/1 · 165/210 · graph-rag · igor-steak-r2-delegating  эпоха 1/1 · 166/210 · graph-rag · igor-steak-r2-directive[пул] groq#1:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:
+[пул] groq#1:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:
+[пул] groq#3:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:
+[пул] groq#1:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#3:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:
+[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:
+[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:
+[пул] groq#3:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · 167/210 · graph-rag · igor-steak-r2-directive[пул] groq#1:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#1:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · 168/210 · graph-rag · igor-steak-r2-directive  эпоха 1/1 · 169/210 · graph-rag · igor-steak-r2-supporting[пул] openrouter#1:nvidia/nemotron-3-super-120b-a12b:free выведен из ротации: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-nano-9b-v2:free выведен из ротации: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-3-super-120b-a12b:free выведен из ротации: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-nano-9b-v2:free выведен из ротации: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · 170/210 · graph-rag · igor-steak-r2-supporting  эпоха 1/1 · 171/210 · graph-rag · igor-steak-r2-supporting[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:
+[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:
+[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:
+[пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:
+[пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · 172/210 · graph-rag · marina-salads-r2-coaching  эпоха 1/1 · 173/210 · graph-rag · marina-salads-r2-coaching  эпоха 1/1 · 174/210 · graph-rag · marina-salads-r2-coaching  эпоха 1/1 · 175/210 · graph-rag · marina-salads-r2-delegating  эпоха 1/1 · 176/210 · graph-rag · marina-salads-r2-delegating  эпоха 1/1 · 177/210 · graph-rag · marina-salads-r2-delegating  эпоха 1/1 · 178/210 · graph-rag · marina-salads-r2-directive  эпоха 1/1 · 179/210 · graph-rag · marina-salads-r2-directive  эпоха 1/1 · 180/210 · graph-rag · marina-salads-r2-directive  эпоха 1/1 · 181/210 · graph-rag · marina-salads-r2-supporting  эпоха 1/1 · 182/210 · graph-rag · marina-salads-r2-supporting  эпоха 1/1 · 183/210 · graph-rag · marina-salads-r2-supporting  эпоха 1/1 · 184/210 · graph-rag · olga-banquet_hot-r2-delegating  эпоха 1/1 · 185/210 · graph-rag · olga-banquet_hot-r2-delegating  эпоха 1/1 · 186/210 · graph-rag · olga-banquet_hot-r2-delegating  эпоха 1/1 · 187/210 · graph-rag · olga-banquet_hot-r2-directive  эпоха 1/1 · 188/210 · graph-rag · olga-banquet_hot-r2-directive  эпоха 1/1 · 189/210 · graph-rag · olga-banquet_hot-r2-directive  эпоха 1/1 · 190/210 · graph-rag · olga-banquet_hot-r2-supporting  эпоха 1/1 · 191/210 · graph-rag · olga-banquet_hot-r2-supporting  эпоха 1/1 · 192/210 · graph-rag · olga-banquet_hot-r2-supporting  эпоха 1/1 · 193/210 · graph-rag · olga-salads-r2-delegating  эпоха 1/1 · 194/210 · graph-rag · olga-salads-r2-delegating  эпоха 1/1 · 195/210 · graph-rag · olga-salads-r2-delegating  эпоха 1/1 · 196/210 · graph-rag · olga-salads-r2-directive  эпоха 1/1 · 197/210 · graph-rag · olga-salads-r2-directive  эпоха 1/1 · 198/210 · graph-rag · olga-salads-r2-directive  эпоха 1/1 · 199/210 · graph-rag · olga-salads-r2-supporting  эпоха 1/1 · 200/210 · graph-rag · olga-salads-r2-supporting  эпоха 1/1 · 201/210 · graph-rag · olga-salads-r2-supporting  эпоха 1/1 · 202/210 · graph-rag · olga-steak-r2-delegating  эпоха 1/1 · 203/210 · graph-rag · olga-steak-r2-delegating[пул] groq#3:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#3:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#3:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#3:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#5:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#1:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.style за 2 попыток:
+[пул] groq#1:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для evaluation.criteria за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-3-super-120b-a12b:free выведен из ротации: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openrouter#1:nvidia/nemotron-nano-9b-v2:free выведен из ротации: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · 204/210 · graph-rag · olga-steak-r2-delegating  эпоха 1/1 · 205/210 · graph-rag · olga-steak-r2-directive[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#2:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#4:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+[пул] groq#6:llama-3.3-70b-versatile выведен из ротации: llama-3.3-70b-versatile не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · 206/210 · graph-rag · olga-steak-r2-directive  эпоха 1/1 · 207/210 · graph-rag · olga-steak-r2-directive  эпоха 1/1 · 208/210 · graph-rag · olga-steak-r2-supporting  эпоха 1/1 · 209/210 · graph-rag · olga-steak-r2-supporting  эпоха 1/1 · 210/210 · graph-rag · olga-steak-r2-supporting
+# Сравнение подходов ИИ-модуля
+
+- Провайдер: `pool` (модель `nvidia/nemotron-3-super-120b-a12b:free`)
+- Сценариев: 70, прогонов на сценарий: 3, эпох: 1
+- Контрольный вариант: `baseline`
+- Запуск: 2026-08-17T11:17:27.650Z → 2026-08-17T14:12:24.409Z
+
+> ⚠️ Экспертными метками подписано 0 из 70 сценариев,
+> остальные 70 — предварительные. Колонка «MAE к эксперту» показывает
+> расхождение с временной калибровкой, а не с методологом: она годится, чтобы
+> ловить регрессии, и не годится как основание внедрять подход.
+
+> ⚠️ Диалоги обслужены разными моделями — сработало переключение пула.
+> Сравнение вариантов между собой при этом некорректно: разница может
+> объясняться моделью, а не подходом. Модели по вариантам:
+> - `baseline`: nvidia/nemotron-3-super-120b-a12b:free × 210, gpt-5.4-mini × 210
+> - `baseline-judge`: nvidia/nemotron-3-super-120b-a12b:free × 210, gpt-5.4-mini × 210, gpt-5.5 × 1
+> - `llm-first`: nvidia/nemotron-3-super-120b-a12b:free × 210, gpt-5.4-mini × 210
+> - `rag`: nvidia/nemotron-3-super-120b-a12b:free × 210, gpt-5.4-mini × 210, gpt-5.5 × 1
+> - `hybrid-rag`: nvidia/nemotron-3-super-120b-a12b:free × 210, gpt-5.4-mini × 210, gpt-5.5 × 2
+> - `graph-rag`: nvidia/nemotron-3-super-120b-a12b:free × 210, gpt-5.4-mini × 210
+
+> ⚠️ Цена неизвестна для: gpt-5.4-mini, gpt-5.5.
+> Колонка «$/диалог» показывает 0 для этих моделей — это отсутствующая
+> цена в MODEL_PRICING, а не подтверждённо бесплатный вызов. Добавьте
+> модель в packages/ai/src/provider/pricing.ts, если тариф известен.
+
+## Значимость против контрольного варианта
+
+Парный бутстрап по сценариям, 95% доверительный интервал.
+Положительная Δ — вариант лучше контрольного. Вывод «лучше» только если интервал не пересекает ноль.
+
+### `baseline-judge`
+
+| Метрика | Δ | 95% ДИ | p | Вывод |
+| --- | ---: | :---: | ---: | --- |
+| MAE к эксперту | +1.16 | [-0.81; 3.13] | 0.247 | не доказано |
+| Точность стиля | -0.01 | [-0.05; 0.02] | 0.561 | не доказано |
+| F1 по критериям | -0.11 | [-0.14; -0.07] | 0.000 | **хуже** |
+| Удержание роли | -0.01 | [-0.01; 0.00] | 1.000 | не доказано |
+| Дрейф персоны | +0.00 | [0.00; 0.00] | 1.000 | не доказано |
+| Стоимость диалога | +0.0000 | [0.0000; 0.0000] | 1.000 | не доказано |
+
+### `llm-first`
+
+| Метрика | Δ | 95% ДИ | p | Вывод |
+| --- | ---: | :---: | ---: | --- |
+| MAE к эксперту | +1.72 | [-0.40; 3.81] | 0.109 | не доказано |
+| Точность стиля | +0.00 | [-0.06; 0.05] | 1.000 | не доказано |
+| F1 по критериям | -0.12 | [-0.15; -0.08] | 0.000 | **хуже** |
+| Удержание роли | +0.00 | [0.00; 0.00] | 1.000 | не доказано |
+| Дрейф персоны | +0.00 | [0.00; 0.00] | 1.000 | не доказано |
+| Стоимость диалога | +0.0000 | [0.0000; 0.0000] | 1.000 | не доказано |
+
+### `rag`
+
+| Метрика | Δ | 95% ДИ | p | Вывод |
+| --- | ---: | :---: | ---: | --- |
+| MAE к эксперту | +1.42 | [-0.31; 3.16] | 0.122 | не доказано |
+| Точность стиля | +0.03 | [0.01; 0.06] | 0.061 | **лучше** |
+| F1 по критериям | -0.11 | [-0.15; -0.08] | 0.000 | **хуже** |
+| Удержание роли | +0.00 | [0.00; 0.00] | 1.000 | не доказано |
+| Дрейф персоны | +0.00 | [0.00; 0.00] | 1.000 | не доказано |
+| Стоимость диалога | +0.0000 | [0.0000; 0.0000] | 1.000 | не доказано |
+
+### `hybrid-rag`
+
+| Метрика | Δ | 95% ДИ | p | Вывод |
+| --- | ---: | :---: | ---: | --- |
+| MAE к эксперту | +1.16 | [-0.79; 3.06] | 0.245 | не доказано |
+| Точность стиля | +0.04 | [0.01; 0.07] | 0.031 | **лучше** |
+| F1 по критериям | -0.12 | [-0.15; -0.08] | 0.000 | **хуже** |
+| Удержание роли | +0.00 | [0.00; 0.00] | 1.000 | не доказано |
+| Дрейф персоны | +0.00 | [0.00; 0.00] | 1.000 | не доказано |
+| Стоимость диалога | +0.0000 | [0.0000; 0.0000] | 1.000 | не доказано |
+
+### `graph-rag`
+
+| Метрика | Δ | 95% ДИ | p | Вывод |
+| --- | ---: | :---: | ---: | --- |
+| MAE к эксперту | +2.50 | [0.77; 4.23] | 0.006 | **лучше** |
+| Точность стиля | +0.02 | [0.01; 0.05] | 0.123 | **лучше** |
+| F1 по критериям | -0.13 | [-0.17; -0.09] | 0.000 | **хуже** |
+| Удержание роли | -0.01 | [-0.01; 0.00] | 1.000 | не доказано |
+| Дрейф персоны | +0.00 | [0.00; 0.00] | 1.000 | не доказано |
+| Стоимость диалога | +0.0000 | [0.0000; 0.0000] | 1.000 | не доказано |
+
+**Доказанное улучшение MAE:** `graph-rag`.
+
+## Сырые показатели
+
+| Вариант | MAE | σ внутри сценария | κ по стилю | F1 критериев | Роль | Дрейф | Молчание | Задержка | $/диалог |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `graph-rag` | 13.9 | 3.0 | 0.74 | 0.82 | 100% | 0% | 100% | 35585 мс | $0.0000 |
+| `llm-first` | 14.7 | 3.4 | 0.71 | 0.83 | 100% | 0% | 100% | 37131 мс | $0.0000 |
+| `rag` | 15.0 | 3.1 | 0.75 | 0.83 | 100% | 0% | 100% | 32174 мс | $0.0000 |
+| `baseline-judge` | 15.2 | 3.5 | 0.69 | 0.84 | 100% | 0% | 100% | 35211 мс | $0.0000 |
+| `hybrid-rag` | 15.2 | 2.7 | 0.76 | 0.83 | 100% | 0% | 100% | 33831 мс | $0.0000 |
+| `baseline` | 16.4 | 0.0 | 0.71 | 0.95 | 100% | 0% | 100% | 24722 мс | $0.0000 |
+
+Согласие со стилем эксперта у контрольного варианта: κ = 0.71 (существенное).
+
+## Кто обслуживал запросы
+
+| Кандидат | Успешно | Отказы по лимиту | Не осилил схему |
+| --- | ---: | ---: | ---: |
+| `groq#1:llama-3.3-70b-versatile` | 0 | 68 | 1 |
+| `groq#2:llama-3.3-70b-versatile` | 0 | 72 | 0 |
+| `groq#3:llama-3.3-70b-versatile` | 0 | 64 | 0 |
+| `groq#4:llama-3.3-70b-versatile` | 0 | 71 | 0 |
+| `groq#5:llama-3.3-70b-versatile` | 0 | 71 | 0 |
+| `groq#6:llama-3.3-70b-versatile` | 0 | 67 | 0 |
+| `openai#1:gpt-5.4-mini` | 7517 | 0 | 7 |
+| `openai#1:gpt-5.5` | 7 | 0 | 0 |
+| `openrouter#1:nvidia/nemotron-3-super-120b-a12b:free` | 0 | 67 | 1 |
+| `openrouter#1:nvidia/nemotron-nano-9b-v2:free` | 0 | 68 | 0 |
+
+## Худшие расхождения
+
+| Сценарий | Вариант | Авто | Эксперт | Δ | Стиль (авто → метка) |
+| --- | --- | ---: | ---: | ---: | --- |
+| anna-decorated_cake-r3-coaching | `llm-first` | 67 | 15 | 52 | directive → coaching |
+| anna-decorated_cake-r3-coaching | `baseline-judge` | 66 | 15 | 51 | directive → coaching |
+| anna-decorated_cake-r3-coaching | `rag` | 62 | 15 | 47 | directive → coaching |
+| anna-decorated_cake-r3-coaching | `baseline-judge` | 58 | 15 | 43 | directive → coaching |
+| anna-banquet_hot-r3-coaching | `hybrid-rag` | 57 | 15 | 42 | directive → coaching |
+| anna-apple_pies-r2-supporting | `hybrid-rag` | 81 | 40 | 41 | supporting → supporting |
+| anna-banquet_hot-r3-coaching | `baseline-judge` | 55 | 15 | 40 | directive → coaching |
+| olga-salads-r2-supporting | `llm-first` | 80 | 40 | 40 | supporting → supporting |
+| olga-salads-r2-supporting | `rag` | 80 | 40 | 40 | supporting → supporting |
+| olga-salads-r2-supporting | `hybrid-rag` | 80 | 40 | 40 | supporting → supporting |
+
+## Нарушения роли
+
+- `baseline-judge` / anna-decorated_cake-r2-directive: упомянул «критери», упомянул «критери»
+- `graph-rag` / anna-steak-r2-coaching: упомянул «критери»
+
+
+Отчёт записан: ../../reports/wave2-full.md
+Сырые результаты: ../../reports/wave2-full.json

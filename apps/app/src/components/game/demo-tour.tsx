@@ -17,6 +17,10 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
 } from "@acme/ui";
 import {
   IconArrowRight,
@@ -25,88 +29,17 @@ import {
   IconRefresh,
   IconSparkles,
 } from "@tabler/icons-react";
-import { useEffect, useRef, useState } from "react";
-import { EvaluationCard, type EvaluationView } from "./evaluation-card";
-
-interface ScriptTurn {
-  role: "manager" | "employee";
-  text: string;
-  /** Что именно демонстрирует эта реплика — показывается под ней в демо. */
-  note?: string;
-}
-
-const EMPLOYEE = { name: "Марина Ким", role: "Помощник повара · уровень L2" };
-const TASK_TITLE = "Салаты дня, 15 порций";
-
-const SCRIPT: ScriptTurn[] = [
-  {
-    role: "manager",
-    text: "Марина, у нас новый заказ: салаты дня, 15 порций к обеду.",
-    note: "Обратился по имени и сразу назвал задачу — сотрудник включается в разговор.",
-  },
-  {
-    role: "employee",
-    text: "Хорошо, базовый рецепт я помню, но на такой объём сомневаюсь в пропорциях соуса.",
-  },
-  {
-    role: "manager",
-    text: "Ориентир такой: соус к овощам 1 к 5. Сделай одну пробную порцию и покажи мне перед тем, как готовить остальные.",
-    note: "Дал чёткий ориентир и назначил контрольную точку — это наставнический стиль, а не просто приказ.",
-  },
-  {
-    role: "employee",
-    text: "Поняла, соберу пробную порцию и подойду на проверку.",
-  },
-  {
-    role: "manager",
-    text: "Отлично. Если по заправке будут вопросы — сразу спрашивай, не жди, пока накопится.",
-    note: "Явно предложил поддержку, но не забрал задачу себе — ответственность остаётся у сотрудника.",
-  },
-  {
-    role: "employee",
-    text: "Спасибо, тогда приступаю — через 20 минут покажу первую порцию.",
-  },
-];
-
-const DEMO_EVALUATION: EvaluationView = {
-  scorePercent: 88,
-  expectedStyle: "coaching",
-  actualStyle: "coaching",
-  styleDistribution: {
-    directive: 0.1,
-    coaching: 0.75,
-    supporting: 0.15,
-    delegating: 0,
-  },
-  criteria: [
-    { id: "greeted", title: "Обратился к сотруднику по имени", met: true },
-    {
-      id: "result",
-      title: "Обозначил ожидаемый результат и срок",
-      met: true,
-    },
-    { id: "checked", title: "Проверил понимание задачи", met: true },
-    { id: "checkpoint", title: "Назначил контрольную точку", met: true },
-    { id: "tone", title: "Сохранил уважительный тон", met: true },
-    {
-      id: "support",
-      title: "Уточнил, что именно вызывает сомнения",
-      met: false,
-      comment: "Можно было спросить прямо, а не только предложить обращаться",
-    },
-  ],
-  outcome: {
-    status: "success",
-    onTime: true,
-    defects: [],
-    motivationDelta: 1,
-    summary:
-      "Марина сделала пробную порцию, сверила пропорции и уложилась в срок — заказ ушёл без замечаний.",
-  },
-  breakdown: { style: 40, actions: 30, outcome: 18, penalties: 0 },
-  summary:
-    "Ориентир и контрольная точка совпали с готовностью Марины (L2): дали структуру, но оставили пространство для вопросов.",
-};
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  DEFAULT_DEMO_SCENARIO_ID,
+  DEMO_SCENARIO_GROUPS,
+  DEMO_SCENARIOS,
+  type DemoScenario,
+  type DemoScenarioGroup,
+  resolveDemoScenario,
+} from "./demo-scenarios";
+import { EvaluationCard } from "./evaluation-card";
 
 const SPEED_OPTIONS = [
   { id: "1", label: "1×", ms: 2600 },
@@ -114,74 +47,146 @@ const SPEED_OPTIONS = [
   { id: "2", label: "2×", ms: 1200 },
 ] as const;
 
+type SpeedId = (typeof SPEED_OPTIONS)[number]["id"];
+
+const SCENARIO_QUERY_PARAM = "scenario";
+
 /**
- * Автопроигрывающийся пример разговора, чтобы новый игрок увидел исход до
- * того, как начнёт настоящую смену. Использует ту же карточку разбора
- * (`EvaluationCard`), что и реальный диалог, — итог демо выглядит так же,
- * как итог настоящей игры.
+ * Определяем группу текущего сценария — нужно, чтобы верхний ряд табов
+ * подсвечивал правильную вкладку при загрузке по deep-link.
+ */
+function groupOfScenario(scenario: DemoScenario): DemoScenarioGroup {
+  return scenario.group;
+}
+
+/**
+ * Автопроигрыватель демо-разговоров с переключателем сценариев.
+ *
+ * Сценарий хранится в query-параметре `?scenario=…`, чтобы конкретный кейс
+ * можно было дать ссылкой (например, ведущему на разбор ошибки). При смене
+ * таба состояние проигрывателя (позиция, пауза) сбрасывается, скорость —
+ * сохраняется.
  */
 export function DemoTour() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const scenarioIdFromUrl = searchParams.get(SCENARIO_QUERY_PARAM);
+  const scenario = useMemo(
+    () => resolveDemoScenario(scenarioIdFromUrl),
+    [scenarioIdFromUrl],
+  );
+
+  const activeGroup = groupOfScenario(scenario);
+
   const [visibleCount, setVisibleCount] = useState(0);
   const [playing, setPlaying] = useState(true);
-  const [speedId, setSpeedId] =
-    useState<(typeof SPEED_OPTIONS)[number]["id"]>("1");
+  const [speedId, setSpeedId] = useState<SpeedId>("1");
   const endRef = useRef<HTMLDivElement>(null);
 
-  const finished = visibleCount >= SCRIPT.length;
+  const script = scenario.script;
+  const finished = visibleCount >= script.length;
   const speed =
     SPEED_OPTIONS.find((option) => option.id === speedId) ?? SPEED_OPTIONS[0];
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: сценарий нужен как триггер сброса, хотя в теле используются только setters.
+  useEffect(() => {
+    setVisibleCount(0);
+    setPlaying(true);
+  }, [scenario.id]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: visibleCount нужен в зависимостях, чтобы таймер переставлялся после каждой реплики, хотя в теле эффекта не читается.
   useEffect(() => {
     if (!playing || finished) return;
     const timer = window.setTimeout(() => {
-      setVisibleCount((count) => Math.min(count + 1, SCRIPT.length));
+      setVisibleCount((count) => Math.min(count + 1, script.length));
     }, speed.ms);
     return () => window.clearTimeout(timer);
-  }, [playing, finished, speed.ms, visibleCount]);
+  }, [playing, finished, speed.ms, visibleCount, script.length]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: должен переисполняться при каждой новой реплике.
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [visibleCount]);
 
+  const setScenarioId = useCallback(
+    (id: string) => {
+      const params = new URLSearchParams(searchParams);
+      if (id === DEFAULT_DEMO_SCENARIO_ID) {
+        params.delete(SCENARIO_QUERY_PARAM);
+      } else {
+        params.set(SCENARIO_QUERY_PARAM, id);
+      }
+      const query = params.toString();
+      router.replace(query ? `${pathname}?${query}` : pathname, {
+        scroll: false,
+      });
+    },
+    [pathname, router, searchParams],
+  );
+
   function restart() {
     setVisibleCount(0);
     setPlaying(true);
   }
 
+  function handleGroupChange(next: string) {
+    const group = next as DemoScenarioGroup;
+    if (group === activeGroup) return;
+    const firstInGroup = DEMO_SCENARIOS.find((item) => item.group === group);
+    if (firstInGroup) setScenarioId(firstInGroup.id);
+  }
+
   return (
     <div className="flex flex-col gap-4">
+      <ScenarioPicker
+        activeGroup={activeGroup}
+        activeScenarioId={scenario.id}
+        onGroupChange={handleGroupChange}
+        onScenarioChange={setScenarioId}
+      />
+
       <Card className="overflow-hidden">
         <CardHeader>
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="flex items-center gap-3">
               <Avatar className="size-12">
-                <AvatarFallback>
-                  {EMPLOYEE.name.slice(0, 1).toUpperCase()}
-                </AvatarFallback>
+                <AvatarFallback>{scenario.employee.initials}</AvatarFallback>
               </Avatar>
               <div>
-                <CardTitle>{EMPLOYEE.name}</CardTitle>
-                <CardDescription>{EMPLOYEE.role}</CardDescription>
+                <CardTitle>{scenario.employee.name}</CardTitle>
+                <CardDescription>{scenario.employee.role}</CardDescription>
               </div>
             </div>
-            <Badge variant="secondary">
-              <IconSparkles data-icon="inline-start" />
-              Демо-запись
-            </Badge>
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge variant="outline">{scenario.levelBadge}</Badge>
+              {scenario.shift.round === 3 ? (
+                <Badge variant="outline">Раунд 3</Badge>
+              ) : null}
+              {scenario.shift.soloOnShift ? (
+                <Badge variant="outline">Один в смене</Badge>
+              ) : null}
+              <Badge variant="secondary">
+                <IconSparkles data-icon="inline-start" />
+                Демо-запись
+              </Badge>
+            </div>
           </div>
-          <CardDescription>Ситуация: {TASK_TITLE}</CardDescription>
+          <CardDescription>Ситуация: {scenario.taskTitle}</CardDescription>
+          <p className="text-muted-foreground text-sm">{scenario.headline}</p>
         </CardHeader>
 
         <CardContent className="flex flex-col gap-4">
-          <Progress value={(visibleCount / SCRIPT.length) * 100} />
+          <p className="bg-muted/40 rounded-lg p-3 text-sm">{scenario.intro}</p>
+
+          <Progress value={(visibleCount / script.length) * 100} />
 
           <div className="flex min-h-[280px] flex-col gap-3 rounded-lg border p-4">
-            {SCRIPT.slice(0, visibleCount).map((turn, index) => (
+            {script.slice(0, visibleCount).map((turn, index) => (
               <div
                 // biome-ignore lint/suspicious/noArrayIndexKey: сценарий фиксирован и только раскрывается по порядку.
-                key={index}
+                key={`${scenario.id}-${index}`}
                 className={
                   turn.role === "manager"
                     ? "ml-auto max-w-[92%] sm:max-w-[80%]"
@@ -200,11 +205,11 @@ export function DemoTour() {
                       <AvatarFallback>
                         {turn.role === "manager"
                           ? "ВЫ"
-                          : EMPLOYEE.name.slice(0, 1).toUpperCase()}
+                          : scenario.employee.initials}
                       </AvatarFallback>
                     </Avatar>
                     <p className="text-muted-foreground text-xs">
-                      {turn.role === "manager" ? "Вы" : EMPLOYEE.name}
+                      {turn.role === "manager" ? "Вы" : scenario.employee.name}
                     </p>
                   </div>
                   <p className="text-sm">{turn.text}</p>
@@ -258,9 +263,7 @@ export function DemoTour() {
 
             <Select
               value={speedId}
-              onValueChange={(value) =>
-                setSpeedId(value as (typeof SPEED_OPTIONS)[number]["id"])
-              }
+              onValueChange={(value) => setSpeedId(value as SpeedId)}
             >
               <SelectTrigger
                 aria-label="Скорость воспроизведения"
@@ -280,7 +283,7 @@ export function DemoTour() {
             </Select>
 
             <span className="text-muted-foreground text-xs">
-              {visibleCount} из {SCRIPT.length} реплик
+              {visibleCount} из {script.length} реплик
             </span>
 
             {!finished && visibleCount > 0 ? (
@@ -288,7 +291,7 @@ export function DemoTour() {
                 variant="ghost"
                 size="sm"
                 className="ml-auto"
-                onClick={() => setVisibleCount(SCRIPT.length)}
+                onClick={() => setVisibleCount(script.length)}
               >
                 Пропустить
                 <IconArrowRight data-icon="inline-end" />
@@ -304,9 +307,66 @@ export function DemoTour() {
             Так выглядит разбор после разговора — с тем же процентом и
             чек-листом, что увидит реальный игрок:
           </p>
-          <EvaluationCard evaluation={DEMO_EVALUATION} />
+          <EvaluationCard evaluation={scenario.evaluation} />
         </div>
       ) : null}
+    </div>
+  );
+}
+
+/**
+ * Двухуровневый переключатель: верхний ряд — группы (правильно / ошибки /
+ * раунд 3), нижний ряд — сценарии внутри выбранной группы. Внутри `mistakes`
+ * получается 4 таба в одном ряду, поэтому список делаем прокручиваемым по
+ * горизонтали на узких экранах.
+ */
+function ScenarioPicker({
+  activeGroup,
+  activeScenarioId,
+  onGroupChange,
+  onScenarioChange,
+}: {
+  activeGroup: DemoScenarioGroup;
+  activeScenarioId: string;
+  onGroupChange: (next: string) => void;
+  onScenarioChange: (next: string) => void;
+}) {
+  const groupDescription = DEMO_SCENARIO_GROUPS.find(
+    (group) => group.id === activeGroup,
+  )?.description;
+
+  return (
+    <div className="flex flex-col gap-3">
+      <Tabs value={activeGroup} onValueChange={onGroupChange}>
+        <TabsList className="w-full sm:w-fit">
+          {DEMO_SCENARIO_GROUPS.map((group) => (
+            <TabsTrigger key={group.id} value={group.id}>
+              {group.title}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+        {DEMO_SCENARIO_GROUPS.map((group) => (
+          <TabsContent key={group.id} value={group.id} className="mt-0" />
+        ))}
+      </Tabs>
+
+      {groupDescription ? (
+        <p className="text-muted-foreground text-sm">{groupDescription}</p>
+      ) : null}
+
+      <Tabs value={activeScenarioId} onValueChange={onScenarioChange}>
+        <div className="overflow-x-auto">
+          <TabsList className="w-max">
+            {DEMO_SCENARIOS.filter((item) => item.group === activeGroup).map(
+              (item) => (
+                <TabsTrigger key={item.id} value={item.id}>
+                  {item.tabLabel}
+                </TabsTrigger>
+              ),
+            )}
+          </TabsList>
+        </div>
+      </Tabs>
     </div>
   );
 }
