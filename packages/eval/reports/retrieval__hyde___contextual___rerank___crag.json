@@ -1,0 +1,5461 @@
+{
+  "startedAt": "2026-08-18T18:32:01.386Z",
+  "finishedAt": "2026-08-18T19:10:11.703Z",
+  "providerId": "ai-sdk:openai-compatible",
+  "model": "gpt-5.5",
+  "epochs": 1,
+  "runsPerFixture": 3,
+  "fixtures": 12,
+  "expertLabelledFixtures": 0,
+  "referenceVariantId": "hybrid-rag",
+  "variants": [
+    {
+      "variantId": "hybrid-rag",
+      "items": 36,
+      "scoreMae": 15.417,
+      "scoreStdDev": 3.83,
+      "expectedStyleAccuracy": 1,
+      "actualStyleAccuracy": 0.861,
+      "styleKappa": 0.811,
+      "criteriaF1": 0.903,
+      "personaAdherence": 1,
+      "personaDriftRate": 0,
+      "personaDriftSlope": 0,
+      "silenceAccuracy": 1,
+      "avgLatencyMs": 48847,
+      "totalInputTokens": 1179939,
+      "totalOutputTokens": 48852,
+      "totalCostUsd": 0,
+      "avgCostUsd": 0,
+      "modelMix": {
+        "gpt-5.5": 36
+      }
+    },
+    {
+      "variantId": "hyde-rag",
+      "items": 36,
+      "scoreMae": 15.25,
+      "scoreStdDev": 2.47,
+      "expectedStyleAccuracy": 1,
+      "actualStyleAccuracy": 0.806,
+      "styleKappa": 0.736,
+      "criteriaF1": 0.901,
+      "personaAdherence": 1,
+      "personaDriftRate": 0,
+      "personaDriftSlope": 0,
+      "silenceAccuracy": 1,
+      "avgLatencyMs": 47223,
+      "totalInputTokens": 1872953,
+      "totalOutputTokens": 59983,
+      "totalCostUsd": 0,
+      "avgCostUsd": 0,
+      "modelMix": {
+        "gpt-5.5": 36
+      }
+    },
+    {
+      "variantId": "contextual-rag",
+      "items": 36,
+      "scoreMae": 16.056,
+      "scoreStdDev": 2.61,
+      "expectedStyleAccuracy": 1,
+      "actualStyleAccuracy": 0.778,
+      "styleKappa": 0.698,
+      "criteriaF1": 0.915,
+      "personaAdherence": 1,
+      "personaDriftRate": 0,
+      "personaDriftSlope": 0,
+      "silenceAccuracy": 1,
+      "avgLatencyMs": 32814,
+      "totalInputTokens": 1420555,
+      "totalOutputTokens": 49607,
+      "totalCostUsd": 0,
+      "avgCostUsd": 0,
+      "modelMix": {
+        "gpt-5.5": 36
+      }
+    },
+    {
+      "variantId": "rerank-rag",
+      "items": 31,
+      "scoreMae": 16.065,
+      "scoreStdDev": 3.39,
+      "expectedStyleAccuracy": 1,
+      "actualStyleAccuracy": 0.871,
+      "styleKappa": 0.824,
+      "criteriaF1": 0.898,
+      "personaAdherence": 1,
+      "personaDriftRate": 0,
+      "personaDriftSlope": 0,
+      "silenceAccuracy": 1,
+      "avgLatencyMs": 56063,
+      "totalInputTokens": 1746847,
+      "totalOutputTokens": 74319,
+      "totalCostUsd": 0,
+      "avgCostUsd": 0,
+      "modelMix": {
+        "gpt-5.5": 31
+      }
+    },
+    {
+      "variantId": "corrective-rag",
+      "items": 0,
+      "scoreMae": 0,
+      "scoreStdDev": 0,
+      "expectedStyleAccuracy": 0,
+      "actualStyleAccuracy": 0,
+      "styleKappa": 0,
+      "criteriaF1": 0,
+      "personaAdherence": 0,
+      "personaDriftRate": 0,
+      "personaDriftSlope": 0,
+      "silenceAccuracy": 0,
+      "avgLatencyMs": 0,
+      "totalInputTokens": 0,
+      "totalOutputTokens": 0,
+      "totalCostUsd": 0,
+      "avgCostUsd": 0,
+      "modelMix": {}
+    }
+  ],
+  "comparisons": [
+    {
+      "variantId": "hyde-rag",
+      "metrics": [
+        {
+          "metric": "scoreMae",
+          "label": "MAE к эксперту",
+          "direction": "lower",
+          "delta": 0.167,
+          "ciLow": -3.25,
+          "ciHigh": 4.833,
+          "pValue": 0.9294,
+          "pairs": 12,
+          "significant": false
+        },
+        {
+          "metric": "actualStyleAccuracy",
+          "label": "Точность стиля",
+          "direction": "higher",
+          "delta": -0.056,
+          "ciLow": -0.194,
+          "ciHigh": 0.056,
+          "pValue": 0.5019,
+          "pairs": 12,
+          "significant": false
+        },
+        {
+          "metric": "criteriaF1",
+          "label": "F1 по критериям",
+          "direction": "higher",
+          "delta": -0.002,
+          "ciLow": -0.029,
+          "ciHigh": 0.025,
+          "pValue": 0.9045,
+          "pairs": 12,
+          "significant": false
+        },
+        {
+          "metric": "personaAdherence",
+          "label": "Удержание роли",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 12,
+          "significant": false
+        },
+        {
+          "metric": "personaDriftRate",
+          "label": "Дрейф персоны",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 12,
+          "significant": false
+        },
+        {
+          "metric": "costUsd",
+          "label": "Стоимость диалога",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 12,
+          "significant": false
+        }
+      ]
+    },
+    {
+      "variantId": "contextual-rag",
+      "metrics": [
+        {
+          "metric": "scoreMae",
+          "label": "MAE к эксперту",
+          "direction": "lower",
+          "delta": -0.639,
+          "ciLow": -4.417,
+          "ciHigh": 4.333,
+          "pValue": 0.7992,
+          "pairs": 12,
+          "significant": false
+        },
+        {
+          "metric": "actualStyleAccuracy",
+          "label": "Точность стиля",
+          "direction": "higher",
+          "delta": -0.083,
+          "ciLow": -0.222,
+          "ciHigh": 0,
+          "pValue": 0.5068,
+          "pairs": 12,
+          "significant": false
+        },
+        {
+          "metric": "criteriaF1",
+          "label": "F1 по критериям",
+          "direction": "higher",
+          "delta": 0.012,
+          "ciLow": -0.019,
+          "ciHigh": 0.042,
+          "pValue": 0.4587,
+          "pairs": 12,
+          "significant": false
+        },
+        {
+          "metric": "personaAdherence",
+          "label": "Удержание роли",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 12,
+          "significant": false
+        },
+        {
+          "metric": "personaDriftRate",
+          "label": "Дрейф персоны",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 12,
+          "significant": false
+        },
+        {
+          "metric": "costUsd",
+          "label": "Стоимость диалога",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 12,
+          "significant": false
+        }
+      ]
+    },
+    {
+      "variantId": "rerank-rag",
+      "metrics": [
+        {
+          "metric": "scoreMae",
+          "label": "MAE к эксперту",
+          "direction": "lower",
+          "delta": -1.273,
+          "ciLow": -4.909,
+          "ciHigh": 3.091,
+          "pValue": 0.5862,
+          "pairs": 11,
+          "significant": false
+        },
+        {
+          "metric": "actualStyleAccuracy",
+          "label": "Точность стиля",
+          "direction": "higher",
+          "delta": -0.03,
+          "ciLow": -0.121,
+          "ciHigh": 0.061,
+          "pValue": 1,
+          "pairs": 11,
+          "significant": false
+        },
+        {
+          "metric": "criteriaF1",
+          "label": "F1 по критериям",
+          "direction": "higher",
+          "delta": 0.004,
+          "ciLow": -0.035,
+          "ciHigh": 0.044,
+          "pValue": 0.8822,
+          "pairs": 11,
+          "significant": false
+        },
+        {
+          "metric": "personaAdherence",
+          "label": "Удержание роли",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 11,
+          "significant": false
+        },
+        {
+          "metric": "personaDriftRate",
+          "label": "Дрейф персоны",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 11,
+          "significant": false
+        },
+        {
+          "metric": "costUsd",
+          "label": "Стоимость диалога",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 11,
+          "significant": false
+        }
+      ]
+    },
+    {
+      "variantId": "corrective-rag",
+      "metrics": [
+        {
+          "metric": "scoreMae",
+          "label": "MAE к эксперту",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "actualStyleAccuracy",
+          "label": "Точность стиля",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "criteriaF1",
+          "label": "F1 по критериям",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "personaAdherence",
+          "label": "Удержание роли",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "personaDriftRate",
+          "label": "Дрейф персоны",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "costUsd",
+          "label": "Стоимость диалога",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        }
+      ]
+    }
+  ],
+  "failures": [
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "rerank-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.002498, need: ＄0.129094 (request id: 202608181908523494787038268d9d6lu2ZIL49) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "rerank-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.002498, need: ＄0.128670 (request id: 202608181908538629195058268d9d6MHrLEXHo) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "rerank-rag",
+      "message": "gpt-5.5 не вернула валидный объект для evaluation.criteria за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.063538, need: ＄0.127290 (request id: 202608181908553504054648268d9d6Y9yytvye) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "rerank-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.046374, need: ＄0.130826 (request id: 202608181909167920406198268d9d633P2yzzx) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "rerank-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.078002, need: ＄0.129100 (request id: 202608181909272232231358268d9d6uEiAhFpY) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.078002, need: ＄0.127300 (request id: 202608181909282487813658268d9d6WIvEfcVJ) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.078002, need: ＄0.127300 (request id: 202608181909283146781738268d9d6MbhgsYoL) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.078002, need: ＄0.127300 (request id: 202608181909283654876208268d9d61LS5MnSV) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.078002, need: ＄0.127300 (request id: 202608181909294223887198268d9d641CXXeic) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.078002, need: ＄0.127300 (request id: 202608181909295886319328268d9d6POhOtfsx) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.078002, need: ＄0.127300 (request id: 202608181909299075682188268d9d6WvLdYxWD) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.078002, need: ＄0.127300 (request id: 202608181909305378647918268d9d6Tcf1izfi) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.078002, need: ＄0.127300 (request id: 202608181909308762379318268d9d6o34WDbfa) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.078002, need: ＄0.127300 (request id: 202608181909310143070898268d9d6tNJ1caNT) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.078002, need: ＄0.128610 (request id: 202608181909315450340908268d9d6T7hyiFox) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.034036, need: ＄0.128610 (request id: 202608181909369175366518268d9d6Q6OflS73) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.022996, need: ＄0.128610 (request id: 202608181909386557912058268d9d6WRw6kYxp) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.022996, need: ＄0.128980 (request id: 202608181909394276593988268d9d6iPjRLE3P) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.022996, need: ＄0.128610 (request id: 202608181909396269007558268d9d6jErpPeD3) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.115772, need: ＄0.128610 (request id: 202608181909407509831758268d9d6QVA45YaC) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.115772, need: ＄0.128610 (request id: 202608181909408653039128268d9d6sP63wtdA) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.100952, need: ＄0.128610 (request id: 202608181909421522582458268d9d6QmZyVy0d) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.083122, need: ＄0.128610 (request id: 202608181909422210489048268d9d61fjyvek6) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.083122, need: ＄0.128610 (request id: 202608181909437787046568268d9d6ab8QfqpR) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.083122, need: ＄0.128610 (request id: 202608181909460882418388268d9d6tcmDF8cU) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.074890, need: ＄0.127360 (request id: 202608181909472683444528268d9d6V005maNg) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.063552, need: ＄0.127360 (request id: 202608181909492166906528268d9d6VcidKz8E) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.063552, need: ＄0.128980 (request id: 202608181909493172635528268d9d6X0pQzbOc) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.049436, need: ＄0.127360 (request id: 202608181909506412927198268d9d6MqevvCd3) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.049436, need: ＄0.127360 (request id: 202608181909508144056168268d9d6n4yVDain) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.049436, need: ＄0.127360 (request id: 202608181909514202029548268d9d6PGoBhnRI) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.035930, need: ＄0.127360 (request id: 202608181909517098092518268d9d6sRT5yHE4) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.035930, need: ＄0.127360 (request id: 202608181909519361220758268d9d6GiY3SGkW) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.035930, need: ＄0.127360 (request id: 202608181909530495233518268d9d6rFnVRiXw) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.035930, need: ＄0.127360 (request id: 202608181909531516846308268d9d6IHzDmRM0) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.010360, need: ＄0.128670 (request id: 202608181909554801254378268d9d6G0qsajXx) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.010360, need: ＄0.128670 (request id: 202608181909581546961468268d9d6KiT352X2) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.122950, need: ＄0.128670 (request id: 202608181910001827064318268d9d6AfG9qFb9) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.122950, need: ＄0.128670 (request id: 202608181910010372062028268d9d6Gb01aPaP) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.102460, need: ＄0.128670 (request id: 202608181910043142804828268d9d68IaUq4GT) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "corrective-rag",
+      "message": "gpt-5.5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for gpt wallet, balance: ＄0.083434, need: ＄0.129210 (request id: 202608181910113844889028268d9d6Mz9zImcQ) If this error persists, try changing the model source/channel. Current source: \"GPT Team/Plus\"."
+    }
+  ],
+  "epochSummaries": [
+    {
+      "epoch": 1,
+      "variants": [
+        {
+          "variantId": "hybrid-rag",
+          "items": 36,
+          "scoreMae": 15.417,
+          "scoreStdDev": 3.83,
+          "expectedStyleAccuracy": 1,
+          "actualStyleAccuracy": 0.861,
+          "styleKappa": 0.811,
+          "criteriaF1": 0.903,
+          "personaAdherence": 1,
+          "personaDriftRate": 0,
+          "personaDriftSlope": 0,
+          "silenceAccuracy": 1,
+          "avgLatencyMs": 48847,
+          "totalInputTokens": 1179939,
+          "totalOutputTokens": 48852,
+          "totalCostUsd": 0,
+          "avgCostUsd": 0,
+          "modelMix": {
+            "gpt-5.5": 36
+          }
+        },
+        {
+          "variantId": "hyde-rag",
+          "items": 36,
+          "scoreMae": 15.25,
+          "scoreStdDev": 2.47,
+          "expectedStyleAccuracy": 1,
+          "actualStyleAccuracy": 0.806,
+          "styleKappa": 0.736,
+          "criteriaF1": 0.901,
+          "personaAdherence": 1,
+          "personaDriftRate": 0,
+          "personaDriftSlope": 0,
+          "silenceAccuracy": 1,
+          "avgLatencyMs": 47223,
+          "totalInputTokens": 1872953,
+          "totalOutputTokens": 59983,
+          "totalCostUsd": 0,
+          "avgCostUsd": 0,
+          "modelMix": {
+            "gpt-5.5": 36
+          }
+        },
+        {
+          "variantId": "contextual-rag",
+          "items": 36,
+          "scoreMae": 16.056,
+          "scoreStdDev": 2.61,
+          "expectedStyleAccuracy": 1,
+          "actualStyleAccuracy": 0.778,
+          "styleKappa": 0.698,
+          "criteriaF1": 0.915,
+          "personaAdherence": 1,
+          "personaDriftRate": 0,
+          "personaDriftSlope": 0,
+          "silenceAccuracy": 1,
+          "avgLatencyMs": 32814,
+          "totalInputTokens": 1420555,
+          "totalOutputTokens": 49607,
+          "totalCostUsd": 0,
+          "avgCostUsd": 0,
+          "modelMix": {
+            "gpt-5.5": 36
+          }
+        },
+        {
+          "variantId": "rerank-rag",
+          "items": 31,
+          "scoreMae": 16.065,
+          "scoreStdDev": 3.39,
+          "expectedStyleAccuracy": 1,
+          "actualStyleAccuracy": 0.871,
+          "styleKappa": 0.824,
+          "criteriaF1": 0.898,
+          "personaAdherence": 1,
+          "personaDriftRate": 0,
+          "personaDriftSlope": 0,
+          "silenceAccuracy": 1,
+          "avgLatencyMs": 56063,
+          "totalInputTokens": 1746847,
+          "totalOutputTokens": 74319,
+          "totalCostUsd": 0,
+          "avgCostUsd": 0,
+          "modelMix": {
+            "gpt-5.5": 31
+          }
+        },
+        {
+          "variantId": "corrective-rag",
+          "items": 0,
+          "scoreMae": 0,
+          "scoreStdDev": 0,
+          "expectedStyleAccuracy": 0,
+          "actualStyleAccuracy": 0,
+          "styleKappa": 0,
+          "criteriaF1": 0,
+          "personaAdherence": 0,
+          "personaDriftRate": 0,
+          "personaDriftSlope": 0,
+          "silenceAccuracy": 0,
+          "avgLatencyMs": 0,
+          "totalInputTokens": 0,
+          "totalOutputTokens": 0,
+          "totalCostUsd": 0,
+          "avgCostUsd": 0,
+          "modelMix": {}
+        }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 91,
+      "expertScore": 90,
+      "absError": 1,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 22627,
+      "inputTokens": 26445,
+      "outputTokens": 661,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 91,
+      "expertScore": 90,
+      "absError": 1,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 22900,
+      "inputTokens": 26438,
+      "outputTokens": 825,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 93,
+      "expertScore": 90,
+      "absError": 3,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 24679,
+      "inputTokens": 26453,
+      "outputTokens": 839,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 48,
+      "expertScore": 20,
+      "absError": 28,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 23039,
+      "inputTokens": 32209,
+      "outputTokens": 1034,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 55,
+      "expertScore": 20,
+      "absError": 35,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.5,
+        "recall": 1,
+        "f1": 0.6666666666666666
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 24395,
+      "inputTokens": 32187,
+      "outputTokens": 1096,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 60,
+      "expertScore": 40,
+      "absError": 20,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 44514,
+      "inputTokens": 32329,
+      "outputTokens": 1003,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 60,
+      "expertScore": 40,
+      "absError": 20,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 68929,
+      "inputTokens": 32214,
+      "outputTokens": 1161,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 57,
+      "expertScore": 20,
+      "absError": 37,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.5,
+        "recall": 1,
+        "f1": 0.6666666666666666
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 129706,
+      "inputTokens": 32345,
+      "outputTokens": 1800,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 78,
+      "expertScore": 40,
+      "absError": 38,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.5,
+        "recall": 1,
+        "f1": 0.6666666666666666
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 80052,
+      "inputTokens": 32377,
+      "outputTokens": 1922,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 53,
+      "expertScore": 28,
+      "absError": 25,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 0.75,
+        "recall": 1,
+        "f1": 0.8571428571428571
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 105039,
+      "inputTokens": 32908,
+      "outputTokens": 1677,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 49,
+      "expertScore": 28,
+      "absError": 21,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 124382,
+      "inputTokens": 32801,
+      "outputTokens": 1438,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 56,
+      "expertScore": 28,
+      "absError": 28,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "coaching",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.75,
+        "recall": 1,
+        "f1": 0.8571428571428571
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 209188,
+      "inputTokens": 32972,
+      "outputTokens": 1323,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 17,
+      "expertScore": 5,
+      "absError": 12,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 69778,
+      "inputTokens": 32951,
+      "outputTokens": 2172,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 13,
+      "expertScore": 5,
+      "absError": 8,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 67728,
+      "inputTokens": 32932,
+      "outputTokens": 1620,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 29,
+      "expertScore": 5,
+      "absError": 24,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 47179,
+      "inputTokens": 32927,
+      "outputTokens": 1240,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 18,
+      "expertScore": 5,
+      "absError": 13,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 53003,
+      "inputTokens": 32776,
+      "outputTokens": 1693,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 28,
+      "expertScore": 5,
+      "absError": 23,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 31965,
+      "inputTokens": 33022,
+      "outputTokens": 1148,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 30,
+      "expertScore": 5,
+      "absError": 25,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 24001,
+      "inputTokens": 33173,
+      "outputTokens": 1068,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 87,
+      "expertScore": 90,
+      "absError": 3,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 37529,
+      "inputTokens": 45457,
+      "outputTokens": 1441,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 89,
+      "expertScore": 90,
+      "absError": 1,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 33954,
+      "inputTokens": 45387,
+      "outputTokens": 1474,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 89,
+      "expertScore": 90,
+      "absError": 1,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 37151,
+      "inputTokens": 45351,
+      "outputTokens": 1420,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 45,
+      "expertScore": 34,
+      "absError": 11,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.75,
+        "f1": 0.8571428571428571
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 30043,
+      "inputTokens": 32475,
+      "outputTokens": 1467,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 43,
+      "expertScore": 34,
+      "absError": 9,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "coaching",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.75,
+        "f1": 0.8571428571428571
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 35336,
+      "inputTokens": 32502,
+      "outputTokens": 1669,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 62,
+      "expertScore": 34,
+      "absError": 28,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "coaching",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 35698,
+      "inputTokens": 32486,
+      "outputTokens": 1595,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 8,
+      "expertScore": 5,
+      "absError": 3,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 27656,
+      "inputTokens": 32312,
+      "outputTokens": 1241,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 9,
+      "expertScore": 5,
+      "absError": 4,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 27407,
+      "inputTokens": 32472,
+      "outputTokens": 1210,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 1,
+      "expertScore": 5,
+      "absError": 4,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.5,
+        "f1": 0.6666666666666666
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 27054,
+      "inputTokens": 32355,
+      "outputTokens": 1241,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 93,
+      "expertScore": 90,
+      "absError": 3,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 30472,
+      "inputTokens": 32518,
+      "outputTokens": 1203,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 91,
+      "expertScore": 90,
+      "absError": 1,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 25550,
+      "inputTokens": 32469,
+      "outputTokens": 1083,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 87,
+      "expertScore": 90,
+      "absError": 3,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.8,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 34227,
+      "inputTokens": 32485,
+      "outputTokens": 1420,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 46,
+      "expertScore": 15,
+      "absError": 31,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 0.8,
+        "recall": 1,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 37599,
+      "inputTokens": 33394,
+      "outputTokens": 1653,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 42,
+      "expertScore": 15,
+      "absError": 27,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 0.75,
+        "recall": 0.75,
+        "f1": 0.75
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 40011,
+      "inputTokens": 33427,
+      "outputTokens": 1705,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 44,
+      "expertScore": 15,
+      "absError": 29,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "coaching",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.8,
+        "recall": 1,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 40183,
+      "inputTokens": 33368,
+      "outputTokens": 1568,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 15,
+      "expertScore": 5,
+      "absError": 10,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 29042,
+      "inputTokens": 27402,
+      "outputTokens": 1272,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 17,
+      "expertScore": 5,
+      "absError": 12,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 26799,
+      "inputTokens": 27317,
+      "outputTokens": 1118,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 18,
+      "expertScore": 5,
+      "absError": 13,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 29683,
+      "inputTokens": 27303,
+      "outputTokens": 1352,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 93,
+      "expertScore": 90,
+      "absError": 3,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 25173,
+      "inputTokens": 40691,
+      "outputTokens": 974,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 93,
+      "expertScore": 90,
+      "absError": 3,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 26647,
+      "inputTokens": 40817,
+      "outputTokens": 889,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 93,
+      "expertScore": 90,
+      "absError": 3,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 29838,
+      "inputTokens": 40780,
+      "outputTokens": 959,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 32,
+      "expertScore": 20,
+      "absError": 12,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 36968,
+      "inputTokens": 51615,
+      "outputTokens": 1453,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 31,
+      "expertScore": 20,
+      "absError": 11,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 40488,
+      "inputTokens": 51404,
+      "outputTokens": 1629,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 32,
+      "expertScore": 20,
+      "absError": 12,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 36568,
+      "inputTokens": 51593,
+      "outputTokens": 1193,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 69,
+      "expertScore": 40,
+      "absError": 29,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.5,
+        "recall": 1,
+        "f1": 0.6666666666666666
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 39775,
+      "inputTokens": 51572,
+      "outputTokens": 1365,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 78,
+      "expertScore": 40,
+      "absError": 38,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.5,
+        "recall": 1,
+        "f1": 0.6666666666666666
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 46486,
+      "inputTokens": 51392,
+      "outputTokens": 1552,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 52,
+      "expertScore": 28,
+      "absError": 24,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 0.75,
+        "recall": 1,
+        "f1": 0.8571428571428571
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 39854,
+      "inputTokens": 52443,
+      "outputTokens": 1601,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 51,
+      "expertScore": 28,
+      "absError": 23,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 0.75,
+        "recall": 1,
+        "f1": 0.8571428571428571
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 40199,
+      "inputTokens": 52337,
+      "outputTokens": 1535,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 78,
+      "expertScore": 40,
+      "absError": 38,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.5,
+        "recall": 1,
+        "f1": 0.6666666666666666
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 101380,
+      "inputTokens": 51619,
+      "outputTokens": 1286,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 53,
+      "expertScore": 28,
+      "absError": 25,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 0.75,
+        "recall": 1,
+        "f1": 0.8571428571428571
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 40297,
+      "inputTokens": 52172,
+      "outputTokens": 1558,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 19,
+      "expertScore": 5,
+      "absError": 14,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 42894,
+      "inputTokens": 52085,
+      "outputTokens": 1519,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 21,
+      "expertScore": 5,
+      "absError": 16,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 37290,
+      "inputTokens": 51948,
+      "outputTokens": 1409,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 17,
+      "expertScore": 5,
+      "absError": 12,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 40915,
+      "inputTokens": 52239,
+      "outputTokens": 1645,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 29,
+      "expertScore": 5,
+      "absError": 24,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 38192,
+      "inputTokens": 52193,
+      "outputTokens": 1328,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 30,
+      "expertScore": 5,
+      "absError": 25,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 37525,
+      "inputTokens": 52043,
+      "outputTokens": 1528,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 28,
+      "expertScore": 5,
+      "absError": 23,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 48776,
+      "inputTokens": 52108,
+      "outputTokens": 1348,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 88,
+      "expertScore": 90,
+      "absError": 2,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 55018,
+      "inputTokens": 74167,
+      "outputTokens": 2093,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 88,
+      "expertScore": 90,
+      "absError": 2,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 52909,
+      "inputTokens": 74293,
+      "outputTokens": 2121,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 65,
+      "expertScore": 34,
+      "absError": 31,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 43462,
+      "inputTokens": 52001,
+      "outputTokens": 1735,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 45,
+      "expertScore": 34,
+      "absError": 11,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.75,
+        "f1": 0.8571428571428571
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 49815,
+      "inputTokens": 51909,
+      "outputTokens": 1903,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 87,
+      "expertScore": 90,
+      "absError": 3,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 77908,
+      "inputTokens": 74219,
+      "outputTokens": 2029,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 64,
+      "expertScore": 34,
+      "absError": 30,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 40334,
+      "inputTokens": 51948,
+      "outputTokens": 1671,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 8,
+      "expertScore": 5,
+      "absError": 3,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 43199,
+      "inputTokens": 52007,
+      "outputTokens": 1661,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 6,
+      "expertScore": 5,
+      "absError": 1,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 47825,
+      "inputTokens": 52030,
+      "outputTokens": 1912,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 0,
+      "expertScore": 5,
+      "absError": 5,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.5,
+        "f1": 0.6666666666666666
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 50966,
+      "inputTokens": 51634,
+      "outputTokens": 2193,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 92,
+      "expertScore": 90,
+      "absError": 2,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 47414,
+      "inputTokens": 51757,
+      "outputTokens": 1839,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 91,
+      "expertScore": 90,
+      "absError": 1,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 52226,
+      "inputTokens": 52011,
+      "outputTokens": 1899,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 91,
+      "expertScore": 90,
+      "absError": 1,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 44553,
+      "inputTokens": 51474,
+      "outputTokens": 1806,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 46,
+      "expertScore": 15,
+      "absError": 31,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 0.8,
+        "recall": 1,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 57141,
+      "inputTokens": 52391,
+      "outputTokens": 2412,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 41,
+      "expertScore": 15,
+      "absError": 26,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "coaching",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.75,
+        "recall": 0.75,
+        "f1": 0.75
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 53036,
+      "inputTokens": 52311,
+      "outputTokens": 2175,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 45,
+      "expertScore": 15,
+      "absError": 30,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "coaching",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.8,
+        "recall": 1,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 79009,
+      "inputTokens": 52817,
+      "outputTokens": 2148,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 17,
+      "expertScore": 5,
+      "absError": 12,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 44534,
+      "inputTokens": 41610,
+      "outputTokens": 1772,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 17,
+      "expertScore": 5,
+      "absError": 12,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 60239,
+      "inputTokens": 41763,
+      "outputTokens": 1742,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 16,
+      "expertScore": 5,
+      "absError": 11,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 51192,
+      "inputTokens": 41560,
+      "outputTokens": 2101,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 93,
+      "expertScore": 90,
+      "absError": 3,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 68489,
+      "inputTokens": 26666,
+      "outputTokens": 690,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 91,
+      "expertScore": 90,
+      "absError": 1,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 68686,
+      "inputTokens": 260157,
+      "outputTokens": 4989,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 93,
+      "expertScore": 90,
+      "absError": 3,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 69256,
+      "inputTokens": 26688,
+      "outputTokens": 617,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 31,
+      "expertScore": 20,
+      "absError": 11,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 22314,
+      "inputTokens": 32412,
+      "outputTokens": 978,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 32,
+      "expertScore": 20,
+      "absError": 12,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 23810,
+      "inputTokens": 32496,
+      "outputTokens": 1027,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 31,
+      "expertScore": 20,
+      "absError": 11,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 26275,
+      "inputTokens": 32490,
+      "outputTokens": 1124,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 78,
+      "expertScore": 40,
+      "absError": 38,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.5,
+        "recall": 1,
+        "f1": 0.6666666666666666
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 20577,
+      "inputTokens": 32508,
+      "outputTokens": 953,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 78,
+      "expertScore": 40,
+      "absError": 38,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.5,
+        "recall": 1,
+        "f1": 0.6666666666666666
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 26302,
+      "inputTokens": 32537,
+      "outputTokens": 994,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 78,
+      "expertScore": 40,
+      "absError": 38,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.5,
+        "recall": 1,
+        "f1": 0.6666666666666666
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 25301,
+      "inputTokens": 32589,
+      "outputTokens": 1023,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 55,
+      "expertScore": 28,
+      "absError": 27,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "coaching",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.75,
+        "recall": 1,
+        "f1": 0.8571428571428571
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 30237,
+      "inputTokens": 33148,
+      "outputTokens": 1457,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 53,
+      "expertScore": 28,
+      "absError": 25,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 0.75,
+        "recall": 1,
+        "f1": 0.8571428571428571
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 32292,
+      "inputTokens": 33033,
+      "outputTokens": 1552,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 50,
+      "expertScore": 28,
+      "absError": 22,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 36140,
+      "inputTokens": 33182,
+      "outputTokens": 1726,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 18,
+      "expertScore": 5,
+      "absError": 13,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 26258,
+      "inputTokens": 33285,
+      "outputTokens": 1201,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 19,
+      "expertScore": 5,
+      "absError": 14,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 33667,
+      "inputTokens": 33140,
+      "outputTokens": 1602,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 18,
+      "expertScore": 5,
+      "absError": 13,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 27673,
+      "inputTokens": 33272,
+      "outputTokens": 1136,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 28,
+      "expertScore": 5,
+      "absError": 23,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 26585,
+      "inputTokens": 33285,
+      "outputTokens": 1171,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 28,
+      "expertScore": 5,
+      "absError": 23,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 27206,
+      "inputTokens": 33268,
+      "outputTokens": 1132,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 29,
+      "expertScore": 5,
+      "absError": 24,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 35923,
+      "inputTokens": 33296,
+      "outputTokens": 1341,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 89,
+      "expertScore": 90,
+      "absError": 1,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 33192,
+      "inputTokens": 45586,
+      "outputTokens": 1240,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 88,
+      "expertScore": 90,
+      "absError": 2,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 33050,
+      "inputTokens": 45389,
+      "outputTokens": 1300,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 87,
+      "expertScore": 90,
+      "absError": 3,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 34002,
+      "inputTokens": 45503,
+      "outputTokens": 1569,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 65,
+      "expertScore": 34,
+      "absError": 31,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 27377,
+      "inputTokens": 32735,
+      "outputTokens": 1194,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 64,
+      "expertScore": 34,
+      "absError": 30,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 32327,
+      "inputTokens": 32784,
+      "outputTokens": 1501,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 45,
+      "expertScore": 34,
+      "absError": 11,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.75,
+        "f1": 0.8571428571428571
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 30573,
+      "inputTokens": 32787,
+      "outputTokens": 1332,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 7,
+      "expertScore": 5,
+      "absError": 2,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 28574,
+      "inputTokens": 32604,
+      "outputTokens": 1367,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 7,
+      "expertScore": 5,
+      "absError": 2,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 39559,
+      "inputTokens": 32612,
+      "outputTokens": 1647,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 6,
+      "expertScore": 5,
+      "absError": 1,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 34115,
+      "inputTokens": 32527,
+      "outputTokens": 1705,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 73,
+      "expertScore": 90,
+      "absError": 17,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.8,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 31330,
+      "inputTokens": 32656,
+      "outputTokens": 1536,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 93,
+      "expertScore": 90,
+      "absError": 3,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 27603,
+      "inputTokens": 32730,
+      "outputTokens": 1248,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 91,
+      "expertScore": 90,
+      "absError": 1,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 32087,
+      "inputTokens": 32691,
+      "outputTokens": 1236,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 47,
+      "expertScore": 15,
+      "absError": 32,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 0.8,
+        "recall": 1,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 29046,
+      "inputTokens": 33383,
+      "outputTokens": 1348,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 46,
+      "expertScore": 15,
+      "absError": 31,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 0.8,
+        "recall": 1,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 33554,
+      "inputTokens": 33472,
+      "outputTokens": 1631,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 17,
+      "expertScore": 5,
+      "absError": 12,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 23140,
+      "inputTokens": 27351,
+      "outputTokens": 1148,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 47,
+      "expertScore": 15,
+      "absError": 32,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 0.8,
+        "recall": 1,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 28333,
+      "inputTokens": 33444,
+      "outputTokens": 1341,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 20,
+      "expertScore": 5,
+      "absError": 15,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 27738,
+      "inputTokens": 27407,
+      "outputTokens": 1279,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 18,
+      "expertScore": 5,
+      "absError": 13,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 28728,
+      "inputTokens": 27442,
+      "outputTokens": 1272,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 93,
+      "expertScore": 90,
+      "absError": 3,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 30939,
+      "inputTokens": 43363,
+      "outputTokens": 1172,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 93,
+      "expertScore": 90,
+      "absError": 3,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 31255,
+      "inputTokens": 43419,
+      "outputTokens": 1241,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 93,
+      "expertScore": 90,
+      "absError": 3,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 36321,
+      "inputTokens": 43380,
+      "outputTokens": 1498,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 24,
+      "expertScore": 20,
+      "absError": 4,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 41991,
+      "inputTokens": 54690,
+      "outputTokens": 1676,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 54,
+      "expertScore": 20,
+      "absError": 34,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.5,
+        "recall": 1,
+        "f1": 0.6666666666666666
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 43250,
+      "inputTokens": 54617,
+      "outputTokens": 1841,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 32,
+      "expertScore": 20,
+      "absError": 12,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 43503,
+      "inputTokens": 54630,
+      "outputTokens": 1543,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 78,
+      "expertScore": 40,
+      "absError": 38,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.5,
+        "recall": 1,
+        "f1": 0.6666666666666666
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 50189,
+      "inputTokens": 55066,
+      "outputTokens": 1791,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 78,
+      "expertScore": 40,
+      "absError": 38,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.5,
+        "recall": 1,
+        "f1": 0.6666666666666666
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 55365,
+      "inputTokens": 55068,
+      "outputTokens": 2192,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 78,
+      "expertScore": 40,
+      "absError": 38,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.5,
+        "recall": 1,
+        "f1": 0.6666666666666666
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 61173,
+      "inputTokens": 54986,
+      "outputTokens": 2444,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 54,
+      "expertScore": 28,
+      "absError": 26,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 0.75,
+        "recall": 1,
+        "f1": 0.8571428571428571
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 47654,
+      "inputTokens": 55438,
+      "outputTokens": 1940,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 55,
+      "expertScore": 28,
+      "absError": 27,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "coaching",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.75,
+        "recall": 1,
+        "f1": 0.8571428571428571
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 51992,
+      "inputTokens": 55465,
+      "outputTokens": 2098,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 54,
+      "expertScore": 28,
+      "absError": 26,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "coaching",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.75,
+        "recall": 1,
+        "f1": 0.8571428571428571
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 56490,
+      "inputTokens": 55487,
+      "outputTokens": 2392,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 18,
+      "expertScore": 5,
+      "absError": 13,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 49909,
+      "inputTokens": 55385,
+      "outputTokens": 2103,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 19,
+      "expertScore": 5,
+      "absError": 14,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 47426,
+      "inputTokens": 55332,
+      "outputTokens": 1831,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 18,
+      "expertScore": 5,
+      "absError": 13,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 45459,
+      "inputTokens": 55329,
+      "outputTokens": 1916,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 29,
+      "expertScore": 5,
+      "absError": 24,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 46019,
+      "inputTokens": 55204,
+      "outputTokens": 1916,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 28,
+      "expertScore": 5,
+      "absError": 23,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 48333,
+      "inputTokens": 55053,
+      "outputTokens": 2115,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 28,
+      "expertScore": 5,
+      "absError": 23,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 47678,
+      "inputTokens": 55131,
+      "outputTokens": 1919,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 88,
+      "expertScore": 90,
+      "absError": 2,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 78556,
+      "inputTokens": 78822,
+      "outputTokens": 3300,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 86,
+      "expertScore": 90,
+      "absError": 4,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 78454,
+      "inputTokens": 79127,
+      "outputTokens": 3412,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 87,
+      "expertScore": 90,
+      "absError": 3,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 75989,
+      "inputTokens": 78830,
+      "outputTokens": 3212,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 43,
+      "expertScore": 34,
+      "absError": 9,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "coaching",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.75,
+        "f1": 0.8571428571428571
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 58379,
+      "inputTokens": 55206,
+      "outputTokens": 2611,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 67,
+      "expertScore": 34,
+      "absError": 33,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 75746,
+      "inputTokens": 55423,
+      "outputTokens": 3543,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 65,
+      "expertScore": 34,
+      "absError": 31,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 72832,
+      "inputTokens": 55463,
+      "outputTokens": 3256,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 8,
+      "expertScore": 5,
+      "absError": 3,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 72305,
+      "inputTokens": 55055,
+      "outputTokens": 3376,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 6,
+      "expertScore": 5,
+      "absError": 1,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 60776,
+      "inputTokens": 54903,
+      "outputTokens": 2751,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 6,
+      "expertScore": 5,
+      "absError": 1,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 69101,
+      "inputTokens": 54949,
+      "outputTokens": 3178,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 85,
+      "expertScore": 90,
+      "absError": 5,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.8,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 61200,
+      "inputTokens": 55206,
+      "outputTokens": 2823,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 83,
+      "expertScore": 90,
+      "absError": 7,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.8,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 61685,
+      "inputTokens": 55408,
+      "outputTokens": 2848,
+      "costUsd": 0,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 85,
+      "expertScore": 90,
+      "absError": 5,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.8,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 68399,
+      "inputTokens": 55467,
+      "outputTokens": 3196,
+      "costUsd": 0,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 47,
+      "expertScore": 15,
+      "absError": 32,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 0.8,
+        "recall": 1,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 69571,
+      "inputTokens": 55945,
+      "outputTokens": 3185,
+      "costUsd": 0,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    }
+  ],
+  "unpricedModels": [
+    "gpt-5.5"
+  ],
+  "evaluationStrategyMismatch": []
+}
