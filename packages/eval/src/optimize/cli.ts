@@ -11,7 +11,10 @@ import {
 } from "@acme/ai";
 
 import { FIXTURES } from "../fixtures";
+import { flushTelemetry, initTelemetry } from "../telemetry";
 import { type GepaSlot, optimizePrompt } from "./gepa";
+
+initTelemetry();
 
 const SLOTS: Record<string, GepaSlot> = {
   persona: {
@@ -139,7 +142,9 @@ async function main(): Promise<void> {
   }
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+main()
+  .catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  })
+  .finally(flushTelemetry);

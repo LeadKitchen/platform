@@ -55,6 +55,9 @@ export default async function createNextConfig(): Promise<NextConfig> {
       "@t3-oss/env-nextjs",
       "@t3-oss/env-core",
     ],
+    // Laminar's SDK ships native gRPC bindings; keep it out of the bundler.
+    // @see https://laminar.sh/docs/tracing/integrations/overview
+    serverExternalPackages: ["@lmnr-ai/lmnr"],
 
     async headers() {
       return [{ source: "/:path*", headers: securityHeaders }];

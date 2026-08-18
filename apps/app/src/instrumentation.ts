@@ -6,9 +6,20 @@
  * `OTEL_EXPORTER_OTLP_ENDPOINT` at any OTLP-compatible collector.
  *
  * @see https://nextjs.org/docs/app/guides/open-telemetry
+ *
+ * Laminar is initialized separately (dual pipeline) so LLM/agent traces from
+ * `@acme/ai` show up in the Laminar UI without interfering with the general
+ * `@vercel/otel` pipeline above.
+ * @see https://laminar.sh/docs/tracing/integrations/overview
  */
 import { registerOTel } from "@vercel/otel";
 
-export function register() {
+export async function register() {
   registerOTel({ serviceName: "acme-app" });
+
+  if (process.env.NEXT_RUNTIME === "nodejs") {
+    const { Laminar, registerAiSdkTelemetry } = await import("@lmnr-ai/lmnr");
+    Laminar.initialize({ projectApiKey: process.env.LMNR_PROJECT_API_KEY });
+    registerAiSdkTelemetry();
+  }
 }

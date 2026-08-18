@@ -9,6 +9,7 @@ import {
   GameProductEvent,
 } from "@acme/db";
 import { detectCriteria, detectToxicity, resolveExpectation } from "@acme/game";
+import { Laminar, observe } from "@lmnr-ai/lmnr";
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
 import {
@@ -160,11 +161,23 @@ export const say = protectedProcedure
 
     let turn: Awaited<ReturnType<typeof pipeline.respond>>;
     try {
-      turn = await pipeline.respond({
-        dialog: loaded.context,
-        utterance: input.text,
-        signal,
-      });
+      turn = await observe(
+        {
+          name: "game.dialog.say",
+          userId: context.session.user.id,
+          sessionId: input.dialogId,
+          metadata: { variantId: loaded.record.variantId },
+        },
+        async () => {
+          Laminar.setTraceUserId(context.session.user.id);
+          Laminar.setTraceSessionId(input.dialogId);
+          return pipeline.respond({
+            dialog: loaded.context,
+            utterance: input.text,
+            signal,
+          });
+        },
+      );
     } catch (cause) {
       if (signal?.aborted) {
         await appendEvent(context.db, input.dialogId, "error", {
@@ -263,7 +276,19 @@ export const finish = protectedProcedure
     const engine = await loadEngine(context.db);
     const pipeline = engine.pipeline(loaded.record.variantId);
 
-    const result = await pipeline.evaluate(loaded.context);
+    const result = await observe(
+      {
+        name: "game.dialog.finish",
+        userId: context.session.user.id,
+        sessionId: input.dialogId,
+        metadata: { variantId: loaded.record.variantId },
+      },
+      async () => {
+        Laminar.setTraceUserId(context.session.user.id);
+        Laminar.setTraceSessionId(input.dialogId);
+        return pipeline.evaluate(loaded.context);
+      },
+    );
 
     // Sum what the conversation itself cost, then add the scoring call.
     const events = await context.db

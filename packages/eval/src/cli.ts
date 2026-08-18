@@ -9,6 +9,9 @@ import { FIXTURES } from "./fixtures";
 import { renderMarkdownReport } from "./report";
 import { runEvaluation } from "./runner";
 import { createSimulatedProvider } from "./simulated-provider";
+import { flushTelemetry, initTelemetry } from "./telemetry";
+
+initTelemetry();
 
 type ProviderKind = "simulated" | "anthropic" | "openai" | "env";
 
@@ -185,7 +188,9 @@ async function main(): Promise<void> {
   }
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+main()
+  .catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  })
+  .finally(flushTelemetry);

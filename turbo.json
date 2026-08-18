@@ -98,7 +98,8 @@
     "INNGEST_EVENT_KEY",
     "INNGEST_SIGNING_KEY",
     "INNGEST_BASE_URL",
-    "HATCHET_CLIENT_TOKEN"
+    "HATCHET_CLIENT_TOKEN",
+    "LMNR_PROJECT_API_KEY"
   ],
   "globalPassThroughEnv": [
     "NODE_ENV",

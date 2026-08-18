@@ -3,6 +3,9 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 
 import { renderScaleReport, runScaleSweep } from "./scale";
+import { flushTelemetry, initTelemetry } from "./telemetry";
+
+initTelemetry();
 
 async function main(): Promise<void> {
   const argv = process.argv.slice(2);
@@ -40,7 +43,9 @@ async function main(): Promise<void> {
   }
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+main()
+  .catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  })
+  .finally(flushTelemetry);
