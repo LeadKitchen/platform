@@ -27,6 +27,7 @@
     "@acme/ai": "workspace:*",
     "@acme/db": "workspace:*",
     "@acme/game": "workspace:*",
+    "@ax-llm/ax": "23.0.16",
     "@lmnr-ai/lmnr": "^0.8.43",
     "zod": "4.4.3"
   },

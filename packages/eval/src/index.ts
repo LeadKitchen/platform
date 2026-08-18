@@ -13,9 +13,31 @@ export {
   summarize,
   type VariantSummary,
 } from "./metrics";
+export {
+  AX_JUDGE_SLOTS,
+  type AxFewShotOptions,
+  type AxFewShotResult,
+  type AxJudgeSlot,
+  type AxJudgeSlotName,
+  bootstrapJudgePrompt,
+} from "./optimize/ax-few-shot";
+export {
+  type BuildJudgeCorpusOptions,
+  buildJudgeCorpus,
+  defaultCorpusPath,
+  type JudgeSample,
+} from "./optimize/judge-corpus";
+export {
+  mean,
+  objective,
+  type PromptSlotParam,
+  type ScoreCandidateOptions,
+  scoreCandidate,
+} from "./optimize/objective";
 export { renderMarkdownReport } from "./report";
 export {
   buildComparisons,
+  buildDialog,
   type MetricComparison,
   type RunOptions,
   type RunResult,

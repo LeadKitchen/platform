@@ -2,8 +2,11 @@ import type { LlmProvider, VariantConfig } from "@acme/ai";
 import { z } from "zod";
 
 import type { EvalFixture } from "../fixtures";
-import type { ItemResult } from "../metrics";
-import { runEvaluation } from "../runner";
+import {
+  mean,
+  type PromptSlotParam,
+  scoreCandidate as scoreSlotCandidate,
+} from "./objective";
 
 /**
  * Reflective prompt evolution (GEPA-style).
@@ -28,7 +31,7 @@ import { runEvaluation } from "../runner";
 
 export interface GepaSlot {
   /** Which variant parameter this optimiser writes to. */
-  param: "roleRules" | "styleJudgeSystem" | "criteriaJudgeSystem";
+  param: PromptSlotParam;
   /** Human-readable description of the prompt's job, used in reflection. */
   role: string;
   /** Starting text. */
@@ -95,48 +98,19 @@ function mulberry32(seed: number): () => number {
   };
 }
 
-/**
- * Objective the optimiser maximises, per scenario.
- *
- * Combines the two things a good arm has to do at once — agree with the expert
- * and keep the character in role — so the optimiser cannot buy accuracy by
- * turning the cook into an analyst.
- */
-function objective(item: ItemResult): number {
-  const accuracy = 1 - Math.min(1, item.absError / 100);
-  const styleMatch = item.actualStyleCorrect ? 1 : 0;
-  const roleplay = item.personaViolations.length === 0 ? 1 : 0;
-  const drift = 1 - Math.min(1, item.personaDrift.rate);
-  return 0.4 * accuracy + 0.3 * styleMatch + 0.2 * roleplay + 0.1 * drift;
-}
-
 async function scoreCandidate(
   text: string,
   fixtures: EvalFixture[],
   options: GepaOptions,
 ): Promise<Map<string, number>> {
-  const variant: VariantConfig = {
-    ...options.baseVariant,
-    id: `${options.baseVariant.id}__candidate`,
-    params: { ...options.baseVariant.params, [options.slot.param]: text },
-  };
-
-  const result = await runEvaluation({
-    variantIds: [variant.id],
-    variants: [variant],
+  return scoreSlotCandidate({
+    param: options.slot.param,
+    text,
+    baseVariant: options.baseVariant,
     provider: options.provider,
     fixtures,
-    concurrency: options.concurrency ?? 4,
+    concurrency: options.concurrency,
   });
-
-  const scores = new Map<string, number>();
-  for (const item of result.items) scores.set(item.fixtureId, objective(item));
-  return scores;
-}
-
-function mean(values: number[]): number {
-  if (values.length === 0) return 0;
-  return values.reduce((sum, value) => sum + value, 0) / values.length;
 }
 
 /**

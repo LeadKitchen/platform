@@ -206,7 +206,18 @@ export interface RunResult {
   evaluationStrategyMismatch: string[];
 }
 
-function buildDialog(fixture: EvalFixture, catalog: Catalog): DialogContext {
+/**
+ * Turn a fixture into a fresh dialog context.
+ *
+ * Exported so an optimiser can replay the same scripted scenario outside
+ * `runEvaluation` — building a corpus of transcripts, for instance — without
+ * re-deriving the shift load or the order shape and drifting out of sync with
+ * what the benchmark actually measures.
+ */
+export function buildDialog(
+  fixture: EvalFixture,
+  catalog: Catalog,
+): DialogContext {
   const employee = findEmployee(catalog, fixture.employeeId);
   const task = findTask(catalog, fixture.taskId);
   if (!employee) throw new Error(`Unknown employee "${fixture.employeeId}"`);

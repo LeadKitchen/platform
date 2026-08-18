@@ -33,7 +33,10 @@ const { KEY, BASE } = (() => {
     // PROBE_BASE_URL/PROBE_API_KEY at it rather than hardcoding one more case
     // per vendor.
     case "custom":
-      return { KEY: process.env.PROBE_API_KEY, BASE: process.env.PROBE_BASE_URL };
+      return {
+        KEY: process.env.PROBE_API_KEY,
+        BASE: process.env.PROBE_BASE_URL,
+      };
     default:
       return { KEY: process.env.OPENROUTER_API_KEY, BASE: OPENROUTER_BASE_URL };
   }
