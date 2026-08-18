@@ -11,7 +11,12 @@ export const metadata: Metadata = {
 export default function AiDocsPage() {
   return (
     <>
-      <SiteHeader breadcrumbs={[{ label: "Технологии ИИ" }]} />
+      <SiteHeader
+        breadcrumbs={[
+          { label: "Деловая игра", href: "/game" },
+          { label: "Технологии ИИ" },
+        ]}
+      />
       <AiDocsOverview />
     </>
   );
