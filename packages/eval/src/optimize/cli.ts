@@ -12,11 +12,12 @@ import {
 
 import { FIXTURES } from "../fixtures";
 import { flushTelemetry, initTelemetry } from "../telemetry";
+import { loadPromptArtifact, writePromptArtifact } from "./artifact";
 import { createAxClientFromEnv } from "./ax-client";
 import { AX_JUDGE_SLOTS, bootstrapJudgePrompt } from "./ax-few-shot";
 import { type GepaSlot, optimizePrompt } from "./gepa";
 import { buildJudgeCorpus } from "./judge-corpus";
-import { mean, scoreCandidate } from "./objective";
+import { mean, type PromptSlotParam, scoreCandidate } from "./objective";
 
 initTelemetry();
 
@@ -58,7 +59,10 @@ function printHelp(): void {
   --variant ID      базовый вариант конвейера (по умолч. baseline-judge)
   --limit N         сколько сценариев взять всего (по умолч. 24)
   --concurrency N   параллельных сценариев (по умолч. 4)
-  --out FILE        куда записать найденный промпт (JSON)
+  --out FILE        куда записать найденный промпт (JSON-артефакт)
+  --seed-from FILE  стартовать не от промпта из кода, а от найденного ранее
+                    артефакта того же слота. Этим оптимизаторы композируются:
+                    gepa переписывает инструкцию, ax навешивает на неё примеры.
 
 Флаги gepa:
   --iterations N    шагов мутации (по умолч. 6)
@@ -73,9 +77,16 @@ function printHelp(): void {
   --refresh-corpus  перестроить кэш транскриптов
   --no-validate     не прогонять найденный промпт против исходного
 
-Результат — обычный JSON с текстом промпта. Подставьте его в params варианта
-и сравните с контрольным armом обычным прогоном eval: оптимизатор ничего не
-доказывает сам по себе, он только предлагает кандидата.`);
+Результат — JSON-артефакт. Оптимизатор ничего не доказывает сам по себе, он
+только предлагает кандидата; доказательство даёт прогон против контрольного
+арма с доверительным интервалом:
+
+  bun --filter @acme/eval eval --provider env --candidate FILE --runs 3
+
+Несколько артефактов можно применить сразу, а с --combine — одним армом:
+
+  bun --filter @acme/eval eval --provider env \\
+    --candidate persona.json --candidate style.json --combine --runs 3`);
 }
 
 async function main(): Promise<void> {
@@ -109,14 +120,41 @@ async function main(): Promise<void> {
   const provider = createProviderFromEnv();
   const out = read("--out");
 
+  /**
+   * Starting text for the optimiser.
+   *
+   * Chaining is the point: an Ax few-shot run seeded from a GEPA artefact
+   * attaches demonstrations to the *optimised* instruction rather than to the
+   * one in the source, which is the only way the two optimisers compose.
+   */
+  const seedFrom = read("--seed-from");
+  const loadSeed = async (
+    param: PromptSlotParam,
+  ): Promise<string | undefined> => {
+    if (!seedFrom) return undefined;
+    const artifact = await loadPromptArtifact(seedFrom);
+    if (artifact.slot !== param) {
+      console.error(
+        `Артефакт ${seedFrom} относится к слоту "${artifact.slot}", а оптимизируется "${param}". Слоты должны совпадать.`,
+      );
+      process.exit(1);
+    }
+    console.log(
+      `  стартовый промпт взят из артефакта ${seedFrom} (${artifact.optimizer})`,
+    );
+    return artifact.prompt;
+  };
+
   const writeResult = async (
-    payload: Record<string, unknown>,
+    payload: Parameters<typeof writePromptArtifact>[1],
     prompt: string,
   ) => {
     if (out) {
-      await mkdir(dirname(resolve(out)), { recursive: true });
-      await writeFile(out, JSON.stringify(payload, null, 2), "utf8");
-      console.log(`Промпт записан: ${out}`);
+      await writePromptArtifact(out, payload);
+      console.log(`Артефакт записан: ${out}`);
+      console.log(
+        `Проверить: bun --filter @acme/eval eval --provider env --candidate ${out} --runs 3`,
+      );
       return;
     }
     console.log("--- НАЙДЕННЫЙ ПРОМПТ ---");
@@ -153,8 +191,10 @@ async function main(): Promise<void> {
       onProgress: (message) => console.log(`  ${message}`),
     });
 
+    const chainedSeed = await loadSeed(slot.param);
+
     const result = await bootstrapJudgePrompt({
-      slot,
+      slot: chainedSeed ? { ...slot, seed: chainedSeed } : slot,
       samples,
       client: axClient.client,
       maxDemos: readInt("--max-demos", 3),
@@ -238,7 +278,9 @@ async function main(): Promise<void> {
 
     await writeResult(
       {
-        optimizer: "ax-bootstrap-few-shot",
+        optimizer: chainedSeed
+          ? "ax-bootstrap-few-shot (поверх артефакта)"
+          : "ax-bootstrap-few-shot",
         slot: result.param,
         variantId,
         demoCount: result.demoCount,
@@ -265,8 +307,10 @@ async function main(): Promise<void> {
     `Оптимизация слота "${slotName}" (${slot.param}) на варианте ${variantId}; провайдер ${provider.id} (${provider.model})`,
   );
 
+  const chainedSeed = await loadSeed(slot.param);
+
   const result = await optimizePrompt({
-    slot,
+    slot: chainedSeed ? { ...slot, seed: chainedSeed } : slot,
     baseVariant,
     provider,
     fixtures,
