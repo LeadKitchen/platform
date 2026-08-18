@@ -13,19 +13,25 @@ import {
 } from "@acme/ui";
 import {
   IconAdjustments,
+  IconArrowsSort,
   IconBrain,
+  IconBulb,
   IconChartBar,
   IconChefHat,
   IconClipboardList,
+  IconDatabase,
   IconInnerShadowTop,
   IconListDetails,
   IconMessages,
+  IconRefresh,
   IconReportAnalytics,
+  IconScale,
   IconSchool,
   IconSettings,
   IconShieldLock,
   IconSparkles,
   IconUsers,
+  IconUsersGroup,
 } from "@tabler/icons-react";
 import type * as React from "react";
 import { NavMain, NavSecondary, NavUser } from "~/components/sidebar";
@@ -45,6 +51,41 @@ const data = {
           exact: true,
         },
         { title: "Раунд 1 · Теория", url: "/game/round-1", icon: IconSchool },
+      ],
+    },
+    {
+      title: "Технологии ИИ",
+      url: "/docs/ai",
+      icon: IconBrain,
+      items: [
+        {
+          title: "Обзор",
+          url: "/docs/ai",
+          icon: IconBrain,
+          exact: true,
+        },
+        { title: "HyDE", url: "/docs/ai/hyde", icon: IconBulb },
+        {
+          title: "Contextual Retrieval",
+          url: "/docs/ai/contextual-retrieval",
+          icon: IconDatabase,
+        },
+        {
+          title: "Reranking",
+          url: "/docs/ai/reranking",
+          icon: IconArrowsSort,
+        },
+        { title: "CRAG", url: "/docs/ai/crag", icon: IconRefresh },
+        {
+          title: "Self-Consistency",
+          url: "/docs/ai/self-consistency",
+          icon: IconUsersGroup,
+        },
+        {
+          title: "Debate Judge",
+          url: "/docs/ai/debate-judge",
+          icon: IconScale,
+        },
       ],
     },
     {
