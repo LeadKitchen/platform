@@ -2,9 +2,14 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 
-import { BUILT_IN_VARIANTS, createProviderFromEnv } from "@acme/ai";
+import {
+  BUILT_IN_VARIANTS,
+  createProviderFromEnv,
+  type VariantConfig,
+} from "@acme/ai";
 
 import { FIXTURES } from "./fixtures";
+import { buildCandidateArms, loadPromptArtifact } from "./optimize/artifact";
 
 import { renderMarkdownReport } from "./report";
 import { runEvaluation } from "./runner";
@@ -33,6 +38,10 @@ interface Flags {
   learn: boolean;
   out?: string;
   json?: string;
+  /** Prompt artefacts from `optimize`, turned into arms against their control. */
+  candidates: string[];
+  /** Apply every `--candidate` to one arm instead of one arm each. */
+  combine: boolean;
 }
 
 function parseFlags(argv: string[]): Flags {
@@ -43,6 +52,8 @@ function parseFlags(argv: string[]): Flags {
     runs: 1,
     concurrency: 1,
     learn: false,
+    candidates: [],
+    combine: false,
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -83,6 +94,13 @@ function parseFlags(argv: string[]): Flags {
       case "--learn":
         flags.learn = true;
         break;
+      case "--candidate":
+        if (next) flags.candidates.push(next);
+        index += 1;
+        break;
+      case "--combine":
+        flags.combine = true;
+        break;
       case "--out":
         flags.out = next;
         index += 1;
@@ -120,6 +138,13 @@ function printHelp(): void {
   --learn            передавать награду стратегиям с обучением
   --out FILE         записать markdown-отчёт
   --json FILE        записать сырые результаты в JSON
+  --candidate FILE   JSON-артефакт из optimize (можно повторять).
+                      Добавляет к --variants арм с этим промптом и его
+                      контрольный вариант, взятый из самого артефакта — так что
+                      сравнение всегда идёт против правильного контроля.
+  --combine          все --candidate применяются к одному арму, а не к
+                      одному арму на артефакт (для совместной проверки
+                      нескольких слотов, например persona + criteria)
 
 Примеры:
   bun --filter @acme/eval eval --variants baseline,rag,graph-rag
@@ -135,6 +160,9 @@ function printHelp(): void {
 
   # Judge: меняется только single-judge на debate
   bun --filter @acme/eval eval --provider env --variants baseline-judge,debate-judge --reference baseline-judge --runs 3 --out reports/judge.md
+
+  # Проверка кандидата от optimize против его собственного контрольного варианта
+  bun --filter @acme/eval eval --provider env --candidate reports/ax-criteria.json --runs 3 --out reports/candidate.md
 
 Примечание: contextual-rag при первом запуске обогащает каждый чанк через LLM;
 стоимость прогрева учитывается в первом диалоге. Повторяйте все arms одинаковое
@@ -155,18 +183,57 @@ async function main(): Promise<void> {
 
   const fixtures = flags.limit ? FIXTURES.slice(0, flags.limit) : FIXTURES;
 
+  // A `--candidate` arm and its control must come from the same artefact:
+  // building them separately is exactly the mistake this flag exists to rule
+  // out — a candidate compared against a control that quietly drifted.
+  const extraVariants: VariantConfig[] = [];
+  let variantIds = flags.variants;
+  let referenceVariantId = flags.reference;
+
+  if (flags.candidates.length > 0) {
+    const artifacts = await Promise.all(
+      flags.candidates.map((path) => loadPromptArtifact(path)),
+    );
+    const arms = buildCandidateArms(artifacts, { combine: flags.combine });
+
+    const controlIds = new Set(arms.map((arm) => arm.referenceVariantId));
+    if (controlIds.size > 1) {
+      throw new Error(
+        `--candidate артефакты ссылаются на разные контрольные варианты (${[...controlIds].join(", ")}).`,
+      );
+    }
+
+    for (const arm of arms) {
+      extraVariants.push(arm.candidate);
+      console.log(`  кандидат ${arm.candidate.id}: ${arm.provenance}`);
+    }
+
+    // Candidate arms replace the default variant list rather than adding to
+    // it: `--variants` defaults to every built-in variant, and running all of
+    // those alongside a candidate would bury the one comparison this flag is
+    // for and burn quota on arms nobody asked to check.
+    const usedDefaultVariants =
+      flags.variants.length === BUILT_IN_VARIANTS.length &&
+      flags.variants.every((id, index) => id === BUILT_IN_VARIANTS[index]?.id);
+    variantIds = usedDefaultVariants
+      ? [...controlIds, ...arms.map((arm) => arm.candidate.id)]
+      : [...flags.variants, ...arms.map((arm) => arm.candidate.id)];
+    referenceVariantId = referenceVariantId ?? [...controlIds][0];
+  }
+
   console.log(
-    `Запуск: варианты ${flags.variants.join(", ")}; провайдер ${provider.id} (${provider.model}); сценариев ${fixtures.length}; прогонов ${flags.runs}; эпох ${flags.epochs}`,
+    `Запуск: варианты ${variantIds.join(", ")}; провайдер ${provider.id} (${provider.model}); сценариев ${fixtures.length}; прогонов ${flags.runs}; эпох ${flags.epochs}`,
   );
 
   const result = await runEvaluation({
-    variantIds: flags.variants,
+    variantIds,
     provider,
     fixtures,
+    variants: extraVariants,
     epochs: flags.epochs,
     runsPerFixture: flags.runs,
     concurrency: flags.concurrency,
-    referenceVariantId: flags.reference,
+    referenceVariantId,
     learn: flags.learn,
     onProgress: (message) => process.stdout.write(`  ${message}\r`),
   });

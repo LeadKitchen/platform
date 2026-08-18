@@ -14,6 +14,16 @@ export {
   type VariantSummary,
 } from "./metrics";
 export {
+  buildCandidateArms,
+  type CandidateArm,
+  loadPromptArtifact,
+  PROMPT_ARTIFACT_VERSION,
+  PROMPT_SLOT_PARAMS,
+  type PromptArtifact,
+  promptArtifactSchema,
+  writePromptArtifact,
+} from "./optimize/artifact";
+export {
   AX_JUDGE_SLOTS,
   type AxFewShotOptions,
   type AxFewShotResult,

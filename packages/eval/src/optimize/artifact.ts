@@ -1,7 +1,11 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 
-import { resolveVariant, type VariantConfig, variantConfigSchema } from "@acme/ai";
+import {
+  resolveVariant,
+  type VariantConfig,
+  variantConfigSchema,
+} from "@acme/ai";
 import { z } from "zod";
 
 /**
@@ -88,7 +92,10 @@ export async function loadPromptArtifact(
   if (!result.success) {
     throw new Error(
       `Артефакт промпта ${target} не соответствует формату:\n${result.error.issues
-        .map((issue) => `  ${issue.path.join(".") || "(корень)"}: ${issue.message}`)
+        .map(
+          (issue) =>
+            `  ${issue.path.join(".") || "(корень)"}: ${issue.message}`,
+        )
         .join("\n")}`,
     );
   }
