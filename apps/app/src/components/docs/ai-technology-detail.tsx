@@ -23,16 +23,58 @@ import {
   IconArrowRight,
   IconChartBar,
   IconCheck,
+  IconCode,
   IconFlask,
   IconShieldCheck,
   IconSparkles,
   IconTarget,
+  IconTerminal2,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { AI_TECHNOLOGIES, type AiTechnology } from "~/content/ai-technologies";
 
 interface AiTechnologyDetailProps {
   technology: AiTechnology;
+}
+
+interface InlineSegment {
+  id: string;
+  text: string;
+  isCode: boolean;
+}
+
+/**
+ * Технические описания содержат идентификаторы кода в обратных кавычках.
+ * Разбор на сегменты нужен, чтобы `topK` и `audience` читались как код, а не
+ * как случайные символы в предложении.
+ */
+function inlineSegments(text: string): InlineSegment[] {
+  return text
+    .split(/`([^`]+)`/g)
+    .flatMap((part, index) =>
+      part.length === 0
+        ? []
+        : [{ id: `${index}:${part}`, text: part, isCode: index % 2 === 1 }],
+    );
+}
+
+function TechnicalText({ text }: { text: string }) {
+  return (
+    <>
+      {inlineSegments(text).map((segment) =>
+        segment.isCode ? (
+          <code
+            key={segment.id}
+            className="bg-muted rounded px-1 py-0.5 text-xs"
+          >
+            {segment.text}
+          </code>
+        ) : (
+          <span key={segment.id}>{segment.text}</span>
+        ),
+      )}
+    </>
+  );
 }
 
 export function AiTechnologyDetail({ technology }: AiTechnologyDetailProps) {
@@ -82,11 +124,20 @@ export function AiTechnologyDetail({ technology }: AiTechnologyDetailProps) {
               <Button
                 size="lg"
                 variant="outline"
-                render={<Link href="/admin/game/benchmarks" />}
+                render={<a href="#benchmark" />}
                 nativeButton={false}
               >
                 <IconChartBar data-icon="inline-start" />
-                Результаты измерений
+                Отчёт о тестах
+              </Button>
+              <Button
+                size="lg"
+                variant="ghost"
+                render={<Link href="/admin/game/benchmarks" />}
+                nativeButton={false}
+              >
+                <IconFlask data-icon="inline-start" />
+                Все прогоны
               </Button>
             </div>
           </div>
@@ -175,6 +226,117 @@ export function AiTechnologyDetail({ technology }: AiTechnologyDetailProps) {
             </Card>
           ))}
         </div>
+      </section>
+
+      <section
+        id="internals"
+        className="flex scroll-mt-20 flex-col gap-4"
+        aria-labelledby="internals-title"
+      >
+        <div className="flex max-w-3xl flex-col gap-2">
+          <Badge variant="outline" className="w-fit">
+            Технический разбор
+          </Badge>
+          <h2 id="internals-title" className="text-2xl font-semibold">
+            Что происходит в коде
+          </h2>
+          <p className="text-muted-foreground leading-relaxed">
+            {technology.technicalSummary}
+          </p>
+        </div>
+        <div className="grid gap-4 lg:grid-cols-2">
+          {technology.internals.map((internal) => (
+            <Card key={internal.title} className="h-full">
+              <CardHeader>
+                <div className="bg-muted text-foreground flex size-9 items-center justify-center rounded-lg">
+                  <IconCode />
+                </div>
+                <CardTitle>
+                  <h3>{internal.title}</h3>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm leading-relaxed">
+                <p>
+                  <TechnicalText text={internal.detail} />
+                </p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <h3>Где лежит реализация и что она вызывает</h3>
+            </CardTitle>
+            <CardDescription className="max-w-3xl leading-relaxed">
+              Стратегия подключена через реестр этапа, поэтому API, экраны и
+              аналитика работают с ней как с любой другой: заменяется реализация
+              одного шага, а не конвейер.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-6 lg:grid-cols-2">
+            <div className="flex flex-col gap-5">
+              <div className="flex flex-col gap-2">
+                <span className="text-muted-foreground text-xs font-medium uppercase tracking-wide">
+                  id стратегии
+                </span>
+                <code className="bg-muted w-fit rounded px-1.5 py-1 text-xs">
+                  {technology.implementation.strategyId}
+                </code>
+              </div>
+              <div className="flex flex-col gap-2">
+                <span className="text-muted-foreground text-xs font-medium uppercase tracking-wide">
+                  Файлы реализации
+                </span>
+                <ul className="flex flex-col items-start gap-1.5">
+                  {technology.implementation.files.map((file) => (
+                    <li key={file}>
+                      <code className="bg-muted rounded px-1.5 py-1 text-xs">
+                        {file}
+                      </code>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            <div className="flex flex-col gap-5">
+              <div className="flex flex-col gap-2">
+                <span className="text-muted-foreground text-xs font-medium uppercase tracking-wide">
+                  Обращения к модели
+                </span>
+                <p className="text-sm leading-relaxed">
+                  <TechnicalText text={technology.implementation.llmCalls} />
+                </p>
+              </div>
+              <div className="flex flex-col gap-2">
+                <span className="text-muted-foreground text-xs font-medium uppercase tracking-wide">
+                  Схемы структурированного вывода
+                </span>
+                <ul className="flex flex-col gap-1.5 text-sm">
+                  {technology.implementation.schemas.map((schema) => (
+                    <li key={schema} className="flex items-start gap-2">
+                      <IconCheck className="mt-0.5 shrink-0 text-primary" />
+                      <span>{schema}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="flex flex-col gap-2">
+                <span className="text-muted-foreground text-xs font-medium uppercase tracking-wide">
+                  Поля телеметрии
+                </span>
+                <ul className="flex flex-col gap-1.5 text-sm">
+                  {technology.implementation.telemetry.map((field) => (
+                    <li key={field}>
+                      <TechnicalText text={field} />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </section>
 
       <section className="flex flex-col gap-4" aria-labelledby="benefits-title">
@@ -314,6 +476,273 @@ export function AiTechnologyDetail({ technology }: AiTechnologyDetailProps) {
             </p>
           </AlertDescription>
         </Alert>
+      </section>
+
+      <section
+        id="benchmark"
+        className="flex scroll-mt-20 flex-col gap-4"
+        aria-labelledby="benchmark-title"
+      >
+        <div className="flex max-w-3xl flex-col gap-2">
+          <Badge variant="outline" className="w-fit">
+            Отчёт о тестах
+          </Badge>
+          <h2 id="benchmark-title" className="text-2xl font-semibold">
+            Замер против классического подхода
+          </h2>
+          <p className="text-muted-foreground leading-relaxed">
+            Последний опубликованный прогон офлайн-стенда. Цифры приведены как
+            есть: страница ничего не пересчитывает и не сглаживает.
+          </p>
+        </div>
+
+        <Alert
+          variant={
+            technology.benchmark.status === "no-data"
+              ? "destructive"
+              : "default"
+          }
+        >
+          {technology.benchmark.status === "no-data" ? (
+            <IconAlertTriangle />
+          ) : (
+            <IconChartBar />
+          )}
+          <AlertTitle>
+            {technology.benchmark.status === "no-data"
+              ? "По этому варианту данных нет"
+              : "Что показал прогон"}
+          </AlertTitle>
+          <AlertDescription>
+            <p>{technology.benchmark.headline}</p>
+          </AlertDescription>
+        </Alert>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <h3>{technology.benchmark.reportLabel}</h3>
+            </CardTitle>
+            <CardDescription className="leading-relaxed">
+              Классический контроль: {technology.benchmark.control}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-4 text-sm sm:grid-cols-2 lg:grid-cols-4">
+            <div className="flex flex-col gap-1">
+              <span className="text-muted-foreground text-xs font-medium uppercase tracking-wide">
+                Прогон
+              </span>
+              <span className="font-medium">{technology.benchmark.runAt}</span>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-muted-foreground text-xs font-medium uppercase tracking-wide">
+                Провайдер и модель
+              </span>
+              <span className="font-medium">
+                {technology.benchmark.provider} · {technology.benchmark.model}
+              </span>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-muted-foreground text-xs font-medium uppercase tracking-wide">
+                Объём замера
+              </span>
+              <span className="font-medium">
+                {technology.benchmark.scenarios}
+              </span>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-muted-foreground text-xs font-medium uppercase tracking-wide">
+                Файл отчёта
+              </span>
+              <code className="bg-muted w-fit rounded px-1.5 py-1 text-xs">
+                {technology.benchmark.reportPath}
+              </code>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <h3>Значимость против контроля</h3>
+            </CardTitle>
+            <CardDescription className="max-w-3xl leading-relaxed">
+              Парный бутстрап по сценариям, 95% доверительный интервал.
+              Положительная Δ — вариант лучше классики. Вывод «лучше» ставится
+              только когда интервал не пересекает ноль.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Метрика</TableHead>
+                  <TableHead className="text-right">Δ</TableHead>
+                  <TableHead className="text-right">95% ДИ</TableHead>
+                  <TableHead className="text-right">p</TableHead>
+                  <TableHead className="text-right">Пар</TableHead>
+                  <TableHead>Вывод</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {technology.benchmark.metrics.map((metric) => (
+                  <TableRow key={metric.metric}>
+                    <TableCell className="min-w-40 whitespace-normal font-medium">
+                      {metric.metric}
+                    </TableCell>
+                    <TableCell className="text-right tabular-nums">
+                      {metric.delta}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground text-right tabular-nums">
+                      {metric.ci}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground text-right tabular-nums">
+                      {metric.pValue}
+                    </TableCell>
+                    <TableCell className="text-right tabular-nums">
+                      {metric.pairs}
+                    </TableCell>
+                    <TableCell className="min-w-44 whitespace-normal">
+                      <Badge
+                        variant={
+                          metric.verdict === "нет данных"
+                            ? "destructive"
+                            : "outline"
+                        }
+                      >
+                        {metric.verdict}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <h3>Сырые показатели: классика и новая технология</h3>
+            </CardTitle>
+            <CardDescription className="max-w-3xl leading-relaxed">
+              MAE — расхождение автоматической оценки с эталоном, σ — разброс
+              между повторами одного сценария, κ — согласие по стилю сверх
+              случайного.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Вариант</TableHead>
+                  <TableHead>Роль</TableHead>
+                  <TableHead className="text-right">Диалогов</TableHead>
+                  <TableHead className="text-right">MAE</TableHead>
+                  <TableHead className="text-right">σ</TableHead>
+                  <TableHead className="text-right">κ</TableHead>
+                  <TableHead className="text-right">F1</TableHead>
+                  <TableHead className="text-right">Задержка</TableHead>
+                  <TableHead className="text-right">Токены</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {technology.benchmark.arms.map((arm) => (
+                  <TableRow key={arm.arm}>
+                    <TableCell>
+                      <code className="bg-muted rounded px-1.5 py-1 text-xs">
+                        {arm.arm}
+                      </code>
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={
+                          arm.role === "control" ? "secondary" : "default"
+                        }
+                      >
+                        {arm.role === "control" ? "Классика" : "Новая"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right tabular-nums">
+                      {arm.dialogs}
+                    </TableCell>
+                    <TableCell className="text-right tabular-nums">
+                      {arm.mae}
+                    </TableCell>
+                    <TableCell className="text-right tabular-nums">
+                      {arm.withinFixtureSd}
+                    </TableCell>
+                    <TableCell className="text-right tabular-nums">
+                      {arm.styleKappa}
+                    </TableCell>
+                    <TableCell className="text-right tabular-nums">
+                      {arm.criteriaF1}
+                    </TableCell>
+                    <TableCell className="text-right tabular-nums">
+                      {arm.latency}
+                    </TableCell>
+                    <TableCell className="min-w-48 whitespace-normal text-right">
+                      {arm.tokens}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+          <Card className="h-full">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <IconAlertTriangle />
+                <CardTitle>
+                  <h3>Как читать эти цифры</h3>
+                </CardTitle>
+              </div>
+              <CardDescription>
+                Оговорки, без которых таблица выше вводит в заблуждение.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul className="flex flex-col gap-3">
+                {technology.benchmark.caveats.map((caveat) => (
+                  <li key={caveat} className="flex items-start gap-3 text-sm">
+                    <IconAlertTriangle className="mt-0.5 shrink-0 text-muted-foreground" />
+                    <span className="leading-relaxed">
+                      <TechnicalText text={caveat} />
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+          <Card className="h-full">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <IconTerminal2 className="text-primary" />
+                <CardTitle>
+                  <h3>Повторить замер</h3>
+                </CardTitle>
+              </div>
+              <CardDescription>
+                Изолированное сравнение: меняется только этот этап конвейера.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3">
+              <pre className="bg-muted overflow-x-auto rounded-lg p-3 text-xs leading-relaxed">
+                <code>{technology.benchmark.reproduce}</code>
+              </pre>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                Результат публикуется в админку командой{" "}
+                <code className="bg-muted rounded px-1.5 py-1 text-xs">
+                  bun --filter @acme/eval publish reports/&lt;файл&gt;.json
+                </code>{" "}
+                и появляется в разделе «Отчёты о качестве».
+              </p>
+            </CardContent>
+          </Card>
+        </div>
       </section>
 
       <section

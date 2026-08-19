@@ -5,7 +5,7 @@ import { SiteHeader } from "~/components/layout";
 export const metadata: Metadata = {
   title: "Технологии ИИ",
   description:
-    "Понятный обзор шести LLM-технологий, внедрённых для повышения и измерения качества тренажёра.",
+    "Шесть LLM-технологий конвейера: продуктовое объяснение, технический разбор реализации и отчёты офлайн-стенда против классических подходов.",
 };
 
 export default function AiDocsPage() {

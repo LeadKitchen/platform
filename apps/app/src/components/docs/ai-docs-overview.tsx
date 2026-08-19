@@ -28,6 +28,9 @@ import {
 } from "@tabler/icons-react";
 import Link from "next/link";
 import {
+  AI_BENCHMARK_FULL_RUN_COMMAND,
+  AI_BENCHMARK_METHODOLOGY,
+  AI_BENCHMARK_RUNS,
   AI_STAGE_COPY,
   AI_TECHNOLOGIES,
   type AiTechnologyStage,
@@ -96,10 +99,19 @@ export function AiDocsOverview() {
               <Button
                 size="lg"
                 variant="outline"
-                render={<Link href="/admin/game/benchmarks" />}
+                render={<a href="#benchmarks" />}
                 nativeButton={false}
               >
                 <IconChartBar data-icon="inline-start" />
+                Отчёты о тестах
+              </Button>
+              <Button
+                size="lg"
+                variant="ghost"
+                render={<Link href="/admin/game/benchmarks" />}
+                nativeButton={false}
+              >
+                <IconFlask data-icon="inline-start" />
                 Открыть измерения
               </Button>
             </div>
@@ -204,8 +216,9 @@ export function AiDocsOverview() {
             Что именно внедрено
           </h2>
           <p className="text-muted-foreground">
-            Откройте карточку, чтобы увидеть понятную аналогию, схему работы,
-            ограничения, fallback и метрики для честного сравнения.
+            Откройте карточку, чтобы увидеть аналогию, схему работы, технический
+            разбор реализации (промпты, схемы вывода, формулы ранжирования,
+            телеметрия) и отчёт замера против классического подхода.
           </p>
         </div>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -315,6 +328,188 @@ export function AiDocsOverview() {
               </TableBody>
             </Table>
           </CardContent>
+        </Card>
+      </section>
+
+      <section
+        id="benchmarks"
+        className="flex scroll-mt-20 flex-col gap-4"
+        aria-labelledby="benchmarks-title"
+      >
+        <div className="flex max-w-3xl flex-col gap-2">
+          <Badge variant="outline" className="w-fit">
+            Отчёты о тестах
+          </Badge>
+          <h2 id="benchmarks-title" className="text-2xl font-semibold">
+            Что уже измерено против классических подходов
+          </h2>
+          <p className="text-muted-foreground leading-relaxed">
+            Три изолированных прогона: в каждом меняется ровно один этап
+            конвейера. Ниже — их фактическое состояние, без округления в
+            благоприятную сторону.
+          </p>
+        </div>
+
+        <Alert variant="destructive">
+          <IconAlertTriangle />
+          <AlertTitle>
+            Ни одна из шести технологий пока не подтверждена статистически
+          </AlertTitle>
+          <AlertDescription>
+            <p>
+              В прогоне 18 августа 2026 полноценные данные получил только HyDE —
+              и выигрыша против hybrid-rag не показал. Contextual Retrieval
+              выжил на 28 диалогах из 210, а reranking, CRAG, self-consistency и
+              debate-judge не дали ни одного успешного диалога из-за внешних
+              отказов провайдера. Нулевые Δ в таких отчётах означают отсутствие
+              замера, а не отсутствие эффекта.
+            </p>
+          </AlertDescription>
+        </Alert>
+
+        <div className="grid gap-4 lg:grid-cols-3">
+          {AI_BENCHMARK_RUNS.map((run) => (
+            <Card key={run.label} className="h-full">
+              <CardHeader>
+                <div className="flex items-start justify-between gap-3">
+                  <Badge
+                    variant={
+                      run.status === "no-data" ? "destructive" : "secondary"
+                    }
+                  >
+                    {run.status === "no-data" ? "нет данных" : "есть данные"}
+                  </Badge>
+                  <span className="text-muted-foreground text-xs">
+                    {run.runAt}
+                  </span>
+                </div>
+                <CardTitle>
+                  <h3 className="text-base">{run.label}</h3>
+                </CardTitle>
+                <CardDescription>
+                  Контроль:{" "}
+                  <code className="bg-muted rounded px-1.5 py-0.5 text-xs">
+                    {run.control}
+                  </code>
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-1 flex-col gap-3 text-sm leading-relaxed">
+                <p>{run.outcome}</p>
+                <code className="bg-muted mt-auto block overflow-x-auto rounded px-1.5 py-1 text-xs">
+                  {run.reportPath}
+                </code>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <h3>Итог по каждой технологии</h3>
+            </CardTitle>
+            <CardDescription>
+              Головная метрика прогона — MAE к эксперту; «нет данных» означает,
+              что диалоги варианта не доехали до оценки.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Технология</TableHead>
+                  <TableHead>Классический контроль</TableHead>
+                  <TableHead className="text-right">
+                    Диалогов в замере
+                  </TableHead>
+                  <TableHead>Вывод по MAE</TableHead>
+                  <TableHead>Что дальше</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {AI_TECHNOLOGIES.map((technology) => {
+                  const candidate = technology.benchmark.arms.find(
+                    (arm) => arm.role === "candidate",
+                  );
+                  const maeVerdict =
+                    technology.benchmark.metrics.find((metric) =>
+                      metric.metric.startsWith("MAE"),
+                    )?.verdict ?? "нет данных";
+
+                  return (
+                    <TableRow key={technology.slug}>
+                      <TableCell className="whitespace-normal">
+                        <Link
+                          href={`/docs/ai/${technology.slug}#benchmark`}
+                          className="font-medium underline-offset-4 hover:underline"
+                        >
+                          {technology.shortName}
+                        </Link>
+                      </TableCell>
+                      <TableCell>
+                        <code className="bg-muted rounded px-1.5 py-1 text-xs">
+                          {technology.referenceVariantId}
+                        </code>
+                      </TableCell>
+                      <TableCell className="text-right tabular-nums">
+                        {candidate?.dialogs ?? "—"}
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={
+                            maeVerdict === "нет данных"
+                              ? "destructive"
+                              : "outline"
+                          }
+                        >
+                          {maeVerdict}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="min-w-56 whitespace-normal text-sm">
+                        {technology.benchmark.status === "no-data"
+                          ? "Повторить прогон при живой квоте провайдера"
+                          : "Нужна экспертная разметка сценариев"}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <h3>Как считаются цифры</h3>
+            </CardTitle>
+            <CardDescription className="max-w-3xl leading-relaxed">
+              Правила статистики зафиксированы в коде стенда, а не выбираются
+              под результат. Без них таблица со Δ и p читается как «выиграл тот,
+              у кого число больше».
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-4 md:grid-cols-2">
+            {AI_BENCHMARK_METHODOLOGY.map((rule) => (
+              <div
+                key={rule.title}
+                className="bg-muted/40 flex flex-col gap-1.5 rounded-lg border p-4"
+              >
+                <p className="font-medium">{rule.title}</p>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  {rule.detail}
+                </p>
+              </div>
+            ))}
+          </CardContent>
+          <CardFooter className="flex-col items-start gap-2">
+            <span className="text-muted-foreground text-xs font-medium uppercase tracking-wide">
+              Полный прогон всех трёх сравнений с публикацией в админку
+            </span>
+            <pre className="bg-muted w-full overflow-x-auto rounded-lg p-3 text-xs">
+              <code>{AI_BENCHMARK_FULL_RUN_COMMAND}</code>
+            </pre>
+          </CardFooter>
         </Card>
       </section>
 
