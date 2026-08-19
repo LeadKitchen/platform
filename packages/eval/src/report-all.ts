@@ -82,6 +82,7 @@ function parseArgs(argv: string[]) {
 
   return {
     model: read("--model") ?? "gpt-5.5",
+    vendor: read("--vendor") ?? "openai-compatible",
     runs: readInt("--runs", 3),
     limit: read("--limit") ? readInt("--limit", 0) : undefined,
     concurrency: readInt("--concurrency", 3),
@@ -90,7 +91,25 @@ function parseArgs(argv: string[]) {
   };
 }
 
-function createProvider(model: string): LlmProvider {
+function createProvider(model: string, vendor: string): LlmProvider {
+  if (vendor === "anthropic") {
+    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const baseUrl = process.env.ANTHROPIC_BASE_URL;
+
+    if (!apiKey) {
+      throw new Error("ANTHROPIC_API_KEY не задан — платный прогон невозможен.");
+    }
+
+    return createAiSdkProvider({
+      vendor: "anthropic",
+      model,
+      apiKey,
+      baseUrl,
+      maxAttempts: 3,
+      maxOutputTokens: 4000,
+    });
+  }
+
   const apiKey = process.env.OPENAI_API_KEY;
   const baseUrl = process.env.OPENAI_BASE_URL ?? "https://router.cheap/v1";
 
@@ -143,7 +162,7 @@ async function publish(
 
 async function main(): Promise<void> {
   const args = parseArgs(process.argv.slice(2));
-  const provider = createProvider(args.model);
+  const provider = createProvider(args.model, args.vendor);
   const fixtures = args.limit ? FIXTURES.slice(0, args.limit) : FIXTURES;
 
   const comparisons = ALL_COMPARISONS.filter((comparison) => {

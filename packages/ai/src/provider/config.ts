@@ -303,12 +303,15 @@ export function buildAnthropicCandidates(
     ? split(env.ANTHROPIC_MODELS)
     : [env.AI_MODEL ?? "claude-opus-5"];
 
+  const baseUrl = env.ANTHROPIC_BASE_URL;
+
   return models.flatMap((model) =>
     keys.map((apiKey, keyIndex) => ({
       id: `anthropic#${keyIndex + 1}:${model}`,
       vendor: "anthropic" as AiSdkVendor,
       model,
       apiKey,
+      baseUrl,
     })),
   );
 }
