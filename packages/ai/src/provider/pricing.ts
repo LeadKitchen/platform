@@ -20,13 +20,6 @@ export const MODEL_PRICING: Record<string, { input: number; output: number }> =
     "gpt-4o": { input: 2.5, output: 10 },
     "gpt-4o-mini": { input: 0.15, output: 0.6 },
     "mock-model": { input: 0, output: 0 },
-    // Confirmed free tiers (see docs/model-pool.md) — zero is the real price,
-    // not a missing entry.
-    "nvidia/nemotron-3-super-120b-a12b:free": { input: 0, output: 0 },
-    "nvidia/nemotron-nano-9b-v2:free": { input: 0, output: 0 },
-    "llama-3.3-70b-versatile": { input: 0, output: 0 },
-    "gemini-2.5-flash-lite": { input: 0, output: 0 },
-    "gemini-2.5-flash": { input: 0, output: 0 },
   };
 
 /** Whether a model's price is a confirmed number, not just an absent lookup. */

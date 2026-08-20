@@ -1,9 +1,6 @@
 import {
   buildAnthropicCandidates,
-  buildGeminiCandidates,
-  buildGroqCandidates,
   buildOpenAiCandidates,
-  buildOpenRouterCandidates,
   type PoolCandidate,
 } from "@acme/ai";
 import { type AxAIOpenAIModel, type AxAIService, ai } from "@ax-llm/ax";
@@ -61,36 +58,18 @@ export interface AxClientOptions {
 function pickCandidate(env: NodeJS.ProcessEnv): PoolCandidate | undefined {
   const kind =
     env.AI_PROVIDER ??
-    (env.OPENROUTER_API_KEY || env.OPENROUTER_API_KEYS
-      ? "openrouter"
-      : env.GROQ_API_KEY || env.GROQ_API_KEYS
-        ? "groq"
-        : env.GEMINI_API_KEY || env.GEMINI_API_KEYS
-          ? "gemini"
-          : env.ANTHROPIC_API_KEY
-            ? "anthropic"
-            : env.OPENAI_API_KEY
-              ? "openai"
-              : "mock");
+    (env.ANTHROPIC_API_KEY
+      ? "anthropic"
+      : env.OPENAI_API_KEY
+        ? "openai"
+        : "mock");
 
   const candidates =
-    kind === "openrouter"
-      ? buildOpenRouterCandidates({ env })
-      : kind === "groq"
-        ? buildGroqCandidates(env)
-        : kind === "gemini"
-          ? buildGeminiCandidates(env)
-          : kind === "anthropic"
-            ? buildAnthropicCandidates(env)
-            : kind === "pool"
-              ? [
-                  ...buildOpenAiCandidates(env),
-                  ...buildGroqCandidates(env),
-                  ...buildGeminiCandidates(env),
-                  ...buildOpenRouterCandidates({ env }),
-                  ...buildAnthropicCandidates(env),
-                ]
-              : buildOpenAiCandidates(env);
+    kind === "anthropic"
+      ? buildAnthropicCandidates(env)
+      : kind === "pool"
+        ? [...buildOpenAiCandidates(env), ...buildAnthropicCandidates(env)]
+        : buildOpenAiCandidates(env);
 
   return candidates[0];
 }
@@ -103,7 +82,7 @@ export function createAxClientFromEnv(
 
   if (!candidate) {
     throw new Error(
-      "Ax-оптимизатору нужен реальный провайдер: mock не подходит, а ключей в окружении нет. Задайте OPENAI_API_KEY / GROQ_API_KEY / GEMINI_API_KEY / OPENROUTER_API_KEY / ANTHROPIC_API_KEY.",
+      "Ax-оптимизатору нужен реальный провайдер: mock не подходит, а ключей в окружении нет. Задайте OPENAI_API_KEY / ANTHROPIC_API_KEY.",
     );
   }
 

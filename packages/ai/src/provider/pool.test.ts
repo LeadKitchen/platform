@@ -1,11 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { z } from "zod";
 
-import {
-  buildGeminiCandidates,
-  buildGroqCandidates,
-  buildOpenRouterCandidates,
-} from "./config";
 import { createPoolProvider, type PoolCandidate } from "./pool";
 import type { LlmRequest } from "./types";
 
@@ -209,99 +204,6 @@ describe("createPoolProvider", () => {
     expect(calls).toBe(1);
     expect(provider.stats().availabilityFailures).toEqual({});
     expect(provider.stats().capabilityFailures).toEqual({});
-  });
-});
-
-describe("buildOpenRouterCandidates", () => {
-  test("makes a candidate for every key × model pair", () => {
-    const candidates = buildOpenRouterCandidates({
-      env: {
-        OPENROUTER_API_KEYS: "k1,k2",
-        OPENROUTER_MODELS: "m1:free,m2:free",
-      } as NodeJS.ProcessEnv,
-    });
-
-    expect(candidates).toHaveLength(4);
-    expect(candidates.map((item) => item.model)).toEqual([
-      "m1:free",
-      "m1:free",
-      "m2:free",
-      "m2:free",
-    ]);
-    expect(new Set(candidates.map((item) => item.apiKey))).toEqual(
-      new Set(["k1", "k2"]),
-    );
-  });
-
-  test("defaults to the curated free models", () => {
-    const candidates = buildOpenRouterCandidates({
-      env: { OPENROUTER_API_KEY: "k" } as NodeJS.ProcessEnv,
-    });
-
-    expect(candidates.length).toBeGreaterThan(0);
-    expect(candidates.every((item) => item.model.endsWith(":free"))).toBe(true);
-  });
-
-  test("no key means no candidates rather than a broken one", () => {
-    expect(buildOpenRouterCandidates({ env: {} as NodeJS.ProcessEnv })).toEqual(
-      [],
-    );
-  });
-
-  test("never claims native structured outputs", () => {
-    // OpenRouter proxies many backends and support varies per model; assuming
-    // it works is what silently produced prose instead of JSON before.
-    const candidates = buildOpenRouterCandidates({
-      env: { OPENROUTER_API_KEY: "k" } as NodeJS.ProcessEnv,
-    });
-
-    expect(
-      candidates.every((item) => item.supportsStructuredOutputs === false),
-    ).toBe(true);
-  });
-});
-
-describe("buildGroqCandidates", () => {
-  test("no key means no candidates", () => {
-    expect(buildGroqCandidates({} as NodeJS.ProcessEnv)).toEqual([]);
-  });
-
-  test("defaults to the curated free models with native JSON left unclaimed", () => {
-    const candidates = buildGroqCandidates({
-      GROQ_API_KEY: "k",
-    } as NodeJS.ProcessEnv);
-
-    expect(candidates.length).toBeGreaterThan(0);
-    expect(
-      candidates.every((item) => item.supportsStructuredOutputs === false),
-    ).toBe(true);
-  });
-
-  test("makes a candidate for every key × model pair", () => {
-    const candidates = buildGroqCandidates({
-      GROQ_API_KEYS: "k1,k2",
-      GROQ_MODELS: "m1,m2",
-    } as NodeJS.ProcessEnv);
-
-    expect(candidates).toHaveLength(4);
-  });
-});
-
-describe("buildGeminiCandidates", () => {
-  test("no key means no candidates", () => {
-    expect(buildGeminiCandidates({} as NodeJS.ProcessEnv)).toEqual([]);
-  });
-
-  test("groups quota per model, not per whole key", () => {
-    // Flash-Lite and Flash meter separately on Gemini's free tier, so
-    // exhausting one must not cool down the other.
-    const candidates = buildGeminiCandidates({
-      GEMINI_API_KEY: "k",
-      GEMINI_MODELS: "gemini-2.5-flash-lite,gemini-2.5-flash",
-    } as NodeJS.ProcessEnv);
-
-    expect(candidates).toHaveLength(2);
-    expect(new Set(candidates.map((item) => item.quotaGroup)).size).toBe(2);
   });
 });
 
