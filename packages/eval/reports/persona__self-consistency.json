@@ -1,33 +1,35 @@
 {
-  "startedAt": "2026-08-19T10:09:10.987Z",
-  "finishedAt": "2026-08-19T10:09:14.761Z",
+  "startedAt": "2026-08-19T16:50:48.067Z",
+  "finishedAt": "2026-08-19T16:53:08.596Z",
   "providerId": "ai-sdk:anthropic",
   "model": "claude-sonnet-5",
   "epochs": 1,
   "runsPerFixture": 1,
-  "fixtures": 3,
+  "fixtures": 70,
   "expertLabelledFixtures": 0,
   "referenceVariantId": "baseline",
   "variants": [
     {
       "variantId": "baseline",
-      "items": 0,
-      "scoreMae": 0,
+      "items": 6,
+      "scoreMae": 10.833,
       "scoreStdDev": 0,
-      "expectedStyleAccuracy": 0,
-      "actualStyleAccuracy": 0,
-      "styleKappa": 0,
-      "criteriaF1": 0,
-      "personaAdherence": 0,
+      "expectedStyleAccuracy": 1,
+      "actualStyleAccuracy": 0.833,
+      "styleKappa": 0.769,
+      "criteriaF1": 0.967,
+      "personaAdherence": 1,
       "personaDriftRate": 0,
       "personaDriftSlope": 0,
-      "silenceAccuracy": 0,
-      "avgLatencyMs": 0,
-      "totalInputTokens": 0,
-      "totalOutputTokens": 0,
-      "totalCostUsd": 0,
-      "avgCostUsd": 0,
-      "modelMix": {}
+      "silenceAccuracy": 1,
+      "avgLatencyMs": 26966,
+      "totalInputTokens": 36790,
+      "totalOutputTokens": 4402,
+      "totalCostUsd": 0.1764,
+      "avgCostUsd": 0.0294,
+      "modelMix": {
+        "claude-sonnet-5": 6
+      }
     },
     {
       "variantId": "self-consistency",
@@ -125,34 +127,674 @@
   ],
   "failures": [
     {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.032070, need: ＄0.063034 (request id: 202608191650485396961988268d9d6NfG84TyR) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
       "fixtureId": "anna-apple_pies-r2-directive",
       "variantId": "baseline",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\nNot Found"
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.032070, need: ＄0.062698 (request id: 202608191650485763944438268d9d68lP0fD3X) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
     },
     {
       "fixtureId": "anna-apple_pies-r2-delegating",
       "variantId": "baseline",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\nNot Found"
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.032070, need: ＄0.062698 (request id: 202608191650486944998738268d9d6E6cf1Vix) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
     },
     {
-      "fixtureId": "anna-apple_pies-r2-supporting",
+      "fixtureId": "anna-apple_pies-r3-delegating",
       "variantId": "baseline",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\nNot Found"
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.032070, need: ＄0.063034 (request id: 202608191650491311240268268d9d6239lxe1w) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
     },
     {
-      "fixtureId": "anna-apple_pies-r2-delegating",
-      "variantId": "self-consistency",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\nNot Found"
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.032070, need: ＄0.063034 (request id: 202608191650494013049018268d9d6OV4IrK9j) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.032070, need: ＄0.063034 (request id: 202608191650494733590008268d9d6PHrAW2N4) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.032070, need: ＄0.062722 (request id: 202608191650498398915728268d9d6iB7Q8CGj) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.032070, need: ＄0.062722 (request id: 202608191650499266014938268d9d6m1UkiPUa) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.032070, need: ＄0.062722 (request id: 202608191650502441475978268d9d68WGwQxUq) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.032070, need: ＄0.063058 (request id: 202608191650503416053138268d9d6unT177gW) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.032070, need: ＄0.063058 (request id: 202608191650503676741148268d9d6gfpIMv88) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-coaching",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.057404, need: ＄0.063616 (request id: 202608191651291914251488268d9d6W7ekOXAO) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-coaching",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.057404, need: ＄0.062688 (request id: 202608191651296332757288268d9d6P4Ygmg7s) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-directive",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.052002, need: ＄0.062688 (request id: 202608191651306354959568268d9d6hh1PhbKJ) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-supporting",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.052002, need: ＄0.062688 (request id: 202608191651314655063608268d9d6wvEy2OSy) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-delegating",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.043422, need: ＄0.063204 (request id: 202608191651320376539008268d9d6KVroPGpQ) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-salads-r2-delegating",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.043422, need: ＄0.062688 (request id: 202608191651328351683268268d9d649JXbycK) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-salads-r2-directive",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.043422, need: ＄0.062688 (request id: 202608191651334039368898268d9d6504cBH8V) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-salads-r2-supporting",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.043422, need: ＄0.062688 (request id: 202608191651341418616298268d9d6wiczHGLi) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-delegating",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.034950, need: ＄0.062796 (request id: 202608191651350825689588268d9d6HNqAy5j5) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-directive",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.025794, need: ＄0.063250 (request id: 202608191651359526631118268d9d6FtLa15oh) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-salads-r2-coaching",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.017356, need: ＄0.062802 (request id: 202608191651372923137698268d9d6vnfj12v8) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-salads-r3-supporting",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.017356, need: ＄0.063024 (request id: 202608191651380746300718268d9d6UlfuvVMn) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-steak-r2-coaching",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.017356, need: ＄0.062686 (request id: 202608191651386779768798268d9d6TuO1Xubc) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-steak-r2-delegating",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.017356, need: ＄0.062686 (request id: 202608191651392562070168268d9d6t4htrudL) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-steak-r2-directive",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.017356, need: ＄0.062686 (request id: 202608191651398357529738268d9d630s6WhKy) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-salads-r3-coaching",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.008148, need: ＄0.063168 (request id: 202608191651409231438668268d9d6sewfSth2) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-tiramisu-r2-directive",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.008148, need: ＄0.062674 (request id: 202608191651415663216798268d9d6078yPCzv) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-tiramisu-r2-supporting",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.061436, need: ＄0.062674 (request id: 202608191651421210753628268d9d6qoLSr7Jf) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-salads-r3-delegating",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.061436, need: ＄0.063168 (request id: 202608191651423153121748268d9d6XK4hAm2t) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-tiramisu-r3-delegating",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.061436, need: ＄0.063012 (request id: 202608191651429886791038268d9d6nwAi57WX) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-tiramisu-r3-directive",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.053828, need: ＄0.063012 (request id: 202608191651439219958318268d9d6P3dbWA89) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-tiramisu-r2-delegating",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.041352, need: ＄0.062764 (request id: 202608191651443467475868268d9d6X8HiK0li) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-salads-r3-directive",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.041352, need: ＄0.063358 (request id: 202608191651448260030888268d9d6nweXTGGZ) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-banquet_hot-r2-coaching",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.041352, need: ＄0.062676 (request id: 202608191651450308754368268d9d6NP8Dw2YL) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-banquet_hot-r2-delegating",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.041352, need: ＄0.062676 (request id: 202608191651453631649218268d9d64BPWesqV) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-banquet_hot-r2-directive",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.041352, need: ＄0.062676 (request id: 202608191651456750027868268d9d6Ltf3pyTm) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-banquet_hot-r2-supporting",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.041352, need: ＄0.062676 (request id: 202608191651458814943528268d9d6hQxcG9wY) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r2-coaching",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.041352, need: ＄0.062670 (request id: 202608191651463243738618268d9d6Nd9EuHxm) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r2-delegating",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.041352, need: ＄0.062670 (request id: 202608191651464285881558268d9d6GKNHLshv) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r2-directive",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.041352, need: ＄0.062670 (request id: 202608191651469853130768268d9d6Nzz91PX6) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r2-supporting",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.041352, need: ＄0.062670 (request id: 202608191651470185403628268d9d6sVrRrOGd) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r3-delegating",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.041352, need: ＄0.063006 (request id: 202608191651476193673438268d9d6QkGmmxO6) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r3-coaching",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.041352, need: ＄0.063006 (request id: 202608191651476573341518268d9d6ZHqlNzWs) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r3-supporting",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.025428, need: ＄0.063006 (request id: 202608191651488062161848268d9d6WlZLScsq) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-tiramisu-r3-coaching",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.025428, need: ＄0.063190 (request id: 202608191651489007014178268d9d6Lym4YF43) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-steak-r2-coaching",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.025428, need: ＄0.062640 (request id: 202608191651498458221098268d9d69u6Lsvn2) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-steak-r2-delegating",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.025428, need: ＄0.062640 (request id: 202608191651499486271788268d9d6c55hEzrU) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-steak-r2-supporting",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.025428, need: ＄0.062640 (request id: 202608191651508371927888268d9d6vaiJprGN) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-steak-r2-directive",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.025428, need: ＄0.062640 (request id: 202608191651509176306068268d9d6ic46f0mI) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "marina-salads-r2-coaching",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.025428, need: ＄0.062638 (request id: 202608191651513748068898268d9d6s4FniK3p) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "marina-salads-r2-delegating",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.025428, need: ＄0.062638 (request id: 202608191651515130100448268d9d6OaT4DJHr) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "marina-salads-r2-directive",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.025428, need: ＄0.062638 (request id: 202608191651519069739658268d9d6OSzIa2MP) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "marina-salads-r2-supporting",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.025428, need: ＄0.062638 (request id: 202608191651521578038538268d9d6zxpbO7Kl) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "olga-banquet_hot-r2-delegating",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.025428, need: ＄0.062688 (request id: 202608191651526520308928268d9d6Bjpn0eEz) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "olga-banquet_hot-r2-directive",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.025428, need: ＄0.062688 (request id: 202608191651527937522758268d9d6B5gj0j21) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "olga-banquet_hot-r2-supporting",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.015974, need: ＄0.062688 (request id: 202608191651534188179398268d9d6JUtCh6YD) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r3-directive",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.015974, need: ＄0.063180 (request id: 202608191651539954507958268d9d67YKTo46A) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "olga-salads-r2-directive",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.006776, need: ＄0.062658 (request id: 202608191651542526681678268d9d61jPAQmYJ) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-tiramisu-r3-supporting",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.006776, need: ＄0.063420 (request id: 202608191651546020131338268d9d6AMH1LR26) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "olga-steak-r2-delegating",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.006776, need: ＄0.062652 (request id: 202608191651548098491348268d9d6a2vi9563) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "olga-steak-r2-directive",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.006776, need: ＄0.062652 (request id: 202608191651550076885748268d9d6sPHD0Kgz) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "olga-steak-r2-supporting",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.006776, need: ＄0.062652 (request id: 202608191651558849334108268d9d6U1lVnKTi) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "olga-salads-r2-supporting",
+      "variantId": "baseline",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056310, need: ＄0.062782 (request id: 202608191651578435264568268d9d6I5Dw6b6c) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
     },
     {
       "fixtureId": "anna-apple_pies-r2-directive",
       "variantId": "self-consistency",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\nNot Found"
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.043896, need: ＄0.062698 (request id: 202608191652227086113808268d9d6NRe4YfvY) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
     },
     {
       "fixtureId": "anna-apple_pies-r2-supporting",
       "variantId": "self-consistency",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\nNot Found"
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.043896, need: ＄0.062698 (request id: 202608191652236635987468268d9d6b2P9bODV) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.043896, need: ＄0.063034 (request id: 202608191652237078297178268d9d6jhQFSG38) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.043896, need: ＄0.063034 (request id: 202608191652242837436438268d9d6irjfrlcM) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.043896, need: ＄0.063034 (request id: 202608191652246155393058268d9d62BHz46H9) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.043896, need: ＄0.063034 (request id: 202608191652245374079178268d9d6hSXpzwXX) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-coaching",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.043896, need: ＄0.062722 (request id: 202608191652253295028738268d9d6v8CRYf7K) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-coaching",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.036812, need: ＄0.063058 (request id: 202608191652269379944248268d9d6fapPZN7O) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-delegating",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.036812, need: ＄0.063058 (request id: 202608191652288283933198268d9d6itmznUF1) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-directive",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.036812, need: ＄0.063058 (request id: 202608191652295651151628268d9d6rHFUW9vy) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-coaching",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.036812, need: ＄0.062730 (request id: 202608191652304166241628268d9d6c8D33LFl) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.021870, need: ＄0.062848 (request id: 202608191652476966356708268d9d6wCGqPDsJ) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.021870, need: ＄0.062794 (request id: 202608191652477588081798268d9d6r8UW38gt) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-directive",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.021870, need: ＄0.062730 (request id: 202608191652484026948908268d9d6eb3hYcGr) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-coaching",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.021870, need: ＄0.063066 (request id: 202608191652482181817808268d9d6fiJ9WRkr) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-delegating",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.021870, need: ＄0.063066 (request id: 202608191652489624512368268d9d6TDauuopx) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.012528, need: ＄0.062854 (request id: 202608191652503235768528268d9d65AdDgC50) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-coaching",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.012528, need: ＄0.062688 (request id: 202608191652507856465458268d9d6GDyGlNvR) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-delegating",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.012528, need: ＄0.062848 (request id: 202608191652510699562848268d9d6ual3P8nO) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-delegating",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.012528, need: ＄0.062688 (request id: 202608191652515356533398268d9d6RHwZSQ0H) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-supporting",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.012528, need: ＄0.062688 (request id: 202608191652517824473128268d9d6Ji6twFKT) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-directive",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.012528, need: ＄0.062688 (request id: 202608191652513524928188268d9d682VoOfzp) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-salads-r2-coaching",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.012528, need: ＄0.062688 (request id: 202608191652524263000318268d9d6YAPBAnrB) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-salads-r2-directive",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.012528, need: ＄0.062688 (request id: 202608191652529770541368268d9d6Z7QTJqsM) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-salads-r2-supporting",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.012528, need: ＄0.062688 (request id: 202608191652530937612348268d9d6M3X7dHun) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-salads-r3-delegating",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.012528, need: ＄0.063024 (request id: 202608191652537414833698268d9d6HzKJjVET) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-salads-r3-coaching",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.012528, need: ＄0.063024 (request id: 202608191652536344520538268d9d6CMknrBq5) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-salads-r2-delegating",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.003836, need: ＄0.062688 (request id: 202608191652540280174188268d9d6yp9yTIm3) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r3-directive",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.003836, need: ＄0.063222 (request id: 202608191652547299288168268d9d6SKYtJ313) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-salads-r3-supporting",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.003836, need: ＄0.063024 (request id: 202608191652548026823708268d9d6e1vNCRoa) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-steak-r2-coaching",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.003836, need: ＄0.062686 (request id: 202608191652564345748908268d9d67SI8IDCi) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-steak-r2-delegating",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.003836, need: ＄0.062686 (request id: 202608191652564389889538268d9d646D8o6gI) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-tiramisu-r2-directive",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.003836, need: ＄0.062674 (request id: 202608191652580118664398268d9d6woG2u5Ei) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-steak-r2-directive",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.003836, need: ＄0.062686 (request id: 202608191652571373928148268d9d6FWDzHuhS) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-tiramisu-r2-supporting",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.003836, need: ＄0.062674 (request id: 202608191652591720551748268d9d6Cydnxef6) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-tiramisu-r2-delegating",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.003836, need: ＄0.062674 (request id: 202608191652576712075078268d9d6KjBMIo9N) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-tiramisu-r3-coaching",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.003836, need: ＄0.063012 (request id: 202608191652593070244198268d9d6It57rzN3) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-tiramisu-r3-supporting",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.003836, need: ＄0.063012 (request id: 202608191653003019590738268d9d6mazzrPTs) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-tiramisu-r3-directive",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.003836, need: ＄0.063012 (request id: 202608191653004665286248268d9d6g6RFRSXB) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-tiramisu-r3-delegating",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.003836, need: ＄0.063012 (request id: 202608191653001006532728268d9d6TRfgHIdL) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-banquet_hot-r2-coaching",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062676 (request id: 202608191653008240208028268d9d66ck86eHE) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-banquet_hot-r2-delegating",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062676 (request id: 202608191653009918179088268d9d6yjh3BuCZ) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-banquet_hot-r2-directive",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062676 (request id: 202608191653015489259178268d9d6io7XlT2f) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-banquet_hot-r2-supporting",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062676 (request id: 202608191653015065076238268d9d618P478zV) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "anna-salads-r3-directive",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063250 (request id: 202608191653014991995598268d9d6i0ddzNP2) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r2-coaching",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062670 (request id: 202608191653021077279638268d9d6NamiS2ZT) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r2-directive",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062670 (request id: 202608191653021750723838268d9d6HbsUAVWb) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r2-delegating",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062670 (request id: 202608191653021515252758268d9d6fF9UxW4R) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r2-supporting",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062670 (request id: 202608191653025964301678268d9d6brmU3kdF) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r3-coaching",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063006 (request id: 202608191653026531515548268d9d6t22KElQW) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r3-delegating",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063006 (request id: 202608191653028224794738268d9d6qFqWeHzz) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r3-directive",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063006 (request id: 202608191653029043453068268d9d6l8xKUIFP) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-new_menu_dish-r3-supporting",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063006 (request id: 202608191653035359007268268d9d6s0TSqzTT) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-steak-r2-coaching",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062640 (request id: 202608191653036616808708268d9d6AQmARCca) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-steak-r2-supporting",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062640 (request id: 202608191653040763703158268d9d6uyTlKxi9) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-steak-r2-directive",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062640 (request id: 202608191653041709287318268d9d6wFLZfYUL) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "igor-steak-r2-delegating",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062640 (request id: 202608191653035869354018268d9d6IcyyP9Wi) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "marina-salads-r2-coaching",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062638 (request id: 202608191653042384885648268d9d6i1hKuN15) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "marina-salads-r2-delegating",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062638 (request id: 202608191653049766649158268d9d6ncEmPBAn) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "olga-banquet_hot-r2-delegating",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653057502064938268d9d6Te1j760l) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "marina-salads-r2-supporting",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062638 (request id: 202608191653054840778458268d9d6Z89zXwRH) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "marina-salads-r2-directive",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062638 (request id: 202608191653050735740268268d9d6xEFjROQs) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "olga-banquet_hot-r2-directive",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653058119707798268d9d67GxMpt27) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "olga-banquet_hot-r2-supporting",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653069003259068268d9d66c3zwdTg) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "olga-salads-r2-delegating",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062658 (request id: 202608191653069758263568268d9d6422TTyqi) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "olga-salads-r2-directive",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062658 (request id: 202608191653074663456098268d9d6cXdwn3rq) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "olga-salads-r2-supporting",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062658 (request id: 202608191653076077251918268d9d6yqQM6CHt) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "olga-steak-r2-delegating",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062652 (request id: 202608191653078637189888268d9d6FiGTUZgm) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "olga-steak-r2-directive",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062652 (request id: 202608191653080301871518268d9d6SeRwVPWi) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
+    },
+    {
+      "fixtureId": "olga-steak-r2-supporting",
+      "variantId": "self-consistency",
+      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062652 (request id: 202608191653083573298528268d9d6fnFstdmV) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
     }
   ],
   "epochSummaries": [
@@ -161,23 +803,25 @@
       "variants": [
         {
           "variantId": "baseline",
-          "items": 0,
-          "scoreMae": 0,
+          "items": 6,
+          "scoreMae": 10.833,
           "scoreStdDev": 0,
-          "expectedStyleAccuracy": 0,
-          "actualStyleAccuracy": 0,
-          "styleKappa": 0,
-          "criteriaF1": 0,
-          "personaAdherence": 0,
+          "expectedStyleAccuracy": 1,
+          "actualStyleAccuracy": 0.833,
+          "styleKappa": 0.769,
+          "criteriaF1": 0.967,
+          "personaAdherence": 1,
           "personaDriftRate": 0,
           "personaDriftSlope": 0,
-          "silenceAccuracy": 0,
-          "avgLatencyMs": 0,
-          "totalInputTokens": 0,
-          "totalOutputTokens": 0,
-          "totalCostUsd": 0,
-          "avgCostUsd": 0,
-          "modelMix": {}
+          "silenceAccuracy": 1,
+          "avgLatencyMs": 26966,
+          "totalInputTokens": 36790,
+          "totalOutputTokens": 4402,
+          "totalCostUsd": 0.1764,
+          "avgCostUsd": 0.0294,
+          "modelMix": {
+            "claude-sonnet-5": 6
+          }
         },
         {
           "variantId": "self-consistency",
@@ -202,7 +846,212 @@
       ]
     }
   ],
-  "items": [],
+  "items": [
+    {
+      "fixtureId": "anna-decorated_cake-r2-delegating",
+      "variantId": "baseline",
+      "epoch": 1,
+      "score": 13,
+      "expertScore": 5,
+      "absError": 8,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 14048,
+      "inputTokens": 4089,
+      "outputTokens": 395,
+      "costUsd": 0.018192,
+      "run": 1,
+      "models": [
+        "claude-sonnet-5"
+      ]
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-coaching",
+      "variantId": "baseline",
+      "epoch": 1,
+      "score": 49,
+      "expertScore": 34,
+      "absError": 15,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "supporting",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 19103,
+      "inputTokens": 5665,
+      "outputTokens": 703,
+      "costUsd": 0.027540000000000002,
+      "run": 1,
+      "models": [
+        "claude-sonnet-5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "baseline",
+      "epoch": 1,
+      "score": 64,
+      "expertScore": 40,
+      "absError": 24,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 36995,
+      "inputTokens": 6001,
+      "outputTokens": 438,
+      "costUsd": 0.024573,
+      "run": 1,
+      "models": [
+        "claude-sonnet-5"
+      ]
+    },
+    {
+      "fixtureId": "anna-decorated_cake-r2-directive",
+      "variantId": "baseline",
+      "epoch": 1,
+      "score": 93,
+      "expertScore": 90,
+      "absError": 3,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 22517,
+      "inputTokens": 5595,
+      "outputTokens": 782,
+      "costUsd": 0.028515,
+      "run": 1,
+      "models": [
+        "claude-sonnet-5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-directive",
+      "variantId": "baseline",
+      "epoch": 1,
+      "score": 91,
+      "expertScore": 86,
+      "absError": 5,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 39770,
+      "inputTokens": 11208,
+      "outputTokens": 1774,
+      "costUsd": 0.060233999999999996,
+      "run": 1,
+      "models": [
+        "claude-sonnet-5"
+      ]
+    },
+    {
+      "fixtureId": "olga-salads-r2-delegating",
+      "variantId": "baseline",
+      "epoch": 1,
+      "score": 100,
+      "expertScore": 90,
+      "absError": 10,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 29363,
+      "inputTokens": 4232,
+      "outputTokens": 310,
+      "costUsd": 0.017346,
+      "run": 1,
+      "models": [
+        "claude-sonnet-5"
+      ]
+    }
+  ],
   "unpricedModels": [],
   "evaluationStrategyMismatch": []
 }
