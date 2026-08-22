@@ -1,14 +1,13 @@
+import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-import { afterEach, beforeEach, describe, expect, test } from "bun:test";
-
 import {
   buildCandidateArms,
   loadPromptArtifact,
-  type PromptArtifact,
   PROMPT_ARTIFACT_VERSION,
+  type PromptArtifact,
   writePromptArtifact,
 } from "./artifact";
 

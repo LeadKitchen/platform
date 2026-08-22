@@ -13,8 +13,10 @@
       "!**/.next",
       "!**/packages/ui/**/*",
       "!**/tooling/**/*",
-      "!**/apps/app/**/*.css"
-    ]
+      "!**/apps/app/**/*.css",
+      "!**/reports/*"
+    ],
+    "maxSize": 1100000
   },
   "formatter": {
     "enabled": true,
