@@ -27,7 +27,7 @@ import { z } from "zod";
 import { authClient } from "~/auth/client";
 
 const signInSchema = z.object({
-  email: z.string().email("Некорректный email адрес"),
+  email: z.string().email("Некорректный адрес электронной почты"),
   password: z.string().min(8, "Пароль должен содержать минимум 8 символов"),
 });
 
