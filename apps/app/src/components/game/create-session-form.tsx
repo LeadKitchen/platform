@@ -86,9 +86,6 @@ export function CreateSessionForm({ defaults }: { defaults: SessionDefaults }) {
             onChange={(event) => setTitle(event.target.value)}
             placeholder="Например, Команда шефов"
           />
-          <FieldDescription>
-            Если оставить поле пустым, мы назовём смену автоматически.
-          </FieldDescription>
         </Field>
 
         <Field>
@@ -114,6 +111,10 @@ export function CreateSessionForm({ defaults }: { defaults: SessionDefaults }) {
         <Button type="submit" size="lg" disabled={pending}>
           {pending ? "Готовим смену…" : "Начать практику"}
         </Button>
+
+        <FieldDescription>
+          Если оставить поле пустым, мы назовём смену автоматически.
+        </FieldDescription>
 
         {error ? (
           <p className="text-destructive text-sm lg:col-span-3">{error}</p>
