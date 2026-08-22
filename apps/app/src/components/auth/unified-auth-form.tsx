@@ -30,6 +30,19 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { authClient } from "~/auth/client";
 
+const DEMO_ACCOUNTS = [
+  {
+    label: "Администратор",
+    email: "demo-admin@sitruk.demo",
+    password: "DemoAdmin123!",
+  },
+  {
+    label: "Участник",
+    email: "demo-player@sitruk.demo",
+    password: "DemoPlayer123!",
+  },
+] as const;
+
 const emailPasswordSchema = z.object({
   email: z.email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
@@ -143,6 +156,38 @@ export function UnifiedAuthForm({
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
+          {mode === "signin" && (
+            <div className="rounded-md border border-dashed p-3 text-sm">
+              <p className="mb-2 font-medium">Демо-доступ для тестирования</p>
+              <div className="space-y-2">
+                {DEMO_ACCOUNTS.map((account) => (
+                  <div
+                    key={account.email}
+                    className="flex items-center justify-between gap-2"
+                  >
+                    <div className="text-muted-foreground">
+                      <span className="font-medium text-foreground">
+                        {account.label}:
+                      </span>{" "}
+                      {account.email} / {account.password}
+                    </div>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => {
+                        passwordForm.setValue("email", account.email);
+                        passwordForm.setValue("password", account.password);
+                      }}
+                    >
+                      Заполнить
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <Button
             variant="outline"
             className="w-full"
