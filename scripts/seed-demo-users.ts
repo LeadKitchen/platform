@@ -4,7 +4,7 @@
  * participant. Re-running is safe — existing accounts are left untouched.
  */
 import { initAuth } from "@acme/auth";
-import { AppAdmin, db, eq, user as User } from "@acme/db";
+import { account as Account, AppAdmin, db, eq, user as User } from "@acme/db";
 
 export const DEMO_ADMIN = {
   email: "demo-admin@sitruk.demo",
@@ -33,8 +33,18 @@ async function ensureUser(account: {
     where: eq(User.email, account.email),
   });
   if (existing) {
-    console.log(`Уже существует: ${account.email}`);
-    return existing;
+    const credentialAccount = await db.query.account.findFirst({
+      where: eq(Account.userId, existing.id),
+    });
+    if (credentialAccount) {
+      console.log(`Уже существует: ${account.email}`);
+      return existing;
+    }
+    // User row exists without a credential account (e.g. a previous seed
+    // run was interrupted between creating the user and the account).
+    // Drop it and recreate through signUpEmail so the password is set.
+    console.log(`Восстанавливаю битую запись: ${account.email}`);
+    await db.delete(User).where(eq(User.id, existing.id));
   }
 
   const result = await auth.api.signUpEmail({
