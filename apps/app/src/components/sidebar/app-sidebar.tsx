@@ -166,7 +166,9 @@ export function AppSidebar({
   isAdmin?: boolean;
 }) {
   const navMain = data.navMain.filter(
-    (item) => isAdmin || item.url !== "/admin/game/overview",
+    (item) =>
+      isAdmin ||
+      (item.url !== "/admin/game/overview" && item.url !== "/docs/ai"),
   );
 
   return (

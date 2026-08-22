@@ -12,11 +12,8 @@
  * `@vercel/otel` pipeline above.
  * @see https://laminar.sh/docs/tracing/integrations/overview
  */
-import { registerOTel } from "@vercel/otel";
 
 export async function register() {
-  registerOTel({ serviceName: "acme-app" });
-
   if (process.env.NEXT_RUNTIME === "nodejs") {
     const { Laminar, registerAiSdkTelemetry } = await import("@lmnr-ai/lmnr");
     Laminar.initialize({ projectApiKey: process.env.LMNR_PROJECT_API_KEY });
