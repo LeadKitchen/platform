@@ -14,6 +14,7 @@ import {
 import {
   IconAdjustments,
   IconArrowsSort,
+  IconBook2,
   IconBrain,
   IconBulb,
   IconChartBar,
@@ -143,6 +144,11 @@ const data = {
           url: "/admin/game/settings",
           icon: IconSettings,
         },
+        {
+          title: "Документация",
+          url: "/admin/docs",
+          icon: IconBook2,
+        },
       ],
     },
   ],
@@ -177,11 +183,13 @@ export function AppSidebar({
                 "/admin/game/variants",
                 "/admin/game/benchmarks",
                 "/admin/game/settings",
+                "/admin/docs",
               ]
             : [
                 "/admin/game/overview",
                 "/admin/game/sessions",
                 "/admin/game/dialogs",
+                "/admin/docs",
               ],
       );
       return {
