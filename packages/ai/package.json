@@ -21,16 +21,16 @@
   },
   "dependencies": {
     "@acme/game": "workspace:*",
-    "@ai-sdk/anthropic": "4.0.39",
-    "@ai-sdk/openai": "4.0.42",
-    "@ai-sdk/openai-compatible": "3.0.30",
-    "@lmnr-ai/lmnr": "^0.8.43",
-    "ai": "7.0.66",
+    "@ai-sdk/anthropic": "4.0.41",
+    "@ai-sdk/openai": "4.0.46",
+    "@ai-sdk/openai-compatible": "3.0.35",
+    "@lmnr-ai/lmnr": "^0.8.45",
+    "ai": "7.0.77",
     "zod": "4.4.3"
   },
   "devDependencies": {
     "@acme/tsconfig": "workspace:*",
-    "@types/bun": "1.3.14",
+    "@types/bun": "1.4.0",
     "@types/node": "26.2.0",
     "typescript": "7.0.2"
   }
