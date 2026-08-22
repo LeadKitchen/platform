@@ -43,8 +43,12 @@ const securityHeaders = [
 
 export default async function createNextConfig(): Promise<NextConfig> {
   const config: NextConfig = {
-    /** Enables hot reloading for local packages without a build step */
-    output: "standalone",
+    /**
+     * Enables hot reloading for local packages without a build step.
+     * Must stay off on Vercel — its builder manages its own file tracing,
+     * and standalone output breaks Vercel's post-build `.nft.json` step.
+     */
+    output: process.env.VERCEL ? undefined : "standalone",
     transpilePackages: [
       "@acme/api",
       "@acme/auth",
