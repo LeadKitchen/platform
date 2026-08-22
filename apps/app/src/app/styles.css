@@ -26,4 +26,11 @@
   body {
     letter-spacing: var(--tracking-normal);
   }
+  h1,
+  h2,
+  h3,
+  [data-slot="card-title"] {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
 }

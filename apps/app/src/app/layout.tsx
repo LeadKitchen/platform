@@ -1,10 +1,24 @@
 import { APP_CONFIG } from "@acme/config";
 import { ThemeProvider, Toaster } from "@acme/ui";
 import type { Metadata, Viewport } from "next";
+import { Inter, Lora } from "next/font/google";
 import { env } from "~/env";
 import { ORPCReactProvider } from "~/orpc/react";
 
 import "~/app/styles.css";
+
+const inter = Inter({
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const lora = Lora({
+  subsets: ["latin", "cyrillic"],
+  weight: ["500", "600", "700"],
+  variable: "--font-lora",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -31,7 +45,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
-    <html lang="ru" suppressHydrationWarning>
+    <html
+      lang="ru"
+      suppressHydrationWarning
+      className={`${inter.variable} ${lora.variable}`}
+    >
       <body className="bg-background text-foreground min-h-screen font-sans antialiased">
         <ThemeProvider>
           <ORPCReactProvider>{props.children}</ORPCReactProvider>

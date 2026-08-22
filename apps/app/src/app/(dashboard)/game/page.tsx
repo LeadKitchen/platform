@@ -49,7 +49,7 @@ export default async function GamePage() {
     <>
       <SiteHeader />
       <div className="flex flex-1 flex-col gap-6 p-4 lg:p-6">
-        <Card className="bg-muted/30 overflow-hidden">
+        <Card className="from-accent/60 via-card to-card overflow-hidden bg-gradient-to-br">
           <CardHeader>
             <Badge variant="secondary" className="w-fit">
               Тренажёр руководителя

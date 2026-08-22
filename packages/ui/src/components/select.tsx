@@ -1,12 +1,57 @@
 "use client";
 
-import type * as React from "react";
+import * as React from "react";
 import { Select as SelectPrimitive } from "@base-ui/react/select";
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 
 import { cn } from ".";
 
-const Select = SelectPrimitive.Root;
+/**
+ * Base UI only resolves `<SelectValue>`'s label from the `items` map passed
+ * to `<Select.Root>` — it does not read it back from rendered `<SelectItem>`
+ * children, so without this the trigger shows the raw value instead of its
+ * label. Walking the authored JSX tree here lets every call site keep the
+ * simple `<SelectItem value={x}>{label}</SelectItem>` shape.
+ */
+function collectSelectItems(
+  children: React.ReactNode,
+  acc: Record<string, React.ReactNode>,
+) {
+  React.Children.forEach(children, (child) => {
+    if (!React.isValidElement(child)) return;
+    if (child.type === SelectItem) {
+      const { value, children: label } = child.props as {
+        value?: unknown;
+        children?: React.ReactNode;
+      };
+      if (value != null) acc[String(value)] = label;
+      return;
+    }
+    const childProps = child.props as { children?: React.ReactNode } | null;
+    if (childProps?.children != null) {
+      collectSelectItems(childProps.children, acc);
+    }
+  });
+}
+
+function Select({
+  children,
+  items,
+  ...props
+}: React.ComponentProps<typeof SelectPrimitive.Root>) {
+  const resolvedItems = React.useMemo(() => {
+    if (items) return items;
+    const acc: Record<string, React.ReactNode> = {};
+    collectSelectItems(children, acc);
+    return acc;
+  }, [children, items]);
+
+  return (
+    <SelectPrimitive.Root items={resolvedItems} {...props}>
+      {children}
+    </SelectPrimitive.Root>
+  );
+}
 
 function SelectGroup({ className, ...props }: SelectPrimitive.Group.Props) {
   return (
