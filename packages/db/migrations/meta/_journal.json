@@ -43,6 +43,13 @@
       "when": 1787395754561,
       "tag": "0005_charming_argent",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1787400043097,
+      "tag": "0006_amazing_kree",
+      "breakpoints": true
     }
   ]
 }
