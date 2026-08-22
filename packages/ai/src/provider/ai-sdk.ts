@@ -283,7 +283,7 @@ export function createAiSdkProvider(
 
           // Last-ditch: the SDK kept the raw text, and the object is often
           // sitting inside it behind a line of prose.
-          const text = lastText ?? (cause as { text?: string }).text;
+          const text = (cause as { text?: string }).text ?? lastText;
           if (typeof text === "string") {
             const salvaged = salvageJson(text);
             if (salvaged !== undefined) {
@@ -329,7 +329,7 @@ export function createAiSdkProvider(
       // undebuggable: the SDK's message only says "did not match schema", and
       // the offending text is the one thing needed to fix either the prompt or
       // the schema.
-      const raw = lastText ?? (lastError as { text?: string })?.text;
+      const raw = (lastError as { text?: string })?.text ?? lastText;
       const detail = (lastError as { cause?: { message?: string } })?.cause
         ?.message;
 
