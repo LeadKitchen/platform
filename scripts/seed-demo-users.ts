@@ -4,7 +4,14 @@
  * participant. Re-running is safe — existing accounts are left untouched.
  */
 import { initAuth } from "@acme/auth";
-import { account as Account, AppAdmin, db, eq, user as User } from "@acme/db";
+import {
+  account as Account,
+  and,
+  AppAdmin,
+  db,
+  eq,
+  user as User,
+} from "@acme/db";
 
 export const DEMO_ADMIN = {
   email: "demo-admin@sitruk.demo",
@@ -34,7 +41,10 @@ async function ensureUser(account: {
   });
   if (existing) {
     const credentialAccount = await db.query.account.findFirst({
-      where: eq(Account.userId, existing.id),
+      where: and(
+        eq(Account.userId, existing.id),
+        eq(Account.issuer, "local:credential"),
+      ),
     });
     if (credentialAccount) {
       console.log(`Уже существует: ${account.email}`);
