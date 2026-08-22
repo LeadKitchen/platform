@@ -8,7 +8,7 @@ import {
 } from "@acme/db";
 import { z } from "zod";
 
-import { facilitatorProcedure } from "../../../orpc";
+import { adminProcedure } from "../../../orpc";
 
 const insightSchema = z.object({
   answer: z.string().min(1).max(2000),
@@ -24,7 +24,7 @@ const insightSchema = z.object({
   suggestedQuestions: z.array(z.string().min(1).max(200)).max(4),
 });
 
-export const analyze = facilitatorProcedure
+export const analyze = adminProcedure
   .input(z.object({ question: z.string().trim().min(5).max(2000) }))
   .handler(async ({ context, input }) => {
     const [evaluations, events] = await Promise.all([

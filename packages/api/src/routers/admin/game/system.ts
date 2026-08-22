@@ -14,9 +14,9 @@ import { z } from "zod";
 
 import { mutateConfig } from "../../../game/config-version";
 import { loadGameSettings } from "../../../game/settings";
-import { facilitatorProcedure, methodologistProcedure } from "../../../orpc";
+import { adminProcedure } from "../../../orpc";
 
-export const overview = facilitatorProcedure.handler(async ({ context }) => {
+export const overview = adminProcedure.handler(async ({ context }) => {
   const [sessions, dialogs, evaluations, employees, tasks, variants, settings] =
     await Promise.all([
       context.db.select({ count: count() }).from(GameSession),
@@ -43,7 +43,6 @@ export const overview = facilitatorProcedure.handler(async ({ context }) => {
       variants: variants[0]?.count ?? 0,
     },
     runtime: {
-      adminRole: context.adminRole,
       provider: process.env.AI_PROVIDER ?? "auto",
       model: process.env.AI_MODEL ?? process.env.OPENAI_MODEL ?? "по умолчанию",
       defaultVariant: process.env.AI_DEFAULT_VARIANT ?? "baseline",
@@ -55,7 +54,7 @@ export const overview = facilitatorProcedure.handler(async ({ context }) => {
   };
 });
 
-export const updateSettings = methodologistProcedure
+export const updateSettings = adminProcedure
   .input(
     z.object({
       defaultVariantId: z.string().min(1).max(64).nullable(),
