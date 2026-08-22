@@ -33,6 +33,7 @@ import {
   IconSparkles,
   IconUsers,
   IconUsersGroup,
+  IconWand,
 } from "@tabler/icons-react";
 import type * as React from "react";
 import { NavMain, NavSecondary, NavUser } from "~/components/sidebar";
@@ -144,10 +145,58 @@ const data = {
           url: "/admin/game/settings",
           icon: IconSettings,
         },
+      ],
+    },
+    {
+      title: "Документация",
+      url: "/admin/docs",
+      icon: IconBook2,
+      items: [
         {
-          title: "Документация",
+          title: "Обзор",
           url: "/admin/docs",
           icon: IconBook2,
+          exact: true,
+        },
+        {
+          title: "Что такое продукт",
+          url: "/admin/docs/product-overview",
+          icon: IconSparkles,
+        },
+        {
+          title: "Как устроена игра для сотрудника",
+          url: "/admin/docs/game-flow",
+          icon: IconClipboardList,
+        },
+        {
+          title: "Разделы административной панели",
+          url: "/admin/docs/admin-panel",
+          icon: IconShieldLock,
+        },
+        {
+          title: "ИИ-помощники внутри админ-панели",
+          url: "/admin/docs/admin-copilots",
+          icon: IconWand,
+        },
+        {
+          title: "Роли и права доступа",
+          url: "/admin/docs/roles-access",
+          icon: IconUsers,
+        },
+        {
+          title: "Как ИИ понимает контекст и как измеряется качество",
+          url: "/admin/docs/ai-quality",
+          icon: IconBrain,
+        },
+        {
+          title: "Отчёты о качестве и сравнительные тесты",
+          url: "/admin/docs/reports-benchmarks",
+          icon: IconReportAnalytics,
+        },
+        {
+          title: "Настройки и техническая эксплуатация",
+          url: "/admin/docs/settings-integrations",
+          icon: IconSettings,
         },
       ],
     },
@@ -168,7 +217,9 @@ export function AppSidebar({
   const navMain = data.navMain.filter(
     (item) =>
       isAdmin ||
-      (item.url !== "/admin/game/overview" && item.url !== "/docs/ai"),
+      (item.url !== "/admin/game/overview" &&
+        item.url !== "/admin/docs" &&
+        item.url !== "/docs/ai"),
   );
 
   return (

@@ -34,6 +34,16 @@ const SESSION_STATUS_LABELS: Record<string, string> = {
   archived: "в архиве",
 };
 
+const SESSION_STATUS_VARIANTS: Record<
+  string,
+  "accent" | "secondary" | "outline"
+> = {
+  active: "accent",
+  completed: "secondary",
+  finished: "secondary",
+  archived: "outline",
+};
+
 export default async function GamePage() {
   const [sessions, catalog, playerProgress] = await Promise.all([
     api.game.session.list({ limit: 20, offset: 0 }),
@@ -49,9 +59,9 @@ export default async function GamePage() {
     <>
       <SiteHeader />
       <div className="flex flex-1 flex-col gap-6 p-4 lg:p-6">
-        <Card className="bg-muted/30 overflow-hidden">
+        <Card className="from-accent/60 via-card to-card overflow-hidden bg-gradient-to-br">
           <CardHeader>
-            <Badge variant="secondary" className="w-fit">
+            <Badge variant="accent" className="w-fit">
               Тренажёр руководителя
             </Badge>
             <CardTitle className="max-w-3xl text-2xl leading-tight sm:text-3xl">
@@ -254,7 +264,11 @@ export default async function GamePage() {
                   </span>
                 </span>
                 <span className="flex flex-wrap items-center gap-2">
-                  <Badge variant="outline">
+                  <Badge
+                    variant={
+                      SESSION_STATUS_VARIANTS[session.status] ?? "outline"
+                    }
+                  >
                     {SESSION_STATUS_LABELS[session.status] ?? session.status}
                   </Badge>
                   <IconArrowRight />

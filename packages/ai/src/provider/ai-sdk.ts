@@ -2,7 +2,7 @@ import { createAnthropic } from "@ai-sdk/anthropic";
 import { createOpenAI } from "@ai-sdk/openai";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import type { LanguageModel } from "ai";
-import { generateObject } from "ai";
+import { generateText, Output } from "ai";
 import { z } from "zod";
 
 import type { LlmProvider, LlmRequest, LlmResult } from "./types";
@@ -110,11 +110,17 @@ function salvagePersonaReply(text: string): unknown {
 /**
  * Vendor-neutral provider built on the Vercel AI SDK.
  *
- * One `generateObject` call site covers OpenAI, Anthropic and any
- * OpenAI-compatible gateway, which is what turns "which model should we use?"
- * into another arm of the experiment instead of a rewrite. The SDK also owns
- * the structured-output negotiation (native JSON schema where supported,
- * prompt-injected schema where not).
+ * One `generateText` call site (with `output: Output.object(...)`) covers
+ * OpenAI, Anthropic and any OpenAI-compatible gateway, which is what turns
+ * "which model should we use?" into another arm of the experiment instead of
+ * a rewrite. The SDK also owns the structured-output negotiation (native JSON
+ * schema where supported, prompt-injected schema where not).
+ *
+ * `generateText` is used instead of the deprecated `generateObject`: parsing
+ * the schema is a separate step from the model call here, so `result.text`
+ * (the raw model answer) stays available for salvage — and for tracing —
+ * even when schema validation fails. `generateObject` throws before either
+ * is recorded.
  */
 export type AiSdkVendor = "openai" | "anthropic" | "openai-compatible";
 
@@ -211,6 +217,11 @@ export function createAiSdkProvider(
       let cachedTokens = 0;
       let cacheWriteTokens = 0;
       let lastError: unknown;
+      // Raw model text, kept outside the try/catch so it survives an
+      // `output` access that throws (schema didn't validate) — this is what
+      // lets both salvage below and the Laminar trace see what the model
+      // actually said, not just the request.
+      let lastText: string | undefined;
 
       for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
         request.signal?.throwIfAborted();
@@ -225,14 +236,14 @@ export function createAiSdkProvider(
             : request.system + schemaHint(request.schema);
 
         try {
-          const result = await generateObject({
+          const result = await generateText({
             model,
-            schema: request.schema,
             system,
             messages: request.messages.map((message) => ({
               role: message.role,
               content: message.content,
             })),
+            output: Output.object({ schema: request.schema }),
             maxOutputTokens,
             // Retries belong to the pool, not to the SDK: an availability
             // failure should move to the next candidate immediately instead of
@@ -246,9 +257,14 @@ export function createAiSdkProvider(
           cachedTokens += result.usage.inputTokenDetails?.cacheReadTokens ?? 0;
           cacheWriteTokens +=
             result.usage.inputTokenDetails?.cacheWriteTokens ?? 0;
+          lastText = result.text;
 
+          // `result.output` parses/validates lazily and throws
+          // `NoOutputGeneratedError` here — inside this same try — if the
+          // model's text didn't match the schema. `lastText` above is already
+          // set by that point, so the catch block below can still salvage it.
           return {
-            value: result.object as T,
+            value: result.output as T,
             usage: {
               inputTokens,
               outputTokens,
@@ -267,7 +283,7 @@ export function createAiSdkProvider(
 
           // Last-ditch: the SDK kept the raw text, and the object is often
           // sitting inside it behind a line of prose.
-          const text = (cause as { text?: string }).text;
+          const text = (cause as { text?: string }).text ?? lastText;
           if (typeof text === "string") {
             const salvaged = salvageJson(text);
             if (salvaged !== undefined) {
@@ -313,7 +329,7 @@ export function createAiSdkProvider(
       // undebuggable: the SDK's message only says "did not match schema", and
       // the offending text is the one thing needed to fix either the prompt or
       // the schema.
-      const raw = (lastError as { text?: string })?.text;
+      const raw = (lastError as { text?: string })?.text ?? lastText;
       const detail = (lastError as { cause?: { message?: string } })?.cause
         ?.message;
 

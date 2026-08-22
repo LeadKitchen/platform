@@ -74,6 +74,16 @@ const STATUS_LABELS: Record<string, string> = {
   failed: "испорчен",
 };
 
+const STATUS_VARIANTS: Record<
+  string,
+  "outline" | "accent" | "success" | "destructive"
+> = {
+  queued: "outline",
+  in_progress: "accent",
+  done: "success",
+  failed: "destructive",
+};
+
 /**
  * Очередь заказов сессии: распределение заказов по сотрудникам и вход в диалог.
  *
@@ -332,7 +342,7 @@ export function OrderQueue(props: {
                   <Badge variant="outline">
                     <IconClock /> {order.deadlineMinutes} мин
                   </Badge>
-                  <Badge variant="secondary">
+                  <Badge variant={STATUS_VARIANTS[order.status] ?? "secondary"}>
                     {STATUS_LABELS[order.status] ?? order.status}
                   </Badge>
                 </div>
