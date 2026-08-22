@@ -3027,9 +3027,7 @@
       "outputTokens": 201,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-apple_pies-r2-directive",
@@ -3061,9 +3059,7 @@
       "outputTokens": 284,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-apple_pies-r2-supporting",
@@ -3095,9 +3091,7 @@
       "outputTokens": 252,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-coaching",
@@ -3129,9 +3123,7 @@
       "outputTokens": 317,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-delegating",
@@ -3163,9 +3155,7 @@
       "outputTokens": 274,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-directive",
@@ -3197,9 +3187,7 @@
       "outputTokens": 321,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-supporting",
@@ -3231,9 +3219,7 @@
       "outputTokens": 489,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-banquet_hot-r2-coaching",
@@ -3265,9 +3251,7 @@
       "outputTokens": 314,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-banquet_hot-r2-delegating",
@@ -3299,9 +3283,7 @@
       "outputTokens": 260,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-banquet_hot-r2-directive",
@@ -3333,9 +3315,7 @@
       "outputTokens": 292,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-banquet_hot-r3-coaching",
@@ -3367,9 +3347,7 @@
       "outputTokens": 334,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-banquet_hot-r3-delegating",
@@ -3401,9 +3379,7 @@
       "outputTokens": 266,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-banquet_hot-r3-directive",
@@ -3435,9 +3411,7 @@
       "outputTokens": 501,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-decorated_cake-r2-coaching",
@@ -3469,9 +3443,7 @@
       "outputTokens": 286,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-decorated_cake-r2-delegating",
@@ -3503,9 +3475,7 @@
       "outputTokens": 210,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-decorated_cake-r2-directive",
@@ -3537,9 +3507,7 @@
       "outputTokens": 296,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-decorated_cake-r3-coaching",
@@ -3571,9 +3539,7 @@
       "outputTokens": 332,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-decorated_cake-r3-delegating",
@@ -3605,9 +3571,7 @@
       "outputTokens": 240,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-decorated_cake-r3-directive",
@@ -3639,9 +3603,7 @@
       "outputTokens": 536,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-prep_veggies-r2-coaching",
@@ -3673,9 +3635,7 @@
       "outputTokens": 363,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-prep_veggies-r2-delegating",
@@ -3707,9 +3667,7 @@
       "outputTokens": 177,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-prep_veggies-r2-directive",
@@ -3741,9 +3699,7 @@
       "outputTokens": 272,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-prep_veggies-r2-supporting",
@@ -3775,9 +3731,7 @@
       "outputTokens": 240,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-salads-r2-coaching",
@@ -3809,9 +3763,7 @@
       "outputTokens": 266,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-salads-r2-delegating",
@@ -3843,9 +3795,7 @@
       "outputTokens": 188,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-salads-r2-directive",
@@ -3877,9 +3827,7 @@
       "outputTokens": 254,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-salads-r2-supporting",
@@ -3911,9 +3859,7 @@
       "outputTokens": 307,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-salads-r3-coaching",
@@ -3945,9 +3891,7 @@
       "outputTokens": 457,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-salads-r3-delegating",
@@ -3979,9 +3923,7 @@
       "outputTokens": 278,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-salads-r3-directive",
@@ -4013,9 +3955,7 @@
       "outputTokens": 372,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-salads-r3-supporting",
@@ -4047,9 +3987,7 @@
       "outputTokens": 297,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-steak-r2-coaching",
@@ -4081,9 +4019,7 @@
       "outputTokens": 255,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-steak-r2-delegating",
@@ -4115,9 +4051,7 @@
       "outputTokens": 195,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-steak-r2-directive",
@@ -4149,9 +4083,7 @@
       "outputTokens": 276,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-tiramisu-r2-delegating",
@@ -4183,9 +4115,7 @@
       "outputTokens": 171,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-tiramisu-r2-directive",
@@ -4217,9 +4147,7 @@
       "outputTokens": 267,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     },
     {
       "fixtureId": "anna-tiramisu-r2-supporting",
@@ -4251,9 +4179,7 @@
       "outputTokens": 291,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "llama-3.3-70b-versatile"
-      ]
+      "models": ["llama-3.3-70b-versatile"]
     }
   ],
   "poolStats": {

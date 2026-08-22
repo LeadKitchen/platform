@@ -621,9 +621,7 @@
       "outputTokens": 1656,
       "costUsd": 0.048876,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r2-supporting",
@@ -655,9 +653,7 @@
       "outputTokens": 2317,
       "costUsd": 0.066261,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-coaching",
@@ -689,9 +685,7 @@
       "outputTokens": 2880,
       "costUsd": 0.078198,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r2-directive",
@@ -723,9 +717,7 @@
       "outputTokens": 2209,
       "costUsd": 0.06434100000000001,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-delegating",
@@ -757,9 +749,7 @@
       "outputTokens": 2402,
       "costUsd": 0.06966900000000001,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-directive",
@@ -791,9 +781,7 @@
       "outputTokens": 3020,
       "costUsd": 0.080499,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r2-coaching",
@@ -825,9 +813,7 @@
       "outputTokens": 3105,
       "costUsd": 0.079575,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-supporting",
@@ -859,9 +845,7 @@
       "outputTokens": 3692,
       "costUsd": 0.106797,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r2-delegating",
@@ -893,9 +877,7 @@
       "outputTokens": 2780,
       "costUsd": 0.072489,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r2-directive",
@@ -927,9 +909,7 @@
       "outputTokens": 2634,
       "costUsd": 0.071211,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r3-coaching",
@@ -961,9 +941,7 @@
       "outputTokens": 3529,
       "costUsd": 0.090549,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r3-delegating",
@@ -995,9 +973,7 @@
       "outputTokens": 2651,
       "costUsd": 0.06908700000000001,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r2-coaching",
@@ -1029,9 +1005,7 @@
       "outputTokens": 2474,
       "costUsd": 0.068382,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r3-directive",
@@ -1063,9 +1037,7 @@
       "outputTokens": 4156,
       "costUsd": 0.116859,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r2-delegating",
@@ -1097,9 +1069,7 @@
       "outputTokens": 2008,
       "costUsd": 0.054828,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r2-directive",
@@ -1131,9 +1101,7 @@
       "outputTokens": 2407,
       "costUsd": 0.067989,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r3-coaching",
@@ -1165,9 +1133,7 @@
       "outputTokens": 2952,
       "costUsd": 0.07975499999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r3-delegating",
@@ -1199,9 +1165,7 @@
       "outputTokens": 2997,
       "costUsd": 0.076104,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r3-directive",
@@ -1233,9 +1197,7 @@
       "outputTokens": 3698,
       "costUsd": 0.106548,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-prep_veggies-r2-coaching",
@@ -1267,9 +1229,7 @@
       "outputTokens": 2429,
       "costUsd": 0.067398,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-prep_veggies-r2-delegating",
@@ -1301,9 +1261,7 @@
       "outputTokens": 1669,
       "costUsd": 0.048897,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-prep_veggies-r2-directive",
@@ -1335,9 +1293,7 @@
       "outputTokens": 2362,
       "costUsd": 0.066606,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-prep_veggies-r2-supporting",
@@ -1369,9 +1325,7 @@
       "outputTokens": 2056,
       "costUsd": 0.061212,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r2-delegating",
@@ -1403,9 +1357,7 @@
       "outputTokens": 2018,
       "costUsd": 0.054540000000000005,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r2-coaching",
@@ -1437,9 +1389,7 @@
       "outputTokens": 2521,
       "costUsd": 0.068571,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r2-directive",
@@ -1471,9 +1421,7 @@
       "outputTokens": 2721,
       "costUsd": 0.072408,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r2-supporting",
@@ -1505,9 +1453,7 @@
       "outputTokens": 2830,
       "costUsd": 0.074241,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r3-delegating",
@@ -1539,9 +1485,7 @@
       "outputTokens": 3254,
       "costUsd": 0.08474699999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r3-coaching",
@@ -1573,9 +1517,7 @@
       "outputTokens": 3945,
       "costUsd": 0.113061,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r3-directive",
@@ -1607,9 +1549,7 @@
       "outputTokens": 2966,
       "costUsd": 0.0801,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-steak-r2-coaching",
@@ -1641,9 +1581,7 @@
       "outputTokens": 2660,
       "costUsd": 0.071937,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-steak-r2-delegating",
@@ -1675,9 +1613,7 @@
       "outputTokens": 2429,
       "costUsd": 0.061554000000000005,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-steak-r2-directive",
@@ -1709,9 +1645,7 @@
       "outputTokens": 2467,
       "costUsd": 0.069027,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r2-delegating",
@@ -1743,9 +1677,7 @@
       "outputTokens": 1564,
       "costUsd": 0.047232,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r2-directive",
@@ -1777,9 +1709,7 @@
       "outputTokens": 2296,
       "costUsd": 0.06482399999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r2-supporting",
@@ -1811,9 +1741,7 @@
       "outputTokens": 2192,
       "costUsd": 0.064353,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r3-coaching",
@@ -1845,9 +1773,7 @@
       "outputTokens": 2984,
       "costUsd": 0.080001,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r3-delegating",
@@ -1879,9 +1805,7 @@
       "outputTokens": 2006,
       "costUsd": 0.057033,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r3-directive",
@@ -1913,9 +1837,7 @@
       "outputTokens": 2797,
       "costUsd": 0.07732800000000001,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r3-supporting",
@@ -1947,9 +1869,7 @@
       "outputTokens": 3250,
       "costUsd": 0.09816,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r3-supporting",
@@ -1981,9 +1901,7 @@
       "outputTokens": 2231,
       "costUsd": 0.068127,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-banquet_hot-r2-coaching",
@@ -2015,9 +1933,7 @@
       "outputTokens": 3627,
       "costUsd": 0.092709,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-banquet_hot-r2-delegating",
@@ -2049,9 +1965,7 @@
       "outputTokens": 2177,
       "costUsd": 0.057852,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-banquet_hot-r2-directive",
@@ -2083,9 +1997,7 @@
       "outputTokens": 2738,
       "costUsd": 0.072918,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r2-coaching",
@@ -2117,9 +2029,7 @@
       "outputTokens": 2913,
       "costUsd": 0.076026,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-banquet_hot-r2-supporting",
@@ -2151,9 +2061,7 @@
       "outputTokens": 2459,
       "costUsd": 0.067137,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r2-delegating",
@@ -2185,9 +2093,7 @@
       "outputTokens": 2481,
       "costUsd": 0.06820799999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r2-directive",
@@ -2219,9 +2125,7 @@
       "outputTokens": 2769,
       "costUsd": 0.073236,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r2-supporting",
@@ -2253,9 +2157,7 @@
       "outputTokens": 2854,
       "costUsd": 0.074907,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r3-delegating",
@@ -2287,9 +2189,7 @@
       "outputTokens": 2971,
       "costUsd": 0.07414799999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r3-coaching",
@@ -2321,9 +2221,7 @@
       "outputTokens": 3970,
       "costUsd": 0.11145000000000001,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r3-directive",
@@ -2355,9 +2253,7 @@
       "outputTokens": 3261,
       "costUsd": 0.084702,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r3-supporting",
@@ -2389,9 +2285,7 @@
       "outputTokens": 3393,
       "costUsd": 0.088056,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-steak-r2-coaching",
@@ -2423,9 +2317,7 @@
       "outputTokens": 2224,
       "costUsd": 0.065289,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-steak-r2-delegating",
@@ -2457,9 +2349,7 @@
       "outputTokens": 1869,
       "costUsd": 0.052776,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-steak-r2-supporting",
@@ -2491,9 +2381,7 @@
       "outputTokens": 2129,
       "costUsd": 0.064017,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-steak-r2-directive",
@@ -2525,9 +2413,7 @@
       "outputTokens": 2216,
       "costUsd": 0.06468299999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "marina-salads-r2-coaching",
@@ -2559,9 +2445,7 @@
       "outputTokens": 3179,
       "costUsd": 0.080667,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "marina-salads-r2-delegating",
@@ -2593,9 +2477,7 @@
       "outputTokens": 2412,
       "costUsd": 0.061578,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "marina-salads-r2-directive",
@@ -2627,9 +2509,7 @@
       "outputTokens": 2919,
       "costUsd": 0.076797,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-banquet_hot-r2-delegating",
@@ -2661,9 +2541,7 @@
       "outputTokens": 1939,
       "costUsd": 0.0534,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-banquet_hot-r2-directive",
@@ -2695,9 +2573,7 @@
       "outputTokens": 2519,
       "costUsd": 0.069306,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "marina-salads-r2-supporting",
@@ -2729,9 +2605,7 @@
       "outputTokens": 3389,
       "costUsd": 0.08430599999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-salads-r2-delegating",
@@ -2763,9 +2637,7 @@
       "outputTokens": 1529,
       "costUsd": 0.046806,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-banquet_hot-r2-supporting",
@@ -2797,9 +2669,7 @@
       "outputTokens": 2562,
       "costUsd": 0.07092899999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-salads-r2-directive",
@@ -2831,9 +2701,7 @@
       "outputTokens": 2054,
       "costUsd": 0.060783000000000004,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-salads-r2-supporting",
@@ -2865,9 +2733,7 @@
       "outputTokens": 2056,
       "costUsd": 0.061047000000000004,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-steak-r2-delegating",
@@ -2899,9 +2765,7 @@
       "outputTokens": 2020,
       "costUsd": 0.059499,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-steak-r2-directive",
@@ -2933,9 +2797,7 @@
       "outputTokens": 2070,
       "costUsd": 0.061449000000000004,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-steak-r2-supporting",
@@ -2967,9 +2829,7 @@
       "outputTokens": 2169,
       "costUsd": 0.063504,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r2-delegating",
@@ -3001,9 +2861,7 @@
       "outputTokens": 2617,
       "costUsd": 0.07705409999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r2-directive",
@@ -3035,9 +2893,7 @@
       "outputTokens": 3196,
       "costUsd": 0.095475,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r2-supporting",
@@ -3069,9 +2925,7 @@
       "outputTokens": 3341,
       "costUsd": 0.095847,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-coaching",
@@ -3103,9 +2957,7 @@
       "outputTokens": 4330,
       "costUsd": 0.116064,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-delegating",
@@ -3137,9 +2989,7 @@
       "outputTokens": 3771,
       "costUsd": 0.106323,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-directive",
@@ -3171,9 +3021,7 @@
       "outputTokens": 4159,
       "costUsd": 0.114342,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r2-coaching",
@@ -3205,9 +3053,7 @@
       "outputTokens": 4159,
       "costUsd": 0.11151900000000001,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-supporting",
@@ -3239,9 +3085,7 @@
       "outputTokens": 5502,
       "costUsd": 0.159312,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r2-directive",
@@ -3273,9 +3117,7 @@
       "outputTokens": 4020,
       "costUsd": 0.10966200000000001,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r3-coaching",
@@ -3307,9 +3149,7 @@
       "outputTokens": 5181,
       "costUsd": 0.13394699999999998,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r3-delegating",
@@ -3341,9 +3181,7 @@
       "outputTokens": 3542,
       "costUsd": 0.093186,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r2-delegating",
@@ -3375,9 +3213,7 @@
       "outputTokens": 3540,
       "costUsd": 0.089574,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r2-coaching",
@@ -3409,9 +3245,7 @@
       "outputTokens": 3901,
       "costUsd": 0.1087476,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r2-delegating",
@@ -3443,9 +3277,7 @@
       "outputTokens": 4171,
       "costUsd": 0.1173243,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r3-directive",
@@ -3477,9 +3309,7 @@
       "outputTokens": 6244,
       "costUsd": 0.174282,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r2-directive",
@@ -3511,9 +3341,7 @@
       "outputTokens": 3485,
       "costUsd": 0.099132,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r3-coaching",
@@ -3545,9 +3373,7 @@
       "outputTokens": 4514,
       "costUsd": 0.119448,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r3-delegating",
@@ -3579,9 +3405,7 @@
       "outputTokens": 4045,
       "costUsd": 0.10269,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-prep_veggies-r2-delegating",
@@ -3613,9 +3437,7 @@
       "outputTokens": 2735,
       "costUsd": 0.07913025000000001,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-prep_veggies-r2-coaching",
@@ -3647,9 +3469,7 @@
       "outputTokens": 3584,
       "costUsd": 0.10247129999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r3-directive",
@@ -3681,9 +3501,7 @@
       "outputTokens": 5834,
       "costUsd": 0.16441500000000003,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-prep_veggies-r2-supporting",
@@ -3715,9 +3533,7 @@
       "outputTokens": 3643,
       "costUsd": 0.10114200000000001,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r2-delegating",
@@ -3749,9 +3565,7 @@
       "outputTokens": 3150,
       "costUsd": 0.08572350000000001,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r2-coaching",
@@ -3783,9 +3597,7 @@
       "outputTokens": 3786,
       "costUsd": 0.104625,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r2-directive",
@@ -3817,9 +3629,7 @@
       "outputTokens": 3746,
       "costUsd": 0.103374,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r2-supporting",
@@ -3851,9 +3661,7 @@
       "outputTokens": 3965,
       "costUsd": 0.109359,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r3-coaching",
@@ -3885,9 +3693,7 @@
       "outputTokens": 6050,
       "costUsd": 0.16734300000000002,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r3-delegating",
@@ -3919,9 +3725,7 @@
       "outputTokens": 4100,
       "costUsd": 0.110484,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r3-directive",
@@ -3953,9 +3757,7 @@
       "outputTokens": 4448,
       "costUsd": 0.11781899999999998,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r3-supporting",
@@ -3987,9 +3789,7 @@
       "outputTokens": 4765,
       "costUsd": 0.12568200000000002,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-steak-r2-coaching",
@@ -4021,9 +3821,7 @@
       "outputTokens": 3527,
       "costUsd": 0.101574,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-steak-r2-delegating",
@@ -4055,9 +3853,7 @@
       "outputTokens": 3464,
       "costUsd": 0.088527,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-prep_veggies-r2-directive",
@@ -4089,9 +3885,7 @@
       "outputTokens": 3637,
       "costUsd": 0.1022055,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-steak-r2-directive",
@@ -4123,9 +3917,7 @@
       "outputTokens": 3357,
       "costUsd": 0.097806,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r2-directive",
@@ -4157,9 +3949,7 @@
       "outputTokens": 3370,
       "costUsd": 0.097914,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r2-supporting",
@@ -4191,9 +3981,7 @@
       "outputTokens": 3216,
       "costUsd": 0.096273,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r3-delegating",
@@ -4225,9 +4013,7 @@
       "outputTokens": 2976,
       "costUsd": 0.083367,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r3-coaching",
@@ -4259,9 +4045,7 @@
       "outputTokens": 3975,
       "costUsd": 0.110871,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r3-directive",
@@ -4293,9 +4077,7 @@
       "outputTokens": 4018,
       "costUsd": 0.110535,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r2-delegating",
@@ -4327,9 +4109,7 @@
       "outputTokens": 2645,
       "costUsd": 0.075591,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-banquet_hot-r2-delegating",
@@ -4361,9 +4141,7 @@
       "outputTokens": 4134,
       "costUsd": 0.10041,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-banquet_hot-r2-coaching",
@@ -4395,9 +4173,7 @@
       "outputTokens": 5457,
       "costUsd": 0.141393,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r3-supporting",
@@ -4429,9 +4205,7 @@
       "outputTokens": 5246,
       "costUsd": 0.15467400000000003,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-banquet_hot-r2-directive",
@@ -4463,9 +4237,7 @@
       "outputTokens": 3897,
       "costUsd": 0.106713,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-banquet_hot-r2-supporting",
@@ -4497,9 +4269,7 @@
       "outputTokens": 4290,
       "costUsd": 0.11482499999999998,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r2-coaching",
@@ -4531,9 +4301,7 @@
       "outputTokens": 4139,
       "costUsd": 0.111927,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r2-delegating",
@@ -4565,9 +4333,7 @@
       "outputTokens": 4064,
       "costUsd": 0.10910399999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r2-directive",
@@ -4599,9 +4365,7 @@
       "outputTokens": 4189,
       "costUsd": 0.111939,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r2-supporting",
@@ -4633,9 +4397,7 @@
       "outputTokens": 4520,
       "costUsd": 0.11883,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r3-delegating",
@@ -4667,9 +4429,7 @@
       "outputTokens": 4337,
       "costUsd": 0.10783200000000001,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r3-directive",
@@ -4701,9 +4461,7 @@
       "outputTokens": 5285,
       "costUsd": 0.133617,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r3-coaching",
@@ -4735,9 +4493,7 @@
       "outputTokens": 6337,
       "costUsd": 0.172428,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-steak-r2-delegating",
@@ -4769,9 +4525,7 @@
       "outputTokens": 3037,
       "costUsd": 0.08350199999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-steak-r2-coaching",
@@ -4803,9 +4557,7 @@
       "outputTokens": 3486,
       "costUsd": 0.10329704999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r3-supporting",
@@ -4837,9 +4589,7 @@
       "outputTokens": 5617,
       "costUsd": 0.143451,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-steak-r2-directive",
@@ -4871,9 +4621,7 @@
       "outputTokens": 3635,
       "costUsd": 0.102342,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-steak-r2-supporting",
@@ -4905,9 +4653,7 @@
       "outputTokens": 3820,
       "costUsd": 0.10817099999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "marina-salads-r2-delegating",
@@ -4939,9 +4685,7 @@
       "outputTokens": 3330,
       "costUsd": 0.088422,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "marina-salads-r2-coaching",
@@ -4973,9 +4717,7 @@
       "outputTokens": 4169,
       "costUsd": 0.1128045,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "marina-salads-r2-directive",
@@ -5007,9 +4749,7 @@
       "outputTokens": 4598,
       "costUsd": 0.11809499999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-banquet_hot-r2-delegating",
@@ -5041,9 +4781,7 @@
       "outputTokens": 3570,
       "costUsd": 0.090195,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "marina-salads-r2-supporting",
@@ -5075,9 +4813,7 @@
       "outputTokens": 4092,
       "costUsd": 0.112032,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-banquet_hot-r2-directive",
@@ -5109,9 +4845,7 @@
       "outputTokens": 3736,
       "costUsd": 0.105153,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-banquet_hot-r2-supporting",
@@ -5143,9 +4877,7 @@
       "outputTokens": 4462,
       "costUsd": 0.115398,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-salads-r2-delegating",
@@ -5177,9 +4909,7 @@
       "outputTokens": 2625,
       "costUsd": 0.075624,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-salads-r2-directive",
@@ -5211,9 +4941,7 @@
       "outputTokens": 3467,
       "costUsd": 0.09900300000000001,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-salads-r2-supporting",
@@ -5245,9 +4973,7 @@
       "outputTokens": 3698,
       "costUsd": 0.103086,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-steak-r2-delegating",
@@ -5279,9 +5005,7 @@
       "outputTokens": 3218,
       "costUsd": 0.095322,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-steak-r2-directive",
@@ -5313,9 +5037,7 @@
       "outputTokens": 3570,
       "costUsd": 0.101244,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-steak-r2-supporting",
@@ -5347,9 +5069,7 @@
       "outputTokens": 3531,
       "costUsd": 0.100755,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r2-delegating",
@@ -5381,9 +5101,7 @@
       "outputTokens": 13950,
       "costUsd": 0.38796600000000003,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r2-directive",
@@ -5415,9 +5133,7 @@
       "outputTokens": 2053,
       "costUsd": 0.062472,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r2-supporting",
@@ -5449,9 +5165,7 @@
       "outputTokens": 2273,
       "costUsd": 0.065775,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-coaching",
@@ -5483,9 +5197,7 @@
       "outputTokens": 2851,
       "costUsd": 0.07900199999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-directive",
@@ -5517,9 +5229,7 @@
       "outputTokens": 2833,
       "costUsd": 0.078354,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-delegating",
@@ -5551,9 +5261,7 @@
       "outputTokens": 2400,
       "costUsd": 0.07044900000000001,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-supporting",
@@ -5585,9 +5293,7 @@
       "outputTokens": 3644,
       "costUsd": 0.108009,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r2-coaching",
@@ -5619,9 +5325,7 @@
       "outputTokens": 3072,
       "costUsd": 0.080391,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r2-delegating",
@@ -5653,9 +5357,7 @@
       "outputTokens": 2975,
       "costUsd": 0.077898,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r2-directive",
@@ -5687,9 +5389,7 @@
       "outputTokens": 3041,
       "costUsd": 0.078852,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r3-delegating",
@@ -5721,9 +5421,7 @@
       "outputTokens": 2962,
       "costUsd": 0.076818,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r3-coaching",
@@ -5755,9 +5453,7 @@
       "outputTokens": 3050,
       "costUsd": 0.08580299999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r2-coaching",
@@ -5789,9 +5485,7 @@
       "outputTokens": 2552,
       "costUsd": 0.069702,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r2-delegating",
@@ -5823,9 +5517,7 @@
       "outputTokens": 2363,
       "costUsd": 0.059942999999999996,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r2-directive",
@@ -5857,9 +5549,7 @@
       "outputTokens": 2801,
       "costUsd": 0.074865,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r3-directive",
@@ -5891,9 +5581,7 @@
       "outputTokens": 4328,
       "costUsd": 0.12372000000000001,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r3-coaching",
@@ -5925,9 +5613,7 @@
       "outputTokens": 3358,
       "costUsd": 0.087618,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r3-delegating",
@@ -5959,9 +5645,7 @@
       "outputTokens": 2786,
       "costUsd": 0.071712,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-prep_veggies-r2-coaching",
@@ -5993,9 +5677,7 @@
       "outputTokens": 2373,
       "costUsd": 0.066279,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r3-directive",
@@ -6027,9 +5709,7 @@
       "outputTokens": 3807,
       "costUsd": 0.107682,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-prep_veggies-r2-delegating",
@@ -6061,9 +5741,7 @@
       "outputTokens": 1761,
       "costUsd": 0.050544,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-prep_veggies-r2-directive",
@@ -6095,9 +5773,7 @@
       "outputTokens": 2540,
       "costUsd": 0.06945899999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-prep_veggies-r2-supporting",
@@ -6129,9 +5805,7 @@
       "outputTokens": 2269,
       "costUsd": 0.065205,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r2-directive",
@@ -6163,9 +5837,7 @@
       "outputTokens": 2936,
       "costUsd": 0.076926,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r2-supporting",
@@ -6197,9 +5869,7 @@
       "outputTokens": 2550,
       "costUsd": 0.071043,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r2-coaching",
@@ -6231,9 +5901,7 @@
       "outputTokens": 2324,
       "costUsd": 0.06642,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r3-delegating",
@@ -6265,9 +5933,7 @@
       "outputTokens": 2962,
       "costUsd": 0.078426,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r3-coaching",
@@ -6299,9 +5965,7 @@
       "outputTokens": 3600,
       "costUsd": 0.10783800000000002,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r3-directive",
@@ -6333,9 +5997,7 @@
       "outputTokens": 2978,
       "costUsd": 0.080175,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-steak-r2-delegating",
@@ -6367,9 +6029,7 @@
       "outputTokens": 2687,
       "costUsd": 0.065886,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-steak-r2-coaching",
@@ -6401,9 +6061,7 @@
       "outputTokens": 3373,
       "costUsd": 0.085707,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r3-supporting",
@@ -6435,9 +6093,7 @@
       "outputTokens": 3048,
       "costUsd": 0.084228,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r2-delegating",
@@ -6469,9 +6125,7 @@
       "outputTokens": 1842,
       "costUsd": 0.053367,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r2-delegating",
@@ -6503,9 +6157,7 @@
       "outputTokens": 1874,
       "costUsd": 0.051957,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-steak-r2-directive",
@@ -6537,9 +6189,7 @@
       "outputTokens": 2379,
       "costUsd": 0.068379,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r2-directive",
@@ -6571,9 +6221,7 @@
       "outputTokens": 2170,
       "costUsd": 0.06326999999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r2-supporting",
@@ -6605,9 +6253,7 @@
       "outputTokens": 2243,
       "costUsd": 0.06518399999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r3-delegating",
@@ -6639,9 +6285,7 @@
       "outputTokens": 2191,
       "costUsd": 0.060198,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r3-coaching",
@@ -6673,9 +6317,7 @@
       "outputTokens": 2810,
       "costUsd": 0.077544,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r3-directive",
@@ -6707,9 +6349,7 @@
       "outputTokens": 2753,
       "costUsd": 0.07629,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-banquet_hot-r2-delegating",
@@ -6741,9 +6381,7 @@
       "outputTokens": 2362,
       "costUsd": 0.061215000000000006,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r3-supporting",
@@ -6775,9 +6413,7 @@
       "outputTokens": 3179,
       "costUsd": 0.098553,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-banquet_hot-r2-coaching",
@@ -6809,9 +6445,7 @@
       "outputTokens": 3462,
       "costUsd": 0.090102,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-banquet_hot-r2-directive",
@@ -6843,9 +6477,7 @@
       "outputTokens": 3216,
       "costUsd": 0.08039099999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-banquet_hot-r2-supporting",
@@ -6877,9 +6509,7 @@
       "outputTokens": 2909,
       "costUsd": 0.079392,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r2-coaching",
@@ -6911,9 +6541,7 @@
       "outputTokens": 2956,
       "costUsd": 0.077778,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r2-delegating",
@@ -6945,9 +6573,7 @@
       "outputTokens": 2544,
       "costUsd": 0.070374,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r2-directive",
@@ -6979,9 +6605,7 @@
       "outputTokens": 2767,
       "costUsd": 0.074841,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r3-delegating",
@@ -7013,9 +6637,7 @@
       "outputTokens": 2789,
       "costUsd": 0.070173,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r2-supporting",
@@ -7047,9 +6669,7 @@
       "outputTokens": 3048,
       "costUsd": 0.080379,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r3-coaching",
@@ -7081,9 +6701,7 @@
       "outputTokens": 4727,
       "costUsd": 0.128448,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r3-directive",
@@ -7115,9 +6733,7 @@
       "outputTokens": 3930,
       "costUsd": 0.09940199999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-steak-r2-coaching",
@@ -7149,9 +6765,7 @@
       "outputTokens": 2326,
       "costUsd": 0.066693,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r3-supporting",
@@ -7183,9 +6797,7 @@
       "outputTokens": 3383,
       "costUsd": 0.08929500000000001,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-steak-r2-delegating",
@@ -7217,9 +6829,7 @@
       "outputTokens": 1778,
       "costUsd": 0.051717,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-steak-r2-directive",
@@ -7251,9 +6861,7 @@
       "outputTokens": 2331,
       "costUsd": 0.067185,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-steak-r2-supporting",
@@ -7285,9 +6893,7 @@
       "outputTokens": 2405,
       "costUsd": 0.068469,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "marina-salads-r2-delegating",
@@ -7319,9 +6925,7 @@
       "outputTokens": 2374,
       "costUsd": 0.061548000000000005,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "marina-salads-r2-coaching",
@@ -7353,9 +6957,7 @@
       "outputTokens": 2845,
       "costUsd": 0.076641,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "marina-salads-r2-directive",
@@ -7387,9 +6989,7 @@
       "outputTokens": 2774,
       "costUsd": 0.073746,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "marina-salads-r2-supporting",
@@ -7421,9 +7021,7 @@
       "outputTokens": 3068,
       "costUsd": 0.08111099999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-banquet_hot-r2-delegating",
@@ -7455,9 +7053,7 @@
       "outputTokens": 2515,
       "costUsd": 0.062517,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-banquet_hot-r2-directive",
@@ -7489,9 +7085,7 @@
       "outputTokens": 2367,
       "costUsd": 0.066648,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-salads-r2-delegating",
@@ -7523,9 +7117,7 @@
       "outputTokens": 1656,
       "costUsd": 0.048686999999999994,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-banquet_hot-r2-supporting",
@@ -7557,9 +7149,7 @@
       "outputTokens": 2790,
       "costUsd": 0.075063,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-salads-r2-directive",
@@ -7591,9 +7181,7 @@
       "outputTokens": 2268,
       "costUsd": 0.064845,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-salads-r2-supporting",
@@ -7625,9 +7213,7 @@
       "outputTokens": 2102,
       "costUsd": 0.062141999999999996,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-steak-r2-delegating",
@@ -7659,9 +7245,7 @@
       "outputTokens": 2056,
       "costUsd": 0.060899999999999996,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-steak-r2-directive",
@@ -7693,9 +7277,7 @@
       "outputTokens": 2165,
       "costUsd": 0.063687,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-steak-r2-supporting",
@@ -7727,9 +7309,7 @@
       "outputTokens": 2184,
       "costUsd": 0.06506100000000001,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r2-delegating",
@@ -7761,9 +7341,7 @@
       "outputTokens": 3604,
       "costUsd": 0.116205,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r2-supporting",
@@ -7795,9 +7373,7 @@
       "outputTokens": 5035,
       "costUsd": 0.157983,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-coaching",
@@ -7829,9 +7405,7 @@
       "outputTokens": 5442,
       "costUsd": 0.168594,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r2-directive",
@@ -7863,9 +7437,7 @@
       "outputTokens": 5728,
       "costUsd": 0.167379,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-delegating",
@@ -7897,9 +7469,7 @@
       "outputTokens": 5698,
       "costUsd": 0.170841,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-directive",
@@ -7931,9 +7501,7 @@
       "outputTokens": 5624,
       "costUsd": 0.168489,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r2-coaching",
@@ -7965,9 +7533,7 @@
       "outputTokens": 6236,
       "costUsd": 0.178305,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-supporting",
@@ -7999,9 +7565,7 @@
       "outputTokens": 8331,
       "costUsd": 0.251541,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r2-directive",
@@ -8033,9 +7597,7 @@
       "outputTokens": 6333,
       "costUsd": 0.18048,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r2-delegating",
@@ -8067,9 +7629,7 @@
       "outputTokens": 6726,
       "costUsd": 0.18511799999999998,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r3-coaching",
@@ -8101,9 +7661,7 @@
       "outputTokens": 6333,
       "costUsd": 0.182868,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r2-delegating",
@@ -8135,9 +7693,7 @@
       "outputTokens": 4494,
       "costUsd": 0.12825,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r2-coaching",
@@ -8169,9 +7725,7 @@
       "outputTokens": 5658,
       "costUsd": 0.16904400000000003,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r3-delegating",
@@ -8203,9 +7757,7 @@
       "outputTokens": 5277,
       "costUsd": 0.147531,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r3-directive",
@@ -8237,9 +7789,7 @@
       "outputTokens": 9599,
       "costUsd": 0.27734099999999995,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r2-directive",
@@ -8271,9 +7821,7 @@
       "outputTokens": 5692,
       "costUsd": 0.168423,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r3-coaching",
@@ -8305,9 +7853,7 @@
       "outputTokens": 6643,
       "costUsd": 0.18846,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r3-delegating",
@@ -8339,9 +7885,7 @@
       "outputTokens": 5234,
       "costUsd": 0.142779,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-prep_veggies-r2-delegating",
@@ -8373,9 +7917,7 @@
       "outputTokens": 3936,
       "costUsd": 0.116094,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-prep_veggies-r2-coaching",
@@ -8407,9 +7949,7 @@
       "outputTokens": 6075,
       "costUsd": 0.172161,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r3-directive",
@@ -8441,9 +7981,7 @@
       "outputTokens": 9143,
       "costUsd": 0.26019600000000004,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-prep_veggies-r2-directive",
@@ -8475,9 +8013,7 @@
       "outputTokens": 5490,
       "costUsd": 0.160044,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-prep_veggies-r2-supporting",
@@ -8509,9 +8045,7 @@
       "outputTokens": 5609,
       "costUsd": 0.162873,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r2-delegating",
@@ -8543,9 +8077,7 @@
       "outputTokens": 4349,
       "costUsd": 0.127959,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r2-coaching",
@@ -8577,9 +8109,7 @@
       "outputTokens": 5294,
       "costUsd": 0.162351,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r2-directive",
@@ -8611,9 +8141,7 @@
       "outputTokens": 5524,
       "costUsd": 0.163959,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r2-supporting",
@@ -8645,9 +8173,7 @@
       "outputTokens": 5661,
       "costUsd": 0.17004,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r3-delegating",
@@ -8679,9 +8205,7 @@
       "outputTokens": 5626,
       "costUsd": 0.17122800000000002,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r3-directive",
@@ -8713,9 +8237,7 @@
       "outputTokens": 6016,
       "costUsd": 0.174825,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r3-coaching",
@@ -8747,9 +8269,7 @@
       "outputTokens": 8692,
       "costUsd": 0.261141,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-steak-r2-coaching",
@@ -8781,9 +8301,7 @@
       "outputTokens": 5834,
       "costUsd": 0.17454,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r3-supporting",
@@ -8815,9 +8333,7 @@
       "outputTokens": 6925,
       "costUsd": 0.19447199999999998,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-steak-r2-delegating",
@@ -8849,9 +8365,7 @@
       "outputTokens": 4563,
       "costUsd": 0.129858,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-steak-r2-directive",
@@ -8883,9 +8397,7 @@
       "outputTokens": 5850,
       "costUsd": 0.170343,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r2-delegating",
@@ -8917,9 +8429,7 @@
       "outputTokens": 3695,
       "costUsd": 0.117825,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r2-directive",
@@ -8951,9 +8461,7 @@
       "outputTokens": 4883,
       "costUsd": 0.152847,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r2-supporting",
@@ -8985,9 +8493,7 @@
       "outputTokens": 5581,
       "costUsd": 0.168468,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r3-coaching",
@@ -9019,9 +8525,7 @@
       "outputTokens": 5574,
       "costUsd": 0.169842,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r3-delegating",
@@ -9053,9 +8557,7 @@
       "outputTokens": 4841,
       "costUsd": 0.136884,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r3-directive",
@@ -9087,9 +8589,7 @@
       "outputTokens": 5468,
       "costUsd": 0.165216,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-banquet_hot-r2-delegating",
@@ -9121,9 +8621,7 @@
       "outputTokens": 4920,
       "costUsd": 0.137088,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-banquet_hot-r2-coaching",
@@ -9155,9 +8653,7 @@
       "outputTokens": 7203,
       "costUsd": 0.20952900000000002,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r3-supporting",
@@ -9189,9 +8685,7 @@
       "outputTokens": 8203,
       "costUsd": 0.25355099999999997,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-banquet_hot-r2-directive",
@@ -9223,9 +8717,7 @@
       "outputTokens": 6278,
       "costUsd": 0.17654999999999998,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r2-coaching",
@@ -9257,9 +8749,7 @@
       "outputTokens": 5821,
       "costUsd": 0.17162699999999997,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-banquet_hot-r2-supporting",
@@ -9291,9 +8781,7 @@
       "outputTokens": 7003,
       "costUsd": 0.18839099999999998,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r2-delegating",
@@ -9325,9 +8813,7 @@
       "outputTokens": 5696,
       "costUsd": 0.169455,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r2-directive",
@@ -9359,9 +8845,7 @@
       "outputTokens": 5329,
       "costUsd": 0.16110000000000002,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r3-delegating",
@@ -9393,9 +8877,7 @@
       "outputTokens": 5089,
       "costUsd": 0.143349,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r2-supporting",
@@ -9427,9 +8909,7 @@
       "outputTokens": 6110,
       "costUsd": 0.176583,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r3-directive",
@@ -9461,9 +8941,7 @@
       "outputTokens": 5937,
       "costUsd": 0.174105,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r3-coaching",
@@ -9495,9 +8973,7 @@
       "outputTokens": 9070,
       "costUsd": 0.267393,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-steak-r2-delegating",
@@ -9529,9 +9005,7 @@
       "outputTokens": 4373,
       "costUsd": 0.128763,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-steak-r2-coaching",
@@ -9563,9 +9037,7 @@
       "outputTokens": 5265,
       "costUsd": 0.162327,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r3-supporting",
@@ -9597,9 +9069,7 @@
       "outputTokens": 6708,
       "costUsd": 0.19005,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-steak-r2-directive",
@@ -9631,9 +9101,7 @@
       "outputTokens": 4833,
       "costUsd": 0.153501,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "marina-salads-r2-coaching",
@@ -9665,9 +9133,7 @@
       "outputTokens": 5268,
       "costUsd": 0.159609,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-steak-r2-supporting",
@@ -9699,9 +9165,7 @@
       "outputTokens": 5947,
       "costUsd": 0.172596,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "marina-salads-r2-delegating",
@@ -9733,9 +9197,7 @@
       "outputTokens": 5128,
       "costUsd": 0.135273,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "marina-salads-r2-directive",
@@ -9767,9 +9229,7 @@
       "outputTokens": 5656,
       "costUsd": 0.163635,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-banquet_hot-r2-delegating",
@@ -9801,9 +9261,7 @@
       "outputTokens": 4192,
       "costUsd": 0.125085,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "marina-salads-r2-supporting",
@@ -9835,9 +9293,7 @@
       "outputTokens": 5317,
       "costUsd": 0.15832800000000002,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-banquet_hot-r2-directive",
@@ -9869,9 +9325,7 @@
       "outputTokens": 5629,
       "costUsd": 0.16443,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-banquet_hot-r2-supporting",
@@ -9903,9 +9357,7 @@
       "outputTokens": 5370,
       "costUsd": 0.163605,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-salads-r2-delegating",
@@ -9937,9 +9389,7 @@
       "outputTokens": 3670,
       "costUsd": 0.111654,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-salads-r2-directive",
@@ -9971,9 +9421,7 @@
       "outputTokens": 5137,
       "costUsd": 0.15262799999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-salads-r2-supporting",
@@ -10005,9 +9453,7 @@
       "outputTokens": 4809,
       "costUsd": 0.149706,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-steak-r2-delegating",
@@ -10039,9 +9485,7 @@
       "outputTokens": 5024,
       "costUsd": 0.147357,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-steak-r2-directive",
@@ -10073,9 +9517,7 @@
       "outputTokens": 5269,
       "costUsd": 0.154953,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-steak-r2-supporting",
@@ -10107,9 +9549,7 @@
       "outputTokens": 4725,
       "costUsd": 0.14850600000000003,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r2-delegating",
@@ -10141,9 +9581,7 @@
       "outputTokens": 3419,
       "costUsd": 0.08793,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r2-directive",
@@ -10175,9 +9613,7 @@
       "outputTokens": 5062,
       "costUsd": 0.11977800000000001,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r2-supporting",
@@ -10209,9 +9645,7 @@
       "outputTokens": 4310,
       "costUsd": 0.111459,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-coaching",
@@ -10243,9 +9677,7 @@
       "outputTokens": 5472,
       "costUsd": 0.138282,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-delegating",
@@ -10277,9 +9709,7 @@
       "outputTokens": 4636,
       "costUsd": 0.12331499999999998,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-directive",
@@ -10311,9 +9741,7 @@
       "outputTokens": 5468,
       "costUsd": 0.133371,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r2-coaching",
@@ -10345,9 +9773,7 @@
       "outputTokens": 5703,
       "costUsd": 0.131226,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-supporting",
@@ -10379,9 +9805,7 @@
       "outputTokens": 7669,
       "costUsd": 0.199629,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r2-delegating",
@@ -10413,9 +9837,7 @@
       "outputTokens": 5257,
       "costUsd": 0.13121100000000002,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r2-directive",
@@ -10447,9 +9869,7 @@
       "outputTokens": 5130,
       "costUsd": 0.122199,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r3-coaching",
@@ -10481,9 +9901,7 @@
       "outputTokens": 6295,
       "costUsd": 0.146067,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r3-delegating",
@@ -10515,9 +9933,7 @@
       "outputTokens": 4400,
       "costUsd": 0.108066,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r2-coaching",
@@ -10549,9 +9965,7 @@
       "outputTokens": 5230,
       "costUsd": 0.134328,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r2-delegating",
@@ -10583,9 +9997,7 @@
       "outputTokens": 4338,
       "costUsd": 0.099807,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r3-directive",
@@ -10617,9 +10029,7 @@
       "outputTokens": 7566,
       "costUsd": 0.19248300000000002,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r2-directive",
@@ -10651,9 +10061,7 @@
       "outputTokens": 5515,
       "costUsd": 0.136344,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r3-delegating",
@@ -10685,9 +10093,7 @@
       "outputTokens": 5264,
       "costUsd": 0.119451,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r3-coaching",
@@ -10719,9 +10125,7 @@
       "outputTokens": 5777,
       "costUsd": 0.140544,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-prep_veggies-r2-coaching",
@@ -10753,9 +10157,7 @@
       "outputTokens": 4886,
       "costUsd": 0.116595,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-prep_veggies-r2-delegating",
@@ -10787,9 +10189,7 @@
       "outputTokens": 3212,
       "costUsd": 0.084387,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r3-directive",
@@ -10821,9 +10221,7 @@
       "outputTokens": 7954,
       "costUsd": 0.191274,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-prep_veggies-r2-directive",
@@ -10855,9 +10253,7 @@
       "outputTokens": 4583,
       "costUsd": 0.115227,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r2-delegating",
@@ -10889,9 +10285,7 @@
       "outputTokens": 3334,
       "costUsd": 0.082755,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-prep_veggies-r2-supporting",
@@ -10923,9 +10317,7 @@
       "outputTokens": 4927,
       "costUsd": 0.121542,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r2-coaching",
@@ -10957,9 +10349,7 @@
       "outputTokens": 5024,
       "costUsd": 0.12901200000000002,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r2-directive",
@@ -10991,9 +10381,7 @@
       "outputTokens": 4610,
       "costUsd": 0.11326799999999998,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r2-supporting",
@@ -11025,9 +10413,7 @@
       "outputTokens": 5392,
       "costUsd": 0.12873600000000002,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r3-delegating",
@@ -11059,9 +10445,7 @@
       "outputTokens": 5905,
       "costUsd": 0.14602199999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r3-directive",
@@ -11093,9 +10477,7 @@
       "outputTokens": 5902,
       "costUsd": 0.14594999999999997,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r3-coaching",
@@ -11127,9 +10509,7 @@
       "outputTokens": 7372,
       "costUsd": 0.19331700000000002,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-salads-r3-supporting",
@@ -11161,9 +10541,7 @@
       "outputTokens": 6190,
       "costUsd": 0.14754899999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-steak-r2-delegating",
@@ -11195,9 +10573,7 @@
       "outputTokens": 3594,
       "costUsd": 0.09065699999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-steak-r2-coaching",
@@ -11229,9 +10605,7 @@
       "outputTokens": 5699,
       "costUsd": 0.131865,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-steak-r2-directive",
@@ -11263,9 +10637,7 @@
       "outputTokens": 5508,
       "costUsd": 0.132807,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r2-delegating",
@@ -11297,9 +10669,7 @@
       "outputTokens": 3131,
       "costUsd": 0.083034,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r2-directive",
@@ -11331,9 +10701,7 @@
       "outputTokens": 4797,
       "costUsd": 0.11885099999999998,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r2-supporting",
@@ -11365,9 +10733,7 @@
       "outputTokens": 4381,
       "costUsd": 0.108126,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r3-coaching",
@@ -11399,9 +10765,7 @@
       "outputTokens": 5410,
       "costUsd": 0.132912,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r3-delegating",
@@ -11433,9 +10797,7 @@
       "outputTokens": 4017,
       "costUsd": 0.10035,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r3-directive",
@@ -11467,9 +10829,7 @@
       "outputTokens": 5332,
       "costUsd": 0.139497,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-banquet_hot-r2-delegating",
@@ -11501,9 +10861,7 @@
       "outputTokens": 4095,
       "costUsd": 0.101709,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-banquet_hot-r2-coaching",
@@ -11535,9 +10893,7 @@
       "outputTokens": 6514,
       "costUsd": 0.155028,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-tiramisu-r3-supporting",
@@ -11569,9 +10925,7 @@
       "outputTokens": 7618,
       "costUsd": 0.18354,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-banquet_hot-r2-directive",
@@ -11603,9 +10957,7 @@
       "outputTokens": 4912,
       "costUsd": 0.12162300000000001,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-banquet_hot-r2-supporting",
@@ -11637,9 +10989,7 @@
       "outputTokens": 5884,
       "costUsd": 0.136953,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r2-delegating",
@@ -11671,9 +11021,7 @@
       "outputTokens": 5187,
       "costUsd": 0.12051600000000001,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r2-coaching",
@@ -11705,9 +11053,7 @@
       "outputTokens": 5536,
       "costUsd": 0.134655,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r2-directive",
@@ -11739,9 +11085,7 @@
       "outputTokens": 4912,
       "costUsd": 0.118287,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r2-supporting",
@@ -11773,9 +11117,7 @@
       "outputTokens": 4919,
       "costUsd": 0.119736,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r3-delegating",
@@ -11807,9 +11149,7 @@
       "outputTokens": 5312,
       "costUsd": 0.11888699999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r3-coaching",
@@ -11841,9 +11181,7 @@
       "outputTokens": 7678,
       "costUsd": 0.188466,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r3-supporting",
@@ -11875,9 +11213,7 @@
       "outputTokens": 5966,
       "costUsd": 0.139311,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-steak-r2-coaching",
@@ -11909,9 +11245,7 @@
       "outputTokens": 4639,
       "costUsd": 0.114552,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-steak-r2-delegating",
@@ -11943,9 +11277,7 @@
       "outputTokens": 3790,
       "costUsd": 0.09081600000000001,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-steak-r2-directive",
@@ -11977,9 +11309,7 @@
       "outputTokens": 4589,
       "costUsd": 0.11414999999999999,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-new_menu_dish-r3-directive",
@@ -12011,9 +11341,7 @@
       "outputTokens": 4934,
       "costUsd": 0.124239,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "igor-steak-r2-supporting",
@@ -12045,9 +11373,7 @@
       "outputTokens": 3913,
       "costUsd": 0.111858,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     }
   ],
   "unpricedModels": [],

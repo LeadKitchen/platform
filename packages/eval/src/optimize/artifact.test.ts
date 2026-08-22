@@ -12,10 +12,9 @@ import {
   writePromptArtifact,
 } from "./artifact";
 
-function artifact(overrides: Partial<PromptArtifact> = {}): Omit<
-  PromptArtifact,
-  "version" | "createdAt"
-> {
+function artifact(
+  overrides: Partial<PromptArtifact> = {},
+): Omit<PromptArtifact, "version" | "createdAt"> {
   return {
     optimizer: "gepa",
     slot: "roleRules",
@@ -64,7 +63,9 @@ describe("writePromptArtifact / loadPromptArtifact", () => {
   test("rejects a payload missing a required field", async () => {
     const path = join(dir, "incomplete.json");
     await Bun.write(path, JSON.stringify({ optimizer: "gepa" }));
-    await expect(loadPromptArtifact(path)).rejects.toThrow(/не соответствует формату/);
+    await expect(loadPromptArtifact(path)).rejects.toThrow(
+      /не соответствует формату/,
+    );
   });
 
   test("rejects an artefact from a newer format version", async () => {
@@ -89,7 +90,10 @@ describe("buildCandidateArms", () => {
     const arms = buildCandidateArms([
       { ...artifact({ slot: "roleRules" }), version: 1, createdAt: null },
       {
-        ...artifact({ slot: "styleJudgeSystem", optimizer: "ax-bootstrap-few-shot" }),
+        ...artifact({
+          slot: "styleJudgeSystem",
+          optimizer: "ax-bootstrap-few-shot",
+        }),
         version: 1,
         createdAt: null,
       },
@@ -135,9 +139,7 @@ describe("buildCandidateArms", () => {
 
     expect(arms).toHaveLength(1);
     const [arm] = arms;
-    expect(arm?.candidate.params.roleRules).toBe(
-      "Новая инструкция персонажа.",
-    );
+    expect(arm?.candidate.params.roleRules).toBe("Новая инструкция персонажа.");
     expect(arm?.candidate.params.criteriaJudgeSystem).toBe(
       "Инструкция судье по критериям.",
     );
@@ -148,8 +150,16 @@ describe("buildCandidateArms", () => {
   test("rejects artefacts built on different base variants", () => {
     expect(() =>
       buildCandidateArms([
-        { ...artifact({ variantId: "baseline-judge" }), version: 1, createdAt: null },
-        { ...artifact({ variantId: "llm-first" }), version: 1, createdAt: null },
+        {
+          ...artifact({ variantId: "baseline-judge" }),
+          version: 1,
+          createdAt: null,
+        },
+        {
+          ...artifact({ variantId: "llm-first" }),
+          version: 1,
+          createdAt: null,
+        },
       ]),
     ).toThrow(/разных базовых вариантах/);
   });
@@ -158,8 +168,16 @@ describe("buildCandidateArms", () => {
     expect(() =>
       buildCandidateArms(
         [
-          { ...artifact({ slot: "roleRules", prompt: "A" }), version: 1, createdAt: null },
-          { ...artifact({ slot: "roleRules", prompt: "B" }), version: 1, createdAt: null },
+          {
+            ...artifact({ slot: "roleRules", prompt: "A" }),
+            version: 1,
+            createdAt: null,
+          },
+          {
+            ...artifact({ slot: "roleRules", prompt: "B" }),
+            version: 1,
+            createdAt: null,
+          },
         ],
         { combine: true },
       ),

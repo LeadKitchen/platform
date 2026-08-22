@@ -24,7 +24,11 @@ const auth = initAuth({
   secret: process.env.AUTH_SECRET,
 });
 
-async function ensureUser(account: { email: string; password: string; name: string }) {
+async function ensureUser(account: {
+  email: string;
+  password: string;
+  name: string;
+}) {
   const existing = await db.query.user.findFirst({
     where: eq(User.email, account.email),
   });

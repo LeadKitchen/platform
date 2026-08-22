@@ -247,9 +247,7 @@
       "outputTokens": 2941,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "nvidia/nemotron-3-super-120b-a12b:free"
-      ]
+      "models": ["nvidia/nemotron-3-super-120b-a12b:free"]
     },
     {
       "fixtureId": "anna-apple_pies-r2-directive",
@@ -281,9 +279,7 @@
       "outputTokens": 4587,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "nvidia/nemotron-3-super-120b-a12b:free"
-      ]
+      "models": ["nvidia/nemotron-3-super-120b-a12b:free"]
     },
     {
       "fixtureId": "anna-apple_pies-r2-supporting",
@@ -315,9 +311,7 @@
       "outputTokens": 4999,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "nvidia/nemotron-3-super-120b-a12b:free"
-      ]
+      "models": ["nvidia/nemotron-3-super-120b-a12b:free"]
     },
     {
       "fixtureId": "anna-apple_pies-r3-delegating",
@@ -349,9 +343,7 @@
       "outputTokens": 6986,
       "costUsd": 0,
       "run": 1,
-      "models": [
-        "nvidia/nemotron-3-super-120b-a12b:free"
-      ]
+      "models": ["nvidia/nemotron-3-super-120b-a12b:free"]
     }
   ],
   "poolStats": {

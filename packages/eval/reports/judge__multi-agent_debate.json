@@ -874,7 +874,5 @@
   ],
   "items": [],
   "unpricedModels": [],
-  "evaluationStrategyMismatch": [
-    "debate-judge"
-  ]
+  "evaluationStrategyMismatch": ["debate-judge"]
 }

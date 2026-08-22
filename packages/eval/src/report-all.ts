@@ -97,7 +97,9 @@ function createProvider(model: string, vendor: string): LlmProvider {
     const baseUrl = process.env.ANTHROPIC_BASE_URL;
 
     if (!apiKey) {
-      throw new Error("ANTHROPIC_API_KEY не задан — платный прогон невозможен.");
+      throw new Error(
+        "ANTHROPIC_API_KEY не задан — платный прогон невозможен.",
+      );
     }
 
     return createAiSdkProvider({

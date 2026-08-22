@@ -81,9 +81,9 @@ describe("counterfactual comparison", () => {
   });
 
   it("normalizes whitespace and case before comparing utterances", () => {
-    expect(sameUtterance("  Анна,   начните сейчас ", "анна, начните сейчас")).toBe(
-      true,
-    );
+    expect(
+      sameUtterance("  Анна,   начните сейчас ", "анна, начните сейчас"),
+    ).toBe(true);
     expect(sameUtterance("Начните сейчас", "Как вы поняли задачу?")).toBe(
       false,
     );

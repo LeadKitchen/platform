@@ -877,9 +877,7 @@
       "outputTokens": 395,
       "costUsd": 0.018192,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r2-coaching",
@@ -911,9 +909,7 @@
       "outputTokens": 703,
       "costUsd": 0.027540000000000002,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-apple_pies-r2-supporting",
@@ -945,9 +941,7 @@
       "outputTokens": 438,
       "costUsd": 0.024573,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-decorated_cake-r2-directive",
@@ -979,9 +973,7 @@
       "outputTokens": 782,
       "costUsd": 0.028515,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "anna-banquet_hot-r3-directive",
@@ -1013,9 +1005,7 @@
       "outputTokens": 1774,
       "costUsd": 0.060233999999999996,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     },
     {
       "fixtureId": "olga-salads-r2-delegating",
@@ -1047,9 +1037,7 @@
       "outputTokens": 310,
       "costUsd": 0.017346,
       "run": 1,
-      "models": [
-        "claude-sonnet-5"
-      ]
+      "models": ["claude-sonnet-5"]
     }
   ],
   "unpricedModels": [],
