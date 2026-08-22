@@ -25,7 +25,7 @@ import { z } from "zod";
 import { authClient } from "~/auth/client";
 
 const forgotPasswordSchema = z.object({
-  email: z.string().email("Некорректный email адрес"),
+  email: z.string().email("Некорректный адрес электронной почты"),
 });
 
 type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
@@ -71,8 +71,8 @@ export function ForgotPasswordForm({
         <CardContent>
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground text-center">
-              Перейдите по ссылке в письме, чтобы сбросить пароль. Срок
-              действия ссылки — 1 час.
+              Перейдите по ссылке в письме, чтобы сбросить пароль. Срок действия
+              ссылки — 1 час.
             </p>
             <Button
               render={<Link href={paths.auth.login} />}

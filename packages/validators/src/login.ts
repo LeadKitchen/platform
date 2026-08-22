@@ -4,8 +4,8 @@ import { z } from "zod";
 export const loginFormSchema = z.object({
   email: z
     .string()
-    .min(1, "Email обязателен")
-    .email("Некорректный email адрес"),
+    .min(1, "Адрес электронной почты обязателен")
+    .email("Некорректный адрес электронной почты"),
 });
 
 export type LoginFormData = z.infer<typeof loginFormSchema>;

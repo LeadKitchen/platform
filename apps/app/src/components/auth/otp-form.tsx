@@ -26,6 +26,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { authClient } from "~/auth/client";
+import { getAuthErrorMessage } from "~/auth/error-messages";
 
 export function OTPForm({ ...props }: React.ComponentProps<typeof Card>) {
   const [loading, setLoading] = useState(false);
@@ -66,7 +67,9 @@ export function OTPForm({ ...props }: React.ComponentProps<typeof Card>) {
           otp: data.otp,
         });
         if (error) {
-          toast.error(error.message || "Неверный код. Попробуйте снова.");
+          toast.error(
+            getAuthErrorMessage(error.code, "Неверный код. Попробуйте снова."),
+          );
           return;
         }
         toast.success("Подтверждено успешно!");
@@ -110,7 +113,9 @@ export function OTPForm({ ...props }: React.ComponentProps<typeof Card>) {
     <Card {...props}>
       <CardHeader className="text-center">
         <CardTitle className="text-xl">Введите код подтверждения</CardTitle>
-        <CardDescription>Мы отправили 6-значный код на {email}.</CardDescription>
+        <CardDescription>
+          Мы отправили 6-значный код на {email}.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>

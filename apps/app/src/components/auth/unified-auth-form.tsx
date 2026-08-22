@@ -29,6 +29,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { authClient } from "~/auth/client";
+import { getAuthErrorMessage } from "~/auth/error-messages";
 
 const DEMO_ACCOUNTS = [
   {
@@ -44,12 +45,12 @@ const DEMO_ACCOUNTS = [
 ] as const;
 
 const emailPasswordSchema = z.object({
-  email: z.email("Некорректный email адрес"),
+  email: z.email("Некорректный адрес электронной почты"),
   password: z.string().min(8, "Пароль должен содержать минимум 8 символов"),
 });
 
 const emailOtpSchema = z.object({
-  email: z.email("Некорректный email адрес"),
+  email: z.email("Некорректный адрес электронной почты"),
 });
 
 type EmailPasswordData = z.infer<typeof emailPasswordSchema>;
@@ -84,13 +85,12 @@ export function UnifiedAuthForm({
           name: data.email.split("@")[0] ?? "User",
         });
         if (error) {
-          if (error.code === "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL") {
-            toast.error("Пользователь уже существует. Используйте другой email.");
-          } else {
-            toast.error(
-              error.message || "Не удалось создать аккаунт. Попробуйте снова.",
-            );
-          }
+          toast.error(
+            getAuthErrorMessage(
+              error.code,
+              "Не удалось создать аккаунт. Попробуйте снова.",
+            ),
+          );
           return;
         }
         toast.success("Аккаунт успешно создан!");
@@ -100,7 +100,12 @@ export function UnifiedAuthForm({
           password: data.password,
         });
         if (error) {
-          toast.error(error.message || "Неверный email или пароль.");
+          toast.error(
+            getAuthErrorMessage(
+              error.code,
+              "Неверный адрес электронной почты или пароль.",
+            ),
+          );
           return;
         }
         toast.success("Вход выполнен успешно!");
@@ -110,7 +115,7 @@ export function UnifiedAuthForm({
       toast.error(
         mode === "signup"
           ? "Не удалось создать аккаунт. Попробуйте снова."
-          : "Неверный email или пароль.",
+          : "Неверный адрес электронной почты или пароль.",
       );
     } finally {
       setLoading(false);
@@ -125,7 +130,12 @@ export function UnifiedAuthForm({
         type: "sign-in",
       });
       if (error) {
-        toast.error(error.message || "Не удалось отправить код. Попробуйте снова.");
+        toast.error(
+          getAuthErrorMessage(
+            error.code,
+            "Не удалось отправить код. Попробуйте снова.",
+          ),
+        );
         return;
       }
       localStorage.setItem("otp_email", data.email);
