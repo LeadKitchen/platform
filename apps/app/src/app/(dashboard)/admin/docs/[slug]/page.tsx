@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { AdminDocsDetail } from "~/components/admin/admin-docs-detail";
 import { SiteHeader } from "~/components/layout";
 import {
   ADMIN_DOC_SECTION_BY_SLUG,
   ADMIN_DOC_SECTIONS,
 } from "~/content/admin-docs";
+import { api } from "~/orpc/server";
 
 interface AdminDocsSectionPageProps {
   params: Promise<{ slug: string }>;
@@ -43,16 +44,22 @@ export default async function AdminDocsSectionPage({
     notFound();
   }
 
+  try {
+    await api.admin.game.system.overview();
+  } catch {
+    redirect("/game");
+  }
+
   return (
     <>
       <SiteHeader
         breadcrumbs={[
           { label: "Администрирование", href: "/admin/game/overview" },
           { label: "Документация", href: "/admin/docs" },
-          { label: section.shortTitle },
+          { label: section!.shortTitle },
         ]}
       />
-      <AdminDocsDetail section={section} />
+      <AdminDocsDetail section={section!} />
     </>
   );
 }
