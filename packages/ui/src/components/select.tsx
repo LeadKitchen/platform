@@ -34,11 +34,14 @@ function collectSelectItems(
   });
 }
 
-function Select({
+function Select<
+  Value = string,
+  Multiple extends boolean | undefined = false,
+>({
   children,
   items,
   ...props
-}: React.ComponentProps<typeof SelectPrimitive.Root>) {
+}: SelectPrimitive.Root.Props<Value, Multiple>) {
   const resolvedItems = React.useMemo(() => {
     if (items) return items;
     const acc: Record<string, React.ReactNode> = {};

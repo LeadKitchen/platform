@@ -18,7 +18,7 @@ export function getAuthErrorMessage(
   if (!code) return fallback;
   // Prevent prototype pollution by checking own property
   if (Object.hasOwn(ERROR_MESSAGES, code)) {
-    return ERROR_MESSAGES[code];
+    return ERROR_MESSAGES[code] ?? fallback;
   }
   return fallback;
 }
