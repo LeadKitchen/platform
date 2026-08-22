@@ -33,7 +33,6 @@ export const list = adminProcedure
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
         adminUserId: AppAdmin.userId,
-        adminRole: AppAdmin.role,
       })
       .from(user)
       .leftJoin(AppAdmin, eq(AppAdmin.userId, user.id))
@@ -41,16 +40,10 @@ export const list = adminProcedure
       .limit(input.limit)
       .offset(input.offset);
 
-    return rows.map(({ adminUserId, adminRole, ...row }) => ({
+    return rows.map(({ adminUserId, ...row }) => ({
       ...row,
       isBootstrapAdmin: bootstrapEmails.has(row.email.toLowerCase()),
       isAdmin:
         adminUserId !== null || bootstrapEmails.has(row.email.toLowerCase()),
-      role: bootstrapEmails.has(row.email.toLowerCase())
-        ? ("admin" as const)
-        : ((adminRole ?? "facilitator") as
-            | "admin"
-            | "methodologist"
-            | "facilitator"),
     }));
   });

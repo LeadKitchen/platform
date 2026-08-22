@@ -1,9 +1,9 @@
 import { desc, GameProductEvent } from "@acme/db";
 import { z } from "zod";
 
-import { facilitatorProcedure } from "../../../orpc";
+import { adminProcedure } from "../../../orpc";
 
-export const productAnalytics = facilitatorProcedure
+export const productAnalytics = adminProcedure
   .input(z.object({ limit: z.number().int().min(1).max(20000).default(10000) }))
   .handler(async ({ context, input }) => {
     const rows = await context.db

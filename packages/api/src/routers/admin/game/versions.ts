@@ -9,9 +9,9 @@ import {
   lockConfig,
   restoreSnapshot,
 } from "../../../game/config-version";
-import { methodologistProcedure } from "../../../orpc";
+import { adminProcedure } from "../../../orpc";
 
-export const list = methodologistProcedure
+export const list = adminProcedure
   .input(z.object({ limit: z.number().int().min(1).max(100).default(30) }))
   .handler(async ({ context, input }) => {
     const versions = await context.db
@@ -33,7 +33,7 @@ export const list = methodologistProcedure
     }));
   });
 
-export const rollback = methodologistProcedure
+export const rollback = adminProcedure
   .input(z.object({ versionId: z.uuid() }))
   .handler(async ({ context, input }) =>
     context.db.transaction(async (tx) => {

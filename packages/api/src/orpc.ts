@@ -94,18 +94,16 @@ export const protectedProcedure = publicProcedure.use(({ context, next }) => {
  * Admin (privileged) procedure
  *
  * Builds on `protectedProcedure` and additionally verifies that the
- * authenticated user has admin privileges.
+ * authenticated user has admin privileges. There are only two roles in the
+ * app: regular user and admin — no in-between tiers.
  *
  * Admin access is granted to emails listed in the ADMIN_EMAILS environment
- * variable (comma-separated).
+ * variable (comma-separated), or to users with a row in `AppAdmin`.
  *
  * @example ADMIN_EMAILS=admin@example.com,ops@example.com
  */
-export const ADMIN_ROLES = ["admin", "methodologist", "facilitator"] as const;
-export type AdminRole = (typeof ADMIN_ROLES)[number];
-
-function roleProcedure(allowed: readonly AdminRole[]) {
-  return protectedProcedure.use(async ({ context, next }) => {
+export const adminProcedure = protectedProcedure.use(
+  async ({ context, next }) => {
     const adminEmails = (process.env.ADMIN_EMAILS ?? "")
       .split(",")
       .map((e) => e.trim().toLowerCase())
@@ -118,32 +116,16 @@ function roleProcedure(allowed: readonly AdminRole[]) {
       ? undefined
       : await context.db.query.AppAdmin.findFirst({
           where: eq(AppAdmin.userId, context.session.user.id),
-          columns: { userId: true, role: true },
+          columns: { userId: true },
         });
 
     if (!isBootstrapAdmin && !persistedGrant) {
       throw new ORPCError("FORBIDDEN", { message: "Admin access required" });
     }
 
-    const role = (isBootstrapAdmin ? "admin" : persistedGrant?.role) as
-      | AdminRole
-      | undefined;
-    if (!role || !allowed.includes(role)) {
-      throw new ORPCError("FORBIDDEN", {
-        message: "Недостаточно прав для этого действия",
-      });
-    }
-
-    return next({ context: { adminRole: role } });
-  });
-}
-
-/** Read game operations and analytics. */
-export const facilitatorProcedure = roleProcedure(ADMIN_ROLES);
-/** Edit methodology, scenarios and LLM settings. */
-export const methodologistProcedure = roleProcedure(["admin", "methodologist"]);
-/** Manage access and runtime-sensitive configuration. */
-export const adminProcedure = roleProcedure(["admin"]);
+    return next({ context });
+  },
+);
 
 // Export the context type for use in other files
 export type ORPCContext = ReturnType<typeof createORPCContext>;

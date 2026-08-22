@@ -1,7 +1,7 @@
 import { desc, eq, GameDialog, GameEvaluation } from "@acme/db";
 import { z } from "zod";
 
-import { facilitatorProcedure } from "../../../orpc";
+import { adminProcedure } from "../../../orpc";
 
 interface Accumulator {
   variantId: string;
@@ -51,7 +51,7 @@ function round(value: number, digits = 2): number {
  *
  * @example client.admin.game.analytics({ round: 3 })
  */
-export const analytics = facilitatorProcedure
+export const analytics = adminProcedure
   .input(
     z.object({
       round: z.union([z.literal(2), z.literal(3)]).optional(),

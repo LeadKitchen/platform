@@ -25,7 +25,7 @@ import { z } from "zod";
 import { authClient } from "~/auth/client";
 
 const forgotPasswordSchema = z.object({
-  email: z.string().email("Invalid email address"),
+  email: z.string().email("Некорректный адрес электронной почты"),
 });
 
 type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
@@ -51,9 +51,9 @@ export function ForgotPasswordForm({
         redirectTo: paths.auth.resetPassword,
       });
       setSent(true);
-      toast.success("Password reset link sent! Check your email.");
+      toast.success("Ссылка для сброса пароля отправлена! Проверьте почту.");
     } catch (_error) {
-      toast.error("Failed to send reset link. Please try again.");
+      toast.error("Не удалось отправить ссылку. Попробуйте снова.");
     } finally {
       setLoading(false);
     }
@@ -63,16 +63,16 @@ export function ForgotPasswordForm({
     return (
       <Card {...props}>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Check your email</CardTitle>
+          <CardTitle className="text-xl">Проверьте почту</CardTitle>
           <CardDescription>
-            We&apos;ve sent a password reset link to your email address.
+            Мы отправили ссылку для сброса пароля на ваш email.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground text-center">
-              Click the link in the email to reset your password. The link will
-              expire in 1 hour.
+              Перейдите по ссылке в письме, чтобы сбросить пароль. Срок действия
+              ссылки — 1 час.
             </p>
             <Button
               render={<Link href={paths.auth.login} />}
@@ -80,7 +80,7 @@ export function ForgotPasswordForm({
               className="w-full"
               variant="outline"
             >
-              Back to sign in
+              Назад ко входу
             </Button>
           </div>
         </CardContent>
@@ -91,10 +91,9 @@ export function ForgotPasswordForm({
   return (
     <Card {...props}>
       <CardHeader className="text-center">
-        <CardTitle className="text-xl">Forgot password?</CardTitle>
+        <CardTitle className="text-xl">Забыли пароль?</CardTitle>
         <CardDescription>
-          Enter your email address and we&apos;ll send you a link to reset your
-          password.
+          Введите свой email, и мы отправим вам ссылку для сброса пароля.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -120,7 +119,7 @@ export function ForgotPasswordForm({
               )}
             />
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Sending…" : "Send reset link"}
+              {loading ? "Отправка…" : "Отправить ссылку"}
             </Button>
             <Button
               render={<Link href={paths.auth.login} />}
@@ -128,7 +127,7 @@ export function ForgotPasswordForm({
               className="w-full"
               variant="outline"
             >
-              Back to sign in
+              Назад ко входу
             </Button>
           </form>
         </Form>

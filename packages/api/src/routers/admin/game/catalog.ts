@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { employeeProfileSchema } from "../../../game/character-studio";
 import { mutateConfig } from "../../../game/config-version";
-import { facilitatorProcedure, methodologistProcedure } from "../../../orpc";
+import { adminProcedure } from "../../../orpc";
 
 const employeeInput = employeeProfileSchema.extend({ isActive: z.boolean() });
 
@@ -23,7 +23,7 @@ const taskInput = z.object({
   isActive: z.boolean(),
 });
 
-export const list = facilitatorProcedure.handler(async ({ context }) => {
+export const list = adminProcedure.handler(async ({ context }) => {
   const [employees, tasks] = await Promise.all([
     context.db.select().from(GameEmployee).orderBy(asc(GameEmployee.name)),
     context.db.select().from(GameTask).orderBy(asc(GameTask.title)),
@@ -31,7 +31,7 @@ export const list = facilitatorProcedure.handler(async ({ context }) => {
   return { employees, tasks };
 });
 
-export const upsertEmployee = methodologistProcedure
+export const upsertEmployee = adminProcedure
   .input(employeeInput)
   .handler(async ({ context, input }) => {
     const audit = await mutateConfig(
@@ -59,7 +59,7 @@ export const upsertEmployee = methodologistProcedure
     return employee;
   });
 
-export const upsertTask = methodologistProcedure
+export const upsertTask = adminProcedure
   .input(taskInput)
   .handler(async ({ context, input }) => {
     const audit = await mutateConfig(
@@ -87,7 +87,7 @@ export const upsertTask = methodologistProcedure
     return task;
   });
 
-export const setEmployeeActive = methodologistProcedure
+export const setEmployeeActive = adminProcedure
   .input(z.object({ id: z.string().max(64), isActive: z.boolean() }))
   .handler(async ({ context, input }) => {
     const audit = await mutateConfig(
@@ -113,7 +113,7 @@ export const setEmployeeActive = methodologistProcedure
     return employee;
   });
 
-export const setTaskActive = methodologistProcedure
+export const setTaskActive = adminProcedure
   .input(z.object({ id: z.string().max(64), isActive: z.boolean() }))
   .handler(async ({ context, input }) => {
     const audit = await mutateConfig(

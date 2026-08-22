@@ -27,8 +27,8 @@ import { z } from "zod";
 import { authClient } from "~/auth/client";
 
 const signInSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  email: z.string().email("Некорректный адрес электронной почты"),
+  password: z.string().min(8, "Пароль должен содержать минимум 8 символов"),
 });
 
 type SignInFormData = z.infer<typeof signInSchema>;
@@ -59,20 +59,20 @@ export function EmailPasswordForm({
           password: data.password,
           name: data.email.split("@")[0] ?? "User",
         });
-        toast.success("Account created successfully!");
+        toast.success("Аккаунт успешно создан!");
       } else {
         await authClient.signIn.email({
           email: data.email,
           password: data.password,
         });
-        toast.success("Signed in successfully!");
+        toast.success("Вход выполнен успешно!");
       }
       router.push(paths.dashboard.root);
     } catch (_error) {
       toast.error(
         mode === "signup"
-          ? "Failed to create account. Please try again."
-          : "Invalid email or password.",
+          ? "Не удалось создать аккаунт. Попробуйте снова."
+          : "Неверный email или пароль.",
       );
     } finally {
       setLoading(false);
@@ -83,12 +83,12 @@ export function EmailPasswordForm({
     <Card {...props}>
       <CardHeader className="text-center">
         <CardTitle className="text-xl">
-          {mode === "signup" ? "Create an account" : "Welcome back"}
+          {mode === "signup" ? "Создать аккаунт" : "С возвращением"}
         </CardTitle>
         <CardDescription>
           {mode === "signup"
-            ? "Enter your email and password to create an account"
-            : "Enter your email and password to sign in"}
+            ? "Введите email и пароль для создания аккаунта"
+            : "Введите email и пароль для входа"}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -118,7 +118,7 @@ export function EmailPasswordForm({
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>Пароль</FormLabel>
                   <FormControl>
                     <PasswordInput
                       placeholder="••••••••"
@@ -138,18 +138,18 @@ export function EmailPasswordForm({
                   href={paths.auth.forgotPassword}
                   className="text-sm text-primary underline-offset-4 hover:underline"
                 >
-                  Forgot password?
+                  Забыли пароль?
                 </Link>
               </div>
             )}
             <Button type="submit" className="w-full" disabled={loading}>
               {loading
                 ? mode === "signup"
-                  ? "Creating account…"
-                  : "Signing in…"
+                  ? "Создание аккаунта…"
+                  : "Выполняется вход…"
                 : mode === "signup"
-                  ? "Create account"
-                  : "Sign in"}
+                  ? "Создать аккаунт"
+                  : "Войти"}
             </Button>
           </form>
         </Form>
