@@ -11,7 +11,7 @@ import { ORPCError } from "@orpc/server";
 import { z } from "zod";
 
 import { mutateConfig } from "../../../game/config-version";
-import { facilitatorProcedure, methodologistProcedure } from "../../../orpc";
+import { adminProcedure } from "../../../orpc";
 
 /**
  * Every experiment arm, active or not, plus the strategies available to build
@@ -19,7 +19,7 @@ import { facilitatorProcedure, methodologistProcedure } from "../../../orpc";
  *
  * @example client.admin.game.variants.list()
  */
-export const list = facilitatorProcedure.handler(async ({ context }) => ({
+export const list = adminProcedure.handler(async ({ context }) => ({
   variants: await context.db
     .select()
     .from(GameVariant)
@@ -35,7 +35,7 @@ export const list = facilitatorProcedure.handler(async ({ context }) => ({
  *
  * @example client.admin.game.variants.upsert({ id: "rag-v2", knowledge: "rag-lexical", ... })
  */
-export const upsert = methodologistProcedure
+export const upsert = adminProcedure
   .input(
     variantConfigSchema.extend({
       isActive: z.boolean().default(true),
@@ -115,7 +115,7 @@ export const upsert = methodologistProcedure
  *
  * @example client.admin.game.variants.setActive({ id: "graph-rag", isActive: false })
  */
-export const setActive = methodologistProcedure
+export const setActive = adminProcedure
   .input(z.object({ id: z.string().max(64), isActive: z.boolean() }))
   .handler(async ({ context, input }) => {
     const audit = await mutateConfig(

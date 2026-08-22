@@ -16,7 +16,7 @@ import {
   loadConfigSnapshot,
   mutateConfig,
 } from "../../../game/config-version";
-import { methodologistProcedure } from "../../../orpc";
+import { adminProcedure } from "../../../orpc";
 
 function qualityContext(
   snapshot: Awaited<ReturnType<typeof loadConfigSnapshot>>,
@@ -32,7 +32,7 @@ function qualityContext(
   };
 }
 
-export const draftRoster = methodologistProcedure
+export const draftRoster = adminProcedure
   .input(
     z.object({
       brief: z.string().trim().min(20).max(4000),
@@ -124,7 +124,7 @@ export const draftRoster = methodologistProcedure
     }
   });
 
-export const publishRoster = methodologistProcedure
+export const publishRoster = adminProcedure
   .input(
     z.object({
       brief: z.string().trim().min(20).max(4000),
@@ -193,7 +193,7 @@ export const publishRoster = methodologistProcedure
     };
   });
 
-export const simulateRoster = methodologistProcedure
+export const simulateRoster = adminProcedure
   .input(
     z.object({
       scenario: z.string().trim().min(20).max(1500),

@@ -222,7 +222,6 @@ export interface AdminGameData {
     counts: Record<string, number>;
     runtime: {
       provider: string;
-      adminRole: "admin" | "methodologist" | "facilitator";
       model: string;
       defaultVariant: string;
       databaseDriver: string;
@@ -240,7 +239,6 @@ export interface AdminGameData {
     createdAt: Date | string;
     isAdmin: boolean;
     isBootstrapAdmin: boolean;
-    role: "admin" | "methodologist" | "facilitator";
   }>;
   benchmarks: BenchmarkRun[];
 }
@@ -523,17 +521,13 @@ export function AdminGameDashboard({
     }
   }
 
-  async function updateAdmin(
-    userId: string,
-    isAdmin: boolean,
-    role: "admin" | "methodologist" | "facilitator" = "facilitator",
-  ) {
+  async function updateAdmin(userId: string, isAdmin: boolean) {
     setPending(true);
     try {
-      await client.admin.users.setAdmin({ userId, isAdmin, role });
+      await client.admin.users.setAdmin({ userId, isAdmin });
       setUsers((current) =>
         current.map((item) =>
-          item.id === userId ? { ...item, isAdmin, role } : item,
+          item.id === userId ? { ...item, isAdmin } : item,
         ),
       );
       toast.success(
@@ -564,12 +558,8 @@ export function AdminGameDashboard({
         </Button>
       </div>
 
-      {initialData.system.runtime.adminRole !== "facilitator" ? (
-        <>
-          <AdminAiAssistant />
-          <AdminConfigHistory />
-        </>
-      ) : null}
+      <AdminAiAssistant />
+      <AdminConfigHistory />
 
       {section === "overview" ? (
         <div className="flex flex-col gap-6">
@@ -1575,13 +1565,7 @@ export function AdminGameDashboard({
                     <TableCell>
                       <span className="flex flex-wrap gap-2">
                         <Badge variant={user.isAdmin ? "default" : "outline"}>
-                          {user.isAdmin
-                            ? {
-                                admin: "Технический администратор",
-                                methodologist: "Методист",
-                                facilitator: "Ведущий",
-                              }[user.role]
-                            : "Участник"}
+                          {user.isAdmin ? "Администратор" : "Участник"}
                         </Badge>
                         {user.isBootstrapAdmin ? (
                           <Badge variant="secondary">Bootstrap</Badge>
@@ -1591,49 +1575,14 @@ export function AdminGameDashboard({
                     <TableCell>{dateLabel(user.createdAt)}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        {user.isAdmin ? (
-                          <Select
-                            value={user.role}
-                            disabled={pending || user.isBootstrapAdmin}
-                            onValueChange={(value) =>
-                              updateAdmin(
-                                user.id,
-                                true,
-                                value as
-                                  | "admin"
-                                  | "methodologist"
-                                  | "facilitator",
-                              )
-                            }
-                          >
-                            <SelectTrigger aria-label={`Роль ${user.name}`}>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectGroup>
-                                <SelectItem value="facilitator">
-                                  Ведущий
-                                </SelectItem>
-                                <SelectItem value="methodologist">
-                                  Методист
-                                </SelectItem>
-                                <SelectItem value="admin">
-                                  Технический администратор
-                                </SelectItem>
-                              </SelectGroup>
-                            </SelectContent>
-                          </Select>
-                        ) : null}
                         <Button
                           type="button"
                           size="sm"
                           variant={user.isAdmin ? "outline" : "default"}
                           disabled={pending || user.isBootstrapAdmin}
-                          onClick={() =>
-                            updateAdmin(user.id, !user.isAdmin, "facilitator")
-                          }
+                          onClick={() => updateAdmin(user.id, !user.isAdmin)}
                         >
-                          {user.isAdmin ? "Отозвать" : "Назначить ведущим"}
+                          {user.isAdmin ? "Отозвать" : "Назначить админом"}
                         </Button>
                       </div>
                     </TableCell>

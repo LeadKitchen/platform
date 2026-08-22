@@ -1,7 +1,7 @@
 import { desc, GameBenchmarkRun } from "@acme/db";
 import { z } from "zod";
 
-import { methodologistProcedure } from "../../../orpc";
+import { adminProcedure } from "../../../orpc";
 
 /**
  * Published offline benchmark runs (`@acme/eval`'s harness).
@@ -14,7 +14,7 @@ import { methodologistProcedure } from "../../../orpc";
  *
  * @example client.admin.game.benchmarks.list({ limit: 10 })
  */
-export const list = methodologistProcedure
+export const list = adminProcedure
   .input(z.object({ limit: z.number().int().min(1).max(50).default(20) }))
   .handler(async ({ context, input }) =>
     context.db

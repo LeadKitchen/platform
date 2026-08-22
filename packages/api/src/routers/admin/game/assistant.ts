@@ -21,7 +21,7 @@ import {
   loadConfigSnapshot,
   mutateConfig,
 } from "../../../game/config-version";
-import { methodologistProcedure } from "../../../orpc";
+import { adminProcedure } from "../../../orpc";
 
 const settingsDraftSchema = z.object({
   defaultVariantId: z.string().min(1).max(64).nullable(),
@@ -144,7 +144,7 @@ function validateVariant(draft: ConfigurationDraft["variant"]): void {
  * Nothing is persisted here: applying the proposal stays an explicit action
  * in the corresponding editor, which keeps LLM mistakes reversible.
  */
-export const draftConfiguration = methodologistProcedure
+export const draftConfiguration = adminProcedure
   .input(z.object({ request: z.string().trim().min(10).max(4000) }))
   .handler(async ({ context, input }) => {
     const snapshot = await loadConfigSnapshot(context.db);
@@ -223,7 +223,7 @@ export const draftConfiguration = methodologistProcedure
   });
 
 /** Apply every card from one reviewed draft atomically and write one audit version. */
-export const applyConfiguration = methodologistProcedure
+export const applyConfiguration = adminProcedure
   .input(
     z.object({
       request: z.string().trim().min(10).max(4000),
@@ -316,7 +316,7 @@ export const applyConfiguration = methodologistProcedure
   });
 
 /** Record an explicit human rejection without allowing public event spoofing. */
-export const rejectConfiguration = methodologistProcedure
+export const rejectConfiguration = adminProcedure
   .input(z.object({ changes: z.number().int().min(0).max(100) }))
   .handler(async ({ context, input }) => {
     const [event] = await context.db

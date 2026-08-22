@@ -17,8 +17,9 @@ export const user = pgTable("users", {
 });
 
 /**
- * Persistent administrator grants. ADMIN_EMAILS remains a bootstrap/fallback
- * mechanism, while day-to-day access is managed through this table.
+ * Persistent administrator grants. A row's existence means the user is an
+ * admin — there is no in-between role. ADMIN_EMAILS remains a bootstrap/
+ * fallback mechanism, while day-to-day access is managed through this table.
  */
 export const AppAdmin = pgTable("app_admins", {
   userId: text("user_id")
@@ -27,8 +28,6 @@ export const AppAdmin = pgTable("app_admins", {
   grantedBy: text("granted_by").references(() => user.id, {
     onDelete: "set null",
   }),
-  /** admin = access control, methodologist = game config, facilitator = runs. */
-  role: text("role").default("admin").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),

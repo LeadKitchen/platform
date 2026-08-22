@@ -54,9 +54,9 @@ async function main(): Promise<void> {
 
   await db
     .insert(AppAdmin)
-    .values({ userId: admin.id, role: "admin" })
+    .values({ userId: admin.id })
     .onConflictDoNothing({ target: AppAdmin.userId });
-  console.log(`Роль admin выдана: ${DEMO_ADMIN.email}`);
+  console.log(`Права администратора выданы: ${DEMO_ADMIN.email}`);
 }
 
 main()
