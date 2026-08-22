@@ -83,5 +83,6 @@ export const env = createEnv({
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
   },
   skipValidation:
-    !!process.env.CI || process.env.npm_lifecycle_event === "lint",
+    (!!process.env.CI && !process.env.VERCEL) ||
+    process.env.npm_lifecycle_event === "lint",
 });
