@@ -371,7 +371,7 @@ export function DialogRoom(props: DialogRoomProps) {
               </Badge>
               <Badge variant="outline">Раунд {props.shift.round}</Badge>
               {props.shift.soloOnShift ? (
-                <Badge variant="secondary">Один в смене</Badge>
+                <Badge variant="accent">Один в смене</Badge>
               ) : null}
               <Badge variant="outline">
                 Заказов в работе: {props.shift.activeOrders}

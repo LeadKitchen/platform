@@ -85,9 +85,9 @@ export function EvaluationCard({
 
   const outcomeTone =
     evaluation.outcome.status === "success"
-      ? "default"
+      ? "success"
       : evaluation.outcome.status === "partial"
-        ? "secondary"
+        ? "accent"
         : "destructive";
   const metCriteria = evaluation.criteria.filter((criterion) => criterion.met);
   const missedCriteria = evaluation.criteria.filter(
@@ -111,7 +111,7 @@ export function EvaluationCard({
             <CardTitle className="text-2xl">{scoreLabel}</CardTitle>
           </div>
           <div className="text-right">
-            <span className="block text-4xl font-semibold tabular-nums">
+            <span className="font-display block text-5xl font-semibold tabular-nums">
               {evaluation.scorePercent}%
             </span>
             <span className="text-muted-foreground text-xs">общая оценка</span>
@@ -124,15 +124,15 @@ export function EvaluationCard({
         <Progress value={evaluation.scorePercent} />
 
         <div className="grid gap-4 lg:grid-cols-2">
-          <div className="flex flex-col gap-3 rounded-lg border p-4">
-            <div className="flex items-center gap-2 font-semibold">
+          <div className="border-success/30 bg-success/5 flex flex-col gap-3 rounded-lg border p-4">
+            <div className="text-success flex items-center gap-2 font-semibold">
               <IconCheck /> Что уже получается
             </div>
             {metCriteria.length > 0 ? (
               <ul className="flex flex-col gap-2 text-sm">
                 {metCriteria.slice(0, 4).map((criterion) => (
                   <li key={criterion.id} className="flex items-start gap-2">
-                    <IconCheck className="mt-0.5" />
+                    <IconCheck className="text-success mt-0.5" />
                     <span>{criterion.title}</span>
                   </li>
                 ))}
@@ -144,15 +144,15 @@ export function EvaluationCard({
             )}
           </div>
 
-          <div className="flex flex-col gap-3 rounded-lg border p-4">
-            <div className="flex items-center gap-2 font-semibold">
+          <div className="border-accent-foreground/20 bg-accent/10 flex flex-col gap-3 rounded-lg border p-4">
+            <div className="text-accent-foreground flex items-center gap-2 font-semibold">
               <IconTrendingUp /> Что попробовать в следующий раз
             </div>
             {missedCriteria.length > 0 ? (
               <ul className="flex flex-col gap-2 text-sm">
                 {missedCriteria.slice(0, 4).map((criterion) => (
                   <li key={criterion.id} className="flex items-start gap-2">
-                    <IconTarget className="mt-0.5" />
+                    <IconTarget className="text-accent-foreground mt-0.5" />
                     <span>
                       {criterion.title}
                       {criterion.comment ? ` — ${criterion.comment}` : ""}
@@ -215,7 +215,7 @@ export function EvaluationCard({
                     </span>
                   ) : null}
                 </span>
-                <Badge variant={criterion.met ? "default" : "outline"}>
+                <Badge variant={criterion.met ? "success" : "outline"}>
                   {criterion.met ? <IconCheck /> : <IconX />}
                   {criterion.met ? "выполнено" : "пропущено"}
                 </Badge>
