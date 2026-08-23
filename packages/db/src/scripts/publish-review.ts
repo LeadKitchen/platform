@@ -25,7 +25,9 @@ async function main(): Promise<void> {
   }
 
   const titleFlag = argv.indexOf("--title");
-  const title = titleFlag !== -1 ? argv[titleFlag + 1] : undefined;
+  const titleValue = titleFlag !== -1 ? argv[titleFlag + 1] : undefined;
+  const title =
+    titleValue && !titleValue.startsWith("--") ? titleValue : undefined;
   if (!title) {
     console.error('Нужен заголовок: --title "Название отчёта"');
     process.exit(1);

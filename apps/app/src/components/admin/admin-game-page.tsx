@@ -2,7 +2,6 @@ import { redirect } from "next/navigation";
 import type { BenchmarkRun } from "~/components/admin/admin-benchmark-reports";
 import type { AdminGameSection } from "~/components/admin/admin-game-dashboard";
 import { AdminGameDashboard } from "~/components/admin/admin-game-dashboard";
-import type { ReviewReport } from "~/components/admin/admin-review-reports";
 import { SiteHeader } from "~/components/layout";
 import { api } from "~/orpc/server";
 
@@ -76,7 +75,7 @@ export async function AdminGamePage({
           system,
           users,
           benchmarks: benchmarks as unknown as BenchmarkRun[],
-          reviews: reviews as unknown as ReviewReport[],
+          reviews,
         }}
       />
     </>

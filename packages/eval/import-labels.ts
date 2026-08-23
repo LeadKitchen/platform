@@ -22,10 +22,16 @@
  */
 import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import type { CriterionId, EvalFixture, ManagementStyle } from "@acme/game";
+import type { CriterionId, ManagementStyle } from "@acme/game";
 import { CRITERIA, MANAGEMENT_STYLES } from "@acme/game";
+import { z } from "zod";
 
-import { ALL_FIXTURES, CORE_FIXTURES, EXTENDED_FIXTURES } from "./src/fixtures";
+import {
+  ALL_FIXTURES,
+  CORE_FIXTURES,
+  type EvalFixture,
+  EXTENDED_FIXTURES,
+} from "./src/fixtures";
 
 const CRITERION_IDS = Object.keys(CRITERIA) as CriterionId[];
 
@@ -240,6 +246,14 @@ async function main(): Promise<void> {
     );
   }
 
+  // Pre-validate schema: all met_<criterion> columns must be present
+  const missingMetCols = metCols.filter(({ index }) => index < 0);
+  if (missingMetCols.length > 0) {
+    throw new Error(
+      `в CSV нет обязательных колонок критериев: ${missingMetCols.map(({ id }) => `met_${id}`).join(", ")}`,
+    );
+  }
+
   const byId = new Map<string, EvalFixture>();
   for (const f of ALL_FIXTURES) byId.set(f.id, f);
 
@@ -269,13 +283,19 @@ async function main(): Promise<void> {
     }
 
     const scoreRaw = row[scoreCol]?.trim();
-    const score = Number.parseInt(scoreRaw ?? "", 10);
-    if (!Number.isFinite(score) || score < 0 || score > 100) {
+    const scoreSchema = z
+      .string()
+      .regex(/^\d+$/, "должно быть целое число без дополнительного текста")
+      .transform((val) => Number.parseInt(val, 10))
+      .refine((val) => val >= 0 && val <= 100, "должно быть от 0 до 100");
+    const scoreResult = scoreSchema.safeParse(scoreRaw ?? "");
+    if (!scoreResult.success) {
       warnings.push(
-        `${id}: expert_score "${scoreRaw}" не число 0..100 — строка пропущена целиком`,
+        `${id}: expert_score "${scoreRaw}" ${scoreResult.error.errors[0]?.message ?? "невалидно"} — строка пропущена целиком`,
       );
       continue;
     }
+    const score = scoreResult.data;
 
     const metCriteria: CriterionId[] = metCols
       .filter(({ index }) => index >= 0 && isMet(row[index]))
