@@ -44,12 +44,18 @@ export function renderMarkdownReport(result: RunResult): string {
   }
 
   if (result.expertLabelledFixtures < result.fixtures) {
-    const provisional = result.fixtures - result.expertLabelledFixtures;
+    const provisional =
+      result.fixtures - result.expertLabelledFixtures - result.aiAssistedFixtures;
+    const aiNote =
+      result.aiAssistedFixtures > 0
+        ? ` (из них ${result.aiAssistedFixtures} — черновая разметка модели, ещё не проверена методологом)`
+        : "";
     lines.push(
       `> ⚠️ Экспертными метками подписано ${result.expertLabelledFixtures} из ${result.fixtures} сценариев,`,
-      `> остальные ${provisional} — предварительные. Колонка «MAE к эксперту» показывает`,
-      "> расхождение с временной калибровкой, а не с методологом: она годится, чтобы",
-      "> ловить регрессии, и не годится как основание внедрять подход.",
+      `> остальные ${provisional + result.aiAssistedFixtures} — предварительные${aiNote}.`,
+      "> Колонка «MAE к эксперту» показывает расхождение с временной калибровкой,",
+      "> а не с методологом: она годится, чтобы ловить регрессии, и не годится как",
+      "> основание внедрять подход.",
       "",
     );
   }

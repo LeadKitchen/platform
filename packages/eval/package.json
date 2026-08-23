@@ -14,6 +14,8 @@
     "clean": "git clean -xdf .cache .turbo dist node_modules reports",
     "dev": "tsc",
     "eval": "bun --env-file=../../.env run src/cli.ts",
+    "label:export": "bun run export-for-labeling.ts",
+    "label:import": "bun run import-labels.ts",
     "publish": "bun --env-file=../../.env run publish-report.ts",
     "format": "biome format .",
     "lint": "biome lint .",

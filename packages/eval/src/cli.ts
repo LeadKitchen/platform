@@ -8,7 +8,7 @@ import {
   type VariantConfig,
 } from "@acme/ai";
 
-import { FIXTURES } from "./fixtures";
+import { ALL_FIXTURES, FIXTURES } from "./fixtures";
 import { buildCandidateArms, loadPromptArtifact } from "./optimize/artifact";
 
 import { renderMarkdownReport } from "./report";
@@ -34,6 +34,7 @@ interface Flags {
   runs: number;
   concurrency: number;
   limit?: number;
+  extended: boolean;
   reference?: string;
   learn: boolean;
   out?: string;
@@ -51,6 +52,7 @@ function parseFlags(argv: string[]): Flags {
     epochs: 1,
     runs: 1,
     concurrency: 1,
+    extended: false,
     learn: false,
     candidates: [],
     combine: false,
@@ -86,6 +88,9 @@ function parseFlags(argv: string[]): Flags {
       case "--limit":
         if (next) flags.limit = Number.parseInt(next, 10) || undefined;
         index += 1;
+        break;
+      case "--extended":
+        flags.extended = true;
         break;
       case "--reference":
         if (next) flags.reference = next;
@@ -130,9 +135,12 @@ function printHelp(): void {
 Флаги:
   --variants a,b,c   какие варианты сравнивать (по умолчанию все встроенные)
   --provider p       simulated | anthropic | openai | env  (по умолч. simulated)
-  --runs N           прогонов на сценарий: даёт разброс модели (реком. 3)
+  --runs N           прогонов на сценарий: даёт разброс модели (реком. 4)
   --concurrency N    сколько сценариев считать параллельно (для обучаемых — 1)
   --limit N          взять только первые N сценариев (быстрая проверка)
+  --extended         добавить EXTENDED_FIXTURES (шаг-в-сторону промахи) к
+                      CORE_FIXTURES — перед решением о внедрении подхода,
+                      не для повседневного прогона
   --reference ID     контрольный вариант для сравнения (по умолч. baseline)
   --epochs N         повторов набора сценариев (для обучаемых стратегий)
   --learn            передавать награду стратегиям с обучением
@@ -148,25 +156,32 @@ function printHelp(): void {
 
 Примеры:
   bun --filter @acme/eval eval --variants baseline,rag,graph-rag
-  bun --filter @acme/eval eval --provider openai --runs 3 --out reports/run.md
+  bun --filter @acme/eval eval --provider openai --runs 4 --out reports/run.md
   bun --filter @acme/eval eval --variants baseline,skill-rl --epochs 5 --learn
 
-Изолированные сравнения передовых техник (рекомендуется --runs 3+):
+Изолированные сравнения передовых техник — один арм против одного контроля,
+не все сразу (рекомендуется --runs 4, --concurrency 3-4):
   # Retrieval: одинаковые persona и evaluation, меняется только knowledge
-  bun --filter @acme/eval eval --provider env --variants hybrid-rag,hyde-rag,contextual-rag,rerank-rag,corrective-rag --reference hybrid-rag --runs 3 --out reports/retrieval.md
+  bun --filter @acme/eval eval --provider env --variants hybrid-rag,contextual-rag --reference hybrid-rag --runs 4 --concurrency 4 --out reports/retrieval.md
 
   # Persona: меняется только способ генерации реплики
-  bun --filter @acme/eval eval --provider env --variants baseline,self-consistency --reference baseline --runs 3 --out reports/persona.md
+  bun --filter @acme/eval eval --provider env --variants baseline,self-consistency --reference baseline --runs 4 --out reports/persona.md
 
   # Judge: меняется только single-judge на debate
-  bun --filter @acme/eval eval --provider env --variants baseline-judge,debate-judge --reference baseline-judge --runs 3 --out reports/judge.md
+  bun --filter @acme/eval eval --provider env --variants baseline-judge,debate-judge --reference baseline-judge --runs 4 --out reports/judge.md
 
   # Проверка кандидата от optimize против его собственного контрольного варианта
-  bun --filter @acme/eval eval --provider env --candidate reports/ax-criteria.json --runs 3 --out reports/candidate.md
+  bun --filter @acme/eval eval --provider env --candidate reports/ax-criteria.json --runs 4 --out reports/candidate.md
+
+  # Финальная проверка перед внедрением: добрать EXTENDED_FIXTURES
+  bun --filter @acme/eval eval --provider env --variants hybrid-rag,contextual-rag --reference hybrid-rag --extended --runs 4 --out reports/retrieval-final.md
 
 Примечание: contextual-rag при первом запуске обогащает каждый чанк через LLM;
 стоимость прогрева учитывается в первом диалоге. Повторяйте все arms одинаковое
-число раз и не смешивайте модели в одном сравнении.`);
+число раз и не смешивайте модели в одном сравнении. По умолчанию прогон идёт
+на CORE_FIXTURES (12 сценариев, см. fixtures.ts) — этого достаточно, чтобы
+поймать явную регрессию; --extended добавляет 8 сценариев "промах на одну
+ступень" для более тонкого разрешения перед решением о внедрении.`);
 }
 
 async function main(): Promise<void> {
@@ -181,7 +196,10 @@ async function main(): Promise<void> {
             : { ...process.env, AI_PROVIDER: flags.provider },
         );
 
-  const fixtures = flags.limit ? FIXTURES.slice(0, flags.limit) : FIXTURES;
+  const fixturePool = flags.extended ? ALL_FIXTURES : FIXTURES;
+  const fixtures = flags.limit
+    ? fixturePool.slice(0, flags.limit)
+    : fixturePool;
 
   // A `--candidate` arm and its control must come from the same artefact:
   // building them separately is exactly the mistake this flag exists to rule

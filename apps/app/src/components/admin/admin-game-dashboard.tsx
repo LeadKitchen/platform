@@ -54,6 +54,7 @@ import {
 } from "./admin-benchmark-reports";
 import { AdminCharacterStudio } from "./admin-character-studio";
 import { AdminConfigHistory } from "./admin-config-history";
+import { AdminReviewReports, type ReviewReport } from "./admin-review-reports";
 
 interface Employee {
   id: string;
@@ -114,6 +115,7 @@ export type AdminGameSection =
   | "tasks"
   | "variants"
   | "benchmarks"
+  | "reviews"
   | "users"
   | "settings";
 
@@ -153,6 +155,11 @@ const SECTION_COPY: Record<
   benchmarks: {
     title: "Отчёты о качестве",
     description: "Офлайн-замеры подходов на размеченных сценариях.",
+  },
+  reviews: {
+    title: "Отчёты о ревью",
+    description:
+      "Технический разбор внешних реализаций и рекомендации на основе Sitruk.",
   },
   users: {
     title: "Пользователи",
@@ -241,6 +248,7 @@ export interface AdminGameData {
     isBootstrapAdmin: boolean;
   }>;
   benchmarks: BenchmarkRun[];
+  reviews: ReviewReport[];
 }
 
 const emptyEmployee: Employee = {
@@ -1323,6 +1331,10 @@ export function AdminGameDashboard({
 
       {section === "benchmarks" ? (
         <AdminBenchmarkReports runs={initialData.benchmarks} />
+      ) : null}
+
+      {section === "reviews" ? (
+        <AdminReviewReports reports={initialData.reviews} />
       ) : null}
 
       {section === "settings" ? (

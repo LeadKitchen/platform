@@ -1,4 +1,11 @@
-export { type EvalFixture, FIXTURES, SILENCE_PROBE } from "./fixtures";
+export {
+  ALL_FIXTURES,
+  CORE_FIXTURES,
+  type EvalFixture,
+  EXTENDED_FIXTURES,
+  FIXTURES,
+  SILENCE_PROBE,
+} from "./fixtures";
 export {
   ASSISTANT_REGISTER_MARKERS,
   checkPersonaAdherence,

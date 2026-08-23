@@ -34,3 +34,22 @@
     letter-spacing: -0.01em;
   }
 }
+
+@layer utilities {
+  @keyframes steam-rise {
+    0% {
+      transform: translateY(0) scaleX(1);
+      opacity: 0;
+    }
+    20% {
+      opacity: 0.6;
+    }
+    100% {
+      transform: translateY(-22px) scaleX(1.2);
+      opacity: 0;
+    }
+  }
+  .animate-steam {
+    animation: steam-rise 2.4s ease-in-out infinite;
+  }
+}

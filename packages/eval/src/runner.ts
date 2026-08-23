@@ -165,6 +165,8 @@ export interface RunResult {
   fixtures: number;
   /** How many fixtures carry a methodologist-signed label. */
   expertLabelledFixtures: number;
+  /** How many fixtures carry a model's own draft read, not a methodologist's. */
+  aiAssistedFixtures: number;
   referenceVariantId: string;
   variants: VariantSummary[];
   /** Paired significance of every candidate against the reference arm. */
@@ -466,6 +468,9 @@ export async function runEvaluation(options: RunOptions): Promise<RunResult> {
     fixtures: fixtures.length,
     expertLabelledFixtures: fixtures.filter(
       (fixture) => fixture.labelSource === "expert",
+    ).length,
+    aiAssistedFixtures: fixtures.filter(
+      (fixture) => fixture.labelSource === "ai-assisted",
     ).length,
     referenceVariantId,
     variants,

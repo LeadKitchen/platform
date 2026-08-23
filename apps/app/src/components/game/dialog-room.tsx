@@ -45,12 +45,12 @@ import {
   IconPlayerStop,
   IconRefresh,
   IconSend,
-  IconUser,
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { client } from "~/orpc/react";
 import { EvaluationCard, type EvaluationView } from "./evaluation-card";
+import { ChefHatIllustration, SteamWisps } from "./illustrations";
 import { useSpeechRecognition } from "./use-speech-recognition";
 
 interface Turn {
@@ -351,11 +351,14 @@ export function DialogRoom(props: DialogRoomProps) {
         <CardHeader>
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="flex items-center gap-3">
-              <Avatar className="size-12">
-                <AvatarFallback>
-                  {props.employee.name.slice(0, 1).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+              <div className="relative">
+                {pending ? <SteamWisps /> : null}
+                <Avatar className="size-12">
+                  <AvatarFallback>
+                    {props.employee.name.slice(0, 1).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
               <div>
                 <CardTitle>{props.employee.name}</CardTitle>
                 <CardDescription>{props.employee.role}</CardDescription>
@@ -411,11 +414,7 @@ export function DialogRoom(props: DialogRoomProps) {
                 <Empty className="border-0 py-16">
                   <EmptyHeader>
                     <EmptyMedia>
-                      <Avatar className="size-14">
-                        <AvatarFallback>
-                          <IconUser />
-                        </AvatarFallback>
-                      </Avatar>
+                      <ChefHatIllustration className="text-muted-foreground size-16" />
                     </EmptyMedia>
                     <EmptyTitle>
                       {props.employee.name} ждёт вашего обращения

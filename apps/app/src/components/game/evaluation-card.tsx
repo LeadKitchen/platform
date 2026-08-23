@@ -26,6 +26,35 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+
+/**
+ * Считает от 0 до `target` за `durationMs` — используется для "проявления"
+ * итогового счёта, а не как индикатор загрузки, поэтому запускается один
+ * раз при монтировании и не реагирует на смену `target`.
+ */
+function useCountUp(target: number, durationMs = 900) {
+  const [value, setValue] = useState(0);
+  const targetRef = useRef(target);
+
+  useEffect(() => {
+    let frame: number;
+    const start = performance.now();
+    const from = 0;
+    const to = targetRef.current;
+    function tick(now: number) {
+      const progress = Math.min((now - start) / durationMs, 1);
+      const eased = 1 - (1 - progress) ** 3;
+      setValue(Math.round(from + (to - from) * eased));
+      if (progress < 1) frame = requestAnimationFrame(tick);
+    }
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+    // biome-ignore lint/correctness/useExhaustiveDependencies: анимация должна проиграться один раз, от начального значения target.
+  }, [durationMs]);
+
+  return value;
+}
 
 export interface EvaluationView {
   scorePercent: number;
@@ -99,9 +128,10 @@ export function EvaluationCard({
       : evaluation.scorePercent >= 60
         ? "Хорошая основа"
         : "Есть точки роста";
+  const animatedScore = useCountUp(evaluation.scorePercent);
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="animate-in fade-in slide-in-from-bottom-2 overflow-hidden duration-500">
       <CardHeader>
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
@@ -112,16 +142,17 @@ export function EvaluationCard({
           </div>
           <div className="text-right">
             <span className="font-display block text-5xl font-semibold tabular-nums">
-              {evaluation.scorePercent}%
+              {animatedScore}%
             </span>
             <span className="text-muted-foreground text-xs">общая оценка</span>
+            <span className="bg-primary animate-in fade-in slide-in-from-right-4 ml-auto mt-1.5 block h-0.5 w-10 duration-700" />
           </div>
         </div>
         <CardDescription>{evaluation.summary}</CardDescription>
       </CardHeader>
 
       <CardContent className="flex flex-col gap-6">
-        <Progress value={evaluation.scorePercent} />
+        <Progress value={animatedScore} />
 
         <div className="grid gap-4 lg:grid-cols-2">
           <div className="border-success/30 bg-success/5 flex flex-col gap-3 rounded-lg border p-4">
