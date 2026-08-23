@@ -10,6 +10,7 @@ import { adminGameCharactersRouter } from "./characters";
 import { detail as dialogDetail, dialogs } from "./dialogs";
 import { analyze as analyzeInsights } from "./insights";
 import { productAnalytics } from "./product-analytics";
+import { adminGameReviewsRouter } from "./reviews";
 import { adminGameSessionsRouter } from "./sessions";
 import { adminGameSystemRouter } from "./system";
 import { adminGameVariantsRouter } from "./variants";
@@ -29,6 +30,7 @@ export const adminGameRouter = {
   characters: adminGameCharactersRouter,
   dialogs,
   dialogDetail,
+  reviews: adminGameReviewsRouter,
   sessions: adminGameSessionsRouter,
   system: adminGameSystemRouter,
   variants: adminGameVariantsRouter,

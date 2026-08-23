@@ -13,6 +13,7 @@ const SECTIONS = new Set<AdminGameSection>([
   "tasks",
   "variants",
   "benchmarks",
+  "reviews",
   "users",
   "settings",
 ]);

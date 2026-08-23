@@ -21,7 +21,11 @@ import {
   IconVideo,
 } from "@tabler/icons-react";
 import Link from "next/link";
-import { CreateSessionForm } from "~/components/game";
+import {
+  CreateSessionForm,
+  KitchenPatternBackdrop,
+  TicketIllustration,
+} from "~/components/game";
 import { SiteHeader } from "~/components/layout";
 import { api } from "~/orpc/server";
 
@@ -59,8 +63,9 @@ export default async function GamePage() {
     <>
       <SiteHeader />
       <div className="flex flex-1 flex-col gap-6 p-4 lg:p-6">
-        <Card className="from-accent/60 via-card to-card overflow-hidden bg-gradient-to-br">
-          <CardHeader>
+        <Card className="from-accent/60 via-card to-card relative overflow-hidden bg-gradient-to-br">
+          <KitchenPatternBackdrop className="text-primary pointer-events-none absolute inset-0 size-full opacity-[0.07]" />
+          <CardHeader className="relative">
             <Badge variant="accent" className="w-fit">
               Тренажёр руководителя
             </Badge>
@@ -78,7 +83,7 @@ export default async function GamePage() {
               </CardAction>
             ) : null}
           </CardHeader>
-          <CardContent className="flex flex-wrap gap-3">
+          <CardContent className="relative flex flex-wrap gap-3">
             {activeSession ? (
               <Button
                 size="lg"
@@ -246,9 +251,10 @@ export default async function GamePage() {
           </CardHeader>
           <CardContent className="flex flex-col gap-2">
             {sessions.length === 0 ? (
-              <p className="text-muted-foreground text-sm">
+              <div className="text-muted-foreground flex flex-col items-center gap-3 p-6 text-center text-sm">
+                <TicketIllustration className="size-12" />
                 Сессий пока нет — создайте первую.
-              </p>
+              </div>
             ) : null}
 
             {sessions.map((session) => (

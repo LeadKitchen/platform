@@ -14,6 +14,7 @@ const SECTION_TITLES: Record<AdminGameSection, string> = {
   tasks: "Задания",
   variants: "Варианты ИИ",
   benchmarks: "Отчёты о качестве",
+  reviews: "Отчёты о ревью",
   users: "Пользователи",
   settings: "Настройки",
 };
@@ -41,6 +42,7 @@ export async function AdminGamePage({
     sessions,
     users,
     benchmarks,
+    reviews,
   ] = await Promise.all([
     api.admin.game.analytics({ limit: 5000 }),
     api.admin.game.productAnalytics({ limit: 10000 }),
@@ -50,6 +52,7 @@ export async function AdminGamePage({
     api.admin.game.sessions.list({ limit: 100, offset: 0 }),
     api.admin.users.list({ limit: 100, offset: 0 }),
     api.admin.game.benchmarks.list({ limit: 20 }),
+    api.admin.game.reviews.list({ limit: 20 }),
   ]);
 
   return (
@@ -72,6 +75,7 @@ export async function AdminGamePage({
           system,
           users,
           benchmarks: benchmarks as unknown as BenchmarkRun[],
+          reviews,
         }}
       />
     </>

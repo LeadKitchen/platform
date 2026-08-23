@@ -21,6 +21,7 @@ import {
   IconChefHat,
   IconClipboardList,
   IconDatabase,
+  IconFileSearch,
   IconInnerShadowTop,
   IconListDetails,
   IconMessages,
@@ -134,6 +135,11 @@ const data = {
           title: "Отчёты о качестве",
           url: "/admin/game/benchmarks",
           icon: IconReportAnalytics,
+        },
+        {
+          title: "Отчёты о ревью",
+          url: "/admin/game/reviews",
+          icon: IconFileSearch,
         },
         {
           title: "Пользователи",

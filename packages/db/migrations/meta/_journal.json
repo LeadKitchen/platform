@@ -50,6 +50,13 @@
       "when": 1787400043097,
       "tag": "0006_amazing_kree",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1787467820978,
+      "tag": "0007_tidy_warpath",
+      "breakpoints": true
     }
   ]
 }

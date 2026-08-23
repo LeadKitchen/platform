@@ -3,6 +3,13 @@ export { DemoTour } from "./demo-tour";
 export { DialogRoom, type DialogRoomProps } from "./dialog-room";
 export { EvaluationCard, type EvaluationView } from "./evaluation-card";
 export {
+  ChefHatIllustration,
+  KitchenPatternBackdrop,
+  SteamWisps,
+  TicketIllustration,
+  WhiskIllustration,
+} from "./illustrations";
+export {
   type EmployeeOption,
   OrderQueue,
   type OrderRow,

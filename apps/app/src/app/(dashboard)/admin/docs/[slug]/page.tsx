@@ -56,10 +56,10 @@ export default async function AdminDocsSectionPage({
         breadcrumbs={[
           { label: "Администрирование", href: "/admin/game/overview" },
           { label: "Документация", href: "/admin/docs" },
-          { label: section!.shortTitle },
+          { label: section.shortTitle },
         ]}
       />
-      <AdminDocsDetail section={section!} />
+      <AdminDocsDetail section={section} />
     </>
   );
 }

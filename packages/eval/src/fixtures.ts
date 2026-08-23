@@ -7,13 +7,32 @@ import type { CriterionId, GameRound, ManagementStyle } from "@acme/game";
  * good approach is one whose automatic score lands close to the expert's *and*
  * whose expected style matches the methodology.
  *
- * The set is balanced over the full confusion matrix (every combination of
- * "style the situation required" × "style the manager actually played"),
- * because the mismatches are what separate approaches: an arm that simply
- * mirrors the employee's level scores well on the matching cases and collapses
- * on "expert handed a brand-new task and then left alone".
+ * Two tiers, curated by hand out of a larger generated pool (see
+ * `gen-fixtures.ts`, which still produces the full combinatorial set if the
+ * pool ever needs to grow again):
  *
- * Regenerate with `bun run gen-fixtures.ts` after changing the catalog.
+ * - `CORE_FIXTURES` (exported as `FIXTURES`, the default for every run) —
+ *   one scenario per (expected style × match/extreme-mismatch), round 2 and
+ *   round 3 where the methodology allows it. This is the minimum needed to
+ *   catch "the approach ignores the required style" and "the approach cannot
+ *   tell overload from normal load" — the two failure modes the game is
+ *   actually built to catch. Two of the twelve are also the toxic-turn cases,
+ *   so toxicity handling is covered without spending a dedicated scenario.
+ * - `EXTENDED_FIXTURES` — the "one step off" arms (over/under-manage by a
+ *   single level) that CORE_FIXTURES deliberately drops. They matter for
+ *   telling apart the partial-credit table in `styleCredit` (0.4/0.6/0.15/0.3)
+ *   but not for a quick regression check — pull them in with `ALL_FIXTURES`
+ *   before shipping a technique, not for everyday iteration.
+ *
+ * Labels start `provisional` (a placeholder calibration formula, see
+ * `gen-fixtures.ts`'s `provisionalScore`) and move to `ai-assisted` or
+ * `expert` via `export-for-labeling.ts` + `import-labels.ts` as a model or
+ * a methodologist reviews scenarios blind — see those two files and the
+ * `labelSource` doc comment below for what each tier is actually worth.
+ *
+ * Regenerate the full pool with `bun run gen-fixtures.ts` after changing the
+ * catalog, then re-pick CORE_FIXTURES / EXTENDED_FIXTURES by hand — the
+ * selection is a methodology call, not something to automate away.
  */
 export interface EvalFixture {
   id: string;
@@ -26,13 +45,18 @@ export interface EvalFixture {
   /**
    * Where the label came from.
    *
-   * `provisional` labels are a placeholder calibration, not a methodologist's
-   * verdict. They are good enough to detect large regressions and to exercise
-   * the harness, and NOT good enough to justify adopting an approach — the
-   * report says so out loud. Replace with `expert` as the methodologist signs
-   * scenarios off.
+   * `provisional` labels are a placeholder calibration formula (see
+   * `gen-fixtures.ts`'s `provisionalScore`), not a considered judgement at
+   * all. `ai-assisted` is a model's own read of the script — useful as a
+   * starting draft, but it must not be trusted as ground truth: the model
+   * being graded here and the model doing the grading share the same failure
+   * modes, so an ai-assisted label can silently agree with a bad approach for
+   * the same reason the approach is bad. Only `expert` — a human
+   * methodologist's verdict, made blind to what the pipeline expected or
+   * scored (see `export-for-labeling.ts`) — is strong enough to justify
+   * adopting an approach; the report says so out loud for anything less.
    */
-  labelSource: "provisional" | "expert";
+  labelSource: "provisional" | "ai-assisted" | "expert";
   /** What the participant says, turn by turn. */
   script: string[];
   label: {
@@ -51,7 +75,8 @@ export interface EvalFixture {
 export const SILENCE_PROBE =
   "Так, посмотрим, что там у нас по заказам на вечер";
 
-export const FIXTURES: EvalFixture[] = [
+/** Core set — default for every eval run. See file header for the selection rationale. */
+export const CORE_FIXTURES: EvalFixture[] = [
   {
     id: "anna-apple_pies-r2-delegating",
     description:
@@ -61,7 +86,7 @@ export const FIXTURES: EvalFixture[] = [
     round: 2,
     activeOrders: 1,
     soloOnShift: false,
-    labelSource: "provisional",
+    labelSource: "ai-assisted",
     script: [
       "Анна, нужно пироги с яблоком, 20 порций к 18:00.",
       "На твоё усмотрение, как обычно — доверяю.",
@@ -70,7 +95,7 @@ export const FIXTURES: EvalFixture[] = [
     label: {
       expectedStyle: "delegating",
       actualStyle: "delegating",
-      expertScore: 90,
+      expertScore: 88,
       metCriteria: [
         "avoid_micromanagement",
         "clarify_task",
@@ -88,7 +113,7 @@ export const FIXTURES: EvalFixture[] = [
     round: 2,
     activeOrders: 1,
     soloOnShift: false,
-    labelSource: "provisional",
+    labelSource: "ai-assisted",
     script: [
       "Анна, нужно пироги с яблоком, 20 порций к 20:00.",
       "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
@@ -98,553 +123,12 @@ export const FIXTURES: EvalFixture[] = [
     label: {
       expectedStyle: "delegating",
       actualStyle: "directive",
-      expertScore: 20,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "anna-apple_pies-r2-supporting",
-    description:
-      "Анна Соколова, «Пироги с яблоком, 20 порций», раунд 2: руководитель ведёт supporting, ожидается delegating",
-    employeeId: "anna",
-    taskId: "apple_pies",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно пироги с яблоком, 20 порций к 19:00.",
-      "Как ты считаешь, успеем к 19:00? Что думаешь по подаче?",
-      "Чем помочь? Могу забрать остальные заказы на себя.",
-      "Ты справишься, я рядом. Спасибо, что взялась.",
-    ],
-    label: {
-      expectedStyle: "delegating",
-      actualStyle: "supporting",
-      expertScore: 40,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "anna-apple_pies-r3-coaching",
-    description:
-      "Анна Соколова, «Пироги с яблоком, 20 порций», раунд 3 (перегруз): руководитель ведёт coaching, ожидается supporting",
-    employeeId: "anna",
-    taskId: "apple_pies",
-    round: 3,
-    activeOrders: 4,
-    soloOnShift: true,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно пироги с яблоком, 20 порций к 21:00.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-      "Ты справишься, я рядом. Спасибо, что взялась.",
-    ],
-    label: {
-      expectedStyle: "supporting",
-      actualStyle: "coaching",
-      expertScore: 28,
-      metCriteria: ["clarify_task", "motivate", "set_deadline"],
-    },
-  },
-  {
-    id: "anna-apple_pies-r3-delegating",
-    description:
-      "Анна Соколова, «Пироги с яблоком, 20 порций», раунд 3 (перегруз): руководитель ведёт delegating, ожидается supporting",
-    employeeId: "anna",
-    taskId: "apple_pies",
-    round: 3,
-    activeOrders: 4,
-    soloOnShift: true,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно пироги с яблоком, 20 порций к 18:00.",
-      "На твоё усмотрение, как обычно — доверяю.",
-      "Не буду вмешиваться, работай как привыкла.",
-      "Ты вообще думаешь головой? Бездарь, сколько можно объяснять.",
-    ],
-    label: {
-      expectedStyle: "supporting",
-      actualStyle: "delegating",
-      expertScore: 5,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "anna-apple_pies-r3-directive",
-    description:
-      "Анна Соколова, «Пироги с яблоком, 20 порций», раунд 3 (перегруз): руководитель ведёт directive, ожидается supporting",
-    employeeId: "anna",
-    taskId: "apple_pies",
-    round: 3,
-    activeOrders: 4,
-    soloOnShift: true,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно пироги с яблоком, 20 порций к 19:00.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Перед подачей покажи мне — я проверю.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-    ],
-    label: {
-      expectedStyle: "supporting",
-      actualStyle: "directive",
-      expertScore: 5,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "anna-apple_pies-r3-supporting",
-    description:
-      "Анна Соколова, «Пироги с яблоком, 20 порций», раунд 3 (перегруз): руководитель ведёт supporting, ожидается supporting",
-    employeeId: "anna",
-    taskId: "apple_pies",
-    round: 3,
-    activeOrders: 4,
-    soloOnShift: true,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно пироги с яблоком, 20 порций к 17:30.",
-      "Как ты считаешь, успеем к 17:30? Что думаешь по подаче?",
-      "Чем помочь? Могу забрать остальные заказы на себя.",
-      "Ты справишься, я рядом. Спасибо, что взялась.",
-      "Сначала пироги с яблоком, 20 порций, потом остальное — остальные заказы подождёт.",
-      "Давай упростим: без украшения, перенесём часть на завтра.",
-    ],
-    label: {
-      expectedStyle: "supporting",
-      actualStyle: "supporting",
-      expertScore: 90,
-      metCriteria: [
-        "ask_opinion",
-        "clarify_task",
-        "motivate",
-        "offer_help",
-        "prioritize",
-        "reduce_scope",
-        "set_deadline",
-      ],
-    },
-  },
-  {
-    id: "anna-banquet_hot-r2-coaching",
-    description:
-      "Анна Соколова, «Горячее на банкет, 40 порций», раунд 2: руководитель ведёт coaching, ожидается directive",
-    employeeId: "anna",
-    taskId: "banquet_hot",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно горячее на банкет, 40 порций к 19:00.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-      "Ты справишься, я рядом. Спасибо, что взялась.",
-    ],
-    label: {
-      expectedStyle: "directive",
-      actualStyle: "coaching",
-      expertScore: 34,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "set_deadline",
-      ],
-    },
-  },
-  {
-    id: "anna-banquet_hot-r2-delegating",
-    description:
-      "Анна Соколова, «Горячее на банкет, 40 порций», раунд 2: руководитель ведёт delegating, ожидается directive",
-    employeeId: "anna",
-    taskId: "banquet_hot",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно горячее на банкет, 40 порций к 20:00.",
-      "На твоё усмотрение, как обычно — доверяю.",
-      "Не буду вмешиваться, работай как привыкла.",
-      "Ты вообще думаешь головой? Бездарь, сколько можно объяснять.",
-    ],
-    label: {
-      expectedStyle: "directive",
-      actualStyle: "delegating",
-      expertScore: 5,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "anna-banquet_hot-r2-directive",
-    description:
-      "Анна Соколова, «Горячее на банкет, 40 порций», раунд 2: руководитель ведёт directive, ожидается directive",
-    employeeId: "anna",
-    taskId: "banquet_hot",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно горячее на банкет, 40 порций к 18:00.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Перед подачей покажи мне — я проверю.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-    ],
-    label: {
-      expectedStyle: "directive",
-      actualStyle: "directive",
-      expertScore: 90,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "set_checkpoints",
-        "set_deadline",
-      ],
-    },
-  },
-  {
-    id: "anna-banquet_hot-r3-coaching",
-    description:
-      "Анна Соколова, «Горячее на банкет, 40 порций», раунд 3 (перегруз): руководитель ведёт coaching, ожидается directive",
-    employeeId: "anna",
-    taskId: "banquet_hot",
-    round: 3,
-    activeOrders: 4,
-    soloOnShift: true,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно горячее на банкет, 40 порций к 21:00.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-      "Ты справишься, я рядом. Спасибо, что взялась.",
-    ],
-    label: {
-      expectedStyle: "directive",
-      actualStyle: "coaching",
-      expertScore: 15,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "set_deadline",
-      ],
-    },
-  },
-  {
-    id: "anna-banquet_hot-r3-delegating",
-    description:
-      "Анна Соколова, «Горячее на банкет, 40 порций», раунд 3 (перегруз): руководитель ведёт delegating, ожидается directive",
-    employeeId: "anna",
-    taskId: "banquet_hot",
-    round: 3,
-    activeOrders: 4,
-    soloOnShift: true,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно горячее на банкет, 40 порций к 18:00.",
-      "На твоё усмотрение, как обычно — доверяю.",
-      "Не буду вмешиваться, работай как привыкла.",
-    ],
-    label: {
-      expectedStyle: "directive",
-      actualStyle: "delegating",
-      expertScore: 5,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "anna-banquet_hot-r3-directive",
-    description:
-      "Анна Соколова, «Горячее на банкет, 40 порций», раунд 3 (перегруз): руководитель ведёт directive, ожидается directive",
-    employeeId: "anna",
-    taskId: "banquet_hot",
-    round: 3,
-    activeOrders: 4,
-    soloOnShift: true,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно горячее на банкет, 40 порций к 17:30.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Перед подачей покажи мне — я проверю.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-      "Сначала горячее на банкет, 40 порций, потом остальное — остальные заказы подождёт.",
-      "Давай упростим: без украшения, перенесём часть на завтра.",
-    ],
-    label: {
-      expectedStyle: "directive",
-      actualStyle: "directive",
-      expertScore: 86,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "prioritize",
-        "reduce_scope",
-        "set_checkpoints",
-        "set_deadline",
-      ],
-    },
-  },
-  {
-    id: "anna-decorated_cake-r2-coaching",
-    description:
-      "Анна Соколова, «Торт с украшением на банкет», раунд 2: руководитель ведёт coaching, ожидается directive",
-    employeeId: "anna",
-    taskId: "decorated_cake",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно торт с украшением на банкет к 17:30.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-      "Ты справишься, я рядом. Спасибо, что взялась.",
-    ],
-    label: {
-      expectedStyle: "directive",
-      actualStyle: "coaching",
-      expertScore: 34,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "set_deadline",
-      ],
-    },
-  },
-  {
-    id: "anna-decorated_cake-r2-delegating",
-    description:
-      "Анна Соколова, «Торт с украшением на банкет», раунд 2: руководитель ведёт delegating, ожидается directive",
-    employeeId: "anna",
-    taskId: "decorated_cake",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно торт с украшением на банкет к 21:00.",
-      "На твоё усмотрение, как обычно — доверяю.",
-      "Не буду вмешиваться, работай как привыкла.",
-    ],
-    label: {
-      expectedStyle: "directive",
-      actualStyle: "delegating",
-      expertScore: 5,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "anna-decorated_cake-r2-directive",
-    description:
-      "Анна Соколова, «Торт с украшением на банкет», раунд 2: руководитель ведёт directive, ожидается directive",
-    employeeId: "anna",
-    taskId: "decorated_cake",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно торт с украшением на банкет к 20:00.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Перед подачей покажи мне — я проверю.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-    ],
-    label: {
-      expectedStyle: "directive",
-      actualStyle: "directive",
-      expertScore: 90,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "set_checkpoints",
-        "set_deadline",
-      ],
-    },
-  },
-  {
-    id: "anna-decorated_cake-r3-coaching",
-    description:
-      "Анна Соколова, «Торт с украшением на банкет», раунд 3 (перегруз): руководитель ведёт coaching, ожидается directive",
-    employeeId: "anna",
-    taskId: "decorated_cake",
-    round: 3,
-    activeOrders: 4,
-    soloOnShift: true,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно торт с украшением на банкет к 19:00.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-      "Ты справишься, я рядом. Спасибо, что взялась.",
-    ],
-    label: {
-      expectedStyle: "directive",
-      actualStyle: "coaching",
-      expertScore: 15,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "set_deadline",
-      ],
-    },
-  },
-  {
-    id: "anna-decorated_cake-r3-delegating",
-    description:
-      "Анна Соколова, «Торт с украшением на банкет», раунд 3 (перегруз): руководитель ведёт delegating, ожидается directive",
-    employeeId: "anna",
-    taskId: "decorated_cake",
-    round: 3,
-    activeOrders: 4,
-    soloOnShift: true,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно торт с украшением на банкет к 20:00.",
-      "На твоё усмотрение, как обычно — доверяю.",
-      "Не буду вмешиваться, работай как привыкла.",
-    ],
-    label: {
-      expectedStyle: "directive",
-      actualStyle: "delegating",
-      expertScore: 5,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "anna-decorated_cake-r3-directive",
-    description:
-      "Анна Соколова, «Торт с украшением на банкет», раунд 3 (перегруз): руководитель ведёт directive, ожидается directive",
-    employeeId: "anna",
-    taskId: "decorated_cake",
-    round: 3,
-    activeOrders: 4,
-    soloOnShift: true,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно торт с украшением на банкет к 18:00.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Перед подачей покажи мне — я проверю.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-      "Сначала торт с украшением на банкет, потом остальное — остальные заказы подождёт.",
-      "Давай упростим: без украшения, перенесём часть на завтра.",
-    ],
-    label: {
-      expectedStyle: "directive",
-      actualStyle: "directive",
-      expertScore: 86,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "prioritize",
-        "reduce_scope",
-        "set_checkpoints",
-        "set_deadline",
-      ],
-    },
-  },
-  {
-    id: "anna-prep_veggies-r2-coaching",
-    description:
-      "Анна Соколова, «Заготовка овощей на смену», раунд 2: руководитель ведёт coaching, ожидается supporting",
-    employeeId: "anna",
-    taskId: "prep_veggies",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно заготовка овощей на смену к 19:00.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-      "Ты справишься, я рядом. Спасибо, что взялась.",
-    ],
-    label: {
-      expectedStyle: "supporting",
-      actualStyle: "coaching",
-      expertScore: 43,
-      metCriteria: ["clarify_task", "motivate", "set_deadline"],
-    },
-  },
-  {
-    id: "anna-prep_veggies-r2-delegating",
-    description:
-      "Анна Соколова, «Заготовка овощей на смену», раунд 2: руководитель ведёт delegating, ожидается supporting",
-    employeeId: "anna",
-    taskId: "prep_veggies",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно заготовка овощей на смену к 20:00.",
-      "На твоё усмотрение, как обычно — доверяю.",
-      "Не буду вмешиваться, работай как привыкла.",
-    ],
-    label: {
-      expectedStyle: "supporting",
-      actualStyle: "delegating",
       expertScore: 22,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "anna-prep_veggies-r2-directive",
-    description:
-      "Анна Соколова, «Заготовка овощей на смену», раунд 2: руководитель ведёт directive, ожидается supporting",
-    employeeId: "anna",
-    taskId: "prep_veggies",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно заготовка овощей на смену к 17:30.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Перед подачей покажи мне — я проверю.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-    ],
-    label: {
-      expectedStyle: "supporting",
-      actualStyle: "directive",
-      expertScore: 17,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "anna-prep_veggies-r2-supporting",
-    description:
-      "Анна Соколова, «Заготовка овощей на смену», раунд 2: руководитель ведёт supporting, ожидается supporting",
-    employeeId: "anna",
-    taskId: "prep_veggies",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно заготовка овощей на смену к 18:00.",
-      "Как ты считаешь, успеем к 18:00? Что думаешь по подаче?",
-      "Чем помочь? Могу забрать остальные заказы на себя.",
-      "Ты справишься, я рядом. Спасибо, что взялась.",
-    ],
-    label: {
-      expectedStyle: "supporting",
-      actualStyle: "supporting",
-      expertScore: 90,
       metCriteria: [
-        "ask_opinion",
+        "check_understanding",
         "clarify_task",
-        "motivate",
-        "offer_help",
+        "explain_how",
+        "set_checkpoints",
         "set_deadline",
       ],
     },
@@ -658,7 +142,7 @@ export const FIXTURES: EvalFixture[] = [
     round: 2,
     activeOrders: 1,
     soloOnShift: false,
-    labelSource: "provisional",
+    labelSource: "ai-assisted",
     script: [
       "Анна, нужно салаты дня, 15 порций к 20:00.",
       "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
@@ -687,7 +171,7 @@ export const FIXTURES: EvalFixture[] = [
     round: 2,
     activeOrders: 1,
     soloOnShift: false,
-    labelSource: "provisional",
+    labelSource: "ai-assisted",
     script: [
       "Анна, нужно салаты дня, 15 порций к 18:00.",
       "На твоё усмотрение, как обычно — доверяю.",
@@ -696,7 +180,281 @@ export const FIXTURES: EvalFixture[] = [
     label: {
       expectedStyle: "coaching",
       actualStyle: "delegating",
-      expertScore: 5,
+      expertScore: 10,
+      metCriteria: [
+        "avoid_micromanagement",
+        "clarify_task",
+        "delegate_authority",
+        "set_deadline",
+      ],
+    },
+  },
+  {
+    id: "anna-banquet_hot-r2-directive",
+    description:
+      "Анна Соколова, «Горячее на банкет, 40 порций», раунд 2: руководитель ведёт directive, ожидается directive",
+    employeeId: "anna",
+    taskId: "banquet_hot",
+    round: 2,
+    activeOrders: 1,
+    soloOnShift: false,
+    labelSource: "ai-assisted",
+    script: [
+      "Анна, нужно горячее на банкет, 40 порций к 18:00.",
+      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
+      "Перед подачей покажи мне — я проверю.",
+      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
+    ],
+    label: {
+      expectedStyle: "directive",
+      actualStyle: "directive",
+      expertScore: 90,
+      metCriteria: [
+        "check_understanding",
+        "clarify_task",
+        "explain_how",
+        "set_checkpoints",
+        "set_deadline",
+      ],
+    },
+  },
+  {
+    id: "anna-banquet_hot-r2-delegating",
+    description:
+      "Анна Соколова, «Горячее на банкет, 40 порций», раунд 2: руководитель ведёт delegating, ожидается directive",
+    employeeId: "anna",
+    taskId: "banquet_hot",
+    round: 2,
+    activeOrders: 1,
+    soloOnShift: false,
+    labelSource: "ai-assisted",
+    script: [
+      "Анна, нужно горячее на банкет, 40 порций к 20:00.",
+      "На твоё усмотрение, как обычно — доверяю.",
+      "Не буду вмешиваться, работай как привыкла.",
+      "Ты вообще думаешь головой? Бездарь, сколько можно объяснять.",
+    ],
+    label: {
+      expectedStyle: "directive",
+      actualStyle: "delegating",
+      expertScore: 3,
+      metCriteria: [
+        "avoid_micromanagement",
+        "clarify_task",
+        "delegate_authority",
+        "set_deadline",
+      ],
+    },
+  },
+  {
+    id: "anna-prep_veggies-r2-supporting",
+    description:
+      "Анна Соколова, «Заготовка овощей на смену», раунд 2: руководитель ведёт supporting, ожидается supporting",
+    employeeId: "anna",
+    taskId: "prep_veggies",
+    round: 2,
+    activeOrders: 1,
+    soloOnShift: false,
+    labelSource: "ai-assisted",
+    script: [
+      "Анна, нужно заготовка овощей на смену к 18:00.",
+      "Как ты считаешь, успеем к 18:00? Что думаешь по подаче?",
+      "Чем помочь? Могу забрать остальные заказы на себя.",
+      "Ты справишься, я рядом. Спасибо, что взялась.",
+    ],
+    label: {
+      expectedStyle: "supporting",
+      actualStyle: "supporting",
+      expertScore: 87,
+      metCriteria: [
+        "ask_opinion",
+        "clarify_task",
+        "motivate",
+        "offer_help",
+        "set_deadline",
+      ],
+    },
+  },
+  {
+    id: "anna-prep_veggies-r2-directive",
+    description:
+      "Анна Соколова, «Заготовка овощей на смену», раунд 2: руководитель ведёт directive, ожидается supporting",
+    employeeId: "anna",
+    taskId: "prep_veggies",
+    round: 2,
+    activeOrders: 1,
+    soloOnShift: false,
+    labelSource: "ai-assisted",
+    script: [
+      "Анна, нужно заготовка овощей на смену к 17:30.",
+      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
+      "Перед подачей покажи мне — я проверю.",
+      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
+    ],
+    label: {
+      expectedStyle: "supporting",
+      actualStyle: "directive",
+      expertScore: 18,
+      metCriteria: [
+        "check_understanding",
+        "clarify_task",
+        "explain_how",
+        "set_checkpoints",
+        "set_deadline",
+      ],
+    },
+  },
+  {
+    id: "anna-apple_pies-r3-supporting",
+    description:
+      "Анна Соколова, «Пироги с яблоком, 20 порций», раунд 3 (перегруз): руководитель ведёт supporting, ожидается supporting",
+    employeeId: "anna",
+    taskId: "apple_pies",
+    round: 3,
+    activeOrders: 4,
+    soloOnShift: true,
+    labelSource: "ai-assisted",
+    script: [
+      "Анна, нужно пироги с яблоком, 20 порций к 17:30.",
+      "Как ты считаешь, успеем к 17:30? Что думаешь по подаче?",
+      "Чем помочь? Могу забрать остальные заказы на себя.",
+      "Ты справишься, я рядом. Спасибо, что взялась.",
+      "Сначала пироги с яблоком, 20 порций, потом остальное — остальные заказы подождёт.",
+      "Давай упростим: без украшения, перенесём часть на завтра.",
+    ],
+    label: {
+      expectedStyle: "supporting",
+      actualStyle: "supporting",
+      expertScore: 90,
+      metCriteria: [
+        "ask_opinion",
+        "clarify_task",
+        "motivate",
+        "offer_help",
+        "prioritize",
+        "reduce_scope",
+        "set_deadline",
+      ],
+    },
+  },
+  {
+    id: "anna-apple_pies-r3-delegating",
+    description:
+      "Анна Соколова, «Пироги с яблоком, 20 порций», раунд 3 (перегруз): руководитель ведёт delegating, ожидается supporting",
+    employeeId: "anna",
+    taskId: "apple_pies",
+    round: 3,
+    activeOrders: 4,
+    soloOnShift: true,
+    labelSource: "ai-assisted",
+    script: [
+      "Анна, нужно пироги с яблоком, 20 порций к 18:00.",
+      "На твоё усмотрение, как обычно — доверяю.",
+      "Не буду вмешиваться, работай как привыкла.",
+      "Ты вообще думаешь головой? Бездарь, сколько можно объяснять.",
+    ],
+    label: {
+      expectedStyle: "supporting",
+      actualStyle: "delegating",
+      expertScore: 3,
+      metCriteria: [
+        "avoid_micromanagement",
+        "clarify_task",
+        "delegate_authority",
+        "set_deadline",
+      ],
+    },
+  },
+  {
+    id: "anna-salads-r3-coaching",
+    description:
+      "Анна Соколова, «Салаты дня, 15 порций», раунд 3 (перегруз): руководитель ведёт coaching, ожидается coaching",
+    employeeId: "anna",
+    taskId: "salads",
+    round: 3,
+    activeOrders: 4,
+    soloOnShift: true,
+    labelSource: "ai-assisted",
+    script: [
+      "Анна, нужно салаты дня, 15 порций к 19:00.",
+      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
+      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
+      "Ты справишься, я рядом. Спасибо, что взялась.",
+      "Сначала салаты дня, 15 порций, потом остальное — остальные заказы подождёт.",
+      "Давай упростим: без украшения, перенесём часть на завтра.",
+    ],
+    label: {
+      expectedStyle: "coaching",
+      actualStyle: "coaching",
+      expertScore: 85,
+      metCriteria: [
+        "check_understanding",
+        "clarify_task",
+        "explain_how",
+        "motivate",
+        "prioritize",
+        "reduce_scope",
+        "set_deadline",
+      ],
+    },
+  },
+  {
+    id: "anna-banquet_hot-r3-directive",
+    description:
+      "Анна Соколова, «Горячее на банкет, 40 порций», раунд 3 (перегруз): руководитель ведёт directive, ожидается directive",
+    employeeId: "anna",
+    taskId: "banquet_hot",
+    round: 3,
+    activeOrders: 4,
+    soloOnShift: true,
+    labelSource: "ai-assisted",
+    script: [
+      "Анна, нужно горячее на банкет, 40 порций к 17:30.",
+      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
+      "Перед подачей покажи мне — я проверю.",
+      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
+      "Сначала горячее на банкет, 40 порций, потом остальное — остальные заказы подождёт.",
+      "Давай упростим: без украшения, перенесём часть на завтра.",
+    ],
+    label: {
+      expectedStyle: "directive",
+      actualStyle: "directive",
+      expertScore: 87,
+      metCriteria: [
+        "check_understanding",
+        "clarify_task",
+        "explain_how",
+        "prioritize",
+        "reduce_scope",
+        "set_checkpoints",
+        "set_deadline",
+      ],
+    },
+  },
+];
+
+/** One-step-off arms — pull in via ALL_FIXTURES before a ship decision. */
+export const EXTENDED_FIXTURES: EvalFixture[] = [
+  {
+    id: "anna-apple_pies-r2-supporting",
+    description:
+      "Анна Соколова, «Пироги с яблоком, 20 порций», раунд 2: руководитель ведёт supporting, ожидается delegating",
+    employeeId: "anna",
+    taskId: "apple_pies",
+    round: 2,
+    activeOrders: 1,
+    soloOnShift: false,
+    labelSource: "provisional",
+    script: [
+      "Анна, нужно пироги с яблоком, 20 порций к 19:00.",
+      "Как ты считаешь, успеем к 19:00? Что думаешь по подаче?",
+      "Чем помочь? Могу забрать остальные заказы на себя.",
+      "Ты справишься, я рядом. Спасибо, что взялась.",
+    ],
+    label: {
+      expectedStyle: "delegating",
+      actualStyle: "supporting",
+      expertScore: 40,
       metCriteria: ["clarify_task", "set_deadline"],
     },
   },
@@ -753,125 +511,17 @@ export const FIXTURES: EvalFixture[] = [
     },
   },
   {
-    id: "anna-salads-r3-coaching",
+    id: "anna-banquet_hot-r2-coaching",
     description:
-      "Анна Соколова, «Салаты дня, 15 порций», раунд 3 (перегруз): руководитель ведёт coaching, ожидается coaching",
+      "Анна Соколова, «Горячее на банкет, 40 порций», раунд 2: руководитель ведёт coaching, ожидается directive",
     employeeId: "anna",
-    taskId: "salads",
-    round: 3,
-    activeOrders: 4,
-    soloOnShift: true,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно салаты дня, 15 порций к 19:00.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-      "Ты справишься, я рядом. Спасибо, что взялась.",
-      "Сначала салаты дня, 15 порций, потом остальное — остальные заказы подождёт.",
-      "Давай упростим: без украшения, перенесём часть на завтра.",
-    ],
-    label: {
-      expectedStyle: "coaching",
-      actualStyle: "coaching",
-      expertScore: 83,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "motivate",
-        "prioritize",
-        "reduce_scope",
-        "set_deadline",
-      ],
-    },
-  },
-  {
-    id: "anna-salads-r3-delegating",
-    description:
-      "Анна Соколова, «Салаты дня, 15 порций», раунд 3 (перегруз): руководитель ведёт delegating, ожидается coaching",
-    employeeId: "anna",
-    taskId: "salads",
-    round: 3,
-    activeOrders: 4,
-    soloOnShift: true,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно салаты дня, 15 порций к 21:00.",
-      "На твоё усмотрение, как обычно — доверяю.",
-      "Не буду вмешиваться, работай как привыкла.",
-      "Ты вообще думаешь головой? Бездарь, сколько можно объяснять.",
-    ],
-    label: {
-      expectedStyle: "coaching",
-      actualStyle: "delegating",
-      expertScore: 5,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "anna-salads-r3-directive",
-    description:
-      "Анна Соколова, «Салаты дня, 15 порций», раунд 3 (перегруз): руководитель ведёт directive, ожидается coaching",
-    employeeId: "anna",
-    taskId: "salads",
-    round: 3,
-    activeOrders: 4,
-    soloOnShift: true,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно салаты дня, 15 порций к 20:00.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Перед подачей покажи мне — я проверю.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-    ],
-    label: {
-      expectedStyle: "coaching",
-      actualStyle: "directive",
-      expertScore: 32,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "set_checkpoints",
-        "set_deadline",
-      ],
-    },
-  },
-  {
-    id: "anna-salads-r3-supporting",
-    description:
-      "Анна Соколова, «Салаты дня, 15 порций», раунд 3 (перегруз): руководитель ведёт supporting, ожидается coaching",
-    employeeId: "anna",
-    taskId: "salads",
-    round: 3,
-    activeOrders: 4,
-    soloOnShift: true,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно салаты дня, 15 порций к 17:30.",
-      "Как ты считаешь, успеем к 17:30? Что думаешь по подаче?",
-      "Чем помочь? Могу забрать остальные заказы на себя.",
-      "Ты справишься, я рядом. Спасибо, что взялась.",
-    ],
-    label: {
-      expectedStyle: "coaching",
-      actualStyle: "supporting",
-      expertScore: 13,
-      metCriteria: ["clarify_task", "motivate", "offer_help", "set_deadline"],
-    },
-  },
-  {
-    id: "anna-steak-r2-coaching",
-    description:
-      "Анна Соколова, «Стейк рибай, средняя прожарка», раунд 2: руководитель ведёт coaching, ожидается directive",
-    employeeId: "anna",
-    taskId: "steak",
+    taskId: "banquet_hot",
     round: 2,
     activeOrders: 1,
     soloOnShift: false,
     labelSource: "provisional",
     script: [
-      "Анна, нужно стейк рибай, средняя прожарка к 20:00.",
+      "Анна, нужно горячее на банкет, 40 порций к 19:00.",
       "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
       "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
       "Ты справишься, я рядом. Спасибо, что взялась.",
@@ -889,551 +539,17 @@ export const FIXTURES: EvalFixture[] = [
     },
   },
   {
-    id: "anna-steak-r2-delegating",
+    id: "anna-prep_veggies-r2-coaching",
     description:
-      "Анна Соколова, «Стейк рибай, средняя прожарка», раунд 2: руководитель ведёт delegating, ожидается directive",
+      "Анна Соколова, «Заготовка овощей на смену», раунд 2: руководитель ведёт coaching, ожидается supporting",
     employeeId: "anna",
-    taskId: "steak",
+    taskId: "prep_veggies",
     round: 2,
     activeOrders: 1,
     soloOnShift: false,
     labelSource: "provisional",
     script: [
-      "Анна, нужно стейк рибай, средняя прожарка к 17:30.",
-      "На твоё усмотрение, как обычно — доверяю.",
-      "Не буду вмешиваться, работай как привыкла.",
-    ],
-    label: {
-      expectedStyle: "directive",
-      actualStyle: "delegating",
-      expertScore: 5,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "anna-steak-r2-directive",
-    description:
-      "Анна Соколова, «Стейк рибай, средняя прожарка», раунд 2: руководитель ведёт directive, ожидается directive",
-    employeeId: "anna",
-    taskId: "steak",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно стейк рибай, средняя прожарка к 19:00.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Перед подачей покажи мне — я проверю.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-    ],
-    label: {
-      expectedStyle: "directive",
-      actualStyle: "directive",
-      expertScore: 90,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "set_checkpoints",
-        "set_deadline",
-      ],
-    },
-  },
-  {
-    id: "anna-tiramisu-r2-delegating",
-    description:
-      "Анна Соколова, «Тирамису, 12 порций», раунд 2: руководитель ведёт delegating, ожидается delegating",
-    employeeId: "anna",
-    taskId: "tiramisu",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно тирамису, 12 порций к 17:30.",
-      "На твоё усмотрение, как обычно — доверяю.",
-      "Не буду вмешиваться, работай как привыкла.",
-    ],
-    label: {
-      expectedStyle: "delegating",
-      actualStyle: "delegating",
-      expertScore: 90,
-      metCriteria: [
-        "avoid_micromanagement",
-        "clarify_task",
-        "delegate_authority",
-        "set_deadline",
-      ],
-    },
-  },
-  {
-    id: "anna-tiramisu-r2-directive",
-    description:
-      "Анна Соколова, «Тирамису, 12 порций», раунд 2: руководитель ведёт directive, ожидается delegating",
-    employeeId: "anna",
-    taskId: "tiramisu",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно тирамису, 12 порций к 18:00.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Перед подачей покажи мне — я проверю.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-    ],
-    label: {
-      expectedStyle: "delegating",
-      actualStyle: "directive",
-      expertScore: 20,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "anna-tiramisu-r2-supporting",
-    description:
-      "Анна Соколова, «Тирамису, 12 порций», раунд 2: руководитель ведёт supporting, ожидается delegating",
-    employeeId: "anna",
-    taskId: "tiramisu",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно тирамису, 12 порций к 21:00.",
-      "Как ты считаешь, успеем к 21:00? Что думаешь по подаче?",
-      "Чем помочь? Могу забрать остальные заказы на себя.",
-      "Ты справишься, я рядом. Спасибо, что взялась.",
-    ],
-    label: {
-      expectedStyle: "delegating",
-      actualStyle: "supporting",
-      expertScore: 40,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "anna-tiramisu-r3-coaching",
-    description:
-      "Анна Соколова, «Тирамису, 12 порций», раунд 3 (перегруз): руководитель ведёт coaching, ожидается supporting",
-    employeeId: "anna",
-    taskId: "tiramisu",
-    round: 3,
-    activeOrders: 4,
-    soloOnShift: true,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно тирамису, 12 порций к 20:00.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-      "Ты справишься, я рядом. Спасибо, что взялась.",
-    ],
-    label: {
-      expectedStyle: "supporting",
-      actualStyle: "coaching",
-      expertScore: 28,
-      metCriteria: ["clarify_task", "motivate", "set_deadline"],
-    },
-  },
-  {
-    id: "anna-tiramisu-r3-delegating",
-    description:
-      "Анна Соколова, «Тирамису, 12 порций», раунд 3 (перегруз): руководитель ведёт delegating, ожидается supporting",
-    employeeId: "anna",
-    taskId: "tiramisu",
-    round: 3,
-    activeOrders: 4,
-    soloOnShift: true,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно тирамису, 12 порций к 17:30.",
-      "На твоё усмотрение, как обычно — доверяю.",
-      "Не буду вмешиваться, работай как привыкла.",
-    ],
-    label: {
-      expectedStyle: "supporting",
-      actualStyle: "delegating",
-      expertScore: 9,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "anna-tiramisu-r3-directive",
-    description:
-      "Анна Соколова, «Тирамису, 12 порций», раунд 3 (перегруз): руководитель ведёт directive, ожидается supporting",
-    employeeId: "anna",
-    taskId: "tiramisu",
-    round: 3,
-    activeOrders: 4,
-    soloOnShift: true,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно тирамису, 12 порций к 21:00.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Перед подачей покажи мне — я проверю.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-    ],
-    label: {
-      expectedStyle: "supporting",
-      actualStyle: "directive",
-      expertScore: 5,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "anna-tiramisu-r3-supporting",
-    description:
-      "Анна Соколова, «Тирамису, 12 порций», раунд 3 (перегруз): руководитель ведёт supporting, ожидается supporting",
-    employeeId: "anna",
-    taskId: "tiramisu",
-    round: 3,
-    activeOrders: 4,
-    soloOnShift: true,
-    labelSource: "provisional",
-    script: [
-      "Анна, нужно тирамису, 12 порций к 19:00.",
-      "Как ты считаешь, успеем к 19:00? Что думаешь по подаче?",
-      "Чем помочь? Могу забрать остальные заказы на себя.",
-      "Ты справишься, я рядом. Спасибо, что взялась.",
-      "Сначала тирамису, 12 порций, потом остальное — остальные заказы подождёт.",
-      "Давай упростим: без украшения, перенесём часть на завтра.",
-    ],
-    label: {
-      expectedStyle: "supporting",
-      actualStyle: "supporting",
-      expertScore: 90,
-      metCriteria: [
-        "ask_opinion",
-        "clarify_task",
-        "motivate",
-        "offer_help",
-        "prioritize",
-        "reduce_scope",
-        "set_deadline",
-      ],
-    },
-  },
-  {
-    id: "igor-banquet_hot-r2-coaching",
-    description:
-      "Игорь Петров, «Горячее на банкет, 40 порций», раунд 2: руководитель ведёт coaching, ожидается supporting",
-    employeeId: "igor",
-    taskId: "banquet_hot",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Игорь, нужно горячее на банкет, 40 порций к 17:30.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-      "Ты справишься, я рядом. Спасибо, что взялась.",
-      "Ты вообще думаешь головой? Бездарь, сколько можно объяснять.",
-    ],
-    label: {
-      expectedStyle: "supporting",
-      actualStyle: "coaching",
-      expertScore: 15,
-      metCriteria: ["clarify_task", "motivate", "set_deadline"],
-    },
-  },
-  {
-    id: "igor-banquet_hot-r2-delegating",
-    description:
-      "Игорь Петров, «Горячее на банкет, 40 порций», раунд 2: руководитель ведёт delegating, ожидается supporting",
-    employeeId: "igor",
-    taskId: "banquet_hot",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Игорь, нужно горячее на банкет, 40 порций к 21:00.",
-      "На твоё усмотрение, как обычно — доверяю.",
-      "Не буду вмешиваться, работай как привыкла.",
-    ],
-    label: {
-      expectedStyle: "supporting",
-      actualStyle: "delegating",
-      expertScore: 20,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "igor-banquet_hot-r2-directive",
-    description:
-      "Игорь Петров, «Горячее на банкет, 40 порций», раунд 2: руководитель ведёт directive, ожидается supporting",
-    employeeId: "igor",
-    taskId: "banquet_hot",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Игорь, нужно горячее на банкет, 40 порций к 18:00.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Перед подачей покажи мне — я проверю.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-    ],
-    label: {
-      expectedStyle: "supporting",
-      actualStyle: "directive",
-      expertScore: 20,
-      metCriteria: ["clarify_task", "set_checkpoints", "set_deadline"],
-    },
-  },
-  {
-    id: "igor-banquet_hot-r2-supporting",
-    description:
-      "Игорь Петров, «Горячее на банкет, 40 порций», раунд 2: руководитель ведёт supporting, ожидается supporting",
-    employeeId: "igor",
-    taskId: "banquet_hot",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Игорь, нужно горячее на банкет, 40 порций к 20:00.",
-      "Как ты считаешь, успеем к 20:00? Что думаешь по подаче?",
-      "Чем помочь? Могу забрать остальные заказы на себя.",
-      "Ты справишься, я рядом. Спасибо, что взялась.",
-    ],
-    label: {
-      expectedStyle: "supporting",
-      actualStyle: "supporting",
-      expertScore: 85,
-      metCriteria: [
-        "ask_opinion",
-        "clarify_task",
-        "motivate",
-        "offer_help",
-        "set_deadline",
-      ],
-    },
-  },
-  {
-    id: "igor-new_menu_dish-r2-coaching",
-    description:
-      "Игорь Петров, «Новое блюдо из меню-сета», раунд 2: руководитель ведёт coaching, ожидается coaching",
-    employeeId: "igor",
-    taskId: "new_menu_dish",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Игорь, нужно новое блюдо из меню-сета к 21:00.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-      "Ты справишься, я рядом. Спасибо, что взялась.",
-    ],
-    label: {
-      expectedStyle: "coaching",
-      actualStyle: "coaching",
-      expertScore: 85,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "motivate",
-        "set_deadline",
-      ],
-    },
-  },
-  {
-    id: "igor-new_menu_dish-r2-delegating",
-    description:
-      "Игорь Петров, «Новое блюдо из меню-сета», раунд 2: руководитель ведёт delegating, ожидается coaching",
-    employeeId: "igor",
-    taskId: "new_menu_dish",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Игорь, нужно новое блюдо из меню-сета к 20:00.",
-      "На твоё усмотрение, как обычно — доверяю.",
-      "Не буду вмешиваться, работай как привыкла.",
-      "Ты вообще думаешь головой? Бездарь, сколько можно объяснять.",
-    ],
-    label: {
-      expectedStyle: "coaching",
-      actualStyle: "delegating",
-      expertScore: 5,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "igor-new_menu_dish-r2-directive",
-    description:
-      "Игорь Петров, «Новое блюдо из меню-сета», раунд 2: руководитель ведёт directive, ожидается coaching",
-    employeeId: "igor",
-    taskId: "new_menu_dish",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Игорь, нужно новое блюдо из меню-сета к 18:00.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Перед подачей покажи мне — я проверю.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-    ],
-    label: {
-      expectedStyle: "coaching",
-      actualStyle: "directive",
-      expertScore: 50,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "set_checkpoints",
-        "set_deadline",
-      ],
-    },
-  },
-  {
-    id: "igor-new_menu_dish-r2-supporting",
-    description:
-      "Игорь Петров, «Новое блюдо из меню-сета», раунд 2: руководитель ведёт supporting, ожидается coaching",
-    employeeId: "igor",
-    taskId: "new_menu_dish",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Игорь, нужно новое блюдо из меню-сета к 19:00.",
-      "Как ты считаешь, успеем к 19:00? Что думаешь по подаче?",
-      "Чем помочь? Могу забрать остальные заказы на себя.",
-      "Ты справишься, я рядом. Спасибо, что взялась.",
-    ],
-    label: {
-      expectedStyle: "coaching",
-      actualStyle: "supporting",
-      expertScore: 25,
-      metCriteria: ["clarify_task", "motivate", "set_deadline"],
-    },
-  },
-  {
-    id: "igor-new_menu_dish-r3-coaching",
-    description:
-      "Игорь Петров, «Новое блюдо из меню-сета», раунд 3 (перегруз): руководитель ведёт coaching, ожидается coaching",
-    employeeId: "igor",
-    taskId: "new_menu_dish",
-    round: 3,
-    activeOrders: 4,
-    soloOnShift: true,
-    labelSource: "provisional",
-    script: [
-      "Игорь, нужно новое блюдо из меню-сета к 17:30.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-      "Ты справишься, я рядом. Спасибо, что взялась.",
-      "Сначала новое блюдо из меню-сета, потом остальное — остальные заказы подождёт.",
-      "Давай упростим: без украшения, перенесём часть на завтра.",
-    ],
-    label: {
-      expectedStyle: "coaching",
-      actualStyle: "coaching",
-      expertScore: 83,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "motivate",
-        "prioritize",
-        "reduce_scope",
-        "set_deadline",
-      ],
-    },
-  },
-  {
-    id: "igor-new_menu_dish-r3-delegating",
-    description:
-      "Игорь Петров, «Новое блюдо из меню-сета», раунд 3 (перегруз): руководитель ведёт delegating, ожидается coaching",
-    employeeId: "igor",
-    taskId: "new_menu_dish",
-    round: 3,
-    activeOrders: 4,
-    soloOnShift: true,
-    labelSource: "provisional",
-    script: [
-      "Игорь, нужно новое блюдо из меню-сета к 19:00.",
-      "На твоё усмотрение, как обычно — доверяю.",
-      "Не буду вмешиваться, работай как привыкла.",
-    ],
-    label: {
-      expectedStyle: "coaching",
-      actualStyle: "delegating",
-      expertScore: 5,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "igor-new_menu_dish-r3-directive",
-    description:
-      "Игорь Петров, «Новое блюдо из меню-сета», раунд 3 (перегруз): руководитель ведёт directive, ожидается coaching",
-    employeeId: "igor",
-    taskId: "new_menu_dish",
-    round: 3,
-    activeOrders: 4,
-    soloOnShift: true,
-    labelSource: "provisional",
-    script: [
-      "Игорь, нужно новое блюдо из меню-сета к 21:00.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Перед подачей покажи мне — я проверю.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-    ],
-    label: {
-      expectedStyle: "coaching",
-      actualStyle: "directive",
-      expertScore: 32,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "set_checkpoints",
-        "set_deadline",
-      ],
-    },
-  },
-  {
-    id: "igor-new_menu_dish-r3-supporting",
-    description:
-      "Игорь Петров, «Новое блюдо из меню-сета», раунд 3 (перегруз): руководитель ведёт supporting, ожидается coaching",
-    employeeId: "igor",
-    taskId: "new_menu_dish",
-    round: 3,
-    activeOrders: 4,
-    soloOnShift: true,
-    labelSource: "provisional",
-    script: [
-      "Игорь, нужно новое блюдо из меню-сета к 18:00.",
-      "Как ты считаешь, успеем к 18:00? Что думаешь по подаче?",
-      "Чем помочь? Могу забрать остальные заказы на себя.",
-      "Ты справишься, я рядом. Спасибо, что взялась.",
-    ],
-    label: {
-      expectedStyle: "coaching",
-      actualStyle: "supporting",
-      expertScore: 13,
-      metCriteria: ["clarify_task", "motivate", "offer_help", "set_deadline"],
-    },
-  },
-  {
-    id: "igor-steak-r2-coaching",
-    description:
-      "Игорь Петров, «Стейк рибай, средняя прожарка», раунд 2: руководитель ведёт coaching, ожидается supporting",
-    employeeId: "igor",
-    taskId: "steak",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Игорь, нужно стейк рибай, средняя прожарка к 19:00.",
+      "Анна, нужно заготовка овощей на смену к 19:00.",
       "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
       "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
       "Ты справишься, я рядом. Спасибо, что взялась.",
@@ -1446,17 +562,17 @@ export const FIXTURES: EvalFixture[] = [
     },
   },
   {
-    id: "igor-steak-r2-delegating",
+    id: "anna-prep_veggies-r2-delegating",
     description:
-      "Игорь Петров, «Стейк рибай, средняя прожарка», раунд 2: руководитель ведёт delegating, ожидается supporting",
-    employeeId: "igor",
-    taskId: "steak",
+      "Анна Соколова, «Заготовка овощей на смену», раунд 2: руководитель ведёт delegating, ожидается supporting",
+    employeeId: "anna",
+    taskId: "prep_veggies",
     round: 2,
     activeOrders: 1,
     soloOnShift: false,
     labelSource: "provisional",
     script: [
-      "Игорь, нужно стейк рибай, средняя прожарка к 20:00.",
+      "Анна, нужно заготовка овощей на смену к 20:00.",
       "На твоё усмотрение, как обычно — доверяю.",
       "Не буду вмешиваться, работай как привыкла.",
     ],
@@ -1468,378 +584,62 @@ export const FIXTURES: EvalFixture[] = [
     },
   },
   {
-    id: "igor-steak-r2-directive",
+    id: "anna-apple_pies-r3-coaching",
     description:
-      "Игорь Петров, «Стейк рибай, средняя прожарка», раунд 2: руководитель ведёт directive, ожидается supporting",
-    employeeId: "igor",
-    taskId: "steak",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
+      "Анна Соколова, «Пироги с яблоком, 20 порций», раунд 3 (перегруз): руководитель ведёт coaching, ожидается supporting",
+    employeeId: "anna",
+    taskId: "apple_pies",
+    round: 3,
+    activeOrders: 4,
+    soloOnShift: true,
     labelSource: "provisional",
     script: [
-      "Игорь, нужно стейк рибай, средняя прожарка к 17:30.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Перед подачей покажи мне — я проверю.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-    ],
-    label: {
-      expectedStyle: "supporting",
-      actualStyle: "directive",
-      expertScore: 17,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "igor-steak-r2-supporting",
-    description:
-      "Игорь Петров, «Стейк рибай, средняя прожарка», раунд 2: руководитель ведёт supporting, ожидается supporting",
-    employeeId: "igor",
-    taskId: "steak",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Игорь, нужно стейк рибай, средняя прожарка к 18:00.",
-      "Как ты считаешь, успеем к 18:00? Что думаешь по подаче?",
-      "Чем помочь? Могу забрать остальные заказы на себя.",
-      "Ты справишься, я рядом. Спасибо, что взялась.",
-    ],
-    label: {
-      expectedStyle: "supporting",
-      actualStyle: "supporting",
-      expertScore: 90,
-      metCriteria: [
-        "ask_opinion",
-        "clarify_task",
-        "motivate",
-        "offer_help",
-        "set_deadline",
-      ],
-    },
-  },
-  {
-    id: "marina-salads-r2-coaching",
-    description:
-      "Марина Ким, «Салаты дня, 15 порций», раунд 2: руководитель ведёт coaching, ожидается coaching",
-    employeeId: "marina",
-    taskId: "salads",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Марина, нужно салаты дня, 15 порций к 20:00.",
+      "Анна, нужно пироги с яблоком, 20 порций к 21:00.",
       "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
       "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
       "Ты справишься, я рядом. Спасибо, что взялась.",
     ],
     label: {
-      expectedStyle: "coaching",
+      expectedStyle: "supporting",
       actualStyle: "coaching",
-      expertScore: 85,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "motivate",
-        "set_deadline",
-      ],
-    },
-  },
-  {
-    id: "marina-salads-r2-delegating",
-    description:
-      "Марина Ким, «Салаты дня, 15 порций», раунд 2: руководитель ведёт delegating, ожидается coaching",
-    employeeId: "marina",
-    taskId: "salads",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Марина, нужно салаты дня, 15 порций к 18:00.",
-      "На твоё усмотрение, как обычно — доверяю.",
-      "Не буду вмешиваться, работай как привыкла.",
-    ],
-    label: {
-      expectedStyle: "coaching",
-      actualStyle: "delegating",
-      expertScore: 5,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "marina-salads-r2-directive",
-    description:
-      "Марина Ким, «Салаты дня, 15 порций», раунд 2: руководитель ведёт directive, ожидается coaching",
-    employeeId: "marina",
-    taskId: "salads",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Марина, нужно салаты дня, 15 порций к 17:30.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Перед подачей покажи мне — я проверю.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-    ],
-    label: {
-      expectedStyle: "coaching",
-      actualStyle: "directive",
-      expertScore: 50,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "set_checkpoints",
-        "set_deadline",
-      ],
-    },
-  },
-  {
-    id: "marina-salads-r2-supporting",
-    description:
-      "Марина Ким, «Салаты дня, 15 порций», раунд 2: руководитель ведёт supporting, ожидается coaching",
-    employeeId: "marina",
-    taskId: "salads",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Марина, нужно салаты дня, 15 порций к 21:00.",
-      "Как ты считаешь, успеем к 21:00? Что думаешь по подаче?",
-      "Чем помочь? Могу забрать остальные заказы на себя.",
-      "Ты справишься, я рядом. Спасибо, что взялась.",
-    ],
-    label: {
-      expectedStyle: "coaching",
-      actualStyle: "supporting",
-      expertScore: 25,
+      expertScore: 28,
       metCriteria: ["clarify_task", "motivate", "set_deadline"],
     },
   },
   {
-    id: "olga-banquet_hot-r2-delegating",
+    id: "anna-banquet_hot-r3-coaching",
     description:
-      "Ольга Веретенникова, «Горячее на банкет, 40 порций», раунд 2: руководитель ведёт delegating, ожидается delegating",
-    employeeId: "olga",
+      "Анна Соколова, «Горячее на банкет, 40 порций», раунд 3 (перегруз): руководитель ведёт coaching, ожидается directive",
+    employeeId: "anna",
     taskId: "banquet_hot",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
+    round: 3,
+    activeOrders: 4,
+    soloOnShift: true,
     labelSource: "provisional",
     script: [
-      "Ольга, нужно горячее на банкет, 40 порций к 19:00.",
-      "На твоё усмотрение, как обычно — доверяю.",
-      "Не буду вмешиваться, работай как привыкла.",
-    ],
-    label: {
-      expectedStyle: "delegating",
-      actualStyle: "delegating",
-      expertScore: 84,
-      metCriteria: [
-        "avoid_micromanagement",
-        "clarify_task",
-        "delegate_authority",
-        "set_deadline",
-      ],
-    },
-  },
-  {
-    id: "olga-banquet_hot-r2-directive",
-    description:
-      "Ольга Веретенникова, «Горячее на банкет, 40 порций», раунд 2: руководитель ведёт directive, ожидается delegating",
-    employeeId: "olga",
-    taskId: "banquet_hot",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Ольга, нужно горячее на банкет, 40 порций к 17:30.",
+      "Анна, нужно горячее на банкет, 40 порций к 21:00.",
       "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Перед подачей покажи мне — я проверю.",
       "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-    ],
-    label: {
-      expectedStyle: "delegating",
-      actualStyle: "directive",
-      expertScore: 23,
-      metCriteria: ["clarify_task", "set_checkpoints", "set_deadline"],
-    },
-  },
-  {
-    id: "olga-banquet_hot-r2-supporting",
-    description:
-      "Ольга Веретенникова, «Горячее на банкет, 40 порций», раунд 2: руководитель ведёт supporting, ожидается delegating",
-    employeeId: "olga",
-    taskId: "banquet_hot",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Ольга, нужно горячее на банкет, 40 порций к 20:00.",
-      "Как ты считаешь, успеем к 20:00? Что думаешь по подаче?",
-      "Чем помочь? Могу забрать остальные заказы на себя.",
       "Ты справишься, я рядом. Спасибо, что взялась.",
     ],
     label: {
-      expectedStyle: "delegating",
-      actualStyle: "supporting",
-      expertScore: 37,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "olga-salads-r2-delegating",
-    description:
-      "Ольга Веретенникова, «Салаты дня, 15 порций», раунд 2: руководитель ведёт delegating, ожидается delegating",
-    employeeId: "olga",
-    taskId: "salads",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Ольга, нужно салаты дня, 15 порций к 18:00.",
-      "На твоё усмотрение, как обычно — доверяю.",
-      "Не буду вмешиваться, работай как привыкла.",
-    ],
-    label: {
-      expectedStyle: "delegating",
-      actualStyle: "delegating",
-      expertScore: 90,
+      expectedStyle: "directive",
+      actualStyle: "coaching",
+      expertScore: 15,
       metCriteria: [
-        "avoid_micromanagement",
+        "check_understanding",
         "clarify_task",
-        "delegate_authority",
+        "explain_how",
         "set_deadline",
       ],
-    },
-  },
-  {
-    id: "olga-salads-r2-directive",
-    description:
-      "Ольга Веретенникова, «Салаты дня, 15 порций», раунд 2: руководитель ведёт directive, ожидается delegating",
-    employeeId: "olga",
-    taskId: "salads",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Ольга, нужно салаты дня, 15 порций к 20:00.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Перед подачей покажи мне — я проверю.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-    ],
-    label: {
-      expectedStyle: "delegating",
-      actualStyle: "directive",
-      expertScore: 20,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "olga-salads-r2-supporting",
-    description:
-      "Ольга Веретенникова, «Салаты дня, 15 порций», раунд 2: руководитель ведёт supporting, ожидается delegating",
-    employeeId: "olga",
-    taskId: "salads",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Ольга, нужно салаты дня, 15 порций к 19:00.",
-      "Как ты считаешь, успеем к 19:00? Что думаешь по подаче?",
-      "Чем помочь? Могу забрать остальные заказы на себя.",
-      "Ты справишься, я рядом. Спасибо, что взялась.",
-    ],
-    label: {
-      expectedStyle: "delegating",
-      actualStyle: "supporting",
-      expertScore: 40,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "olga-steak-r2-delegating",
-    description:
-      "Ольга Веретенникова, «Стейк рибай, средняя прожарка», раунд 2: руководитель ведёт delegating, ожидается delegating",
-    employeeId: "olga",
-    taskId: "steak",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Ольга, нужно стейк рибай, средняя прожарка к 17:30.",
-      "На твоё усмотрение, как обычно — доверяю.",
-      "Не буду вмешиваться, работай как привыкла.",
-      "Ты вообще думаешь головой? Бездарь, сколько можно объяснять.",
-    ],
-    label: {
-      expectedStyle: "delegating",
-      actualStyle: "delegating",
-      expertScore: 65,
-      metCriteria: [
-        "avoid_micromanagement",
-        "clarify_task",
-        "delegate_authority",
-        "set_deadline",
-      ],
-    },
-  },
-  {
-    id: "olga-steak-r2-directive",
-    description:
-      "Ольга Веретенникова, «Стейк рибай, средняя прожарка», раунд 2: руководитель ведёт directive, ожидается delegating",
-    employeeId: "olga",
-    taskId: "steak",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Ольга, нужно стейк рибай, средняя прожарка к 18:00.",
-      "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
-      "Перед подачей покажи мне — я проверю.",
-      "Всё понятно? Повтори, пожалуйста, как поняла задачу.",
-    ],
-    label: {
-      expectedStyle: "delegating",
-      actualStyle: "directive",
-      expertScore: 20,
-      metCriteria: ["clarify_task", "set_deadline"],
-    },
-  },
-  {
-    id: "olga-steak-r2-supporting",
-    description:
-      "Ольга Веретенникова, «Стейк рибай, средняя прожарка», раунд 2: руководитель ведёт supporting, ожидается delegating",
-    employeeId: "olga",
-    taskId: "steak",
-    round: 2,
-    activeOrders: 1,
-    soloOnShift: false,
-    labelSource: "provisional",
-    script: [
-      "Ольга, нужно стейк рибай, средняя прожарка к 21:00.",
-      "Как ты считаешь, успеем к 21:00? Что думаешь по подаче?",
-      "Чем помочь? Могу забрать остальные заказы на себя.",
-      "Ты справишься, я рядом. Спасибо, что взялась.",
-    ],
-    label: {
-      expectedStyle: "delegating",
-      actualStyle: "supporting",
-      expertScore: 40,
-      metCriteria: ["clarify_task", "set_deadline"],
     },
   },
 ];
+
+export const ALL_FIXTURES: EvalFixture[] = [
+  ...CORE_FIXTURES,
+  ...EXTENDED_FIXTURES,
+];
+
+/** Default export used by the runner and CLI. */
+export const FIXTURES: EvalFixture[] = CORE_FIXTURES;

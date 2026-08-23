@@ -42,6 +42,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { client } from "~/orpc/react";
+import { TicketIllustration } from "./illustrations";
 
 export interface EmployeeOption {
   id: string;
@@ -319,15 +320,17 @@ export function OrderQueue(props: {
           </div>
           <ul className="flex flex-col gap-2">
             {props.orders.length === 0 ? (
-              <li className="text-muted-foreground rounded-lg border border-dashed p-6 text-center text-sm">
+              <li className="text-muted-foreground flex flex-col items-center gap-3 rounded-lg border border-dashed p-8 text-center text-sm">
+                <TicketIllustration className="size-12" />
                 Первая ситуация появится здесь после начала разговора.
               </li>
             ) : null}
 
-            {props.orders.map((order) => (
+            {props.orders.map((order, index) => (
               <li
                 key={order.id}
-                className="flex flex-wrap items-center justify-between gap-3 rounded-md border px-3 py-2"
+                className="animate-in fade-in slide-in-from-top-2 flex flex-wrap items-center justify-between gap-3 rounded-md border px-3 py-2 duration-300"
+                style={{ animationDelay: `${Math.min(index, 6) * 40}ms` }}
               >
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="flex items-center gap-2 font-medium">

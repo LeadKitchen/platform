@@ -275,6 +275,30 @@ export const GameBenchmarkRun = pgTable(
   (table) => [index("game_benchmark_runs_created_idx").on(table.createdAt)],
 );
 
+/**
+ * A written review report of an external/reference implementation, published
+ * for the admin panel.
+ *
+ * Unlike `GameBenchmarkRun` (machine-measured numbers), this holds
+ * human-authored analysis as markdown — findings, reproduced defects,
+ * recommended fixes — produced offline and pasted in verbatim, the same way
+ * benchmark runs are published rather than recomputed in the browser.
+ */
+export const GameReviewReport = pgTable(
+  "game_review_reports",
+  (t) => ({
+    id: t.uuid().primaryKey().defaultRandom(),
+    /** Short title shown in the report list. */
+    title: t.varchar({ length: 200 }).notNull(),
+    /** One-line description shown under the title. */
+    summary: t.varchar({ length: 400 }).notNull().default(""),
+    /** Full report body, markdown. */
+    content: t.text().notNull(),
+    createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+  }),
+  (table) => [index("game_review_reports_created_idx").on(table.createdAt)],
+);
+
 export const GameEvaluation = pgTable(
   "game_evaluations",
   (t) => ({
