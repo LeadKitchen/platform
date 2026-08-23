@@ -16,14 +16,11 @@ import {
 import { useState } from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import type { api } from "~/orpc/server";
 
-export interface ReviewReport {
-  id: string;
-  title: string;
-  summary: string;
-  content: string;
-  createdAt: Date | string;
-}
+export type ReviewReport = Awaited<
+  ReturnType<typeof api.admin.game.reviews.list>
+>[number];
 
 function dateLabel(value: Date | string): string {
   return new Intl.DateTimeFormat("ru-RU", {
