@@ -64,7 +64,7 @@ export default async function GamePage() {
       <SiteHeader />
       <div className="flex flex-1 flex-col gap-6 p-4 lg:p-6">
         <Card className="from-accent/60 via-card to-card relative overflow-hidden bg-gradient-to-br">
-          <KitchenPatternBackdrop className="text-primary pointer-events-none absolute inset-0 size-full opacity-[0.07]" />
+          <KitchenPatternBackdrop className="text-primary pointer-events-none absolute inset-0 size-full opacity-[0.16]" />
           <CardHeader className="relative">
             <Badge variant="accent" className="w-fit">
               Тренажёр руководителя
