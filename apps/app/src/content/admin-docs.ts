@@ -69,7 +69,7 @@ export const ADMIN_DOC_SECTIONS: readonly AdminDocSection[] = [
   },
   {
     slug: "game-flow",
-    title: "Как проходит игра сотрудник",
+    title: "Как сотрудник проходит игру",
     shortTitle: "Игровой процесс",
     icon: IconClipboardList,
     eyebrow: "Сценарий прохождения",
