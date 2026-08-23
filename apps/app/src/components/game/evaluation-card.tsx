@@ -1,3 +1,5 @@
+"use client";
+
 import type { ManagementStyle } from "@acme/game";
 // Leaf import on purpose: the `@acme/game` barrel also re-exports the
 // scoring heuristics (Unicode-lookbehind regexes) and the full restaurant

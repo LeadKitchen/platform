@@ -17,6 +17,10 @@ export const MODEL_PRICING: Record<string, { input: number; output: number }> =
     "claude-haiku-4-5": { input: 1, output: 5 },
     "gpt-5.1-all": { input: 1.25, output: 10 },
     "gpt-5.1": { input: 1.25, output: 10 },
+    // router.cheap gateway rate, not OpenAI's list price — confirmed with the
+    // account owner rather than looked up, since a reseller gateway's price
+    // is a private contract, not something inferable from the model name.
+    "gpt-5.5": { input: 5, output: 30 },
     "gpt-4o": { input: 2.5, output: 10 },
     "gpt-4o-mini": { input: 0.15, output: 0.6 },
     "mock-model": { input: 0, output: 0 },
