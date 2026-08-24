@@ -14,7 +14,7 @@ const SECTION_TITLES: Record<AdminGameSection, string> = {
   tasks: "Задания",
   variants: "Варианты ИИ",
   benchmarks: "Отчёты о качестве",
-  reviews: "Отчёты о ревью",
+  reviews: "Ревью старого проекта",
   users: "Пользователи",
   settings: "Настройки",
 };

@@ -101,7 +101,7 @@ export function AdminReviewReports({ reports }: { reports: ReviewReport[] }) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Отчёты ревью</CardTitle>
+          <CardTitle>Ревью старого проекта</CardTitle>
           <CardDescription>
             Пока не опубликовано ни одного отчёта.
           </CardDescription>
@@ -124,10 +124,10 @@ export function AdminReviewReports({ reports }: { reports: ReviewReport[] }) {
         <CardHeader>
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <CardTitle>Отчёты о ревью</CardTitle>
+              <CardTitle>Ревью старого проекта</CardTitle>
               <CardDescription>
-                Технический разбор внешних реализаций и рекомендации на основе
-                архитектуры Sitruk.
+                Технический разбор прежней реализации (sitruk_review) и
+                рекомендации на основе архитектуры Sitruk.
               </CardDescription>
             </div>
             {reports.length > 1 ? (
