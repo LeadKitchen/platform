@@ -288,6 +288,18 @@ export const GameReviewReport = pgTable(
   "game_review_reports",
   (t) => ({
     id: t.uuid().primaryKey().defaultRandom(),
+    /**
+     * Which admin section this report belongs to: a standalone technical
+     * review of the legacy implementation, or a side-by-side comparison
+     * report against the Sitruk architecture. Same table, two sections —
+     * avoids duplicating the whole publish/list/render stack for one extra
+     * document type.
+     */
+    kind: t
+      .varchar({ length: 32 })
+      .$type<"legacy-review" | "comparison">()
+      .notNull()
+      .default("legacy-review"),
     /** Short title shown in the report list. */
     title: t.varchar({ length: 200 }).notNull(),
     /** One-line description shown under the title. */
@@ -296,7 +308,10 @@ export const GameReviewReport = pgTable(
     content: t.text().notNull(),
     createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
   }),
-  (table) => [index("game_review_reports_created_idx").on(table.createdAt)],
+  (table) => [
+    index("game_review_reports_created_idx").on(table.createdAt),
+    index("game_review_reports_kind_idx").on(table.kind),
+  ],
 );
 
 export const GameEvaluation = pgTable(
