@@ -79,7 +79,7 @@ export function AiDocsOverview() {
             </Badge>
             <div className="flex max-w-3xl flex-col gap-3">
               <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
-                Шесть способов сделать тренажёр точнее и надёжнее
+                Семь способов сделать тренажёр точнее и надёжнее
               </h1>
               <p className="text-muted-foreground max-w-2xl text-base leading-relaxed sm:text-lg">
                 Эти технологии улучшают три звена системы: поиск внутренних
@@ -173,7 +173,7 @@ export function AiDocsOverview() {
                   <div className="flex items-center justify-between gap-3">
                     <Badge variant="outline">{copy.label}</Badge>
                     <span className="text-muted-foreground text-sm">
-                      {technologies.length} из 6
+                      {technologies.length} из {AI_TECHNOLOGIES.length}
                     </span>
                   </div>
                   <CardTitle>
@@ -210,7 +210,7 @@ export function AiDocsOverview() {
       >
         <div className="flex max-w-3xl flex-col gap-2">
           <Badge variant="outline" className="w-fit">
-            6 технологий
+            {AI_TECHNOLOGIES.length} технологий
           </Badge>
           <h2 id="technologies-title" className="text-2xl font-semibold">
             Что именно внедрено
@@ -466,9 +466,11 @@ export function AiDocsOverview() {
                         </Badge>
                       </TableCell>
                       <TableCell className="min-w-56 whitespace-normal text-sm">
-                        {technology.benchmark.status === "no-data"
-                          ? "Повторить прогон при живой квоте провайдера"
-                          : "Нужна экспертная разметка сценариев"}
+                        {technology.benchmark.status !== "no-data"
+                          ? "Нужна экспертная разметка сценариев"
+                          : technology.benchmark.provider === "—"
+                            ? "Запустить первое прямое сравнение с контролем"
+                            : "Повторить прогон при живой квоте провайдера"}
                       </TableCell>
                     </TableRow>
                   );
