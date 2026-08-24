@@ -22,6 +22,7 @@ import {
   IconClipboardList,
   IconDatabase,
   IconFileSearch,
+  IconGavel,
   IconInnerShadowTop,
   IconListDetails,
   IconMessages,
@@ -83,6 +84,11 @@ const data = {
           title: "Self-Consistency",
           url: "/docs/ai/self-consistency",
           icon: IconUsersGroup,
+        },
+        {
+          title: "LLM Judge",
+          url: "/docs/ai/llm-judge",
+          icon: IconGavel,
         },
         {
           title: "Debate Judge",
