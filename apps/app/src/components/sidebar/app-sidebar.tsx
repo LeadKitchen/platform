@@ -137,7 +137,7 @@ const data = {
           icon: IconReportAnalytics,
         },
         {
-          title: "Отчёты о ревью",
+          title: "Ревью старого проекта",
           url: "/admin/game/reviews",
           icon: IconFileSearch,
         },
