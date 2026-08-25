@@ -86,14 +86,29 @@ const markdownComponents = {
   ),
 };
 
+export interface AdminReviewReportsProps {
+  reports: ReviewReport[];
+  title: string;
+  description: string;
+  /** `--kind` value the empty-state publish command should show. */
+  publishKind?: "legacy-review" | "comparison";
+}
+
 /**
  * Written reviews of external/reference implementations.
  *
  * Same publish-offline-then-display philosophy as `AdminBenchmarkReports`:
  * the markdown body is authored outside the app and inserted verbatim into
- * `game_review_reports`, so this component only renders it.
+ * `game_review_reports`, so this component only renders it. Shared between
+ * the "Ревью старого проекта" and "Сравнение с новым проектом" sections —
+ * they differ in `kind` and copy, not in how the report is displayed.
  */
-export function AdminReviewReports({ reports }: { reports: ReviewReport[] }) {
+export function AdminReviewReports({
+  reports,
+  title,
+  description,
+  publishKind = "legacy-review",
+}: AdminReviewReportsProps) {
   const [selectedId, setSelectedId] = useState(reports[0]?.id);
   const report = reports.find((item) => item.id === selectedId) ?? reports[0];
 
@@ -101,7 +116,7 @@ export function AdminReviewReports({ reports }: { reports: ReviewReport[] }) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Ревью старого проекта</CardTitle>
+          <CardTitle>{title}</CardTitle>
           <CardDescription>
             Пока не опубликовано ни одного отчёта.
           </CardDescription>
@@ -111,6 +126,7 @@ export function AdminReviewReports({ reports }: { reports: ReviewReport[] }) {
           <code className="rounded bg-muted px-1.5 py-0.5">
             bun --filter @acme/db run src/scripts/publish-review.ts report.md
             --title "Название"
+            {publishKind === "comparison" ? " --kind comparison" : ""}
           </code>
           .
         </CardContent>
@@ -124,11 +140,8 @@ export function AdminReviewReports({ reports }: { reports: ReviewReport[] }) {
         <CardHeader>
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <CardTitle>Ревью старого проекта</CardTitle>
-              <CardDescription>
-                Технический разбор прежней реализации (sitruk_review) и
-                рекомендации на основе архитектуры Sitruk.
-              </CardDescription>
+              <CardTitle>{title}</CardTitle>
+              <CardDescription>{description}</CardDescription>
             </div>
             {reports.length > 1 ? (
               <Select

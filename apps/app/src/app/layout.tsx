@@ -1,7 +1,7 @@
 import { APP_CONFIG } from "@acme/config";
 import { ThemeProvider, Toaster } from "@acme/ui";
 import type { Metadata, Viewport } from "next";
-import { Inter, Lora } from "next/font/google";
+import { Inter, Manrope } from "next/font/google";
 import { env } from "~/env";
 import { ORPCReactProvider } from "~/orpc/react";
 
@@ -13,10 +13,10 @@ const inter = Inter({
   display: "swap",
 });
 
-const lora = Lora({
+const manrope = Manrope({
   subsets: ["latin", "cyrillic"],
-  weight: ["500", "600", "700"],
-  variable: "--font-lora",
+  weight: ["600", "700", "800"],
+  variable: "--font-manrope",
   display: "swap",
 });
 
@@ -48,7 +48,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
     <html
       lang="ru"
       suppressHydrationWarning
-      className={`${inter.variable} ${lora.variable}`}
+      className={`${inter.variable} ${manrope.variable}`}
     >
       <body className="bg-background text-foreground min-h-screen font-sans antialiased">
         <ThemeProvider>

@@ -23,6 +23,7 @@ import {
   IconDatabase,
   IconFileSearch,
   IconGavel,
+  IconGitCompare,
   IconInnerShadowTop,
   IconListDetails,
   IconMessages,
@@ -146,6 +147,11 @@ const data = {
           title: "Ревью старого проекта",
           url: "/admin/game/reviews",
           icon: IconFileSearch,
+        },
+        {
+          title: "Сравнение с новым проектом",
+          url: "/admin/game/comparisons",
+          icon: IconGitCompare,
         },
         {
           title: "Пользователи",

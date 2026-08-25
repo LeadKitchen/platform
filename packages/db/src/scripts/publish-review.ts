@@ -6,7 +6,10 @@
  * analysis rather than harness-measured numbers: the file is inserted
  * verbatim into `game_review_reports` so `/admin/game/reviews` can show it.
  *
- * Usage: bun run src/scripts/publish-review.ts report.md --title "Название" [--summary "..."]
+ * Usage: bun run src/scripts/publish-review.ts report.md --title "Название" [--summary "..."] [--kind comparison]
+ *
+ * `--kind` defaults to `legacy-review` (shown under "Ревью старого проекта");
+ * pass `--kind comparison` to publish under "Сравнение с новым проектом" instead.
  */
 import { readFile } from "node:fs/promises";
 import { isAbsolute, resolve } from "node:path";
@@ -36,12 +39,16 @@ async function main(): Promise<void> {
   const summaryFlag = argv.indexOf("--summary");
   const summary = summaryFlag !== -1 ? (argv[summaryFlag + 1] ?? "") : "";
 
+  const kindFlag = argv.indexOf("--kind");
+  const kindValue = kindFlag !== -1 ? argv[kindFlag + 1] : undefined;
+  const kind = kindValue === "comparison" ? "comparison" : "legacy-review";
+
   const path = isAbsolute(pathArg) ? pathArg : resolve(process.cwd(), pathArg);
   const content = await readFile(path, "utf8");
 
   const [row] = await db
     .insert(GameReviewReport)
-    .values({ title, summary, content })
+    .values({ title, summary, content, kind })
     .returning({ id: GameReviewReport.id });
 
   console.log(`Опубликовано: ${title} (id ${row?.id})`);
