@@ -1,14 +1,16 @@
-import { desc, GameReviewReport } from "@acme/db";
+import { desc, eq, GameReviewReport } from "@acme/db";
 import { z } from "zod";
 
 import { adminProcedure } from "../../../orpc";
 
 /**
- * Published review reports of external/reference implementations.
+ * Published technical review reports of the legacy implementation
+ * (`sitruk_review`), filtered to `kind: "legacy-review"`.
  *
  * Read-only by design, same reasoning as `benchmarks`: a report is written
  * offline (see `scripts/publish-review.ts`), then published here so it can be
  * studied in the admin panel without shell access to the analysis machine.
+ * Shares `game_review_reports` with `comparisons` — see that router for why.
  *
  * @example client.admin.game.reviews.list({ limit: 10 })
  */
@@ -18,6 +20,7 @@ export const list = adminProcedure
     context.db
       .select()
       .from(GameReviewReport)
+      .where(eq(GameReviewReport.kind, "legacy-review"))
       .orderBy(desc(GameReviewReport.createdAt))
       .limit(input.limit),
   );

@@ -116,6 +116,7 @@ export type AdminGameSection =
   | "variants"
   | "benchmarks"
   | "reviews"
+  | "comparisons"
   | "users"
   | "settings";
 
@@ -160,6 +161,11 @@ const SECTION_COPY: Record<
     title: "Ревью старого проекта",
     description:
       "Технический разбор прежней реализации (sitruk_review) и рекомендации на основе архитектуры Sitruk.",
+  },
+  comparisons: {
+    title: "Сравнение с новым проектом",
+    description:
+      "Прямое сопоставление прежней реализации и архитектуры Sitruk: недостатки, найденные при живой проверке, и что их устраняет.",
   },
   users: {
     title: "Пользователи",
@@ -249,6 +255,7 @@ export interface AdminGameData {
   }>;
   benchmarks: BenchmarkRun[];
   reviews: ReviewReport[];
+  comparisons: ReviewReport[];
 }
 
 const emptyEmployee: Employee = {
@@ -1334,7 +1341,21 @@ export function AdminGameDashboard({
       ) : null}
 
       {section === "reviews" ? (
-        <AdminReviewReports reports={initialData.reviews} />
+        <AdminReviewReports
+          reports={initialData.reviews}
+          title={SECTION_COPY.reviews.title}
+          description={SECTION_COPY.reviews.description}
+          publishKind="legacy-review"
+        />
+      ) : null}
+
+      {section === "comparisons" ? (
+        <AdminReviewReports
+          reports={initialData.comparisons}
+          title={SECTION_COPY.comparisons.title}
+          description={SECTION_COPY.comparisons.description}
+          publishKind="comparison"
+        />
       ) : null}
 
       {section === "settings" ? (

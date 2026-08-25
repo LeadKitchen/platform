@@ -7,6 +7,7 @@ import {
 import { adminGameBenchmarksRouter } from "./benchmarks";
 import { adminGameCatalogRouter } from "./catalog";
 import { adminGameCharactersRouter } from "./characters";
+import { adminGameComparisonsRouter } from "./comparisons";
 import { detail as dialogDetail, dialogs } from "./dialogs";
 import { analyze as analyzeInsights } from "./insights";
 import { productAnalytics } from "./product-analytics";
@@ -28,6 +29,7 @@ export const adminGameRouter = {
   },
   catalog: adminGameCatalogRouter,
   characters: adminGameCharactersRouter,
+  comparisons: adminGameComparisonsRouter,
   dialogs,
   dialogDetail,
   reviews: adminGameReviewsRouter,

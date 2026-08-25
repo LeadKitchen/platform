@@ -6,10 +6,14 @@
  * analysis rather than harness-measured numbers: the file is inserted
  * verbatim into `game_review_reports` so `/admin/game/reviews` can show it.
  *
- * Usage: bun run src/scripts/publish-review.ts report.md --title "Название" [--summary "..."]
+ * Usage: bun run src/scripts/publish-review.ts report.md --title "Название" [--summary "..."] [--kind comparison]
+ *
+ * `--kind` defaults to `legacy-review` (shown under "Ревью старого проекта");
+ * pass `--kind comparison` to publish under "Сравнение с новым проектом" instead.
  */
 import { readFile } from "node:fs/promises";
 import { isAbsolute, resolve } from "node:path";
+import { z } from "zod";
 
 import { db } from "../client";
 import { GameReviewReport } from "../schema/game/game";
@@ -36,12 +40,35 @@ async function main(): Promise<void> {
   const summaryFlag = argv.indexOf("--summary");
   const summary = summaryFlag !== -1 ? (argv[summaryFlag + 1] ?? "") : "";
 
+  const kindSchema = z.enum(["comparison", "legacy-review"]);
+  const kindFlag = argv.indexOf("--kind");
+  let kind: z.infer<typeof kindSchema>;
+  if (kindFlag === -1) {
+    kind = "legacy-review";
+  } else {
+    const kindValue = argv[kindFlag + 1];
+    if (!kindValue || kindValue.startsWith("--")) {
+      console.error(
+        'Ошибка: --kind требует значение. Допустимые значения: "comparison", "legacy-review"',
+      );
+      process.exit(1);
+    }
+    const parseResult = kindSchema.safeParse(kindValue);
+    if (!parseResult.success) {
+      console.error(
+        `Ошибка: неизвестное значение --kind "${kindValue}". Допустимые значения: "comparison", "legacy-review"`,
+      );
+      process.exit(1);
+    }
+    kind = parseResult.data;
+  }
+
   const path = isAbsolute(pathArg) ? pathArg : resolve(process.cwd(), pathArg);
   const content = await readFile(path, "utf8");
 
   const [row] = await db
     .insert(GameReviewReport)
-    .values({ title, summary, content })
+    .values({ title, summary, content, kind })
     .returning({ id: GameReviewReport.id });
 
   console.log(`Опубликовано: ${title} (id ${row?.id})`);
