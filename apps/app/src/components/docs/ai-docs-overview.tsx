@@ -353,7 +353,8 @@ export function AiDocsOverview() {
         <Alert variant="destructive">
           <IconAlertTriangle />
           <AlertTitle>
-            Ни одна из шести технологий пока не подтверждена статистически
+            Ни одна из {AI_TECHNOLOGIES.length} технологий пока не подтверждена
+            статистически
           </AlertTitle>
           <AlertDescription>
             <p>
