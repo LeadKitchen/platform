@@ -13,6 +13,7 @@
  */
 import { readFile } from "node:fs/promises";
 import { isAbsolute, resolve } from "node:path";
+import { z } from "zod";
 
 import { db } from "../client";
 import { GameReviewReport } from "../schema/game/game";
@@ -39,9 +40,28 @@ async function main(): Promise<void> {
   const summaryFlag = argv.indexOf("--summary");
   const summary = summaryFlag !== -1 ? (argv[summaryFlag + 1] ?? "") : "";
 
+  const kindSchema = z.enum(["comparison", "legacy-review"]);
   const kindFlag = argv.indexOf("--kind");
-  const kindValue = kindFlag !== -1 ? argv[kindFlag + 1] : undefined;
-  const kind = kindValue === "comparison" ? "comparison" : "legacy-review";
+  let kind: z.infer<typeof kindSchema>;
+  if (kindFlag === -1) {
+    kind = "legacy-review";
+  } else {
+    const kindValue = argv[kindFlag + 1];
+    if (!kindValue || kindValue.startsWith("--")) {
+      console.error(
+        'Ошибка: --kind требует значение. Допустимые значения: "comparison", "legacy-review"',
+      );
+      process.exit(1);
+    }
+    const parseResult = kindSchema.safeParse(kindValue);
+    if (!parseResult.success) {
+      console.error(
+        `Ошибка: неизвестное значение --kind "${kindValue}". Допустимые значения: "comparison", "legacy-review"`,
+      );
+      process.exit(1);
+    }
+    kind = parseResult.data;
+  }
 
   const path = isAbsolute(pathArg) ? pathArg : resolve(process.cwd(), pathArg);
   const content = await readFile(path, "utf8");
