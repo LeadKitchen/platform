@@ -3,6 +3,7 @@
 import {
   Avatar,
   AvatarFallback,
+  AvatarImage,
   Badge,
   Button,
   Card,
@@ -31,6 +32,7 @@ import {
 } from "@tabler/icons-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { employeeAvatarUri, userAvatarUri } from "~/lib/avatar";
 import {
   DEFAULT_DEMO_SCENARIO_ID,
   DEMO_SCENARIO_GROUPS,
@@ -79,6 +81,8 @@ export function DemoTour() {
   );
 
   const activeGroup = groupOfScenario(scenario);
+  const employeeAvatar = employeeAvatarUri(scenario.employee.name);
+  const managerAvatar = userAvatarUri("demo-manager");
 
   const [visibleCount, setVisibleCount] = useState(0);
   const [playing, setPlaying] = useState(true);
@@ -152,6 +156,7 @@ export function DemoTour() {
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="flex items-center gap-3">
               <Avatar className="size-12">
+                <AvatarImage src={employeeAvatar} alt={scenario.employee.name} />
                 <AvatarFallback>{scenario.employee.initials}</AvatarFallback>
               </Avatar>
               <div>
@@ -202,6 +207,18 @@ export function DemoTour() {
                 >
                   <div className="mb-1 flex items-center gap-2">
                     <Avatar className="size-6">
+                      <AvatarImage
+                        src={
+                          turn.role === "manager"
+                            ? managerAvatar
+                            : employeeAvatar
+                        }
+                        alt={
+                          turn.role === "manager"
+                            ? "Вы"
+                            : scenario.employee.name
+                        }
+                      />
                       <AvatarFallback>
                         {turn.role === "manager"
                           ? "ВЫ"

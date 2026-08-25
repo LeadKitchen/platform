@@ -3,6 +3,7 @@ import { SidebarInset, SidebarProvider } from "@acme/ui";
 import type { ReactNode } from "react";
 import { getSession } from "~/auth/server";
 import { AppSidebar } from "~/components/sidebar";
+import { userAvatarUri } from "~/lib/avatar";
 
 export default async function DashboardLayout({
   children,
@@ -32,7 +33,7 @@ export default async function DashboardLayout({
         user={{
           name: session.user.name,
           email: session.user.email,
-          avatar: session.user.image || "",
+          avatar: session.user.image || userAvatarUri(session.user.email),
         }}
         isAdmin={isAdmin}
       />
