@@ -14,6 +14,7 @@ import {
   AlertTitle,
   Avatar,
   AvatarFallback,
+  AvatarImage,
   Badge,
   Button,
   Card,
@@ -49,6 +50,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { client } from "~/orpc/react";
+import { employeeAvatarUri, userAvatarUri } from "~/lib/avatar";
 import { EvaluationCard, type EvaluationView } from "./evaluation-card";
 import { ChefHatIllustration, SteamWisps } from "./illustrations";
 import { useSpeechRecognition } from "./use-speech-recognition";
@@ -73,6 +75,8 @@ export interface DialogRoomProps {
   initialEvaluation: EvaluationView | null;
   initialFinished: boolean;
   variantId: string;
+  userAvatarSeed?: string;
+  uploadedAvatarUrl?: string;
 }
 
 /**
@@ -107,6 +111,10 @@ export function DialogRoom(props: DialogRoomProps) {
   const managerTurns = turns.filter((turn) => turn.role === "manager").length;
   const conversationStep = finished ? 3 : managerTurns >= 2 ? 2 : 1;
   const conversationProgress = finished ? 100 : conversationStep * 33;
+
+  const employeeAvatar = employeeAvatarUri(props.employee.name);
+  const managerAvatar =
+    props.uploadedAvatarUrl ?? userAvatarUri(props.userAvatarSeed ?? "manager");
 
   function stepClass(step: number) {
     if (step === conversationStep) {
@@ -354,6 +362,7 @@ export function DialogRoom(props: DialogRoomProps) {
               <div className="relative">
                 {pending ? <SteamWisps /> : null}
                 <Avatar className="size-12">
+                  <AvatarImage src={employeeAvatar} alt={props.employee.name} />
                   <AvatarFallback>
                     {props.employee.name.slice(0, 1).toUpperCase()}
                   </AvatarFallback>
@@ -439,6 +448,18 @@ export function DialogRoom(props: DialogRoomProps) {
                 >
                   <div className="mb-1 flex items-center gap-2">
                     <Avatar className="size-6">
+                      <AvatarImage
+                        src={
+                          turn.role === "manager"
+                            ? managerAvatar
+                            : employeeAvatar
+                        }
+                        alt={
+                          turn.role === "manager"
+                            ? "Вы"
+                            : props.employee.name
+                        }
+                      />
                       <AvatarFallback>
                         {turn.role === "manager"
                           ? "ВЫ"

@@ -1,3 +1,4 @@
+import { getSession } from "~/auth/server";
 import { DialogRoom, type EvaluationView } from "~/components/game";
 import { SiteHeader } from "~/components/layout";
 import { api } from "~/orpc/server";
@@ -10,7 +11,10 @@ export default async function DialogPage({
   params: Promise<{ dialogId: string }>;
 }) {
   const { dialogId } = await params;
-  const data = await api.game.dialog.byId({ dialogId });
+  const [data, session] = await Promise.all([
+    api.game.dialog.byId({ dialogId }),
+    getSession(),
+  ]);
 
   const evaluation: EvaluationView | null = data.evaluation
     ? {
@@ -65,6 +69,8 @@ export default async function DialogPage({
           }))}
           initialEvaluation={evaluation}
           initialFinished={data.dialog.status !== "active"}
+          userAvatarSeed={session?.user.email}
+          uploadedAvatarUrl={session?.user.image}
         />
       </div>
     </>
