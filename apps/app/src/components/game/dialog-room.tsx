@@ -76,6 +76,7 @@ export interface DialogRoomProps {
   initialFinished: boolean;
   variantId: string;
   userAvatarSeed?: string;
+  uploadedAvatarUrl?: string;
 }
 
 /**
@@ -112,7 +113,8 @@ export function DialogRoom(props: DialogRoomProps) {
   const conversationProgress = finished ? 100 : conversationStep * 33;
 
   const employeeAvatar = employeeAvatarUri(props.employee.name);
-  const managerAvatar = userAvatarUri(props.userAvatarSeed ?? "manager");
+  const managerAvatar =
+    props.uploadedAvatarUrl ?? userAvatarUri(props.userAvatarSeed ?? "manager");
 
   function stepClass(step: number) {
     if (step === conversationStep) {
