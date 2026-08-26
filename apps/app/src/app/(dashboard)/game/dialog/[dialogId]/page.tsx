@@ -70,6 +70,7 @@ export default async function DialogPage({
           initialEvaluation={evaluation}
           initialFinished={data.dialog.status !== "active"}
           userAvatarSeed={session?.user.email}
+          uploadedAvatarUrl={session?.user.image}
         />
       </div>
     </>
