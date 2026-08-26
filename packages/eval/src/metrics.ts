@@ -157,6 +157,8 @@ export interface ItemResult {
   costUsd: number;
   /** Which repetition of the fixture this is, for variance estimates. */
   run: number;
+  /** Per-turn strategy telemetry retained in the serialized run report. */
+  turnMeta: Record<string, unknown>[];
   /**
    * Models that actually served this dialog.
    *
