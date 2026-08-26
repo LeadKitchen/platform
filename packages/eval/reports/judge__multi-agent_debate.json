@@ -1,53 +1,58 @@
 {
-  "startedAt": "2026-08-19T16:53:08.655Z",
-  "finishedAt": "2026-08-19T16:53:33.685Z",
-  "providerId": "ai-sdk:anthropic",
-  "model": "claude-sonnet-5",
+  "startedAt": "2026-08-26T11:18:43.561Z",
+  "finishedAt": "2026-08-26T11:43:39.519Z",
+  "providerId": "ai-sdk:openai-compatible",
+  "model": "gpt-5.5",
   "epochs": 1,
-  "runsPerFixture": 1,
-  "fixtures": 70,
+  "runsPerFixture": 3,
+  "fixtures": 12,
   "expertLabelledFixtures": 0,
+  "aiAssistedFixtures": 12,
   "referenceVariantId": "baseline-judge",
   "variants": [
     {
       "variantId": "baseline-judge",
-      "items": 0,
-      "scoreMae": 0,
-      "scoreStdDev": 0,
-      "expectedStyleAccuracy": 0,
-      "actualStyleAccuracy": 0,
-      "styleKappa": 0,
-      "criteriaF1": 0,
-      "personaAdherence": 0,
+      "items": 36,
+      "scoreMae": 9.778,
+      "scoreStdDev": 3.3,
+      "expectedStyleAccuracy": 1,
+      "actualStyleAccuracy": 0.833,
+      "styleKappa": 0.76,
+      "criteriaF1": 0.76,
+      "personaAdherence": 1,
       "personaDriftRate": 0,
       "personaDriftSlope": 0,
-      "silenceAccuracy": 0,
-      "avgLatencyMs": 0,
-      "totalInputTokens": 0,
-      "totalOutputTokens": 0,
-      "totalCostUsd": 0,
-      "avgCostUsd": 0,
-      "modelMix": {}
+      "silenceAccuracy": 1,
+      "avgLatencyMs": 58298,
+      "totalInputTokens": 1300354,
+      "totalOutputTokens": 47965,
+      "totalCostUsd": 8.4572,
+      "avgCostUsd": 0.23492,
+      "modelMix": {
+        "gpt-5.5": 36
+      }
     },
     {
       "variantId": "debate-judge",
-      "items": 0,
-      "scoreMae": 0,
-      "scoreStdDev": 0,
-      "expectedStyleAccuracy": 0,
-      "actualStyleAccuracy": 0,
-      "styleKappa": 0,
-      "criteriaF1": 0,
-      "personaAdherence": 0,
+      "items": 36,
+      "scoreMae": 9.611,
+      "scoreStdDev": 2.07,
+      "expectedStyleAccuracy": 1,
+      "actualStyleAccuracy": 0.778,
+      "styleKappa": 0.676,
+      "criteriaF1": 0.769,
+      "personaAdherence": 1,
       "personaDriftRate": 0,
       "personaDriftSlope": 0,
-      "silenceAccuracy": 0,
-      "avgLatencyMs": 0,
-      "totalInputTokens": 0,
-      "totalOutputTokens": 0,
-      "totalCostUsd": 0,
-      "avgCostUsd": 0,
-      "modelMix": {}
+      "silenceAccuracy": 1,
+      "avgLatencyMs": 63535,
+      "totalInputTokens": 1682414,
+      "totalOutputTokens": 58219,
+      "totalCostUsd": 10.8286,
+      "avgCostUsd": 0.30079,
+      "modelMix": {
+        "gpt-5.5": 36
+      }
     }
   ],
   "comparisons": [
@@ -58,33 +63,33 @@
           "metric": "scoreMae",
           "label": "MAE к эксперту",
           "direction": "lower",
-          "delta": 0,
-          "ciLow": 0,
-          "ciHigh": 0,
-          "pValue": 1,
-          "pairs": 0,
+          "delta": 0.167,
+          "ciLow": -1.444,
+          "ciHigh": 1.972,
+          "pValue": 0.8501,
+          "pairs": 12,
           "significant": false
         },
         {
           "metric": "actualStyleAccuracy",
           "label": "Точность стиля",
           "direction": "higher",
-          "delta": 0,
-          "ciLow": 0,
+          "delta": -0.056,
+          "ciLow": -0.139,
           "ciHigh": 0,
-          "pValue": 1,
-          "pairs": 0,
+          "pValue": 0.4965,
+          "pairs": 12,
           "significant": false
         },
         {
           "metric": "criteriaF1",
           "label": "F1 по критериям",
           "direction": "higher",
-          "delta": 0,
+          "delta": 0.009,
           "ciLow": 0,
-          "ciHigh": 0,
-          "pValue": 1,
-          "pairs": 0,
+          "ciHigh": 0.024,
+          "pValue": 0.4976,
+          "pairs": 12,
           "significant": false
         },
         {
@@ -95,7 +100,7 @@
           "ciLow": 0,
           "ciHigh": 0,
           "pValue": 1,
-          "pairs": 0,
+          "pairs": 12,
           "significant": false
         },
         {
@@ -106,773 +111,2527 @@
           "ciLow": 0,
           "ciHigh": 0,
           "pValue": 1,
-          "pairs": 0,
+          "pairs": 12,
           "significant": false
         },
         {
           "metric": "costUsd",
           "label": "Стоимость диалога",
           "direction": "lower",
-          "delta": 0,
-          "ciLow": 0,
-          "ciHigh": 0,
-          "pValue": 1,
-          "pairs": 0,
-          "significant": false
+          "delta": -0.066,
+          "ciLow": -0.069,
+          "ciHigh": -0.063,
+          "pValue": 0.0002,
+          "pairs": 12,
+          "significant": true
         }
       ]
     }
   ],
-  "failures": [
-    {
-      "fixtureId": "anna-apple_pies-r2-supporting",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062698 (request id: 202608191653094011126298268d9d63iKb9fXt) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-apple_pies-r2-delegating",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062698 (request id: 202608191653094306327268268d9d6PbKLLpg4) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-apple_pies-r2-directive",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062698 (request id: 202608191653094405150348268d9d60Xv15nYs) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-apple_pies-r3-coaching",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063034 (request id: 202608191653094472530438268d9d6jNHgLZqQ) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-apple_pies-r3-delegating",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063034 (request id: 202608191653098591176288268d9d69ORRxwDP) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-apple_pies-r3-supporting",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063034 (request id: 202608191653099299758198268d9d6btdMQZD7) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-apple_pies-r3-directive",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063034 (request id: 202608191653099303164968268d9d6gERR8Fqz) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r2-coaching",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062722 (request id: 202608191653099373161338268d9d6wOw67u4F) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r2-delegating",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062722 (request id: 202608191653103153448638268d9d6vvr18A9s) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r2-directive",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062722 (request id: 202608191653104081728738268d9d6s8IEgRMm) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r3-coaching",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063058 (request id: 202608191653104976905338268d9d6sFAl4gAz) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r3-delegating",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063058 (request id: 202608191653104988829138268d9d6G8TspZAP) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r3-directive",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063058 (request id: 202608191653110267114088268d9d6BrIFvzo0) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-decorated_cake-r2-delegating",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062730 (request id: 202608191653111951012148268d9d6Iphx9NCa) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-decorated_cake-r2-directive",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062730 (request id: 202608191653112071428498268d9d6cEbqrEvu) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-decorated_cake-r2-coaching",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062730 (request id: 202608191653113319367998268d9d6F8RH1BTx) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-decorated_cake-r3-coaching",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063066 (request id: 202608191653115346230128268d9d6KezSKJJq) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-decorated_cake-r3-delegating",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063066 (request id: 202608191653116773207398268d9d6sbCiJouf) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-decorated_cake-r3-directive",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063066 (request id: 202608191653116916118618268d9d6ZnOjvYdy) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-prep_veggies-r2-coaching",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653117808774808268d9d6C7wl4GrS) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-prep_veggies-r2-delegating",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653120086777328268d9d68HI15Pst) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-prep_veggies-r2-supporting",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653121456196668268d9d6sZbjoSMZ) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-prep_veggies-r2-directive",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653121448215648268d9d68lNaW1pU) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-salads-r2-coaching",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653121959046098268d9d6jj4KkKw2) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-salads-r2-delegating",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653125457063308268d9d6SgfbEKBz) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-salads-r2-directive",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653126498138918268d9d6YL3t5Cr1) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-salads-r2-supporting",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653126599478398268d9d6QCDyR2wu) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-salads-r3-coaching",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063024 (request id: 202608191653126934119318268d9d6FbGWlQtU) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-salads-r3-delegating",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063024 (request id: 202608191653130294056338268d9d63SzB8Cdr) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-salads-r3-directive",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063024 (request id: 202608191653130900007948268d9d6NG7Qff1u) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-salads-r3-supporting",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063024 (request id: 202608191653131156093078268d9d62R5p9DBY) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-steak-r2-coaching",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062686 (request id: 202608191653131845621958268d9d6mHo8fcMn) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-steak-r2-delegating",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062686 (request id: 202608191653134920673808268d9d6rUegatyA) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-steak-r2-directive",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062686 (request id: 202608191653135483599768268d9d6piF7tKZs) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-tiramisu-r2-delegating",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062674 (request id: 202608191653135736161208268d9d63KH9qX4j) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-tiramisu-r2-directive",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062674 (request id: 202608191653137851326058268d9d6aKRlXt6q) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-tiramisu-r2-supporting",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062674 (request id: 202608191653141270432118268d9d6Ry1HDqOt) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-tiramisu-r3-delegating",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063012 (request id: 202608191653142030265558268d9d6tYyHLM8H) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-tiramisu-r3-directive",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063012 (request id: 202608191653142832185198268d9d6JCfz6AR7) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-tiramisu-r3-coaching",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063012 (request id: 202608191653144245582868268d9d6qxW4B9JG) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-tiramisu-r3-supporting",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063012 (request id: 202608191653146473286138268d9d6OVUDxlSD) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-banquet_hot-r2-coaching",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062676 (request id: 202608191653146531034718268d9d6XPqQjtlH) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-banquet_hot-r2-delegating",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062676 (request id: 202608191653146849688938268d9d6quMU8m3m) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-banquet_hot-r2-directive",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062676 (request id: 202608191653148582657558268d9d6OPe7capW) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-banquet_hot-r2-supporting",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062676 (request id: 202608191653151222668568268d9d6DyCgVdEa) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-new_menu_dish-r2-coaching",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062670 (request id: 202608191653151277512508268d9d6L1yjReEY) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-new_menu_dish-r2-delegating",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062670 (request id: 202608191653153285814648268d9d6hvXgClBT) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-new_menu_dish-r2-directive",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062670 (request id: 202608191653157214460158268d9d6FW3LgBvs) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-new_menu_dish-r2-supporting",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062670 (request id: 202608191653162447916908268d9d6f44IGwNK) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-new_menu_dish-r3-coaching",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063006 (request id: 202608191653162627699658268d9d6h3u1DdaF) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-new_menu_dish-r3-supporting",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063006 (request id: 202608191653172781349428268d9d6Pt3xnvW7) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-new_menu_dish-r3-delegating",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063006 (request id: 202608191653172787415768268d9d6uSRcaQbq) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-steak-r2-coaching",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062640 (request id: 202608191653174867188848268d9d6e5cmEq74) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-new_menu_dish-r3-directive",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063006 (request id: 202608191653181220084538268d9d63IHRHhp7) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-steak-r2-delegating",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062640 (request id: 202608191653185675768108268d9d6Y39qKkqt) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-steak-r2-directive",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062640 (request id: 202608191653185951169258268d9d6GOupWWzg) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-steak-r2-supporting",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062640 (request id: 202608191653191098412118268d9d6bULAuu5e) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "marina-salads-r2-coaching",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062638 (request id: 202608191653198760918438268d9d6N70UpxM4) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "marina-salads-r2-delegating",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062638 (request id: 202608191653202202636098268d9d6fXRoGhRT) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "marina-salads-r2-directive",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062638 (request id: 202608191653203614858188268d9d63dHjyVbo) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "marina-salads-r2-supporting",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062638 (request id: 202608191653206301036528268d9d6YBSdELpA) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "olga-banquet_hot-r2-delegating",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653212477277018268d9d6tmPsmb3U) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "olga-banquet_hot-r2-directive",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653213720721928268d9d6EMObthou) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "olga-banquet_hot-r2-supporting",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653215481538118268d9d62pRZInQf) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "olga-salads-r2-delegating",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062658 (request id: 202608191653216739128078268d9d60r7HxMAp) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "olga-salads-r2-directive",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062658 (request id: 202608191653221159286928268d9d6LnArUXhW) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "olga-salads-r2-supporting",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062658 (request id: 202608191653221911986338268d9d6c3z2RDkL) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "olga-steak-r2-delegating",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062652 (request id: 202608191653223169436428268d9d6vSFhDRZu) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "olga-steak-r2-directive",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062652 (request id: 202608191653224773314578268d9d6u7aFAM4f) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "olga-steak-r2-supporting",
-      "variantId": "baseline-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062652 (request id: 202608191653225758282778268d9d6txTfNYn9) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-apple_pies-r2-delegating",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062698 (request id: 202608191653231577246148268d9d6NTmlbFYb) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-apple_pies-r2-directive",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062698 (request id: 202608191653232243478378268d9d6gN5D6tee) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-apple_pies-r3-coaching",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063034 (request id: 202608191653232418236038268d9d6FfdeheD6) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-apple_pies-r2-supporting",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062698 (request id: 202608191653232795776268268d9d6EvLN0kXk) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-apple_pies-r3-delegating",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063034 (request id: 202608191653236665860898268d9d6a57Rosjt) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-apple_pies-r3-directive",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063034 (request id: 202608191653237296494968268d9d6uYSxL31L) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r2-coaching",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062722 (request id: 202608191653238327359688268d9d6KUhIDxnr) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r2-delegating",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062722 (request id: 202608191653241669726878268d9d68FGKV7L0) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-apple_pies-r3-supporting",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063034 (request id: 202608191653241739342848268d9d6pilFqktT) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r2-directive",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062722 (request id: 202608191653241867573118268d9d6QNdu6m0C) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r3-coaching",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063058 (request id: 202608191653243219463698268d9d68Jg2i1Kd) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r3-delegating",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063058 (request id: 202608191653245939892088268d9d624HHOXWK) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-decorated_cake-r2-coaching",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062730 (request id: 202608191653246545181268268d9d637Waecor) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r3-directive",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063058 (request id: 202608191653246675527988268d9d6Lsg6qMXi) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-decorated_cake-r2-delegating",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062730 (request id: 202608191653248525448098268d9d6AAKFC7S6) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-decorated_cake-r2-directive",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062730 (request id: 202608191653250543574708268d9d6Wt3KPwsX) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-decorated_cake-r3-coaching",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063066 (request id: 202608191653251302820158268d9d6kSrVdOTj) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-decorated_cake-r3-delegating",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063066 (request id: 202608191653252894796758268d9d66HSYbo91) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-decorated_cake-r3-directive",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063066 (request id: 202608191653254482636718268d9d6VOz1PWHG) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-prep_veggies-r2-coaching",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653256490051908268d9d6YzfnGoQY) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-prep_veggies-r2-delegating",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653256780238208268d9d6nD8q9Jif) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-prep_veggies-r2-directive",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653257082795428268d9d6tFBtz7AM) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-prep_veggies-r2-supporting",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653258735845928268d9d6EzGY3nb7) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-salads-r2-coaching",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653260921265048268d9d6bLdxLA4h) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-salads-r2-delegating",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653261675526778268d9d6FljrcYpD) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-salads-r2-directive",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653261503126218268d9d6ZoXTdWUT) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-salads-r2-supporting",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653263479930578268d9d69WEifzEF) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-salads-r3-delegating",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063024 (request id: 202608191653273793448838268d9d6IZCF7U72) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-salads-r3-directive",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063024 (request id: 202608191653275035010928268d9d6H5oEgkzY) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-salads-r3-supporting",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063024 (request id: 202608191653275275925898268d9d69WyvhfR8) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-salads-r3-coaching",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063024 (request id: 202608191653280093253898268d9d63HCL8vlz) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-steak-r2-coaching",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062686 (request id: 202608191653285036392558268d9d6RXRc7cmg) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-steak-r2-delegating",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062686 (request id: 202608191653286620929548268d9d6A4eO0V1q) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-steak-r2-directive",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062686 (request id: 202608191653286928468788268d9d6ojLUqcDD) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-tiramisu-r2-delegating",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062674 (request id: 202608191653290619977118268d9d6n4dI2CZU) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-tiramisu-r2-directive",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062674 (request id: 202608191653292299498218268d9d6lF6PWZXA) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-tiramisu-r3-coaching",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063012 (request id: 202608191653293725500878268d9d6vL4SmFoL) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-tiramisu-r2-supporting",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062674 (request id: 202608191653293799331628268d9d64DmcZrfX) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-tiramisu-r3-delegating",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063012 (request id: 202608191653295418344688268d9d6zA7OyxvB) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-tiramisu-r3-directive",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063012 (request id: 202608191653297109730268268d9d6jTqGigma) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "anna-tiramisu-r3-supporting",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063012 (request id: 202608191653298563500448268d9d6Itx3EPxh) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-banquet_hot-r2-coaching",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062676 (request id: 202608191653298716317988268d9d6ZIJs8gvv) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-banquet_hot-r2-delegating",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062676 (request id: 202608191653301137482718268d9d6bWu90JsV) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-banquet_hot-r2-directive",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062676 (request id: 202608191653304733468948268d9d6iQgblpOW) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-banquet_hot-r2-supporting",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062676 (request id: 202608191653305554148268268d9d62B5HpdkW) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-new_menu_dish-r2-coaching",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062670 (request id: 202608191653305684034638268d9d6LhZQ4XZn) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-new_menu_dish-r2-delegating",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062670 (request id: 202608191653307001524598268d9d6Ud5Fpolx) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-new_menu_dish-r2-directive",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062670 (request id: 202608191653308900700108268d9d6yPQUyaSR) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-new_menu_dish-r2-supporting",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062670 (request id: 202608191653310581315248268d9d6JP15Jdgt) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-new_menu_dish-r3-coaching",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063006 (request id: 202608191653310803445788268d9d6yjadfU75) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-new_menu_dish-r3-delegating",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063006 (request id: 202608191653311880508098268d9d6JNw89wzR) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-new_menu_dish-r3-directive",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063006 (request id: 202608191653314283963828268d9d6rnMpevuJ) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-new_menu_dish-r3-supporting",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.063006 (request id: 202608191653315181670968268d9d6Mk3bzNWX) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-steak-r2-coaching",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062640 (request id: 202608191653316011405018268d9d6lCfovKG9) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-steak-r2-delegating",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062640 (request id: 202608191653316525959548268d9d6ZvvAfmjL) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-steak-r2-directive",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062640 (request id: 202608191653318712987888268d9d6QJeQ13HC) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "igor-steak-r2-supporting",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062640 (request id: 202608191653319691656318268d9d66bLXTltm) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "marina-salads-r2-coaching",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062638 (request id: 202608191653320169504608268d9d6KogFCfBY) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "marina-salads-r2-delegating",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062638 (request id: 202608191653320884485388268d9d68FCpqBNm) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "marina-salads-r2-directive",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062638 (request id: 202608191653323058146038268d9d6yKXSEB7R) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "marina-salads-r2-supporting",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062638 (request id: 202608191653324825656158268d9d6UNFSnkgu) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "olga-banquet_hot-r2-delegating",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653325094918328268d9d6V09lxJCg) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "olga-banquet_hot-r2-directive",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653325759468818268d9d6d2HITztI) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "olga-banquet_hot-r2-supporting",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062688 (request id: 202608191653328780420148268d9d64f06IGpq) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "olga-salads-r2-delegating",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062658 (request id: 202608191653330700924338268d9d6SYfxFce3) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "olga-salads-r2-directive",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062658 (request id: 202608191653331055440718268d9d6h0xItgOQ) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "olga-salads-r2-supporting",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062658 (request id: 202608191653331158798778268d9d6dmJCUkDp) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "olga-steak-r2-delegating",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062652 (request id: 202608191653333621598368268d9d6aHF803e3) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "olga-steak-r2-supporting",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062652 (request id: 202608191653335543803748268d9d6pmMdOEdg) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    },
-    {
-      "fixtureId": "olga-steak-r2-directive",
-      "variantId": "debate-judge",
-      "message": "claude-sonnet-5 не вернула валидный объект для persona.reply за 3 попыток:\ncredit wallet quota insufficient for claude wallet, balance: ＄0.056460, need: ＄0.062652 (request id: 202608191653335577941168268d9d6jrj4PCw5) If this error persists, try changing the model source/channel. Current source: \"Claude Kiro\"."
-    }
-  ],
+  "failures": [],
   "epochSummaries": [
     {
       "epoch": 1,
       "variants": [
         {
           "variantId": "baseline-judge",
-          "items": 0,
-          "scoreMae": 0,
-          "scoreStdDev": 0,
-          "expectedStyleAccuracy": 0,
-          "actualStyleAccuracy": 0,
-          "styleKappa": 0,
-          "criteriaF1": 0,
-          "personaAdherence": 0,
+          "items": 36,
+          "scoreMae": 9.778,
+          "scoreStdDev": 3.3,
+          "expectedStyleAccuracy": 1,
+          "actualStyleAccuracy": 0.833,
+          "styleKappa": 0.76,
+          "criteriaF1": 0.76,
+          "personaAdherence": 1,
           "personaDriftRate": 0,
           "personaDriftSlope": 0,
-          "silenceAccuracy": 0,
-          "avgLatencyMs": 0,
-          "totalInputTokens": 0,
-          "totalOutputTokens": 0,
-          "totalCostUsd": 0,
-          "avgCostUsd": 0,
-          "modelMix": {}
+          "silenceAccuracy": 1,
+          "avgLatencyMs": 58298,
+          "totalInputTokens": 1300354,
+          "totalOutputTokens": 47965,
+          "totalCostUsd": 8.4572,
+          "avgCostUsd": 0.23492,
+          "modelMix": {
+            "gpt-5.5": 36
+          }
         },
         {
           "variantId": "debate-judge",
-          "items": 0,
-          "scoreMae": 0,
-          "scoreStdDev": 0,
-          "expectedStyleAccuracy": 0,
-          "actualStyleAccuracy": 0,
-          "styleKappa": 0,
-          "criteriaF1": 0,
-          "personaAdherence": 0,
+          "items": 36,
+          "scoreMae": 9.611,
+          "scoreStdDev": 2.07,
+          "expectedStyleAccuracy": 1,
+          "actualStyleAccuracy": 0.778,
+          "styleKappa": 0.676,
+          "criteriaF1": 0.769,
+          "personaAdherence": 1,
           "personaDriftRate": 0,
           "personaDriftSlope": 0,
-          "silenceAccuracy": 0,
-          "avgLatencyMs": 0,
-          "totalInputTokens": 0,
-          "totalOutputTokens": 0,
-          "totalCostUsd": 0,
-          "avgCostUsd": 0,
-          "modelMix": {}
+          "silenceAccuracy": 1,
+          "avgLatencyMs": 63535,
+          "totalInputTokens": 1682414,
+          "totalOutputTokens": 58219,
+          "totalCostUsd": 10.8286,
+          "avgCostUsd": 0.30079,
+          "modelMix": {
+            "gpt-5.5": 36
+          }
         }
       ]
     }
   ],
-  "items": [],
+  "items": [
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 90,
+      "expertScore": 88,
+      "absError": 2,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 47847,
+      "inputTokens": 28445,
+      "outputTokens": 764,
+      "costUsd": 0.176076,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 90,
+      "expertScore": 88,
+      "absError": 2,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 50623,
+      "inputTokens": 28476,
+      "outputTokens": 905,
+      "costUsd": 0.18102400000000002,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 90,
+      "expertScore": 88,
+      "absError": 2,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 55458,
+      "inputTokens": 28459,
+      "outputTokens": 814,
+      "costUsd": 0.179847,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 32,
+      "expertScore": 22,
+      "absError": 10,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.4,
+        "f1": 0.5
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 38759,
+      "inputTokens": 33531,
+      "outputTokens": 964,
+      "costUsd": 0.20923399999999998,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 32,
+      "expertScore": 22,
+      "absError": 10,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.4,
+        "f1": 0.5
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 51509,
+      "inputTokens": 33488,
+      "outputTokens": 1017,
+      "costUsd": 0.21219600000000002,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 32,
+      "expertScore": 22,
+      "absError": 10,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.4,
+        "f1": 0.5
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 50375,
+      "inputTokens": 33587,
+      "outputTokens": 1004,
+      "costUsd": 0.211789,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-coaching",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 70,
+      "expertScore": 85,
+      "absError": 15,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 47600,
+      "inputTokens": 33828,
+      "outputTokens": 1346,
+      "costUsd": 0.22325399999999998,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-coaching",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 82,
+      "expertScore": 85,
+      "absError": 3,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "coaching",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 66263,
+      "inputTokens": 34876,
+      "outputTokens": 1272,
+      "costUsd": 0.226709,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-coaching",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 72,
+      "expertScore": 85,
+      "absError": 13,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 58512,
+      "inputTokens": 33717,
+      "outputTokens": 1139,
+      "costUsd": 0.21587499999999998,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-delegating",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 37,
+      "expertScore": 10,
+      "absError": 27,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.5,
+        "recall": 0.5,
+        "f1": 0.5
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 48792,
+      "inputTokens": 27986,
+      "outputTokens": 1233,
+      "costUsd": 0.188222,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-delegating",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 29,
+      "expertScore": 10,
+      "absError": 19,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.5,
+        "f1": 0.5714285714285715
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 68822,
+      "inputTokens": 27920,
+      "outputTokens": 999,
+      "costUsd": 0.18087200000000003,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-delegating",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 30,
+      "expertScore": 10,
+      "absError": 20,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.5,
+        "f1": 0.5714285714285715
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 67571,
+      "inputTokens": 28594,
+      "outputTokens": 1210,
+      "costUsd": 0.191327,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 74,
+      "expertScore": 90,
+      "absError": 16,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.8,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 55726,
+      "inputTokens": 33774,
+      "outputTokens": 1291,
+      "costUsd": 0.220771,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 85,
+      "expertScore": 90,
+      "absError": 5,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.8,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 49979,
+      "inputTokens": 33732,
+      "outputTokens": 1186,
+      "costUsd": 0.218486,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 74,
+      "expertScore": 90,
+      "absError": 16,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.8,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 49583,
+      "inputTokens": 33689,
+      "outputTokens": 1209,
+      "costUsd": 0.21896100000000002,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 0,
+      "expertScore": 3,
+      "absError": 3,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.25,
+        "f1": 0.4
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 65540,
+      "inputTokens": 34212,
+      "outputTokens": 1541,
+      "costUsd": 0.230653,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 2,
+      "expertScore": 3,
+      "absError": 1,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.25,
+        "f1": 0.4
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 59949,
+      "inputTokens": 34148,
+      "outputTokens": 1438,
+      "costUsd": 0.22785699999999998,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 10,
+      "expertScore": 3,
+      "absError": 7,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.5,
+        "f1": 0.6666666666666666
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 75130,
+      "inputTokens": 34237,
+      "outputTokens": 1500,
+      "costUsd": 0.230674,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-supporting",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 83,
+      "expertScore": 87,
+      "absError": 4,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.8,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 38444,
+      "inputTokens": 32631,
+      "outputTokens": 1118,
+      "costUsd": 0.20943100000000003,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-supporting",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 83,
+      "expertScore": 87,
+      "absError": 4,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.8,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 41405,
+      "inputTokens": 32604,
+      "outputTokens": 1225,
+      "costUsd": 0.21353,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-supporting",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 83,
+      "expertScore": 87,
+      "absError": 4,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.8,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 39121,
+      "inputTokens": 32489,
+      "outputTokens": 1076,
+      "costUsd": 0.207973,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-directive",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 25,
+      "expertScore": 18,
+      "absError": 7,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.2,
+        "f1": 0.33333333333333337
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 48615,
+      "inputTokens": 33535,
+      "outputTokens": 1002,
+      "costUsd": 0.21090599999999998,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-directive",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 25,
+      "expertScore": 18,
+      "absError": 7,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.2,
+        "f1": 0.33333333333333337
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 50716,
+      "inputTokens": 33649,
+      "outputTokens": 1284,
+      "costUsd": 0.220448,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-directive",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 23,
+      "expertScore": 18,
+      "absError": 5,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.2,
+        "f1": 0.33333333333333337
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 37483,
+      "inputTokens": 32957,
+      "outputTokens": 922,
+      "costUsd": 0.20537299999999997,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 86,
+      "expertScore": 90,
+      "absError": 4,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 57943,
+      "inputTokens": 45844,
+      "outputTokens": 1471,
+      "costUsd": 0.291705,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 86,
+      "expertScore": 90,
+      "absError": 4,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 58223,
+      "inputTokens": 46663,
+      "outputTokens": 1579,
+      "costUsd": 0.29820800000000003,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 75,
+      "expertScore": 90,
+      "absError": 15,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 89589,
+      "inputTokens": 47098,
+      "outputTokens": 1613,
+      "costUsd": 0.30164599999999997,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 17,
+      "expertScore": 3,
+      "absError": 14,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.5,
+        "f1": 0.5714285714285715
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 44112,
+      "inputTokens": 33906,
+      "outputTokens": 1212,
+      "costUsd": 0.219893,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 20,
+      "expertScore": 3,
+      "absError": 17,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.5,
+        "f1": 0.5714285714285715
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 37910,
+      "inputTokens": 33848,
+      "outputTokens": 1248,
+      "costUsd": 0.22068300000000002,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 17,
+      "expertScore": 3,
+      "absError": 14,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.5,
+        "f1": 0.5714285714285715
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 38931,
+      "inputTokens": 33864,
+      "outputTokens": 1122,
+      "costUsd": 0.21754600000000002,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r3-coaching",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 70,
+      "expertScore": 85,
+      "absError": 15,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 89369,
+      "inputTokens": 47547,
+      "outputTokens": 1976,
+      "costUsd": 0.313898,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r3-coaching",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 73,
+      "expertScore": 85,
+      "absError": 12,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 0.875,
+        "recall": 1,
+        "f1": 0.9333333333333333
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 94672,
+      "inputTokens": 47837,
+      "outputTokens": 2427,
+      "costUsd": 0.328596,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r3-coaching",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 71,
+      "expertScore": 85,
+      "absError": 14,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 109211,
+      "inputTokens": 47349,
+      "outputTokens": 1776,
+      "costUsd": 0.308495,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-directive",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 73,
+      "expertScore": 87,
+      "absError": 14,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.8571428571428571,
+        "f1": 0.923076923076923
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 68298,
+      "inputTokens": 47215,
+      "outputTokens": 2090,
+      "costUsd": 0.316234,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-directive",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 84,
+      "expertScore": 87,
+      "absError": 3,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.8571428571428571,
+        "f1": 0.923076923076923
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 71358,
+      "inputTokens": 47143,
+      "outputTokens": 1928,
+      "costUsd": 0.311078,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-directive",
+      "variantId": "baseline-judge",
+      "epoch": 1,
+      "score": 73,
+      "expertScore": 87,
+      "absError": 14,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.8571428571428571,
+        "f1": 0.923076923076923
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 75272,
+      "inputTokens": 47476,
+      "outputTokens": 2064,
+      "costUsd": 0.31777,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 90,
+      "expertScore": 88,
+      "absError": 2,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 46624,
+      "inputTokens": 38958,
+      "outputTokens": 987,
+      "costUsd": 0.239734,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 88,
+      "expertScore": 88,
+      "absError": 0,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 49517,
+      "inputTokens": 38937,
+      "outputTokens": 1084,
+      "costUsd": 0.243051,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 88,
+      "expertScore": 88,
+      "absError": 0,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 59035,
+      "inputTokens": 38929,
+      "outputTokens": 1010,
+      "costUsd": 0.240279,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 32,
+      "expertScore": 22,
+      "absError": 10,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.4,
+        "f1": 0.5
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 64059,
+      "inputTokens": 44193,
+      "outputTokens": 1265,
+      "costUsd": 0.276489,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 32,
+      "expertScore": 22,
+      "absError": 10,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.4,
+        "f1": 0.5
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 69099,
+      "inputTokens": 44179,
+      "outputTokens": 1414,
+      "costUsd": 0.280326,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 32,
+      "expertScore": 22,
+      "absError": 10,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.4,
+        "f1": 0.5
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 63485,
+      "inputTokens": 44237,
+      "outputTokens": 1427,
+      "costUsd": 0.283156,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-coaching",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 70,
+      "expertScore": 85,
+      "absError": 15,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 62385,
+      "inputTokens": 44395,
+      "outputTokens": 1397,
+      "costUsd": 0.280384,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-coaching",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 72,
+      "expertScore": 85,
+      "absError": 13,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 72520,
+      "inputTokens": 45462,
+      "outputTokens": 1671,
+      "costUsd": 0.29657500000000003,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-coaching",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 69,
+      "expertScore": 85,
+      "absError": 16,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 73443,
+      "inputTokens": 45498,
+      "outputTokens": 1651,
+      "costUsd": 0.29497799999999996,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-delegating",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 28,
+      "expertScore": 10,
+      "absError": 18,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.5,
+        "f1": 0.5714285714285715
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 77514,
+      "inputTokens": 39230,
+      "outputTokens": 1431,
+      "costUsd": 0.25600100000000003,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-delegating",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 28,
+      "expertScore": 10,
+      "absError": 18,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.5,
+        "f1": 0.5714285714285715
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 80350,
+      "inputTokens": 38872,
+      "outputTokens": 1467,
+      "costUsd": 0.254536,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-delegating",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 29,
+      "expertScore": 10,
+      "absError": 19,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.5,
+        "f1": 0.5714285714285715
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 89694,
+      "inputTokens": 38851,
+      "outputTokens": 1496,
+      "costUsd": 0.255813,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 85,
+      "expertScore": 90,
+      "absError": 5,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.8,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 55456,
+      "inputTokens": 44399,
+      "outputTokens": 1568,
+      "costUsd": 0.286609,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 84,
+      "expertScore": 90,
+      "absError": 6,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.8,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 83750,
+      "inputTokens": 45619,
+      "outputTokens": 1598,
+      "costUsd": 0.294505,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-directive",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 85,
+      "expertScore": 90,
+      "absError": 5,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.8,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 73143,
+      "inputTokens": 45628,
+      "outputTokens": 1598,
+      "costUsd": 0.29567600000000005,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 12,
+      "expertScore": 3,
+      "absError": 9,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.5,
+        "f1": 0.6666666666666666
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 72478,
+      "inputTokens": 44755,
+      "outputTokens": 1670,
+      "costUsd": 0.291641,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 6,
+      "expertScore": 3,
+      "absError": 3,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.5,
+        "f1": 0.6666666666666666
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 72655,
+      "inputTokens": 44772,
+      "outputTokens": 1832,
+      "costUsd": 0.29766099999999995,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r2-delegating",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 0,
+      "expertScore": 3,
+      "absError": 3,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.25,
+        "f1": 0.4
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 83150,
+      "inputTokens": 44802,
+      "outputTokens": 1760,
+      "costUsd": 0.29513900000000004,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-supporting",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 81,
+      "expertScore": 87,
+      "absError": 6,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.8,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 33449,
+      "inputTokens": 43255,
+      "outputTokens": 1307,
+      "costUsd": 0.272573,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-supporting",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 84,
+      "expertScore": 87,
+      "absError": 3,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.8,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 36266,
+      "inputTokens": 43416,
+      "outputTokens": 1404,
+      "costUsd": 0.276288,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-supporting",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 83,
+      "expertScore": 87,
+      "absError": 4,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.8,
+        "f1": 0.888888888888889
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 35517,
+      "inputTokens": 43240,
+      "outputTokens": 1374,
+      "costUsd": 0.27502,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-directive",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 24,
+      "expertScore": 18,
+      "absError": 6,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.2,
+        "f1": 0.33333333333333337
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 48588,
+      "inputTokens": 43620,
+      "outputTokens": 1408,
+      "costUsd": 0.278132,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-directive",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 23,
+      "expertScore": 18,
+      "absError": 5,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.2,
+        "f1": 0.33333333333333337
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 59693,
+      "inputTokens": 44196,
+      "outputTokens": 1349,
+      "costUsd": 0.279434,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-prep_veggies-r2-directive",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 24,
+      "expertScore": 18,
+      "absError": 6,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.2,
+        "f1": 0.33333333333333337
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 47265,
+      "inputTokens": 43544,
+      "outputTokens": 1195,
+      "costUsd": 0.271413,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 84,
+      "expertScore": 90,
+      "absError": 6,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 63299,
+      "inputTokens": 57391,
+      "outputTokens": 1956,
+      "costUsd": 0.36751,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 84,
+      "expertScore": 90,
+      "absError": 6,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 89672,
+      "inputTokens": 57488,
+      "outputTokens": 1791,
+      "costUsd": 0.36202100000000004,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-supporting",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 86,
+      "expertScore": 90,
+      "absError": 4,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 66081,
+      "inputTokens": 57886,
+      "outputTokens": 2153,
+      "costUsd": 0.37697,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 32,
+      "expertScore": 3,
+      "absError": 29,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.5,
+        "f1": 0.5714285714285715
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 49411,
+      "inputTokens": 44607,
+      "outputTokens": 1546,
+      "costUsd": 0.287258,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 17,
+      "expertScore": 3,
+      "absError": 14,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.5,
+        "f1": 0.5714285714285715
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 47655,
+      "inputTokens": 44763,
+      "outputTokens": 1541,
+      "costUsd": 0.2884,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 17,
+      "expertScore": 3,
+      "absError": 14,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.5,
+        "f1": 0.5714285714285715
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 44976,
+      "inputTokens": 44249,
+      "outputTokens": 1490,
+      "costUsd": 0.2843,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r3-coaching",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 68,
+      "expertScore": 85,
+      "absError": 17,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 54006,
+      "inputTokens": 56694,
+      "outputTokens": 2050,
+      "costUsd": 0.36641,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r3-coaching",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 70,
+      "expertScore": 85,
+      "absError": 15,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 55224,
+      "inputTokens": 56685,
+      "outputTokens": 2126,
+      "costUsd": 0.368133,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r3-coaching",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 73,
+      "expertScore": 85,
+      "absError": 12,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 0.875,
+        "recall": 1,
+        "f1": 0.9333333333333333
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 63796,
+      "inputTokens": 56786,
+      "outputTokens": 2084,
+      "costUsd": 0.368082,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-directive",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 75,
+      "expertScore": 87,
+      "absError": 12,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.8571428571428571,
+        "f1": 0.923076923076923
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 77212,
+      "inputTokens": 57247,
+      "outputTokens": 2235,
+      "costUsd": 0.37516,
+      "run": 1,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-directive",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 75,
+      "expertScore": 87,
+      "absError": 12,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.8571428571428571,
+        "f1": 0.923076923076923
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 77180,
+      "inputTokens": 57254,
+      "outputTokens": 2505,
+      "costUsd": 0.382271,
+      "run": 3,
+      "models": [
+        "gpt-5.5"
+      ]
+    },
+    {
+      "fixtureId": "anna-banquet_hot-r3-directive",
+      "variantId": "debate-judge",
+      "epoch": 1,
+      "score": 74,
+      "expertScore": 87,
+      "absError": 13,
+      "expectedStyle": "directive",
+      "labelExpectedStyle": "directive",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.8571428571428571,
+        "f1": 0.923076923076923
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 6,
+      "latencyMs": 89629,
+      "inputTokens": 58377,
+      "outputTokens": 2379,
+      "costUsd": 0.386691,
+      "run": 2,
+      "models": [
+        "gpt-5.5"
+      ]
+    }
+  ],
   "unpricedModels": [],
-  "evaluationStrategyMismatch": ["debate-judge"]
+  "evaluationStrategyMismatch": [
+    "debate-judge"
+  ]
 }
