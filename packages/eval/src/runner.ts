@@ -366,6 +366,7 @@ export async function runEvaluation(options: RunOptions): Promise<RunResult> {
               outputTokens,
               costUsd,
               run,
+              turnMeta,
               models: [...models].filter(Boolean),
             };
 

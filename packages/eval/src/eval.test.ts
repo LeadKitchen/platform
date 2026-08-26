@@ -139,6 +139,25 @@ describe("runEvaluation", () => {
     expect(result.items.filter((item) => item.run === 2)).toHaveLength(3);
   });
 
+  test("retains per-turn strategy metadata in serialized results", async () => {
+    const result = await runEvaluation({
+      variantIds: ["self-consistency"],
+      provider: createSimulatedProvider(),
+      fixtures: FIXTURES.slice(0, 1),
+    });
+
+    const item = result.items[0];
+    expect(item?.turnMeta).toHaveLength(FIXTURES[0]?.script.length ?? 0);
+    const firstMeta = item?.turnMeta[0];
+    expect(firstMeta?.requestedSamples).toBe(3);
+    expect(firstMeta?.successfulSamples).toBe(3);
+    expect(firstMeta?.failedSamples).toBe(0);
+    expect(typeof firstMeta?.consensus).toBe("object");
+    expect(JSON.parse(JSON.stringify(result)).items[0].turnMeta).toEqual(
+      item?.turnMeta,
+    );
+  });
+
   test("learning changes the skill policy across epochs", async () => {
     const result = await runEvaluation({
       variantIds: ["skill-rl"],
