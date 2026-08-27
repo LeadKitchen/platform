@@ -63,7 +63,7 @@ export const list = protectedProcedure
           avgScore: avg(GameEvaluation.scorePercent),
         })
         .from(GameDialog)
-        .innerJoin(GameEvaluation, eq(GameEvaluation.dialogId, GameDialog.id))
+        .leftJoin(GameEvaluation, eq(GameEvaluation.dialogId, GameDialog.id))
         .innerJoin(GameSession, eq(GameSession.id, GameDialog.sessionId))
         .where(eq(GameSession.orgId, orgId))
         .groupBy(GameDialog.sessionId),

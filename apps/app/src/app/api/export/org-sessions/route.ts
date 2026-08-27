@@ -5,8 +5,10 @@ export const dynamic = "force-dynamic";
 
 /** Wraps a CSV field in quotes only when it needs escaping. */
 function csvField(value: string | number | null): string {
-  const text = value === null ? "" : String(value);
-  if (!/[",\n]/.test(text)) return text;
+  let text = value === null ? "" : String(value);
+  // Neutralize spreadsheet formula injection (=, +, -, @ prefixes).
+  if (/^[=+\-@]/.test(text)) text = `'${text}`;
+  if (!/[",\n\r]/.test(text)) return text;
   return `"${text.replaceAll('"', '""')}"`;
 }
 
@@ -30,7 +32,14 @@ const STATUS_LABELS: Record<string, string> = {
 export async function GET() {
   let sessions: Awaited<ReturnType<typeof api.org.sessions.list>>;
   try {
-    sessions = await api.org.sessions.list({ limit: 200, offset: 0 });
+    const pageSize = 200;
+    const pages: Awaited<ReturnType<typeof api.org.sessions.list>>[] = [];
+    for (let offset = 0; ; offset += pageSize) {
+      const page = await api.org.sessions.list({ limit: pageSize, offset });
+      pages.push(page);
+      if (page.length < pageSize) break;
+    }
+    sessions = pages.flat();
   } catch (cause) {
     if (cause instanceof ORPCError && cause.code === "UNAUTHORIZED") {
       return new Response("Требуется вход", { status: 401 });
