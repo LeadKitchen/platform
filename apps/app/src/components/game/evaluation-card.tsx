@@ -22,6 +22,7 @@ import {
 import {
   IconArrowRight,
   IconCheck,
+  IconPrinter,
   IconRefresh,
   IconTarget,
   IconTrendingUp,
@@ -102,11 +103,13 @@ function styleLabel(style: string): string {
  */
 export function EvaluationCard({
   evaluation,
+  dialogId,
   pending,
   onReplay,
 }: {
   evaluation: EvaluationView;
   variantId?: string;
+  dialogId?: string;
   pending?: boolean;
   onReplay?: () => void;
 }) {
@@ -288,6 +291,18 @@ export function EvaluationCard({
           <Button disabled={pending} onClick={onReplay}>
             <IconRefresh data-icon="inline-start" />
             Повторить эту ситуацию
+          </Button>
+        ) : null}
+        {dialogId ? (
+          <Button
+            variant="outline"
+            render={
+              <Link href={`/game/dialog/${dialogId}/report`} target="_blank" />
+            }
+            nativeButton={false}
+          >
+            <IconPrinter data-icon="inline-start" />
+            Скачать отчёт
           </Button>
         ) : null}
         <Button

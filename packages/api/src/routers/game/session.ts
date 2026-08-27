@@ -11,6 +11,7 @@ import {
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
 import { requireOwnedSession } from "../../game/access";
+import { getMemberOrgId } from "../../game/organizations";
 import { loadEngine } from "../../game/service";
 import { loadGameSettings } from "../../game/settings";
 import { protectedProcedure } from "../../orpc";
@@ -49,9 +50,10 @@ export const create = protectedProcedure
     }),
   )
   .handler(async ({ context, input }) => {
-    const [engine, settings] = await Promise.all([
+    const [engine, settings, orgId] = await Promise.all([
       loadEngine(context.db),
       loadGameSettings(context.db),
+      getMemberOrgId(context.db, context.session.user.id),
     ]);
     const round = input.round ?? settings.defaultRound;
     if (round === 3 && !settings.allowRoundThree) {
@@ -92,6 +94,7 @@ export const create = protectedProcedure
           round,
           variantId,
           createdBy: context.session.user.id,
+          orgId,
         })
         .returning();
       if (!session) throw new Error("Не удалось создать сессию");

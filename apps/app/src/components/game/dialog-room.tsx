@@ -49,8 +49,8 @@ import {
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { client } from "~/orpc/react";
 import { employeeAvatarUri, userAvatarUri } from "~/lib/avatar";
+import { client } from "~/orpc/react";
 import { EvaluationCard, type EvaluationView } from "./evaluation-card";
 import { ChefHatIllustration, SteamWisps } from "./illustrations";
 import { useSpeechRecognition } from "./use-speech-recognition";
@@ -455,9 +455,7 @@ export function DialogRoom(props: DialogRoomProps) {
                             : employeeAvatar
                         }
                         alt={
-                          turn.role === "manager"
-                            ? "Вы"
-                            : props.employee.name
+                          turn.role === "manager" ? "Вы" : props.employee.name
                         }
                       />
                       <AvatarFallback>
@@ -633,6 +631,7 @@ export function DialogRoom(props: DialogRoomProps) {
         <EvaluationCard
           evaluation={evaluation}
           variantId={props.variantId}
+          dialogId={props.dialogId}
           pending={pending}
           onReplay={replay}
         />

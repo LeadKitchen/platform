@@ -15,6 +15,7 @@ export {
   type OrderRow,
   type TaskOption,
 } from "./order-queue";
+export { PrintButton } from "./print-button";
 export { RoundOneTraining } from "./round-one-training";
 export { useSpeechRecognition } from "./use-speech-recognition";
 export {

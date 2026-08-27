@@ -53,3 +53,27 @@
     animation: steam-rise 2.4s ease-in-out infinite;
   }
 }
+
+/*
+ * Print-to-PDF for /game/dialog/[dialogId]/report: the sidebar chrome is
+ * shared markup we don't control from that page, so the classic
+ * "hide everything, then reveal one subtree" pattern is the reliable way to
+ * keep it out of the printed output regardless of where it sits in the DOM.
+ */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+  .print-area {
+    position: absolute;
+    inset: 0;
+    padding: 0;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
