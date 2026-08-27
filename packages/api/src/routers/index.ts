@@ -20,10 +20,12 @@
  *   game.order.*    – order queue & assignment                 (protected)
  *   game.dialog.*   – role-play dialog + автооценка            (protected)
  *   admin.game.*    – dialogs, experiment arms, A/B analytics  (admin)
+ *   org.*           – a facilitator's view of their own org    (protected)
  */
 
 import { adminRouter } from "./admin";
 import { gameRouter } from "./game";
+import { orgRouter } from "./org";
 import { postRouter } from "./post";
 import { userRouter } from "./user";
 
@@ -32,6 +34,7 @@ export const appRouter = {
   post: postRouter,
   admin: adminRouter,
   game: gameRouter,
+  org: orgRouter,
 };
 
 export type AppRouter = typeof appRouter;

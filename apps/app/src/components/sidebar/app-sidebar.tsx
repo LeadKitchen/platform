@@ -16,6 +16,7 @@ import {
   IconArrowsSort,
   IconBook2,
   IconBrain,
+  IconBuildingStore,
   IconBulb,
   IconChartBar,
   IconChefHat,
@@ -56,6 +57,7 @@ const data = {
           exact: true,
         },
         { title: "Раунд 1 · Теория", url: "/game/round-1", icon: IconSchool },
+        { title: "Моя группа", url: "/group", icon: IconUsersGroup },
       ],
     },
     {
@@ -154,6 +156,11 @@ const data = {
           icon: IconGitCompare,
         },
         {
+          title: "Организации",
+          url: "/admin/game/organizations",
+          icon: IconBuildingStore,
+        },
+        {
           title: "Пользователи",
           url: "/admin/game/users",
           icon: IconUsers,
@@ -227,18 +234,26 @@ const data = {
 export function AppSidebar({
   user,
   isAdmin,
+  isFacilitator,
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
   user: { name: string; email: string; avatar: string };
   isAdmin?: boolean;
+  isFacilitator?: boolean;
 }) {
-  const navMain = data.navMain.filter(
-    (item) =>
-      isAdmin ||
-      (item.url !== "/admin/game/overview" &&
-        item.url !== "/admin/docs" &&
-        item.url !== "/docs/ai"),
-  );
+  const navMain = data.navMain
+    .filter(
+      (item) =>
+        isAdmin ||
+        (item.url !== "/admin/game/overview" &&
+          item.url !== "/admin/docs" &&
+          item.url !== "/docs/ai"),
+    )
+    .map((item) =>
+      item.url === "/game" && !isFacilitator
+        ? { ...item, items: item.items.filter((sub) => sub.url !== "/group") }
+        : item,
+    );
 
   return (
     <Sidebar collapsible="icon" {...props}>

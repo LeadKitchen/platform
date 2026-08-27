@@ -117,6 +117,7 @@ export type AdminGameSection =
   | "benchmarks"
   | "reviews"
   | "comparisons"
+  | "organizations"
   | "users"
   | "settings";
 
@@ -166,6 +167,10 @@ const SECTION_COPY: Record<
     title: "Сравнение с новым проектом",
     description:
       "Прямое сопоставление прежней реализации и архитектуры Sitruk: недостатки, найденные при живой проверке, и что их устраняет.",
+  },
+  organizations: {
+    title: "Организации",
+    description: "Компании-заказчики, их участники и ведущие деловой игры.",
   },
   users: {
     title: "Пользователи",
@@ -252,6 +257,16 @@ export interface AdminGameData {
     createdAt: Date | string;
     isAdmin: boolean;
     isBootstrapAdmin: boolean;
+    orgId: string | null;
+    orgName: string | null;
+    isFacilitator: boolean;
+  }>;
+  organizations: Array<{
+    id: string;
+    name: string;
+    createdAt: Date | string;
+    members: number;
+    facilitators: number;
   }>;
   benchmarks: BenchmarkRun[];
   reviews: ReviewReport[];
@@ -367,6 +382,8 @@ export function AdminGameDashboard({
   const [sessions, setSessions] = useState(initialData.sessions);
   const [users, setUsers] = useState(initialData.users);
   const [userQuery, setUserQuery] = useState("");
+  const [organizations, setOrganizations] = useState(initialData.organizations);
+  const [newOrgName, setNewOrgName] = useState("");
   const [settings, setSettings] = useState<GameSettings>(
     initialData.system.settings,
   );
@@ -547,6 +564,75 @@ export function AdminGameDashboard({
       );
       toast.success(
         isAdmin ? "Администратор назначен" : "Права администратора отозваны",
+      );
+    } catch (cause) {
+      toast.error(cause instanceof Error ? cause.message : "Ошибка обновления");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  async function createOrganization() {
+    const name = newOrgName.trim();
+    if (!name) return;
+    setPending(true);
+    try {
+      const org = await client.admin.game.organizations.create({ name });
+      setOrganizations((current) =>
+        [...current, { ...org, members: 0, facilitators: 0 }].sort((a, b) =>
+          a.name.localeCompare(b.name, "ru"),
+        ),
+      );
+      setNewOrgName("");
+      toast.success("Организация создана");
+    } catch (cause) {
+      toast.error(cause instanceof Error ? cause.message : "Ошибка создания");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  async function updateUserOrg(userId: string, orgId: string | null) {
+    setPending(true);
+    try {
+      await client.admin.game.organizations.setMember({ userId, orgId });
+      const org = orgId
+        ? (organizations.find((item) => item.id === orgId) ?? null)
+        : null;
+      setUsers((current) =>
+        current.map((item) =>
+          item.id === userId
+            ? {
+                ...item,
+                orgId,
+                orgName: org?.name ?? null,
+                isFacilitator: orgId ? item.isFacilitator : false,
+              }
+            : item,
+        ),
+      );
+      toast.success(orgId ? "Организация назначена" : "Организация снята");
+    } catch (cause) {
+      toast.error(cause instanceof Error ? cause.message : "Ошибка обновления");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  async function updateFacilitator(userId: string, isFacilitator: boolean) {
+    setPending(true);
+    try {
+      await client.admin.game.organizations.setFacilitator({
+        userId,
+        isFacilitator,
+      });
+      setUsers((current) =>
+        current.map((item) =>
+          item.id === userId ? { ...item, isFacilitator } : item,
+        ),
+      );
+      toast.success(
+        isFacilitator ? "Назначен ведущим группы" : "Права ведущего отозваны",
       );
     } catch (cause) {
       toast.error(cause instanceof Error ? cause.message : "Ошибка обновления");
@@ -1578,6 +1664,7 @@ export function AdminGameDashboard({
                   <TableHead>Username</TableHead>
                   <TableHead>Проверен</TableHead>
                   <TableHead>Доступ</TableHead>
+                  <TableHead>Организация</TableHead>
                   <TableHead>Регистрация</TableHead>
                   <TableHead className="text-right">Действие</TableHead>
                 </TableRow>
@@ -1605,6 +1692,52 @@ export function AdminGameDashboard({
                         ) : null}
                       </span>
                     </TableCell>
+                    <TableCell>
+                      <div className="flex flex-col gap-1.5">
+                        <Select
+                          value={user.orgId ?? "none"}
+                          onValueChange={(value) =>
+                            updateUserOrg(
+                              user.id,
+                              value === "none" ? null : value,
+                            )
+                          }
+                        >
+                          <SelectTrigger size="sm" className="w-40">
+                            <SelectValue placeholder="Без организации" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectItem value="none">
+                                Без организации
+                              </SelectItem>
+                              {organizations.map((org) => (
+                                <SelectItem key={org.id} value={org.id}>
+                                  {org.name}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                        {user.orgId ? (
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant={
+                              user.isFacilitator ? "outline" : "secondary"
+                            }
+                            disabled={pending}
+                            onClick={() =>
+                              updateFacilitator(user.id, !user.isFacilitator)
+                            }
+                          >
+                            {user.isFacilitator
+                              ? "Снять с ведущего"
+                              : "Сделать ведущим"}
+                          </Button>
+                        ) : null}
+                      </div>
+                    </TableCell>
                     <TableCell>{dateLabel(user.createdAt)}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
@@ -1625,6 +1758,90 @@ export function AdminGameDashboard({
             </Table>
           </CardContent>
         </Card>
+      ) : null}
+
+      {section === "organizations" ? (
+        <div className="flex flex-col gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Новая организация</CardTitle>
+              <CardDescription>
+                Компания или команда, для которой открыт доступ к тренажёру.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form
+                className="flex flex-wrap items-end gap-3"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  createOrganization();
+                }}
+              >
+                <Field className="min-w-64 flex-1">
+                  <FieldLabel htmlFor="new-org-name">Название</FieldLabel>
+                  <Input
+                    id="new-org-name"
+                    value={newOrgName}
+                    onChange={(event) => setNewOrgName(event.target.value)}
+                    placeholder="Например, «Вкусно и точка»"
+                  />
+                </Field>
+                <Button type="submit" disabled={pending || !newOrgName.trim()}>
+                  Создать
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Организации</CardTitle>
+              <CardDescription>
+                Участники назначаются на организацию, а ведущие — из вкладки
+                «Пользователи».
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Название</TableHead>
+                    <TableHead>Участников</TableHead>
+                    <TableHead>Ведущих</TableHead>
+                    <TableHead>Создана</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {organizations.length === 0 ? (
+                    <TableRow>
+                      <TableCell
+                        colSpan={4}
+                        className="text-muted-foreground text-center"
+                      >
+                        Организаций пока нет.
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    organizations.map((org) => (
+                      <TableRow key={org.id}>
+                        <TableCell className="font-medium">
+                          {org.name}
+                        </TableCell>
+                        <TableCell className="tabular-nums">
+                          {org.members}
+                        </TableCell>
+                        <TableCell className="tabular-nums">
+                          {org.facilitators}
+                        </TableCell>
+                        <TableCell>{dateLabel(org.createdAt)}</TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </div>
       ) : null}
     </div>
   );

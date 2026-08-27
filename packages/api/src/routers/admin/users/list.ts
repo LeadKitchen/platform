@@ -1,4 +1,12 @@
-import { AppAdmin, desc, eq, user } from "@acme/db";
+import {
+  AppAdmin,
+  desc,
+  eq,
+  GameFacilitator,
+  GameOrganization,
+  GameOrgMember,
+  user,
+} from "@acme/db";
 import { z } from "zod";
 
 import { adminProcedure } from "../../../orpc";
@@ -33,17 +41,24 @@ export const list = adminProcedure
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
         adminUserId: AppAdmin.userId,
+        orgId: GameOrgMember.orgId,
+        orgName: GameOrganization.name,
+        facilitatorUserId: GameFacilitator.userId,
       })
       .from(user)
       .leftJoin(AppAdmin, eq(AppAdmin.userId, user.id))
+      .leftJoin(GameOrgMember, eq(GameOrgMember.userId, user.id))
+      .leftJoin(GameOrganization, eq(GameOrganization.id, GameOrgMember.orgId))
+      .leftJoin(GameFacilitator, eq(GameFacilitator.userId, user.id))
       .orderBy(desc(user.createdAt))
       .limit(input.limit)
       .offset(input.offset);
 
-    return rows.map(({ adminUserId, ...row }) => ({
+    return rows.map(({ adminUserId, facilitatorUserId, ...row }) => ({
       ...row,
       isBootstrapAdmin: bootstrapEmails.has(row.email.toLowerCase()),
       isAdmin:
         adminUserId !== null || bootstrapEmails.has(row.email.toLowerCase()),
+      isFacilitator: facilitatorUserId !== null,
     }));
   });

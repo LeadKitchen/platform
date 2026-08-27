@@ -92,13 +92,69 @@ export const GameSession = pgTable(
     round: t.integer().notNull(),
     variantId: t.text().references(() => GameVariant.id),
     status: t.varchar({ length: 32 }).default("active").notNull(),
-    /** Facilitator who opened the session. */
+    /** Participant who opened the session. */
     createdBy: t.text().references(() => user.id, { onDelete: "set null" }),
+    /**
+     * Org the creator belonged to at the time (via `GameOrgMember`), copied
+     * onto the row so a session keeps its group even if membership changes
+     * later. Null for participants outside any organization.
+     */
+    orgId: t.text().references(() => GameOrganization.id, {
+      onDelete: "set null",
+    }),
     createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
     endedAt: t.timestamp({ withTimezone: true }),
   }),
-  (table) => [index("game_sessions_variant_idx").on(table.variantId)],
+  (table) => [
+    index("game_sessions_variant_idx").on(table.variantId),
+    index("game_sessions_org_idx").on(table.orgId),
+  ],
 );
+
+/**
+ * A company or team the platform is deployed for. Facilitators see and
+ * export only the sessions played under their own organization.
+ */
+export const GameOrganization = pgTable("game_organizations", (t) => ({
+  id: t.text().primaryKey(),
+  name: t.varchar({ length: 128 }).notNull(),
+  createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+}));
+
+/**
+ * Which org a user plays under. A user belongs to at most one org — same
+ * "one row, one fact" shape as {@link GameFacilitator} and `AppAdmin`, rather
+ * than a full membership-role matrix nothing here needs yet.
+ */
+export const GameOrgMember = pgTable("game_org_members", (t) => ({
+  userId: t
+    .text()
+    .primaryKey()
+    .references(() => user.id, { onDelete: "cascade" }),
+  orgId: t
+    .text()
+    .notNull()
+    .references(() => GameOrganization.id, { onDelete: "cascade" }),
+  createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+}));
+
+/**
+ * Facilitator grant, scoped to one org. Mirrors `AppAdmin`'s "row exists =
+ * privilege" pattern — a facilitator is not a global role, so it needs the
+ * org on the grant itself rather than a boolean.
+ */
+export const GameFacilitator = pgTable("game_facilitators", (t) => ({
+  userId: t
+    .text()
+    .primaryKey()
+    .references(() => user.id, { onDelete: "cascade" }),
+  orgId: t
+    .text()
+    .notNull()
+    .references(() => GameOrganization.id, { onDelete: "cascade" }),
+  grantedBy: t.text().references(() => user.id, { onDelete: "set null" }),
+  createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+}));
 
 /** Product events are separate from the replayable in-dialog event stream. */
 export const GameProductEvent = pgTable(
