@@ -8,23 +8,9 @@ import {
   GameSession,
   user,
 } from "@acme/db";
-import { ORPCError } from "@orpc/server";
 import { z } from "zod";
-import { getFacilitatorOrgId } from "../../game/organizations";
+import { requireFacilitatorOrgId } from "../../game/organizations";
 import { protectedProcedure } from "../../orpc";
-
-async function requireFacilitatorOrgId(
-  db: Parameters<typeof getFacilitatorOrgId>[0],
-  userId: string,
-) {
-  const orgId = await getFacilitatorOrgId(db, userId);
-  if (!orgId) {
-    throw new ORPCError("FORBIDDEN", {
-      message: "Доступно только ведущим группы",
-    });
-  }
-  return orgId;
-}
 
 /**
  * Sessions played by members of the caller's organization, with an

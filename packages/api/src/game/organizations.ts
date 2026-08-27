@@ -1,4 +1,5 @@
 import { type Database, eq, GameFacilitator, GameOrgMember } from "@acme/db";
+import { ORPCError } from "@orpc/server";
 
 /** Org a user belongs to as a participant, or `null` outside any org. */
 export async function getMemberOrgId(
@@ -24,6 +25,23 @@ export async function getFacilitatorOrgId(
     .where(eq(GameFacilitator.userId, userId))
     .limit(1);
   return row?.orgId ?? null;
+}
+
+/**
+ * Org the current user facilitates, or throws — the shared entry check for
+ * every `org.*` procedure that exposes group-wide data.
+ */
+export async function requireFacilitatorOrgId(
+  db: Database,
+  userId: string,
+): Promise<string> {
+  const orgId = await getFacilitatorOrgId(db, userId);
+  if (!orgId) {
+    throw new ORPCError("FORBIDDEN", {
+      message: "Доступно только ведущим группы",
+    });
+  }
+  return orgId;
 }
 
 /** URL-safe slug from an org name, used as its primary key. */
