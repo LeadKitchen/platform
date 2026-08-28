@@ -1,20 +1,8 @@
 import { ORPCError } from "@orpc/server";
 import { api } from "~/orpc/server";
+import { toCsvRow } from "./csv";
 
 export const dynamic = "force-dynamic";
-
-/** Wraps a CSV field in quotes only when it needs escaping. */
-function csvField(value: string | number | null): string {
-  let text = value === null ? "" : String(value);
-  // Neutralize spreadsheet formula injection (=, +, -, @ prefixes).
-  if (/^[=+\-@]/.test(text)) text = `'${text}`;
-  if (!/[",\n\r]/.test(text)) return text;
-  return `"${text.replaceAll('"', '""')}"`;
-}
-
-function toCsvRow(values: (string | number | null)[]): string {
-  return `${values.map(csvField).join(",")}\r\n`;
-}
 
 const STATUS_LABELS: Record<string, string> = {
   active: "идёт",
@@ -34,10 +22,17 @@ export async function GET() {
   try {
     const pageSize = 200;
     const pages: Awaited<ReturnType<typeof api.org.sessions.list>>[] = [];
-    for (let offset = 0; ; offset += pageSize) {
-      const page = await api.org.sessions.list({ limit: pageSize, offset });
+    let cursor: { createdAt: Date; id: string } | undefined;
+    for (;;) {
+      const page = await api.org.sessions.list({ limit: pageSize, cursor });
       pages.push(page);
       if (page.length < pageSize) break;
+      const lastSession = page.at(-1)?.session;
+      if (!lastSession) break;
+      cursor = {
+        createdAt: lastSession.createdAt,
+        id: lastSession.id,
+      };
     }
     sessions = pages.flat();
   } catch (cause) {
