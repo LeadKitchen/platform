@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "game_training_assignments_active_idx" ON "game_training_assignments" USING btree ("org_id","participant_id","criterion_id") WHERE "game_training_assignments"."status" in ('assigned', 'in_progress');

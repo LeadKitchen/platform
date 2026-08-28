@@ -101,7 +101,8 @@ export const progress = protectedProcedure.handler(async ({ context }) => {
             "evaluation_viewed",
           ]),
         ),
-      ),
+      )
+      .groupBy(GameProductEvent.name),
   ]);
 
   const criteria = new Map<

@@ -95,7 +95,9 @@ export const GameSession = pgTable(
     /** Participant who opened the session. */
     createdBy: t.text().references(() => user.id, { onDelete: "set null" }),
     /** Optional facilitator-assigned practice that this session fulfils. */
-    trainingAssignmentId: t.uuid(),
+    trainingAssignmentId: t.uuid().references(() => GameTrainingAssignment.id, {
+      onDelete: "set null",
+    }),
     /**
      * Org the creator belonged to at the time (via `GameOrgMember`), copied
      * onto the row so a session keeps its group even if membership changes
@@ -227,6 +229,9 @@ export const GameTrainingAssignment = pgTable(
       table.participantId,
       table.status,
     ),
+    uniqueIndex("game_training_assignments_active_idx")
+      .on(table.orgId, table.participantId, table.criterionId)
+      .where(sql`${table.status} in ('assigned', 'in_progress')`),
   ],
 );
 

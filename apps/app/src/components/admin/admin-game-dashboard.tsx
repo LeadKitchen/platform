@@ -619,11 +619,16 @@ export function AdminGameDashboard({
     }
   }
 
-  async function updateFacilitator(userId: string, isFacilitator: boolean) {
+  async function updateFacilitator(
+    userId: string,
+    orgId: string,
+    isFacilitator: boolean,
+  ) {
     setPending(true);
     try {
       await client.admin.game.organizations.setFacilitator({
         userId,
+        orgId,
         isFacilitator,
       });
       setUsers((current) =>
@@ -1728,7 +1733,11 @@ export function AdminGameDashboard({
                             }
                             disabled={pending}
                             onClick={() =>
-                              updateFacilitator(user.id, !user.isFacilitator)
+                              updateFacilitator(
+                                user.id,
+                                user.orgId!,
+                                !user.isFacilitator,
+                              )
                             }
                           >
                             {user.isFacilitator
