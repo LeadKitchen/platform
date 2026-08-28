@@ -8,6 +8,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
+  Progress,
 } from "@acme/ui";
 import {
   IconArrowRight,
@@ -62,6 +63,36 @@ export default async function GamePage() {
   ).length;
   const focus = playerProgress.criteria[0];
   const assignment = assignments[0];
+  const latestDialogId = playerProgress.recent[0]?.dialogId;
+  const onboardingSteps = [
+    {
+      title: "Разберитесь с подходами",
+      description: "Пройдите короткую разминку по стилям руководства.",
+      href: "/game/round-1",
+      complete: playerProgress.onboarding.warmupCompleted,
+    },
+    {
+      title: "Откройте первую смену",
+      description: "Выберите команду и ситуацию для практики.",
+      href: "#start-practice",
+      complete: sessions.length > 0,
+    },
+    {
+      title: "Проведите разговор",
+      description: "Поставьте задачу сотруднику голосом или текстом.",
+      href: activeSession ? `/game/${activeSession.id}` : "#start-practice",
+      complete: playerProgress.dialogs > 0,
+    },
+    {
+      title: "Посмотрите разбор",
+      description: "Зафиксируйте следующий фокус для новой попытки.",
+      href: latestDialogId ? `/game/dialog/${latestDialogId}/report` : "/game",
+      complete: playerProgress.onboarding.evaluationViewed,
+    },
+  ];
+  const completedOnboardingSteps = onboardingSteps.filter(
+    (step) => step.complete,
+  ).length;
 
   return (
     <>
@@ -123,6 +154,61 @@ export default async function GamePage() {
               <IconVideo data-icon="inline-start" />
               Посмотреть демо
             </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <Badge variant="accent" className="w-fit">
+                  Маршрут старта
+                </Badge>
+                <CardTitle className="mt-3">
+                  Ваша первая сильная смена
+                </CardTitle>
+                <CardDescription>
+                  Четыре коротких шага превращают попытку в управленческий
+                  навык.
+                </CardDescription>
+              </div>
+              <Badge variant="secondary">
+                {completedOnboardingSteps} из {onboardingSteps.length}
+              </Badge>
+            </div>
+            <Progress
+              value={(completedOnboardingSteps / onboardingSteps.length) * 100}
+            />
+          </CardHeader>
+          <CardContent className="grid gap-2 lg:grid-cols-2">
+            {onboardingSteps.map((step, index) => (
+              <div
+                key={step.title}
+                className="flex items-center justify-between gap-3 rounded-md border p-3"
+              >
+                <div className="flex min-w-0 items-center gap-3">
+                  <Badge variant={step.complete ? "success" : "outline"}>
+                    {step.complete ? <IconCheck /> : `0${index + 1}`}
+                  </Badge>
+                  <div className="min-w-0">
+                    <p className="font-medium">{step.title}</p>
+                    <p className="text-muted-foreground text-sm">
+                      {step.description}
+                    </p>
+                  </div>
+                </div>
+                {step.complete ? null : (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    render={<Link href={step.href} />}
+                    nativeButton={false}
+                  >
+                    Открыть
+                  </Button>
+                )}
+              </div>
+            ))}
           </CardContent>
         </Card>
 
