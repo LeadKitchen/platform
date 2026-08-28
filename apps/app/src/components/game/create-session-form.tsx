@@ -28,6 +28,7 @@ export interface SessionDefaults {
   defaultVariantId: string | null;
   defaultRound: 2 | 3;
   allowRoundThree: boolean;
+  assignment?: { id: string; criterionTitle: string };
 }
 
 /**
@@ -55,11 +56,13 @@ export function CreateSessionForm({ defaults }: { defaults: SessionDefaults }) {
       const session = await client.game.session.create({
         title:
           title.trim() ||
+          defaults.assignment?.criterionTitle ||
           `Моя команда · ${new Intl.DateTimeFormat("ru-RU", {
             day: "numeric",
             month: "long",
           }).format(new Date())}`,
         round: round === "3" ? 3 : 2,
+        assignmentId: defaults.assignment?.id,
       });
       if (!session?.id) {
         setError("Сессия не создана, попробуйте ещё раз");
@@ -113,7 +116,9 @@ export function CreateSessionForm({ defaults }: { defaults: SessionDefaults }) {
         </Button>
 
         <FieldDescription>
-          Если оставить поле пустым, мы назовём смену автоматически.
+          {defaults.assignment
+            ? `Эта сессия закроет назначенную практику: «${defaults.assignment.criterionTitle}».`
+            : "Если оставить поле пустым, мы назовём смену автоматически."}
         </FieldDescription>
 
         {error ? (

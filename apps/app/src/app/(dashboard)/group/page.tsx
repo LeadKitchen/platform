@@ -20,6 +20,7 @@ import {
   IconDownload,
 } from "@tabler/icons-react";
 import { redirect } from "next/navigation";
+import { AssignPracticeButton } from "~/components/group/assign-practice-button";
 import { SiteHeader } from "~/components/layout";
 import { api } from "~/orpc/server";
 
@@ -29,6 +30,11 @@ const STATUS_LABELS: Record<string, string> = {
   active: "идёт",
   completed: "завершена",
   archived: "в архиве",
+};
+
+const ASSIGNMENT_STATUS_LABELS: Record<string, string> = {
+  assigned: "ожидает практики",
+  in_progress: "в работе",
 };
 
 function dateLabel(value: Date | string): string {
@@ -69,9 +75,10 @@ export default async function GroupPage() {
   const mine = await api.org.mine();
   if (!mine.isFacilitator) redirect("/game");
 
-  const [sessions, { people, topMissedOrg }] = await Promise.all([
+  const [sessions, { people, topMissedOrg }, assignments] = await Promise.all([
     api.org.sessions.list({ limit: 100, offset: 0 }),
     api.org.people.list({}),
+    api.org.training.list(),
   ]);
   const dialogsTotal = sessions.reduce((sum, row) => sum + row.dialogs, 0);
   const scored = sessions.filter((row) => row.avgScore !== null);
@@ -152,13 +159,14 @@ export default async function GroupPage() {
                     <TableHead>Стиль в точку</TableHead>
                     <TableHead>Динамика</TableHead>
                     <TableHead>Чаще всего пропускает</TableHead>
+                    <TableHead>Практика</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {people.length === 0 ? (
                     <TableRow>
                       <TableCell
-                        colSpan={6}
+                        colSpan={7}
                         className="text-muted-foreground text-center"
                       >
                         Пока никто из группы не играл.
@@ -188,6 +196,13 @@ export default async function GroupPage() {
                                 .map((item) => `${item.title} ×${item.missed}`)
                                 .join(", ")
                             : "—"}
+                        </TableCell>
+                        <TableCell>
+                          <AssignPracticeButton
+                            participantId={person.userId}
+                            participantName={person.name}
+                            focus={person.topMissed[0]}
+                          />
                         </TableCell>
                       </TableRow>
                     ))
@@ -230,6 +245,42 @@ export default async function GroupPage() {
             </CardContent>
           </Card>
         </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Назначенная практика</CardTitle>
+            <CardDescription>
+              Ведущий назначает повторную попытку прямо из слабого критерия
+              участника. Сессия автоматически закрывает назначение после
+              завершения.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-2">
+            {assignments.length === 0 ? (
+              <p className="text-muted-foreground text-sm">
+                Активных назначений пока нет.
+              </p>
+            ) : (
+              assignments.map(({ assignment, participant }) => (
+                <div
+                  key={assignment.id}
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-md border px-3 py-2"
+                >
+                  <span className="flex flex-col gap-0.5">
+                    <span className="font-medium">{participant}</span>
+                    <span className="text-muted-foreground text-sm">
+                      {assignment.criterionTitle}
+                    </span>
+                  </span>
+                  <Badge variant="outline">
+                    {ASSIGNMENT_STATUS_LABELS[assignment.status] ??
+                      assignment.status}
+                  </Badge>
+                </div>
+              ))
+            )}
+          </CardContent>
+        </Card>
 
         <Card>
           <CardHeader>
