@@ -99,6 +99,13 @@
       "when": 1787915219713,
       "tag": "0013_uneven_raza",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1787915220000,
+      "tag": "0014_validate_training_assignment_fk",
+      "breakpoints": true
     }
   ]
 }

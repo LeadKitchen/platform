@@ -6,6 +6,7 @@ import {
   GameEvaluation,
   GameProductEvent,
   GameSession,
+  gte,
   inArray,
 } from "@acme/db";
 import { ORPCError } from "@orpc/server";
@@ -74,7 +75,12 @@ export const track = protectedProcedure
   });
 
 export const progress = protectedProcedure.handler(async ({ context }) => {
-  const [rows, productEvents] = await Promise.all([
+  const today = new Date();
+  const windowStart = new Date(today);
+  windowStart.setUTCHours(0, 0, 0, 0);
+  windowStart.setUTCDate(windowStart.getUTCDate() - 27);
+
+  const [recentRows, windowRows, productEvents] = await Promise.all([
     context.db
       .select({
         dialogId: GameDialog.id,
@@ -89,7 +95,26 @@ export const progress = protectedProcedure.handler(async ({ context }) => {
       .innerJoin(GameSession, eq(GameSession.id, GameDialog.sessionId))
       .where(eq(GameSession.createdBy, context.session.user.id))
       .orderBy(desc(GameEvaluation.createdAt))
-      .limit(100),
+      .limit(10),
+    context.db
+      .select({
+        dialogId: GameDialog.id,
+        scorePercent: GameEvaluation.scorePercent,
+        criteria: GameEvaluation.criteria,
+        expectedStyle: GameEvaluation.expectedStyle,
+        actualStyle: GameEvaluation.actualStyle,
+        createdAt: GameEvaluation.createdAt,
+      })
+      .from(GameEvaluation)
+      .innerJoin(GameDialog, eq(GameDialog.id, GameEvaluation.dialogId))
+      .innerJoin(GameSession, eq(GameSession.id, GameDialog.sessionId))
+      .where(
+        and(
+          eq(GameSession.createdBy, context.session.user.id),
+          gte(GameEvaluation.createdAt, windowStart),
+        ),
+      )
+      .orderBy(desc(GameEvaluation.createdAt)),
     context.db
       .select({ name: GameProductEvent.name })
       .from(GameProductEvent)
@@ -109,7 +134,7 @@ export const progress = protectedProcedure.handler(async ({ context }) => {
     string,
     { title: string; met: number; total: number }
   >();
-  for (const row of rows) {
+  for (const row of windowRows) {
     for (const item of row.criteria as Array<{
       id: string;
       title: string;
@@ -126,19 +151,18 @@ export const progress = protectedProcedure.handler(async ({ context }) => {
     }
   }
 
-  const chronological = [...rows].reverse();
+  const chronological = [...windowRows].reverse();
   const first = chronological.slice(0, Math.min(3, chronological.length));
-  const latest = rows.slice(0, Math.min(3, rows.length));
+  const latest = windowRows.slice(0, Math.min(3, windowRows.length));
   const dayKey = (date: Date) => date.toISOString().slice(0, 10);
   const dailyActivity = new Map<string, number>();
   const dailyScores = new Map<string, { count: number; total: number }>();
-  const today = new Date();
   for (let offset = 27; offset >= 0; offset--) {
     const date = new Date(today);
     date.setUTCDate(today.getUTCDate() - offset);
     dailyActivity.set(dayKey(date), 0);
   }
-  for (const row of rows) {
+  for (const row of windowRows) {
     const key = dayKey(row.createdAt);
     if (dailyActivity.has(key)) {
       dailyActivity.set(key, (dailyActivity.get(key) ?? 0) + 1);
@@ -148,7 +172,7 @@ export const progress = protectedProcedure.handler(async ({ context }) => {
       dailyScores.set(key, scores);
     }
   }
-  const average = (items: typeof rows) =>
+  const average = (items: typeof windowRows) =>
     items.length === 0
       ? 0
       : Math.round(
@@ -165,17 +189,17 @@ export const progress = protectedProcedure.handler(async ({ context }) => {
         (event) => event.name === "evaluation_viewed",
       ),
     },
-    dialogs: rows.length,
-    averageScore: average(rows),
+    dialogs: windowRows.length,
+    averageScore: average(windowRows),
     recentScore: average(latest),
     improvement: average(latest) - average(first),
     styleMatchRate:
-      rows.length === 0
+      windowRows.length === 0
         ? 0
         : Math.round(
-            (rows.filter((row) => row.actualStyle === row.expectedStyle)
+            (windowRows.filter((row) => row.actualStyle === row.expectedStyle)
               .length /
-              rows.length) *
+              windowRows.length) *
               100,
           ),
     activeDays: [...dailyActivity.values()].filter((count) => count > 0).length,
@@ -194,7 +218,7 @@ export const progress = protectedProcedure.handler(async ({ context }) => {
         rate: item.total === 0 ? 0 : item.met / item.total,
       }))
       .sort((a, b) => a.rate - b.rate),
-    recent: rows.slice(0, 10),
+    recent: recentRows,
   };
 });
 

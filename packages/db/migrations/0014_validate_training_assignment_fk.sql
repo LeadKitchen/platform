@@ -1,0 +1,1 @@
+ALTER TABLE "game_sessions" VALIDATE CONSTRAINT "game_sessions_training_assignment_id_game_training_assignments_id_fk";
