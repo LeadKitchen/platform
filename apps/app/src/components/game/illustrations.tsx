@@ -154,6 +154,7 @@ export function SteamWisps({ className }: { className?: string }) {
       {wisps.map((wisp) => (
         <svg
           key={wisp.left}
+          aria-hidden="true"
           viewBox="0 0 12 28"
           className="animate-steam text-muted-foreground/60 absolute bottom-1/2 w-2.5"
           style={{
