@@ -78,7 +78,7 @@ export function CreateSessionForm({ defaults }: { defaults: SessionDefaults }) {
 
   return (
     <form onSubmit={submit}>
-      <FieldGroup className="grid gap-4 lg:grid-cols-[1fr_260px_auto] lg:items-end">
+      <FieldGroup className="grid gap-4">
         <Field>
           <FieldLabel htmlFor="session-title">
             Название команды <Badge variant="outline">необязательно</Badge>
@@ -111,7 +111,7 @@ export function CreateSessionForm({ defaults }: { defaults: SessionDefaults }) {
           </Select>
         </Field>
 
-        <Button type="submit" size="lg" disabled={pending}>
+        <Button type="submit" size="lg" disabled={pending} className="w-full">
           {pending ? "Готовим смену…" : "Начать практику"}
         </Button>
 
@@ -121,9 +121,7 @@ export function CreateSessionForm({ defaults }: { defaults: SessionDefaults }) {
             : "Если оставить поле пустым, мы назовём смену автоматически."}
         </FieldDescription>
 
-        {error ? (
-          <p className="text-destructive text-sm lg:col-span-3">{error}</p>
-        ) : null}
+        {error ? <p className="text-destructive text-sm">{error}</p> : null}
       </FieldGroup>
     </form>
   );
