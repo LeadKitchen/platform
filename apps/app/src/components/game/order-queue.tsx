@@ -332,7 +332,7 @@ export function OrderQueue(props: {
                   <span className="text-foreground block font-medium">
                     Ситуаций пока нет
                   </span>
-                  Создайте первый разговор справа.
+                  Создайте первый разговор с помощью формы.
                 </span>
               </li>
             ) : null}

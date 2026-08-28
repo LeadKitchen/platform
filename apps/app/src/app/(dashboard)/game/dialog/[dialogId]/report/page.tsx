@@ -138,7 +138,7 @@ export default async function DialogReportPage({
 
         <div className="print-area grid items-start gap-4 text-sm xl:grid-cols-[minmax(0,1fr)_360px] print:block">
           <div className="flex flex-col gap-4">
-            <Card id="summary">
+            <Card id="summary" className="scroll-mt-20">
               <CardHeader>
                 <CardTitle>Сводка разговора</CardTitle>
               </CardHeader>
@@ -147,7 +147,7 @@ export default async function DialogReportPage({
               </CardContent>
             </Card>
 
-            <Card id="criteria">
+            <Card id="criteria" className="scroll-mt-20">
               <CardHeader>
                 <CardTitle>Чек-лист разговора</CardTitle>
               </CardHeader>
@@ -162,10 +162,13 @@ export default async function DialogReportPage({
                         className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full border ${criterion.met ? "border-primary text-primary" : "text-muted-foreground"}`}
                       >
                         {criterion.met ? (
-                          <IconCheck className="size-3" />
+                          <IconCheck aria-hidden="true" className="size-3" />
                         ) : (
-                          <IconX className="size-3" />
+                          <IconX aria-hidden="true" className="size-3" />
                         )}
+                        <span className="sr-only">
+                          {criterion.met ? "Выполнено" : "Не выполнено"}
+                        </span>
                       </span>
                       <span>
                         <span className="font-medium">{criterion.title}</span>
@@ -183,7 +186,7 @@ export default async function DialogReportPage({
           </div>
 
           <aside className="flex flex-col gap-4">
-            <Card id="styles">
+            <Card id="styles" className="scroll-mt-20">
               <CardHeader>
                 <CardTitle>Стиль руководства</CardTitle>
               </CardHeader>
@@ -218,7 +221,7 @@ export default async function DialogReportPage({
               </CardContent>
             </Card>
 
-            <Card id="outcome">
+            <Card id="outcome" className="scroll-mt-20">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <IconTarget className="size-4" /> Итог ситуации

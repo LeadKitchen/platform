@@ -7,6 +7,7 @@ import {
   Badge,
   Button,
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
@@ -138,12 +139,12 @@ export function RoundOneTraining() {
             Последовательно пройдите четыре ситуации учебного пути.
           </CardDescription>
         </div>
-        <div className="flex items-center gap-3 sm:justify-end">
+        <CardAction className="flex items-center gap-3 sm:justify-end">
           <span className="text-muted-foreground text-xs tabular-nums">
             {Object.keys(results).length} из {CASES.length} пройдено
           </span>
           <Badge variant="outline">{score} верно</Badge>
-        </div>
+        </CardAction>
       </CardHeader>
       <Progress
         value={(Object.keys(results).length / CASES.length) * 100}
@@ -164,6 +165,7 @@ export function RoundOneTraining() {
                   <button
                     key={caseItem.id}
                     type="button"
+                    aria-current={active ? "step" : undefined}
                     onClick={() => setCurrentIndex(index)}
                     className={`flex min-w-52 items-center gap-3 rounded-lg px-3 py-3 text-left transition-colors lg:min-w-0 ${
                       active ? "bg-muted" : "hover:bg-muted/60"
