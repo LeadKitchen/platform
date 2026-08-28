@@ -90,23 +90,27 @@ export function WorkspaceSwitcher({
   }
 
   const workspaceName = activeWorkspace?.name ?? "Моя команда";
+  const workspaceInitial = workspaceName.trim().charAt(0).toUpperCase() || "К";
 
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger
-          render={<SidebarMenuButton size="lg" tooltip="Выбрать команду" />}
+          render={
+            <SidebarMenuButton
+              size="lg"
+              tooltip="Выбрать команду"
+              className="h-10 border border-sidebar-border/70 bg-card px-2.5 shadow-[0_1px_2px_rgba(0,0,0,0.025)] hover:bg-sidebar-accent"
+            />
+          }
         >
-          <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-accent text-sidebar-accent-foreground">
-            <IconUsersGroup className="size-4" />
+          <div className="bg-brand-soft text-brand flex aspect-square size-6 items-center justify-center rounded-md text-xs font-semibold">
+            {workspaceInitial}
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-semibold">{workspaceName}</span>
-            <span className="truncate text-xs text-muted-foreground">
-              Команда
-            </span>
+            <span className="truncate font-medium">{workspaceName}</span>
           </div>
-          <IconChevronDown className="ml-auto size-4" />
+          <IconChevronDown className="text-muted-foreground ml-auto size-3.5" />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-64" align="start" side="right">
           <DropdownMenuLabel>Ваши команды</DropdownMenuLabel>

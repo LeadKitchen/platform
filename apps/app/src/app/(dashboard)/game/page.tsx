@@ -109,7 +109,7 @@ export default async function GamePage() {
     <>
       <SiteHeader />
       <div className="flex flex-1 flex-col gap-6 p-4 lg:p-6">
-        <Card className="from-accent/60 via-card to-card relative overflow-hidden bg-gradient-to-br">
+        <Card className="bg-sunset-soft relative overflow-hidden">
           <KitchenPatternBackdrop className="text-primary pointer-events-none absolute inset-0 size-full opacity-[0.16]" />
           <CardHeader className="relative">
             <Badge variant="accent" className="w-fit">
@@ -241,7 +241,8 @@ export default async function GamePage() {
                 Назначенная практика
               </Badge>
               <CardTitle className="flex items-center gap-2">
-                <IconTarget /> Закрепите навык: {assignedTraining.criterionTitle}
+                <IconTarget /> Закрепите навык:{" "}
+                {assignedTraining.criterionTitle}
               </CardTitle>
               <CardDescription>
                 Ведущий выделил этот критерий как следующий фокус. Создайте
@@ -271,8 +272,8 @@ export default async function GamePage() {
                 <IconTarget /> Продолжите: {inProgressTraining.criterionTitle}
               </CardTitle>
               <CardDescription>
-                Смена по этому назначению уже идёт. Завершите её, чтобы
-                отметить практику выполненной.
+                Смена по этому назначению уже идёт. Завершите её, чтобы отметить
+                практику выполненной.
               </CardDescription>
             </CardHeader>
             <CardFooter>

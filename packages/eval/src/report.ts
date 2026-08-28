@@ -45,7 +45,9 @@ export function renderMarkdownReport(result: RunResult): string {
 
   if (result.expertLabelledFixtures < result.fixtures) {
     const provisional =
-      result.fixtures - result.expertLabelledFixtures - result.aiAssistedFixtures;
+      result.fixtures -
+      result.expertLabelledFixtures -
+      result.aiAssistedFixtures;
     const aiNote =
       result.aiAssistedFixtures > 0
         ? ` (из них ${result.aiAssistedFixtures} — черновая разметка модели, ещё не проверена методологом)`

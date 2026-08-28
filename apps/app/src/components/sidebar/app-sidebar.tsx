@@ -283,11 +283,11 @@ export function AppSidebar({
               size="lg"
               render={<a href={paths.dashboard.root} />}
             >
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+              <div className="flex aspect-square size-7 items-center justify-center rounded-[9px] bg-sidebar-primary text-sidebar-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.18)]">
                 <IconInnerShadowTop className="size-4" />
               </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">
+              <div className="grid flex-1 text-left leading-tight">
+                <span className="truncate text-[15px] font-semibold tracking-[-0.02em]">
                   {APP_CONFIG.name}
                 </span>
               </div>
@@ -305,7 +305,7 @@ export function AppSidebar({
         <NavMain items={navMain} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="border-t border-sidebar-border/80">
         <NavUser user={user} />
       </SidebarFooter>
       <SidebarRail />

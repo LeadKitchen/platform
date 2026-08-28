@@ -31,11 +31,21 @@
   h3,
   [data-slot="card-title"] {
     font-family: var(--font-display);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
+  }
+  svg.tabler-icon {
+    stroke-width: 1.7;
+  }
+  ::selection {
+    background: color-mix(in oklab, var(--brand) 24%, transparent);
   }
 }
 
 @layer utilities {
+  .bg-sunset-soft {
+    background-image: var(--gradient-sunset-soft);
+  }
+
   @keyframes steam-rise {
     0% {
       transform: translateY(0) scaleX(1);
