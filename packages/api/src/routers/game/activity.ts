@@ -80,6 +80,7 @@ export const progress = protectedProcedure.handler(async ({ context }) => {
         dialogId: GameDialog.id,
         scorePercent: GameEvaluation.scorePercent,
         criteria: GameEvaluation.criteria,
+        expectedStyle: GameEvaluation.expectedStyle,
         actualStyle: GameEvaluation.actualStyle,
         createdAt: GameEvaluation.createdAt,
       })
@@ -127,6 +128,25 @@ export const progress = protectedProcedure.handler(async ({ context }) => {
   const chronological = [...rows].reverse();
   const first = chronological.slice(0, Math.min(3, chronological.length));
   const latest = rows.slice(0, Math.min(3, rows.length));
+  const dayKey = (date: Date) => date.toISOString().slice(0, 10);
+  const dailyActivity = new Map<string, number>();
+  const dailyScores = new Map<string, { count: number; total: number }>();
+  const today = new Date();
+  for (let offset = 27; offset >= 0; offset--) {
+    const date = new Date(today);
+    date.setUTCDate(today.getUTCDate() - offset);
+    dailyActivity.set(dayKey(date), 0);
+  }
+  for (const row of rows) {
+    const key = dayKey(row.createdAt);
+    if (dailyActivity.has(key)) {
+      dailyActivity.set(key, (dailyActivity.get(key) ?? 0) + 1);
+      const scores = dailyScores.get(key) ?? { count: 0, total: 0 };
+      scores.count += 1;
+      scores.total += row.scorePercent;
+      dailyScores.set(key, scores);
+    }
+  }
   const average = (items: typeof rows) =>
     items.length === 0
       ? 0
@@ -148,6 +168,24 @@ export const progress = protectedProcedure.handler(async ({ context }) => {
     averageScore: average(rows),
     recentScore: average(latest),
     improvement: average(latest) - average(first),
+    styleMatchRate:
+      rows.length === 0
+        ? 0
+        : Math.round(
+            (rows.filter((row) => row.actualStyle === row.expectedStyle)
+              .length /
+              rows.length) *
+              100,
+          ),
+    activeDays: [...dailyActivity.values()].filter((count) => count > 0).length,
+    dailyActivity: [...dailyActivity.entries()].map(([date, dialogs]) => ({
+      date,
+      dialogs,
+    })),
+    scoreTrend: [...dailyScores.entries()].map(([date, scores]) => ({
+      date,
+      score: Math.round(scores.total / scores.count),
+    })),
     criteria: [...criteria.entries()]
       .map(([id, item]) => ({
         id,

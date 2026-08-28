@@ -26,6 +26,7 @@ import Link from "next/link";
 import {
   CreateSessionForm,
   KitchenPatternBackdrop,
+  PracticeOverview,
   TicketIllustration,
 } from "~/components/game";
 import { SiteHeader } from "~/components/layout";
@@ -211,6 +212,17 @@ export default async function GamePage() {
             ))}
           </CardContent>
         </Card>
+
+        <PracticeOverview
+          dialogs={playerProgress.dialogs}
+          averageScore={playerProgress.averageScore}
+          improvement={playerProgress.improvement}
+          activeDays={playerProgress.activeDays}
+          styleMatchRate={playerProgress.styleMatchRate}
+          dailyActivity={playerProgress.dailyActivity}
+          scoreTrend={playerProgress.scoreTrend}
+          criteria={playerProgress.criteria}
+        />
 
         {assignment ? (
           <Card>
