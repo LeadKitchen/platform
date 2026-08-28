@@ -135,8 +135,8 @@ export function EvaluationCard({
   const animatedScore = useCountUp(evaluation.scorePercent);
 
   return (
-    <Card className="animate-in fade-in slide-in-from-bottom-2 overflow-hidden duration-500">
-      <CardHeader>
+    <Card className="animate-in fade-in slide-in-from-bottom-2 gap-0 overflow-hidden py-0 duration-500">
+      <CardHeader className="border-b py-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <Badge variant="secondary" className="mb-3">
@@ -155,7 +155,7 @@ export function EvaluationCard({
         <CardDescription>{evaluation.summary}</CardDescription>
       </CardHeader>
 
-      <CardContent className="flex flex-col gap-6">
+      <CardContent className="flex flex-col gap-6 py-5">
         <Progress value={animatedScore} />
 
         <div className="grid gap-4 lg:grid-cols-2">

@@ -22,7 +22,7 @@ import {
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { Suspense } from "react";
-import { DemoTour } from "~/components/game";
+import { DemoTour, GameSectionHeader } from "~/components/game";
 import { SiteHeader } from "~/components/layout";
 
 const STYLE_ROWS = [
@@ -71,30 +71,34 @@ export default function GameDemoPage() {
           { label: "Демо" },
         ]}
       />
-      <div className="flex flex-1 flex-col gap-6 p-4 lg:p-6">
-        <Card className="bg-muted/30">
-          <CardHeader>
-            <Badge variant="secondary" className="w-fit">
-              Демо-тур · 9 сценариев
-            </Badge>
-            <CardTitle className="text-2xl leading-tight sm:text-3xl">
-              Как проходит смена — на примере разных разговоров
-            </CardTitle>
-            <CardDescription className="max-w-2xl text-base">
-              Ниже — набор готовых разговоров руководителя с сотрудниками:
-              правильные примеры по каждому уровню, типичные ошибки для
-              контраста и один сценарий из третьего раунда. В настоящей игре вы
-              пишете реплики сами (или говорите голосом), здесь можно просто
-              посмотреть и сравнить.
-            </CardDescription>
-          </CardHeader>
-        </Card>
+      <main className="flex flex-1 flex-col gap-4 p-4 lg:p-6">
+        <GameSectionHeader
+          eyebrow="Обзор · AI roleplay"
+          title="Примеры управленческих разговоров"
+          description="Выберите готовый сценарий, посмотрите разговор целиком и сравните разбор с другими подходами."
+          action={
+            <Button
+              render={<Link href="/game#start-practice" />}
+              nativeButton={false}
+            >
+              Начать практику
+              <IconArrowRight data-icon="inline-end" />
+            </Button>
+          }
+        />
+
+        <div className="flex flex-wrap items-center gap-2 rounded-xl border p-3">
+          <Badge variant="outline">9 сценариев</Badge>
+          <span className="text-muted-foreground text-sm">
+            Правильные примеры, типичные ошибки и усложнённая смена
+          </span>
+        </div>
 
         <Suspense fallback={<DemoTourFallback />}>
           <DemoTour />
         </Suspense>
 
-        <Card>
+        <Card className="gap-0 overflow-hidden py-0">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <IconSchool />
@@ -106,7 +110,7 @@ export default function GameDemoPage() {
               разных задачах может требовать разного подхода.
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="border-t py-5">
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
@@ -190,7 +194,7 @@ export default function GameDemoPage() {
           </Card>
         </div>
 
-        <Card>
+        <Card className="gap-4">
           <CardHeader>
             <CardTitle>Готовы попробовать сами?</CardTitle>
             <CardDescription>
@@ -212,7 +216,7 @@ export default function GameDemoPage() {
             </Button>
           </CardContent>
         </Card>
-      </div>
+      </main>
     </>
   );
 }

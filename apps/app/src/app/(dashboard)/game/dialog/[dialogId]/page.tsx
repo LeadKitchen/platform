@@ -1,5 +1,9 @@
 import { getSession } from "~/auth/server";
-import { DialogRoom, type EvaluationView } from "~/components/game";
+import {
+  DialogRoom,
+  type EvaluationView,
+  GameSectionHeader,
+} from "~/components/game";
 import { SiteHeader } from "~/components/layout";
 import { api } from "~/orpc/server";
 
@@ -33,26 +37,13 @@ export default async function DialogPage({
 
   return (
     <>
-      <SiteHeader
-        breadcrumbs={[
-          { label: "Деловая игра", href: "/game" },
-          { label: `Раунд ${data.shift.round}` },
-          { label: `Разговор с ${data.employee.name}` },
-        ]}
-      />
-      <div className="flex flex-1 flex-col gap-6 p-4 lg:p-6">
-        <div>
-          <p className="text-muted-foreground text-sm">
-            Тренировка управленческого разговора
-          </p>
-          <h1 className="text-2xl font-semibold">
-            Разговор с {data.employee.name}
-          </h1>
-          <p className="text-muted-foreground text-sm">
-            Сотрудник отвечает в своей роли. Ведите естественный диалог и
-            завершите его, когда договоритесь о задаче.
-          </p>
-        </div>
+      <SiteHeader title="Roleplay" />
+      <main className="flex flex-1 flex-col gap-4 p-4 lg:p-6">
+        <GameSectionHeader
+          eyebrow={`Практика · Раунд ${data.shift.round}`}
+          title={`Разговор с ${data.employee.name}`}
+          description="Сотрудник отвечает в своей роли. Ведите естественный диалог и завершите его, когда договоритесь о результате, сроке и контроле."
+        />
         <DialogRoom
           dialogId={data.dialog.id}
           variantId={data.dialog.variantId}
@@ -72,7 +63,7 @@ export default async function DialogPage({
           userAvatarSeed={session?.user.email}
           uploadedAvatarUrl={session?.user.image ?? undefined}
         />
-      </div>
+      </main>
     </>
   );
 }

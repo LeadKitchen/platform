@@ -1,9 +1,18 @@
 import type { ManagementStyle } from "@acme/game";
 import { STYLE_LABELS } from "@acme/game/styles";
-import { Badge, Separator } from "@acme/ui";
+import {
+  Badge,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Progress,
+} from "@acme/ui";
+import { IconCheck, IconTarget, IconX } from "@tabler/icons-react";
 import { redirect } from "next/navigation";
 import { getSession } from "~/auth/server";
-import { PrintButton } from "~/components/game";
+import { GameSectionHeader, PrintButton } from "~/components/game";
+import { SiteHeader } from "~/components/layout";
 import { api } from "~/orpc/server";
 
 export const dynamic = "force-dynamic";
@@ -62,123 +71,218 @@ export default async function DialogReportPage({
   )
     .filter(([, share]) => share > 0.01)
     .sort((a, b) => b[1] - a[1]);
+  const metCriteria = criteria.filter((criterion) => criterion.met);
 
   return (
-    <div className="flex flex-1 flex-col gap-6 p-4 lg:p-6">
-      <div className="no-print">
-        <PrintButton />
-      </div>
-
-      <div className="print-area mx-auto flex w-full max-w-2xl flex-col gap-6 text-sm text-black print:max-w-none">
-        <header className="flex flex-col gap-1 border-b border-black/20 pb-4">
-          <p className="text-xs uppercase tracking-wide text-black/60">
-            Разбор управленческого разговора
-          </p>
-          <h1 className="text-2xl font-semibold">
-            {session?.user.name ?? "Участник"} — раунд {data.dialog.round}
-          </h1>
-          <p className="text-black/70">
-            Сотрудник: {data.employee.name} ({data.employee.role}) · Задача:{" "}
-            {data.task.title}
-          </p>
-          <p className="text-black/50 text-xs">
-            {dateLabel(evaluation.createdAt)}
-          </p>
-        </header>
-
-        <section className="flex items-baseline justify-between">
-          <span className="text-black/70">Итоговая оценка</span>
-          <span className="text-4xl font-semibold tabular-nums">
-            {evaluation.scorePercent}%
-          </span>
-        </section>
-        <p>{evaluation.summary}</p>
-
-        <Separator />
-
-        <section className="grid grid-cols-2 gap-4">
-          <div>
-            <p className="text-black/60">Ожидаемый стиль</p>
-            <p className="font-medium">
-              {styleLabel(evaluation.expectedStyle)}
-            </p>
-          </div>
-          <div>
-            <p className="text-black/60">Фактический стиль</p>
-            <p className="font-medium">{styleLabel(evaluation.actualStyle)}</p>
-          </div>
-        </section>
-
-        <section className="flex flex-col gap-1.5">
-          <p className="text-black/60">Раскладка по стилям</p>
-          {distribution.map(([style, share]) => (
-            <div key={style} className="flex items-center justify-between">
-              <span>{styleLabel(style)}</span>
-              <span className="tabular-nums">{Math.round(share * 100)}%</span>
+    <>
+      <SiteHeader title="Разбор разговора" />
+      <main className="flex flex-1 flex-col gap-4 p-4 lg:p-6">
+        <GameSectionHeader
+          eyebrow="Результаты · AI roleplay"
+          title={`Разговор с ${data.employee.name}`}
+          description={`${data.employee.role} · ${data.task.title} · ${dateLabel(evaluation.createdAt)}`}
+          action={
+            <div className="no-print">
+              <PrintButton />
             </div>
-          ))}
-        </section>
+          }
+        />
 
-        <Separator />
+        <Card className="gap-0 overflow-hidden py-0">
+          <CardHeader className="border-b py-5">
+            <div>
+              <CardTitle>{data.employee.name}</CardTitle>
+              <p className="text-muted-foreground mt-1 text-sm">
+                Разговор провёл {session?.user.name ?? "Участник"}
+              </p>
+            </div>
+            <Badge variant="outline">Раунд {data.dialog.round}</Badge>
+          </CardHeader>
+          <CardContent className="grid p-0 sm:grid-cols-2 xl:grid-cols-4">
+            <Metric
+              label="Общая оценка"
+              value={`${evaluation.scorePercent}%`}
+            />
+            <Metric
+              label="Результат"
+              value={OUTCOME_LABELS[outcome.status] ?? outcome.status}
+            />
+            <Metric
+              label="Критерии"
+              value={`${metCriteria.length} из ${criteria.length}`}
+            />
+            <Metric
+              label="Мотивация"
+              value={`${outcome.motivationDelta > 0 ? "+" : ""}${outcome.motivationDelta}`}
+            />
+          </CardContent>
+        </Card>
 
-        <section className="flex flex-col gap-1.5">
-          <p className="text-black/60">Чек-лист разговора</p>
-          <ul className="flex flex-col gap-1">
-            {criteria.map((criterion) => (
-              <li
-                key={criterion.id}
-                className="flex items-start justify-between gap-3"
-              >
-                <span>
-                  {criterion.title}
-                  {criterion.comment ? (
-                    <span className="text-black/60">
-                      {" "}
-                      — {criterion.comment}
-                    </span>
-                  ) : null}
-                </span>
-                <Badge
-                  variant={criterion.met ? "success" : "outline"}
-                  className="shrink-0"
-                >
-                  {criterion.met ? "выполнено" : "пропущено"}
-                </Badge>
-              </li>
-            ))}
-          </ul>
-        </section>
+        <nav className="no-print flex gap-7 overflow-x-auto border-b px-1 text-sm">
+          <a
+            href="#summary"
+            className="border-foreground border-b-2 pb-3 font-medium"
+          >
+            Сводка
+          </a>
+          <a href="#criteria" className="text-muted-foreground pb-3">
+            Критерии
+          </a>
+          <a href="#styles" className="text-muted-foreground pb-3">
+            Стили
+          </a>
+          <a href="#outcome" className="text-muted-foreground pb-3">
+            Результат
+          </a>
+        </nav>
 
-        <Separator />
+        <div className="print-area grid items-start gap-4 text-sm xl:grid-cols-[minmax(0,1fr)_360px] print:block">
+          <div className="flex flex-col gap-4">
+            <Card id="summary" className="scroll-mt-20">
+              <CardHeader>
+                <CardTitle>Сводка разговора</CardTitle>
+              </CardHeader>
+              <CardContent className="leading-6">
+                {evaluation.summary}
+              </CardContent>
+            </Card>
 
-        <section className="flex flex-col gap-1.5">
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="outline">
-              {OUTCOME_LABELS[outcome.status] ?? outcome.status}
-            </Badge>
-            <Badge variant="outline">
-              {outcome.onTime ? "в срок" : "с опозданием"}
-            </Badge>
-            <Badge variant="outline">
-              мотивация {outcome.motivationDelta > 0 ? "+" : ""}
-              {outcome.motivationDelta}
-            </Badge>
+            <Card id="criteria" className="scroll-mt-20">
+              <CardHeader>
+                <CardTitle>Чек-лист разговора</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="flex flex-col">
+                  {criteria.map((criterion) => (
+                    <li
+                      key={criterion.id}
+                      className="flex items-start gap-3 border-b py-3 first:pt-0 last:border-b-0 last:pb-0"
+                    >
+                      <span
+                        className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full border ${criterion.met ? "border-primary text-primary" : "text-muted-foreground"}`}
+                      >
+                        {criterion.met ? (
+                          <IconCheck aria-hidden="true" className="size-3" />
+                        ) : (
+                          <IconX aria-hidden="true" className="size-3" />
+                        )}
+                        <span className="sr-only">
+                          {criterion.met ? "Выполнено" : "Не выполнено"}
+                        </span>
+                      </span>
+                      <span>
+                        <span className="font-medium">{criterion.title}</span>
+                        {criterion.comment ? (
+                          <span className="text-muted-foreground mt-1 block">
+                            {criterion.comment}
+                          </span>
+                        ) : null}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
           </div>
-          <p>{outcome.summary}</p>
-        </section>
 
-        <div className="text-black/60 grid grid-cols-4 gap-2 text-xs">
-          <span>Стиль: {breakdown.style} / 45</span>
-          <span>Действия: {breakdown.actions} / 35</span>
-          <span>Результат: {breakdown.outcome} / 20</span>
-          <span>Штрафы: {breakdown.penalties}</span>
+          <aside className="flex flex-col gap-4">
+            <Card id="styles" className="scroll-mt-20">
+              <CardHeader>
+                <CardTitle>Стиль руководства</CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-5">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-muted-foreground text-xs">Ожидался</p>
+                    <p className="mt-1 font-medium">
+                      {styleLabel(evaluation.expectedStyle)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-muted-foreground text-xs">Проявился</p>
+                    <p className="mt-1 font-medium">
+                      {styleLabel(evaluation.actualStyle)}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-3">
+                  {distribution.map(([style, share]) => (
+                    <div key={style}>
+                      <div className="mb-1.5 flex justify-between gap-3 text-xs">
+                        <span>{styleLabel(style)}</span>
+                        <span className="tabular-nums">
+                          {Math.round(share * 100)}%
+                        </span>
+                      </div>
+                      <Progress value={share * 100} className="h-1.5" />
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card id="outcome" className="scroll-mt-20">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <IconTarget className="size-4" /> Итог ситуации
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-3">
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="outline">
+                    {OUTCOME_LABELS[outcome.status] ?? outcome.status}
+                  </Badge>
+                  <Badge variant="outline">
+                    {outcome.onTime ? "в срок" : "с опозданием"}
+                  </Badge>
+                </div>
+                <p className="leading-6">{outcome.summary}</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Структура оценки</CardTitle>
+              </CardHeader>
+              <CardContent className="grid grid-cols-2 gap-3 text-xs">
+                <ScorePart label="Стиль" value={`${breakdown.style} / 45`} />
+                <ScorePart
+                  label="Действия"
+                  value={`${breakdown.actions} / 35`}
+                />
+                <ScorePart
+                  label="Результат"
+                  value={`${breakdown.outcome} / 20`}
+                />
+                <ScorePart label="Штрафы" value={String(breakdown.penalties)} />
+              </CardContent>
+            </Card>
+          </aside>
         </div>
 
-        <footer className="text-black/40 border-t border-black/20 pt-3 text-xs">
+        <footer className="text-muted-foreground border-t pt-3 text-xs">
           Сформировано в тренажёре «Ситуационное руководство» ·{" "}
           {dateLabel(new Date())}
         </footer>
-      </div>
+      </main>
+    </>
+  );
+}
+
+function Metric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="border-b p-5 last:border-b-0 sm:border-r sm:[&:nth-child(2n)]:border-r-0 xl:border-b-0 xl:[&:nth-child(2n)]:border-r xl:last:border-r-0">
+      <p className="text-muted-foreground text-xs">{label}</p>
+      <p className="mt-2 text-lg font-semibold tabular-nums">{value}</p>
+    </div>
+  );
+}
+
+function ScorePart({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-lg border p-3">
+      <p className="text-muted-foreground">{label}</p>
+      <p className="mt-1 font-semibold tabular-nums">{value}</p>
     </div>
   );
 }

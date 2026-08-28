@@ -111,7 +111,9 @@ export function DemoTour() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: должен переисполняться при каждой новой реплике.
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    if (visibleCount > 0) {
+      endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
   }, [visibleCount]);
 
   const setScenarioId = useCallback(
@@ -151,8 +153,8 @@ export function DemoTour() {
         onScenarioChange={setScenarioId}
       />
 
-      <Card className="overflow-hidden">
-        <CardHeader>
+      <Card className="gap-0 overflow-hidden py-0">
+        <CardHeader className="border-b py-5">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="flex items-center gap-3">
               <Avatar className="size-12">
@@ -185,7 +187,7 @@ export function DemoTour() {
           <p className="text-muted-foreground text-sm">{scenario.headline}</p>
         </CardHeader>
 
-        <CardContent className="flex flex-col gap-4">
+        <CardContent className="flex flex-col gap-4 py-5">
           <p className="bg-muted/40 rounded-lg p-3 text-sm">{scenario.intro}</p>
 
           <Progress value={(visibleCount / script.length) * 100} />
@@ -356,7 +358,7 @@ function ScenarioPicker({
   )?.description;
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 rounded-xl border p-4">
       <Tabs value={activeGroup} onValueChange={onGroupChange}>
         <TabsList className="w-full sm:w-fit">
           {DEMO_SCENARIO_GROUPS.map((group) => (

@@ -7,6 +7,7 @@ import {
   Badge,
   Button,
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
@@ -19,7 +20,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@acme/ui";
-import { IconCheck, IconRefresh, IconSchool } from "@tabler/icons-react";
+import {
+  IconArrowRight,
+  IconCheck,
+  IconRefresh,
+  IconSchool,
+  IconUser,
+} from "@tabler/icons-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { client } from "~/orpc/react";
 
@@ -121,184 +128,219 @@ export function RoundOneTraining() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <Card className="overflow-hidden">
-        <CardHeader>
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <CardTitle className="flex items-center gap-2">
-                <IconSchool />
-                Разминка: выберите подход руководителя
-              </CardTitle>
-              <CardDescription>
-                По одной ситуации за раз. Сначала оцените готовность, затем
-                выберите стиль руководства.
-              </CardDescription>
+    <Card className="gap-0 overflow-hidden py-0">
+      <CardHeader className="border-b py-5">
+        <div>
+          <CardTitle className="flex items-center gap-2">
+            <IconSchool className="size-4" />
+            Разминка по стилям руководства
+          </CardTitle>
+          <CardDescription className="mt-1">
+            Последовательно пройдите четыре ситуации учебного пути.
+          </CardDescription>
+        </div>
+        <CardAction className="flex items-center gap-3 sm:justify-end">
+          <span className="text-muted-foreground text-xs tabular-nums">
+            {Object.keys(results).length} из {CASES.length} пройдено
+          </span>
+          <Badge variant="outline">{score} верно</Badge>
+        </CardAction>
+      </CardHeader>
+      <Progress
+        value={(Object.keys(results).length / CASES.length) * 100}
+        className="h-1 rounded-none border-0"
+      />
+
+      <CardContent className="p-0">
+        <div className="grid lg:grid-cols-[260px_minmax(0,1fr)]">
+          <aside className="border-b p-3 lg:min-h-[560px] lg:border-b-0 lg:border-r">
+            <p className="text-muted-foreground px-3 pb-2 text-xs font-medium uppercase tracking-wide">
+              Этапы пути
+            </p>
+            <div className="flex gap-2 overflow-x-auto lg:flex-col lg:overflow-visible">
+              {CASES.map((caseItem, index) => {
+                const result = results[caseItem.id];
+                const active = index === currentIndex;
+                return (
+                  <button
+                    key={caseItem.id}
+                    type="button"
+                    aria-current={active ? "step" : undefined}
+                    onClick={() => setCurrentIndex(index)}
+                    className={`flex min-w-52 items-center gap-3 rounded-lg px-3 py-3 text-left transition-colors lg:min-w-0 ${
+                      active ? "bg-muted" : "hover:bg-muted/60"
+                    }`}
+                  >
+                    <span
+                      className={`flex size-7 shrink-0 items-center justify-center rounded-full border text-xs ${
+                        result === true
+                          ? "border-primary bg-primary text-primary-foreground"
+                          : result === false
+                            ? "border-destructive text-destructive"
+                            : "text-muted-foreground"
+                      }`}
+                    >
+                      {result === true ? (
+                        <IconCheck className="size-4" />
+                      ) : (
+                        index + 1
+                      )}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block truncate text-sm font-medium">
+                        {caseItem.name}
+                      </span>
+                      <span className="text-muted-foreground block truncate text-xs">
+                        {caseItem.role}
+                      </span>
+                    </span>
+                  </button>
+                );
+              })}
             </div>
-            <Badge variant="secondary">
-              {currentIndex + 1} из {CASES.length}
-            </Badge>
-          </div>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-6">
-          <Progress
-            value={((currentIndex + (checked ? 1 : 0)) / CASES.length) * 100}
-          />
-
-          <Card className="bg-muted/30">
-            <CardHeader>
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <CardTitle>{item.name}</CardTitle>
-                  <CardDescription>{item.role}</CardDescription>
-                </div>
-                {checked ? (
-                  <Badge variant={results[item.id] ? "default" : "destructive"}>
-                    {results[item.id] ? "Верно" : "Есть что улучшить"}
-                  </Badge>
-                ) : null}
-              </div>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-5">
-              <p className="max-w-3xl text-base leading-relaxed">
-                {item.description}
-              </p>
-
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="flex flex-col gap-2">
-                  <p className="text-sm font-medium">1. Уровень готовности</p>
-                  <Select
-                    value={answers[`${item.id}:level`] ?? ""}
-                    onValueChange={(value) => {
-                      setAnswers({
-                        ...answers,
-                        [`${item.id}:level`]: value ?? "",
-                      });
-                      setResults((current) => {
-                        const next = { ...current };
-                        delete next[item.id];
-                        return next;
-                      });
-                    }}
-                  >
-                    <SelectTrigger
-                      aria-label={`Уровень сотрудника ${item.name}`}
-                    >
-                      <SelectValue placeholder="Выберите уровень" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        {LEVELS.map((level) => (
-                          <SelectItem key={level.id} value={level.id}>
-                            {level.label}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <p className="text-sm font-medium">2. Стиль руководства</p>
-                  <Select
-                    value={answers[`${item.id}:style`] ?? ""}
-                    onValueChange={(value) => {
-                      setAnswers({
-                        ...answers,
-                        [`${item.id}:style`]: value ?? "",
-                      });
-                      setResults((current) => {
-                        const next = { ...current };
-                        delete next[item.id];
-                        return next;
-                      });
-                    }}
-                  >
-                    <SelectTrigger
-                      aria-label={`Стиль руководства для ${item.name}`}
-                    >
-                      <SelectValue placeholder="Выберите стиль" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        {STYLES.map((style) => (
-                          <SelectItem key={style.id} value={style.id}>
-                            {style.label}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              {checked ? (
-                <Alert>
-                  <IconCheck />
-                  <AlertTitle>
-                    Правильная связка: {item.answer} · {item.style}
-                  </AlertTitle>
-                  <AlertDescription>
-                    {results[item.id]
-                      ? "Отлично: оценка готовности и выбранный стиль совпали."
-                      : "Сравните связку со своим ответом. В практике важно оценивать готовность именно к конкретной задаче."}
-                  </AlertDescription>
-                </Alert>
-              ) : null}
-            </CardContent>
-          </Card>
-
-          <div className="flex flex-wrap items-center gap-3">
-            {!checked ? (
-              <Button
-                disabled={!currentComplete}
-                onClick={() =>
-                  setResults({
-                    ...results,
-                    [item.id]:
-                      answers[`${item.id}:level`] === item.answer &&
-                      answers[`${item.id}:style`] === item.styleId,
-                  })
-                }
-              >
-                <IconCheck data-icon="inline-start" />
-                Проверить
-              </Button>
-            ) : currentIndex < CASES.length - 1 ? (
-              <Button onClick={() => setCurrentIndex(currentIndex + 1)}>
-                Следующая ситуация
-              </Button>
-            ) : null}
-
-            {currentIndex > 0 ? (
-              <Button
-                variant="outline"
-                onClick={() => setCurrentIndex(currentIndex - 1)}
-              >
-                Назад
-              </Button>
-            ) : null}
-
-            <Button variant="ghost" onClick={reset}>
+            <Button variant="ghost" size="sm" className="mt-3" onClick={reset}>
               <IconRefresh data-icon="inline-start" />
               Начать заново
             </Button>
-          </div>
+          </aside>
 
-          {finished ? (
-            <Alert>
-              <IconSchool />
-              <AlertTitle>
-                Разминка завершена: {score} из {CASES.length}
-              </AlertTitle>
-              <AlertDescription>
-                Теперь переходите к практике: там готовность зависит от
-                сочетания сотрудника и конкретного заказа.
-              </AlertDescription>
-            </Alert>
-          ) : null}
-        </CardContent>
-      </Card>
-    </div>
+          <div className="flex flex-col gap-6 p-5 sm:p-6">
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <span className="bg-muted flex size-11 items-center justify-center rounded-lg">
+                  <IconUser className="size-5" />
+                </span>
+                <div>
+                  <h2 className="text-lg font-semibold">{item.name}</h2>
+                  <p className="text-muted-foreground text-sm">{item.role}</p>
+                </div>
+              </div>
+              <Badge variant="outline">
+                Ситуация {currentIndex + 1} из {CASES.length}
+              </Badge>
+            </div>
+
+            <p className="max-w-3xl text-base leading-7">{item.description}</p>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="flex flex-col gap-2">
+                <p className="text-sm font-medium">1. Уровень готовности</p>
+                <Select
+                  value={answers[`${item.id}:level`] ?? ""}
+                  onValueChange={(value) => {
+                    setAnswers({
+                      ...answers,
+                      [`${item.id}:level`]: value ?? "",
+                    });
+                    setResults((current) => {
+                      const next = { ...current };
+                      delete next[item.id];
+                      return next;
+                    });
+                  }}
+                >
+                  <SelectTrigger aria-label={`Уровень сотрудника ${item.name}`}>
+                    <SelectValue placeholder="Выберите уровень" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {LEVELS.map((level) => (
+                        <SelectItem key={level.id} value={level.id}>
+                          {level.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <p className="text-sm font-medium">2. Стиль руководства</p>
+                <Select
+                  value={answers[`${item.id}:style`] ?? ""}
+                  onValueChange={(value) => {
+                    setAnswers({
+                      ...answers,
+                      [`${item.id}:style`]: value ?? "",
+                    });
+                    setResults((current) => {
+                      const next = { ...current };
+                      delete next[item.id];
+                      return next;
+                    });
+                  }}
+                >
+                  <SelectTrigger
+                    aria-label={`Стиль руководства для ${item.name}`}
+                  >
+                    <SelectValue placeholder="Выберите стиль" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {STYLES.map((style) => (
+                        <SelectItem key={style.id} value={style.id}>
+                          {style.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {checked ? (
+              <Alert>
+                <IconCheck />
+                <AlertTitle>
+                  Правильная связка: {item.answer} · {item.style}
+                </AlertTitle>
+                <AlertDescription>
+                  {results[item.id]
+                    ? "Оценка готовности и выбранный стиль совпали."
+                    : "Сравните связку со своим ответом: готовность оценивается именно к конкретной задаче."}
+                </AlertDescription>
+              </Alert>
+            ) : null}
+
+            <div className="mt-auto flex flex-wrap items-center gap-2 border-t pt-5">
+              {currentIndex > 0 ? (
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentIndex(currentIndex - 1)}
+                >
+                  Назад
+                </Button>
+              ) : null}
+              {!checked ? (
+                <Button
+                  disabled={!currentComplete}
+                  onClick={() =>
+                    setResults({
+                      ...results,
+                      [item.id]:
+                        answers[`${item.id}:level`] === item.answer &&
+                        answers[`${item.id}:style`] === item.styleId,
+                    })
+                  }
+                >
+                  Проверить ответ
+                  <IconArrowRight data-icon="inline-end" />
+                </Button>
+              ) : currentIndex < CASES.length - 1 ? (
+                <Button onClick={() => setCurrentIndex(currentIndex + 1)}>
+                  Следующая ситуация
+                  <IconArrowRight data-icon="inline-end" />
+                </Button>
+              ) : null}
+              {finished ? (
+                <Badge variant="secondary" className="ml-auto">
+                  Путь завершён: {score} из {CASES.length}
+                </Badge>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

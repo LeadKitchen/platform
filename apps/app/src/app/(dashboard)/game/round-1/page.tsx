@@ -1,4 +1,4 @@
-import { RoundOneTraining } from "~/components/game";
+import { GameSectionHeader, RoundOneTraining } from "~/components/game";
 import { SiteHeader } from "~/components/layout";
 
 export default function RoundOnePage() {
@@ -10,9 +10,14 @@ export default function RoundOnePage() {
           { label: "Раунд 1" },
         ]}
       />
-      <div className="flex flex-1 flex-col gap-6 p-4 lg:p-6">
+      <main className="flex flex-1 flex-col gap-4 p-4 lg:p-6">
+        <GameSectionHeader
+          eyebrow="Обучение"
+          title="Путь ситуационного руководства"
+          description="Пройдите четыре коротких шага и научитесь выбирать подход под готовность сотрудника к конкретной задаче."
+        />
         <RoundOneTraining />
-      </div>
+      </main>
     </>
   );
 }

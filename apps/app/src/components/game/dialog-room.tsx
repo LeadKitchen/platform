@@ -118,12 +118,12 @@ export function DialogRoom(props: DialogRoomProps) {
 
   function stepClass(step: number) {
     if (step === conversationStep) {
-      return "bg-primary text-primary-foreground flex items-center gap-3 rounded-lg p-3";
+      return "bg-muted flex items-center gap-3 rounded-lg border border-foreground/20 p-3";
     }
     if (step < conversationStep) {
-      return "bg-primary/5 flex items-center gap-3 rounded-lg border border-primary/20 p-3";
+      return "flex items-center gap-3 rounded-lg p-3";
     }
-    return "bg-muted flex items-center gap-3 rounded-lg border p-3";
+    return "text-muted-foreground flex items-center gap-3 rounded-lg p-3";
   }
 
   const speech = useSpeechRecognition({
@@ -321,311 +321,339 @@ export function DialogRoom(props: DialogRoomProps) {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center gap-3">
-        <Progress
-          aria-label="Прогресс разговора"
-          value={conversationProgress}
-          className="flex-1"
-        />
-        <span className="text-muted-foreground min-w-10 text-right text-sm">
-          {conversationProgress}%
-        </span>
-      </div>
-      <div className="grid gap-2 sm:grid-cols-3">
-        <div className={stepClass(1)}>
-          <Badge variant={conversationStep === 1 ? "secondary" : "outline"}>
-            {conversationStep > 1 ? <IconCheck /> : "1"}
-          </Badge>
-          <span className="text-sm font-medium">Поставьте задачу</span>
-        </div>
-        <div className={stepClass(2)}>
-          <Badge variant={conversationStep === 2 ? "secondary" : "outline"}>
-            {conversationStep > 2 ? <IconCheck /> : "2"}
-          </Badge>
-          <span className="text-sm font-medium">Проверьте понимание</span>
-        </div>
-        <div className={stepClass(3)}>
-          <Badge variant={conversationStep === 3 ? "secondary" : "outline"}>
-            3
-          </Badge>
-          <span className="text-sm font-medium">
-            Завершите и получите разбор
-          </span>
-        </div>
-      </div>
-
-      <Card className="overflow-hidden">
-        <CardHeader>
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                {pending ? <SteamWisps /> : null}
-                <Avatar className="size-12">
-                  <AvatarImage src={employeeAvatar} alt={props.employee.name} />
-                  <AvatarFallback>
-                    {props.employee.name.slice(0, 1).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-              </div>
-              <div>
-                <CardTitle>{props.employee.name}</CardTitle>
-                <CardDescription>{props.employee.role}</CardDescription>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Badge>
-                <span className="relative mr-1 flex size-2">
-                  <span className="bg-primary-foreground absolute inline-flex size-full animate-ping rounded-full opacity-75" />
-                  <span className="bg-primary-foreground relative inline-flex size-2 rounded-full" />
-                </span>
-                В роли · ИИ
-              </Badge>
-              <Badge variant="outline">Раунд {props.shift.round}</Badge>
-              {props.shift.soloOnShift ? (
-                <Badge variant="accent">Один в смене</Badge>
-              ) : null}
-              <Badge variant="outline">
-                Заказов в работе: {props.shift.activeOrders}
-              </Badge>
-            </div>
-          </div>
-          <CardDescription>
-            Ситуация: {props.task.title}. Обратитесь к сотруднику по имени,
-            поставьте задачу и продолжайте разговор, реагируя на его ответы.
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent className="flex flex-col gap-4">
-          <Collapsible>
-            <Alert>
-              <IconBulb />
-              <AlertTitle>Цель разговора</AlertTitle>
-              <AlertDescription>
-                Договоритесь о результате, сроке и способе контроля.
-                <CollapsibleTrigger
-                  render={<Button variant="ghost" size="sm" />}
-                >
-                  Подсказка
-                  <IconChevronDown data-icon="inline-end" />
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  Для новой или сложной задачи сотруднику могут понадобиться
-                  пошаговая инструкция, контрольные точки и проверка понимания.
-                </CollapsibleContent>
-              </AlertDescription>
-            </Alert>
-          </Collapsible>
-
-          <ScrollArea className="h-[420px] rounded-lg border p-4">
-            <div className="flex flex-col gap-4">
-              {turns.length === 0 ? (
-                <Empty className="border-0 py-16">
-                  <EmptyHeader>
-                    <EmptyMedia>
-                      <ChefHatIllustration className="text-muted-foreground size-16" />
-                    </EmptyMedia>
-                    <EmptyTitle>
-                      {props.employee.name} ждёт вашего обращения
-                    </EmptyTitle>
-                    <EmptyDescription>
-                      Нажмите «Говорить» или напишите первую реплику. Начните с
-                      имени сотрудника, чтобы включить его в разговор.
-                    </EmptyDescription>
-                  </EmptyHeader>
-                </Empty>
-              ) : null}
-
-              {turns.map((turn, index) => (
-                <div
-                  // biome-ignore lint/suspicious/noArrayIndexKey: Реплики неизменяемы и только добавляются в конец.
-                  key={`${index}-${turn.role}`}
-                  className={
-                    turn.role === "manager"
-                      ? "bg-primary/10 ml-auto max-w-[92%] rounded-lg px-3 py-2 sm:max-w-[80%]"
-                      : "bg-muted mr-auto max-w-[92%] rounded-lg px-3 py-2 sm:max-w-[80%]"
-                  }
-                >
-                  <div className="mb-1 flex items-center gap-2">
-                    <Avatar className="size-6">
-                      <AvatarImage
-                        src={
-                          turn.role === "manager"
-                            ? managerAvatar
-                            : employeeAvatar
-                        }
-                        alt={
-                          turn.role === "manager" ? "Вы" : props.employee.name
-                        }
-                      />
-                      <AvatarFallback>
-                        {turn.role === "manager"
-                          ? "ВЫ"
-                          : props.employee.name.slice(0, 1).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <p className="text-muted-foreground text-xs">
-                      {turn.role === "manager" ? "Вы" : props.employee.name}
-                    </p>
-                  </div>
-                  <p className="text-sm whitespace-pre-wrap">{turn.text}</p>
+    <div className="flex flex-col gap-4">
+      <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_300px]">
+        <Card className="gap-0 overflow-hidden py-0">
+          <CardHeader className="border-b py-5">
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  {pending ? <SteamWisps /> : null}
+                  <Avatar className="size-12">
+                    <AvatarImage
+                      src={employeeAvatar}
+                      alt={props.employee.name}
+                    />
+                    <AvatarFallback>
+                      {props.employee.name.slice(0, 1).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
                 </div>
-              ))}
-
-              {speech.interim ? (
-                <p className="text-muted-foreground ml-auto text-sm italic">
-                  {speech.interim}…
-                </p>
-              ) : null}
-              {pending ? (
-                <div
-                  aria-live="polite"
-                  className="bg-muted mr-auto flex items-center gap-2 rounded-lg px-3 py-2 text-sm"
-                >
-                  <IconLoader2 className="animate-spin" />
-                  {props.employee.name} отвечает…
+                <div>
+                  <CardTitle>{props.employee.name}</CardTitle>
+                  <CardDescription>{props.employee.role}</CardDescription>
                 </div>
-              ) : null}
-              <div ref={endRef} />
-            </div>
-          </ScrollArea>
-
-          {notice ? (
-            <Alert aria-live="polite">
-              <IconAlertTriangle />
-              <AlertTitle>Обратите внимание</AlertTitle>
-              <AlertDescription>{notice}</AlertDescription>
-            </Alert>
-          ) : null}
-          {error ? (
-            <Alert aria-live="assertive" variant="destructive">
-              <IconAlertTriangle />
-              <AlertTitle>Не удалось продолжить разговор</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
-              {failedDraft ? (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => void send(failedDraft)}
-                >
-                  <IconRefresh data-icon="inline-start" />
-                  Повторить отправку
-                </Button>
-              ) : null}
-            </Alert>
-          ) : null}
-          {speech.error ? (
-            <Alert variant="destructive">
-              <IconAlertTriangle />
-              <AlertTitle>Голосовой ввод недоступен</AlertTitle>
-              <AlertDescription>{speech.error}</AlertDescription>
-            </Alert>
-          ) : null}
-
-          {finished ? (
-            <Alert>
-              <IconCheck />
-              <AlertTitle>Разговор завершён</AlertTitle>
-              <AlertDescription>
-                Ниже — ваш персональный разбор. Он также доступен ведущему игры.
-              </AlertDescription>
-            </Alert>
-          ) : (
-            <div className="flex flex-col gap-2">
+              </div>
               <div className="flex flex-wrap gap-2">
-                {CONVERSATION_STARTERS.map((starter) => (
-                  <Button
-                    key={starter}
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => insertStarter(starter)}
-                  >
-                    {starter}
-                  </Button>
-                ))}
+                <Badge>
+                  <span className="relative mr-1 flex size-2">
+                    <span className="bg-primary-foreground absolute inline-flex size-full animate-ping rounded-full opacity-75" />
+                    <span className="bg-primary-foreground relative inline-flex size-2 rounded-full" />
+                  </span>
+                  В роли · ИИ
+                </Badge>
+                <Badge variant="outline">Раунд {props.shift.round}</Badge>
+                {props.shift.soloOnShift ? (
+                  <Badge variant="accent">Один в смене</Badge>
+                ) : null}
+                <Badge variant="outline">
+                  Заказов в работе: {props.shift.activeOrders}
+                </Badge>
               </div>
-              <Textarea
-                aria-label="Сообщение сотруднику"
-                value={draft}
-                onChange={(event) => setDraft(event.target.value)}
-                placeholder="Что вы говорите сотруднику?"
-                rows={3}
-                disabled={pending}
-                onKeyDown={(event) => {
-                  if (
-                    (event.ctrlKey || event.metaKey) &&
-                    event.key === "Enter"
-                  ) {
-                    event.preventDefault();
-                    void send();
-                  }
-                }}
-              />
-              <p className="text-muted-foreground text-xs">
-                Черновик сохраняется автоматически в этом браузере.
-              </p>
-              <div className="flex flex-wrap items-center gap-2">
-                <Button
-                  onClick={() => void send()}
-                  disabled={pending || draft.trim() === ""}
-                >
-                  <IconSend data-icon="inline-start" />
-                  Отправить
-                </Button>
+            </div>
+            <CardDescription>
+              Ситуация: {props.task.title}. Обратитесь к сотруднику по имени,
+              поставьте задачу и продолжайте разговор, реагируя на его ответы.
+            </CardDescription>
+          </CardHeader>
 
-                {pending && requestController.current ? (
-                  <Button type="button" variant="outline" onClick={cancelSend}>
-                    <IconPlayerPause data-icon="inline-start" />
-                    Остановить ответ
-                  </Button>
+          <CardContent className="flex flex-col gap-4 py-5">
+            <Collapsible>
+              <Alert>
+                <IconBulb />
+                <AlertTitle>Цель разговора</AlertTitle>
+                <AlertDescription>
+                  Договоритесь о результате, сроке и способе контроля.
+                  <CollapsibleTrigger
+                    render={<Button variant="ghost" size="sm" />}
+                  >
+                    Подсказка
+                    <IconChevronDown data-icon="inline-end" />
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    Для новой или сложной задачи сотруднику могут понадобиться
+                    пошаговая инструкция, контрольные точки и проверка
+                    понимания.
+                  </CollapsibleContent>
+                </AlertDescription>
+              </Alert>
+            </Collapsible>
+
+            <ScrollArea className="bg-muted/20 h-[460px] rounded-lg border p-4">
+              <div className="flex flex-col gap-4">
+                {turns.length === 0 ? (
+                  <Empty className="border-0 py-16">
+                    <EmptyHeader>
+                      <EmptyMedia>
+                        <ChefHatIllustration className="text-muted-foreground size-16" />
+                      </EmptyMedia>
+                      <EmptyTitle>
+                        {props.employee.name} ждёт вашего обращения
+                      </EmptyTitle>
+                      <EmptyDescription>
+                        Нажмите «Говорить» или напишите первую реплику. Начните
+                        с имени сотрудника, чтобы включить его в разговор.
+                      </EmptyDescription>
+                    </EmptyHeader>
+                  </Empty>
                 ) : null}
 
-                {speech.supported ? (
+                {turns.map((turn, index) => (
+                  <div
+                    // biome-ignore lint/suspicious/noArrayIndexKey: Реплики неизменяемы и только добавляются в конец.
+                    key={`${index}-${turn.role}`}
+                    className={
+                      turn.role === "manager"
+                        ? "bg-primary/10 ml-auto max-w-[92%] rounded-lg px-3 py-2 sm:max-w-[80%]"
+                        : "bg-muted mr-auto max-w-[92%] rounded-lg px-3 py-2 sm:max-w-[80%]"
+                    }
+                  >
+                    <div className="mb-1 flex items-center gap-2">
+                      <Avatar className="size-6">
+                        <AvatarImage
+                          src={
+                            turn.role === "manager"
+                              ? managerAvatar
+                              : employeeAvatar
+                          }
+                          alt={
+                            turn.role === "manager" ? "Вы" : props.employee.name
+                          }
+                        />
+                        <AvatarFallback>
+                          {turn.role === "manager"
+                            ? "ВЫ"
+                            : props.employee.name.slice(0, 1).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <p className="text-muted-foreground text-xs">
+                        {turn.role === "manager" ? "Вы" : props.employee.name}
+                      </p>
+                    </div>
+                    <p className="text-sm whitespace-pre-wrap">{turn.text}</p>
+                  </div>
+                ))}
+
+                {speech.interim ? (
+                  <p className="text-muted-foreground ml-auto text-sm italic">
+                    {speech.interim}…
+                  </p>
+                ) : null}
+                {pending ? (
+                  <div
+                    aria-live="polite"
+                    className="bg-muted mr-auto flex items-center gap-2 rounded-lg px-3 py-2 text-sm"
+                  >
+                    <IconLoader2 className="animate-spin" />
+                    {props.employee.name} отвечает…
+                  </div>
+                ) : null}
+                <div ref={endRef} />
+              </div>
+            </ScrollArea>
+
+            {notice ? (
+              <Alert aria-live="polite">
+                <IconAlertTriangle />
+                <AlertTitle>Обратите внимание</AlertTitle>
+                <AlertDescription>{notice}</AlertDescription>
+              </Alert>
+            ) : null}
+            {error ? (
+              <Alert aria-live="assertive" variant="destructive">
+                <IconAlertTriangle />
+                <AlertTitle>Не удалось продолжить разговор</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+                {failedDraft ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => void send(failedDraft)}
+                  >
+                    <IconRefresh data-icon="inline-start" />
+                    Повторить отправку
+                  </Button>
+                ) : null}
+              </Alert>
+            ) : null}
+            {speech.error ? (
+              <Alert variant="destructive">
+                <IconAlertTriangle />
+                <AlertTitle>Голосовой ввод недоступен</AlertTitle>
+                <AlertDescription>{speech.error}</AlertDescription>
+              </Alert>
+            ) : null}
+
+            {finished ? (
+              <Alert>
+                <IconCheck />
+                <AlertTitle>Разговор завершён</AlertTitle>
+                <AlertDescription>
+                  Ниже — ваш персональный разбор. Он также доступен ведущему
+                  игры.
+                </AlertDescription>
+              </Alert>
+            ) : (
+              <div className="flex flex-col gap-2">
+                <div className="flex flex-wrap gap-2">
+                  {CONVERSATION_STARTERS.map((starter) => (
+                    <Button
+                      key={starter}
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => insertStarter(starter)}
+                    >
+                      {starter}
+                    </Button>
+                  ))}
+                </div>
+                <Textarea
+                  aria-label="Сообщение сотруднику"
+                  value={draft}
+                  onChange={(event) => setDraft(event.target.value)}
+                  placeholder="Что вы говорите сотруднику?"
+                  rows={3}
+                  disabled={pending}
+                  onKeyDown={(event) => {
+                    if (
+                      (event.ctrlKey || event.metaKey) &&
+                      event.key === "Enter"
+                    ) {
+                      event.preventDefault();
+                      void send();
+                    }
+                  }}
+                />
+                <p className="text-muted-foreground text-xs">
+                  Черновик сохраняется автоматически в этом браузере.
+                </p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <Button
+                    onClick={() => void send()}
+                    disabled={pending || draft.trim() === ""}
+                  >
+                    <IconSend data-icon="inline-start" />
+                    Отправить
+                  </Button>
+
+                  {pending && requestController.current ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={cancelSend}
+                    >
+                      <IconPlayerPause data-icon="inline-start" />
+                      Остановить ответ
+                    </Button>
+                  ) : null}
+
+                  {speech.supported ? (
+                    <Button
+                      type="button"
+                      variant={speech.listening ? "destructive" : "outline"}
+                      onClick={speech.listening ? speech.stop : startSpeech}
+                    >
+                      {speech.listening ? (
+                        <IconPlayerStop data-icon="inline-start" />
+                      ) : (
+                        <IconMicrophone data-icon="inline-start" />
+                      )}
+                      {speech.listening
+                        ? `Остановить · ${String(Math.floor(recordingSeconds / 60)).padStart(2, "0")}:${String(recordingSeconds % 60).padStart(2, "0")}`
+                        : "Говорить"}
+                    </Button>
+                  ) : (
+                    <span className="text-muted-foreground self-center text-xs">
+                      Голосовой ввод не поддерживается этим браузером — введите
+                      текст
+                    </span>
+                  )}
+
+                  <span className="text-muted-foreground mr-auto hidden text-xs sm:inline">
+                    Ctrl + Enter — отправить
+                  </span>
+
+                  <Separator
+                    orientation="vertical"
+                    className="hidden h-8 sm:block"
+                  />
+
                   <Button
                     type="button"
-                    variant={speech.listening ? "destructive" : "outline"}
-                    onClick={speech.listening ? speech.stop : startSpeech}
+                    variant="secondary"
+                    onClick={requestFinish}
+                    disabled={pending || turns.length === 0}
                   >
-                    {speech.listening ? (
-                      <IconPlayerStop data-icon="inline-start" />
-                    ) : (
-                      <IconMicrophone data-icon="inline-start" />
-                    )}
-                    {speech.listening
-                      ? `Остановить · ${String(Math.floor(recordingSeconds / 60)).padStart(2, "0")}:${String(recordingSeconds % 60).padStart(2, "0")}`
-                      : "Говорить"}
+                    <IconCheck data-icon="inline-start" />
+                    Завершить разговор
                   </Button>
-                ) : (
-                  <span className="text-muted-foreground self-center text-xs">
-                    Голосовой ввод не поддерживается этим браузером — введите
-                    текст
-                  </span>
-                )}
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
-                <span className="text-muted-foreground mr-auto hidden text-xs sm:inline">
-                  Ctrl + Enter — отправить
-                </span>
-
-                <Separator
-                  orientation="vertical"
-                  className="hidden h-8 sm:block"
-                />
-
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={requestFinish}
-                  disabled={pending || turns.length === 0}
-                >
-                  <IconCheck data-icon="inline-start" />
-                  Завершить разговор
-                </Button>
+        <Card className="gap-4 xl:sticky xl:top-[68px]">
+          <CardHeader>
+            <CardTitle className="text-base">Цель тренировки</CardTitle>
+            <CardDescription>
+              Договоритесь о результате, сроке и способе контроля.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            <div className="flex items-center gap-3">
+              <Progress
+                aria-label="Прогресс разговора"
+                value={conversationProgress}
+                className="h-2 flex-1"
+              />
+              <span className="text-muted-foreground text-xs tabular-nums">
+                {conversationProgress}%
+              </span>
+            </div>
+            <div className="flex flex-col gap-1">
+              <div className={stepClass(1)}>
+                <Badge variant="outline">
+                  {conversationStep > 1 ? <IconCheck /> : "1"}
+                </Badge>
+                <span className="text-sm font-medium">Поставьте задачу</span>
+              </div>
+              <div className={stepClass(2)}>
+                <Badge variant="outline">
+                  {conversationStep > 2 ? <IconCheck /> : "2"}
+                </Badge>
+                <span className="text-sm font-medium">Проверьте понимание</span>
+              </div>
+              <div className={stepClass(3)}>
+                <Badge variant="outline">3</Badge>
+                <span className="text-sm font-medium">Получите разбор</span>
               </div>
             </div>
-          )}
-        </CardContent>
-      </Card>
+            <Separator />
+            <div>
+              <p className="text-muted-foreground text-xs font-medium uppercase tracking-wide">
+                Текущая ситуация
+              </p>
+              <p className="mt-2 text-sm font-medium">{props.task.title}</p>
+              <p className="text-muted-foreground mt-1 text-xs">
+                Раунд {props.shift.round} · {props.shift.activeOrders} заказов в
+                работе
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       {evaluation ? (
         <EvaluationCard
