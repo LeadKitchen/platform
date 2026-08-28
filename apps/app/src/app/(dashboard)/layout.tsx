@@ -1,9 +1,10 @@
-import { AppAdmin, db, eq, GameFacilitator } from "@acme/db";
+import { AppAdmin, db, eq } from "@acme/db";
 import { SidebarInset, SidebarProvider } from "@acme/ui";
 import type { ReactNode } from "react";
 import { getSession } from "~/auth/server";
 import { AppSidebar } from "~/components/sidebar";
 import { userAvatarUri } from "~/lib/avatar";
+import { api } from "~/orpc/server";
 
 export default async function DashboardLayout({
   children,
@@ -27,10 +28,10 @@ export default async function DashboardLayout({
         columns: { userId: true },
       });
   const isAdmin = isBootstrapAdmin || persistedAdmin !== undefined;
-  const facilitatorGrant = await db.query.GameFacilitator.findFirst({
-    where: eq(GameFacilitator.userId, session.user.id),
-    columns: { userId: true },
-  });
+  const workspaceState = await api.org.workspace.list();
+  const activeWorkspace = workspaceState.workspaces.find(
+    (item) => item.id === workspaceState.activeOrgId,
+  );
   return (
     <SidebarProvider>
       <AppSidebar
@@ -40,7 +41,9 @@ export default async function DashboardLayout({
           avatar: session.user.image || userAvatarUri(session.user.email),
         }}
         isAdmin={isAdmin}
-        isFacilitator={facilitatorGrant !== undefined}
+        isFacilitator={activeWorkspace?.isFacilitator}
+        activeWorkspace={activeWorkspace}
+        workspaces={workspaceState.workspaces}
       />
       <SidebarInset>{children}</SidebarInset>
     </SidebarProvider>

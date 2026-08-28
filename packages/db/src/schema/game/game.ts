@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { index, pgTable, uniqueIndex } from "drizzle-orm/pg-core";
+import { index, pgTable, primaryKey, uniqueIndex } from "drizzle-orm/pg-core";
 
 import { user } from "../auth/user";
 
@@ -94,6 +94,8 @@ export const GameSession = pgTable(
     status: t.varchar({ length: 32 }).default("active").notNull(),
     /** Participant who opened the session. */
     createdBy: t.text().references(() => user.id, { onDelete: "set null" }),
+    /** Optional facilitator-assigned practice that this session fulfils. */
+    trainingAssignmentId: t.uuid(),
     /**
      * Org the creator belonged to at the time (via `GameOrgMember`), copied
      * onto the row so a session keeps its group even if membership changes
@@ -122,39 +124,111 @@ export const GameOrganization = pgTable("game_organizations", (t) => ({
 }));
 
 /**
- * Which org a user plays under. A user belongs to at most one org — same
- * "one row, one fact" shape as {@link GameFacilitator} and `AppAdmin`, rather
- * than a full membership-role matrix nothing here needs yet.
+ * Which workspaces a user belongs to. A composite key lets a person be a
+ * member of several teams without duplicating their profile.
  */
-export const GameOrgMember = pgTable("game_org_members", (t) => ({
-  userId: t
-    .text()
-    .primaryKey()
-    .references(() => user.id, { onDelete: "cascade" }),
-  orgId: t
-    .text()
-    .notNull()
-    .references(() => GameOrganization.id, { onDelete: "cascade" }),
-  createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
-}));
+export const GameOrgMember = pgTable(
+  "game_org_members",
+  (t) => ({
+    userId: t
+      .text()
+      .notNull()
+      .references(() => user.id, {
+        onDelete: "cascade",
+      }),
+    orgId: t
+      .text()
+      .notNull()
+      .references(() => GameOrganization.id, { onDelete: "cascade" }),
+    createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+  }),
+  (table) => [primaryKey({ columns: [table.userId, table.orgId] })],
+);
 
 /**
  * Facilitator grant, scoped to one org. Mirrors `AppAdmin`'s "row exists =
  * privilege" pattern — a facilitator is not a global role, so it needs the
  * org on the grant itself rather than a boolean.
  */
-export const GameFacilitator = pgTable("game_facilitators", (t) => ({
-  userId: t
-    .text()
-    .primaryKey()
-    .references(() => user.id, { onDelete: "cascade" }),
-  orgId: t
-    .text()
-    .notNull()
-    .references(() => GameOrganization.id, { onDelete: "cascade" }),
-  grantedBy: t.text().references(() => user.id, { onDelete: "set null" }),
-  createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
-}));
+export const GameFacilitator = pgTable(
+  "game_facilitators",
+  (t) => ({
+    userId: t
+      .text()
+      .notNull()
+      .references(() => user.id, {
+        onDelete: "cascade",
+      }),
+    orgId: t
+      .text()
+      .notNull()
+      .references(() => GameOrganization.id, { onDelete: "cascade" }),
+    grantedBy: t.text().references(() => user.id, { onDelete: "set null" }),
+    createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+  }),
+  (table) => [primaryKey({ columns: [table.userId, table.orgId] })],
+);
+
+/** The workspace currently selected in the sidebar for a user. */
+export const GameActiveOrganization = pgTable(
+  "game_active_organizations",
+  (t) => ({
+    userId: t
+      .text()
+      .primaryKey()
+      .references(() => user.id, { onDelete: "cascade" }),
+    orgId: t
+      .text()
+      .notNull()
+      .references(() => GameOrganization.id, { onDelete: "cascade" }),
+    updatedAt: t
+      .timestamp({ mode: "date", withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdateFn(() => sql`now()`),
+  }),
+  (table) => [index("game_active_organizations_org_idx").on(table.orgId)],
+);
+
+/**
+ * A focused practice request from a facilitator to one participant.
+ *
+ * It deliberately stores the criterion label in addition to its id: the
+ * learning brief remains readable even if the methodology dictionary is
+ * revised later.
+ */
+export const GameTrainingAssignment = pgTable(
+  "game_training_assignments",
+  (t) => ({
+    id: t.uuid().primaryKey().defaultRandom(),
+    orgId: t
+      .text()
+      .notNull()
+      .references(() => GameOrganization.id, { onDelete: "cascade" }),
+    participantId: t
+      .text()
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    assignedBy: t.text().references(() => user.id, { onDelete: "set null" }),
+    criterionId: t.varchar({ length: 64 }).notNull(),
+    criterionTitle: t.varchar({ length: 256 }).notNull(),
+    status: t
+      .varchar({ length: 32 })
+      .$type<"assigned" | "in_progress" | "completed">()
+      .default("assigned")
+      .notNull(),
+    createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+    startedAt: t.timestamp({ withTimezone: true }),
+    completedAt: t.timestamp({ withTimezone: true }),
+  }),
+  (table) => [
+    index("game_training_assignments_org_idx").on(table.orgId),
+    index("game_training_assignments_participant_idx").on(
+      table.participantId,
+      table.status,
+    ),
+  ],
+);
 
 /** Product events are separate from the replayable in-dialog event stream. */
 export const GameProductEvent = pgTable(

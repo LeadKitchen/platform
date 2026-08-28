@@ -1,6 +1,7 @@
 import {
   count,
   eq,
+  GameActiveOrganization,
   GameFacilitator,
   GameOrganization,
   GameOrgMember,
@@ -106,6 +107,9 @@ export const setMember = adminProcedure
       await context.db
         .delete(GameFacilitator)
         .where(eq(GameFacilitator.userId, input.userId));
+      await context.db
+        .delete(GameActiveOrganization)
+        .where(eq(GameActiveOrganization.userId, input.userId));
       return { userId: input.userId, orgId: null };
     }
 
@@ -118,17 +122,24 @@ export const setMember = adminProcedure
       throw new ORPCError("NOT_FOUND", { message: "Организация не найдена" });
     }
 
+    // Admin reassignment keeps its original single-team behavior, while the
+    // sidebar can still add a personal workspace without collapsing data.
+    await context.db
+      .delete(GameOrgMember)
+      .where(eq(GameOrgMember.userId, input.userId));
+    await context.db
+      .delete(GameFacilitator)
+      .where(eq(GameFacilitator.userId, input.userId));
     await context.db
       .insert(GameOrgMember)
+      .values({ userId: input.userId, orgId: input.orgId });
+    await context.db
+      .insert(GameActiveOrganization)
       .values({ userId: input.userId, orgId: input.orgId })
       .onConflictDoUpdate({
-        target: GameOrgMember.userId,
+        target: GameActiveOrganization.userId,
         set: { orgId: input.orgId },
       });
-    await context.db
-      .update(GameFacilitator)
-      .set({ orgId: input.orgId })
-      .where(eq(GameFacilitator.userId, input.userId));
 
     return { userId: input.userId, orgId: input.orgId };
   });
@@ -173,7 +184,7 @@ export const setFacilitator = adminProcedure
         grantedBy: context.session.user.id,
       })
       .onConflictDoUpdate({
-        target: GameFacilitator.userId,
+        target: [GameFacilitator.userId, GameFacilitator.orgId],
         set: { orgId: membership.orgId, grantedBy: context.session.user.id },
       });
 

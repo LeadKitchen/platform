@@ -1,7 +1,9 @@
 import {
   AppAdmin,
+  and,
   desc,
   eq,
+  GameActiveOrganization,
   GameFacilitator,
   GameOrganization,
   GameOrgMember,
@@ -47,9 +49,25 @@ export const list = adminProcedure
       })
       .from(user)
       .leftJoin(AppAdmin, eq(AppAdmin.userId, user.id))
-      .leftJoin(GameOrgMember, eq(GameOrgMember.userId, user.id))
+      .leftJoin(
+        GameActiveOrganization,
+        eq(GameActiveOrganization.userId, user.id),
+      )
+      .leftJoin(
+        GameOrgMember,
+        and(
+          eq(GameOrgMember.userId, user.id),
+          eq(GameOrgMember.orgId, GameActiveOrganization.orgId),
+        ),
+      )
       .leftJoin(GameOrganization, eq(GameOrganization.id, GameOrgMember.orgId))
-      .leftJoin(GameFacilitator, eq(GameFacilitator.userId, user.id))
+      .leftJoin(
+        GameFacilitator,
+        and(
+          eq(GameFacilitator.userId, user.id),
+          eq(GameFacilitator.orgId, GameOrgMember.orgId),
+        ),
+      )
       .orderBy(desc(user.createdAt))
       .limit(input.limit)
       .offset(input.offset);

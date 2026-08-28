@@ -1,10 +1,12 @@
 import {
+  and,
   desc,
   eq,
   GameDialog,
   GameEvaluation,
   GameProductEvent,
   GameSession,
+  inArray,
 } from "@acme/db";
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
@@ -72,20 +74,34 @@ export const track = protectedProcedure
   });
 
 export const progress = protectedProcedure.handler(async ({ context }) => {
-  const rows = await context.db
-    .select({
-      dialogId: GameDialog.id,
-      scorePercent: GameEvaluation.scorePercent,
-      criteria: GameEvaluation.criteria,
-      actualStyle: GameEvaluation.actualStyle,
-      createdAt: GameEvaluation.createdAt,
-    })
-    .from(GameEvaluation)
-    .innerJoin(GameDialog, eq(GameDialog.id, GameEvaluation.dialogId))
-    .innerJoin(GameSession, eq(GameSession.id, GameDialog.sessionId))
-    .where(eq(GameSession.createdBy, context.session.user.id))
-    .orderBy(desc(GameEvaluation.createdAt))
-    .limit(100);
+  const [rows, productEvents] = await Promise.all([
+    context.db
+      .select({
+        dialogId: GameDialog.id,
+        scorePercent: GameEvaluation.scorePercent,
+        criteria: GameEvaluation.criteria,
+        actualStyle: GameEvaluation.actualStyle,
+        createdAt: GameEvaluation.createdAt,
+      })
+      .from(GameEvaluation)
+      .innerJoin(GameDialog, eq(GameDialog.id, GameEvaluation.dialogId))
+      .innerJoin(GameSession, eq(GameSession.id, GameDialog.sessionId))
+      .where(eq(GameSession.createdBy, context.session.user.id))
+      .orderBy(desc(GameEvaluation.createdAt))
+      .limit(100),
+    context.db
+      .select({ name: GameProductEvent.name })
+      .from(GameProductEvent)
+      .where(
+        and(
+          eq(GameProductEvent.userId, context.session.user.id),
+          inArray(GameProductEvent.name, [
+            "warmup_completed",
+            "evaluation_viewed",
+          ]),
+        ),
+      ),
+  ]);
 
   const criteria = new Map<
     string,
@@ -120,6 +136,14 @@ export const progress = protectedProcedure.handler(async ({ context }) => {
         );
 
   return {
+    onboarding: {
+      warmupCompleted: productEvents.some(
+        (event) => event.name === "warmup_completed",
+      ),
+      evaluationViewed: productEvents.some(
+        (event) => event.name === "evaluation_viewed",
+      ),
+    },
     dialogs: rows.length,
     averageScore: average(rows),
     recentScore: average(latest),

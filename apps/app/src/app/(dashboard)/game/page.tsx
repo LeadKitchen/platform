@@ -8,6 +8,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
+  Progress,
 } from "@acme/ui";
 import {
   IconArrowRight,
@@ -17,6 +18,7 @@ import {
   IconMessages,
   IconPlayerPlay,
   IconSchool,
+  IconTarget,
   IconTrendingUp,
   IconVideo,
 } from "@tabler/icons-react";
@@ -49,14 +51,47 @@ const SESSION_STATUS_VARIANTS: Record<
 };
 
 export default async function GamePage() {
-  const [sessions, catalog, playerProgress] = await Promise.all([
+  const [sessions, catalog, playerProgress, assignments] = await Promise.all([
     api.game.session.list({ limit: 20, offset: 0 }),
     api.game.catalog.variants(),
     api.game.activity.progress(),
+    api.game.training.listMine(),
   ]);
   const activeSession = sessions.find((session) => session.status === "active");
   const completedCount = sessions.filter((session) =>
     ["completed", "finished"].includes(session.status),
+  ).length;
+  const focus = playerProgress.criteria[0];
+  const assignment = assignments[0];
+  const latestDialogId = playerProgress.recent[0]?.dialogId;
+  const onboardingSteps = [
+    {
+      title: "Разберитесь с подходами",
+      description: "Пройдите короткую разминку по стилям руководства.",
+      href: "/game/round-1",
+      complete: playerProgress.onboarding.warmupCompleted,
+    },
+    {
+      title: "Откройте первую смену",
+      description: "Выберите команду и ситуацию для практики.",
+      href: "#start-practice",
+      complete: sessions.length > 0,
+    },
+    {
+      title: "Проведите разговор",
+      description: "Поставьте задачу сотруднику голосом или текстом.",
+      href: activeSession ? `/game/${activeSession.id}` : "#start-practice",
+      complete: playerProgress.dialogs > 0,
+    },
+    {
+      title: "Посмотрите разбор",
+      description: "Зафиксируйте следующий фокус для новой попытки.",
+      href: latestDialogId ? `/game/dialog/${latestDialogId}/report` : "/game",
+      complete: playerProgress.onboarding.evaluationViewed,
+    },
+  ];
+  const completedOnboardingSteps = onboardingSteps.filter(
+    (step) => step.complete,
   ).length;
 
   return (
@@ -67,15 +102,14 @@ export default async function GamePage() {
           <KitchenPatternBackdrop className="text-primary pointer-events-none absolute inset-0 size-full opacity-[0.16]" />
           <CardHeader className="relative">
             <Badge variant="accent" className="w-fit">
-              Тренажёр руководителя
+              01 · Практика руководителя
             </Badge>
             <CardTitle className="max-w-3xl text-2xl leading-tight sm:text-3xl">
-              Проведите смену так, чтобы команда поняла задачу и сохранила
-              мотивацию
+              Превращайте каждый разговор в следующую сильную попытку
             </CardTitle>
             <CardDescription className="max-w-2xl text-base">
-              Выберите ситуацию, поговорите с сотрудником голосом или текстом и
-              получите разбор конкретных управленческих действий.
+              Выберите ситуацию, проведите разговор голосом или текстом и
+              получите разбор по конкретным управленческим действиям.
             </CardDescription>
             {activeSession ? (
               <CardAction>
@@ -123,45 +157,158 @@ export default async function GamePage() {
           </CardContent>
         </Card>
 
-        {playerProgress.dialogs > 0 ? (
+        <Card>
+          <CardHeader>
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <Badge variant="accent" className="w-fit">
+                  Маршрут старта
+                </Badge>
+                <CardTitle className="mt-3">
+                  Ваша первая сильная смена
+                </CardTitle>
+                <CardDescription>
+                  Четыре коротких шага превращают попытку в управленческий
+                  навык.
+                </CardDescription>
+              </div>
+              <Badge variant="secondary">
+                {completedOnboardingSteps} из {onboardingSteps.length}
+              </Badge>
+            </div>
+            <Progress
+              value={(completedOnboardingSteps / onboardingSteps.length) * 100}
+            />
+          </CardHeader>
+          <CardContent className="grid gap-2 lg:grid-cols-2">
+            {onboardingSteps.map((step, index) => (
+              <div
+                key={step.title}
+                className="flex items-center justify-between gap-3 rounded-md border p-3"
+              >
+                <div className="flex min-w-0 items-center gap-3">
+                  <Badge variant={step.complete ? "success" : "outline"}>
+                    {step.complete ? <IconCheck /> : `0${index + 1}`}
+                  </Badge>
+                  <div className="min-w-0">
+                    <p className="font-medium">{step.title}</p>
+                    <p className="text-muted-foreground text-sm">
+                      {step.description}
+                    </p>
+                  </div>
+                </div>
+                {step.complete ? null : (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    render={<Link href={step.href} />}
+                    nativeButton={false}
+                  >
+                    Открыть
+                  </Button>
+                )}
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        {assignment ? (
           <Card>
             <CardHeader>
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div>
-                  <CardTitle className="flex items-center gap-2">
-                    <IconTrendingUp /> Ваш прогресс
-                  </CardTitle>
-                  <CardDescription>
-                    Результаты последних управленческих разговоров.
-                  </CardDescription>
-                </div>
-                <Badge variant="secondary">
-                  {playerProgress.improvement >= 0 ? "+" : ""}
-                  {playerProgress.improvement} п.п. к первым попыткам
-                </Badge>
-              </div>
+              <Badge variant="accent" className="w-fit">
+                Назначенная практика
+              </Badge>
+              <CardTitle className="flex items-center gap-2">
+                <IconTarget /> Закрепите навык: {assignment.criterionTitle}
+              </CardTitle>
+              <CardDescription>
+                Ведущий выделил этот критерий как следующий фокус. Создайте
+                сессию ниже — она будет отмечена как выполненная после
+                завершения.
+              </CardDescription>
             </CardHeader>
-            <CardContent className="grid gap-4 sm:grid-cols-3">
-              <div>
-                <p className="text-muted-foreground text-sm">Разговоров</p>
-                <p className="text-2xl font-semibold tabular-nums">
-                  {playerProgress.dialogs}
-                </p>
-              </div>
-              <div>
-                <p className="text-muted-foreground text-sm">Средняя оценка</p>
-                <p className="text-2xl font-semibold tabular-nums">
-                  {playerProgress.averageScore}%
-                </p>
-              </div>
-              <div>
-                <p className="text-muted-foreground text-sm">Следующий фокус</p>
-                <p className="font-medium">
-                  {playerProgress.criteria[0]?.title ?? "Новая ситуация"}
-                </p>
-              </div>
-            </CardContent>
+            <CardFooter>
+              <Button
+                render={<a href="#start-practice" />}
+                nativeButton={false}
+              >
+                Начать назначенную практику
+                <IconArrowRight data-icon="inline-end" />
+              </Button>
+            </CardFooter>
           </Card>
+        ) : null}
+
+        {playerProgress.dialogs > 0 ? (
+          <div className="grid gap-4 xl:grid-cols-[1.5fr_1fr]">
+            <Card>
+              <CardHeader>
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <IconTrendingUp /> Ваш прогресс
+                    </CardTitle>
+                    <CardDescription>
+                      Результаты последних управленческих разговоров.
+                    </CardDescription>
+                  </div>
+                  <Badge variant="secondary">
+                    {playerProgress.improvement >= 0 ? "+" : ""}
+                    {playerProgress.improvement} п.п. к первым попыткам
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="grid gap-4 sm:grid-cols-3">
+                <div>
+                  <p className="text-muted-foreground text-sm">Разговоров</p>
+                  <p className="text-2xl font-semibold tabular-nums">
+                    {playerProgress.dialogs}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground text-sm">
+                    Средняя оценка
+                  </p>
+                  <p className="text-2xl font-semibold tabular-nums">
+                    {playerProgress.averageScore}%
+                  </p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground text-sm">
+                    Последняя серия
+                  </p>
+                  <p className="text-2xl font-semibold tabular-nums">
+                    {playerProgress.recentScore}%
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <Badge variant="accent" className="w-fit">
+                  Рекомендация
+                </Badge>
+                <CardTitle className="flex items-center gap-2">
+                  <IconTarget /> Следующая практика
+                </CardTitle>
+                <CardDescription>
+                  {focus
+                    ? `Сфокусируйтесь на критерии «${focus.title}»: он выполнен в ${Math.round(focus.rate * 100)}% подходящих диалогов.`
+                    : "Выберите новую ситуацию и закрепите управленческий приём на практике."}
+                </CardDescription>
+              </CardHeader>
+              <CardFooter>
+                <Button
+                  render={<a href="#start-practice" />}
+                  nativeButton={false}
+                >
+                  Начать следующую попытку
+                  <IconArrowRight data-icon="inline-end" />
+                </Button>
+              </CardFooter>
+            </Card>
+          </div>
         ) : null}
 
         <div className="grid gap-4 md:grid-cols-3">
@@ -230,6 +377,12 @@ export default async function GamePage() {
                 defaultVariantId: catalog.settings.defaultVariantId,
                 defaultRound: catalog.settings.defaultRound,
                 allowRoundThree: catalog.settings.allowRoundThree,
+                assignment: assignment
+                  ? {
+                      id: assignment.id,
+                      criterionTitle: assignment.criterionTitle,
+                    }
+                  : undefined,
               }}
             />
           </CardContent>

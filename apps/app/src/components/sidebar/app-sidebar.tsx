@@ -40,11 +40,18 @@ import {
   IconWand,
 } from "@tabler/icons-react";
 import type * as React from "react";
-import { NavMain, NavSecondary, NavUser } from "~/components/sidebar";
+import {
+  NavMain,
+  NavSecondary,
+  NavUser,
+  type Workspace,
+  WorkspaceSwitcher,
+} from "~/components/sidebar";
 
 const data = {
   navMain: [
     {
+      group: "Практика",
       title: "Деловая игра",
       url: "/game",
       icon: IconListDetails,
@@ -61,6 +68,7 @@ const data = {
       ],
     },
     {
+      group: "Методология",
       title: "Технологии ИИ",
       url: "/docs/ai",
       icon: IconBrain,
@@ -101,6 +109,7 @@ const data = {
       ],
     },
     {
+      group: "Управление",
       title: "Администрирование",
       url: "/admin/game/overview",
       icon: IconShieldLock,
@@ -173,6 +182,7 @@ const data = {
       ],
     },
     {
+      group: "Справка",
       title: "Документация",
       url: "/admin/docs",
       icon: IconBook2,
@@ -235,11 +245,15 @@ export function AppSidebar({
   user,
   isAdmin,
   isFacilitator,
+  activeWorkspace,
+  workspaces,
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
   user: { name: string; email: string; avatar: string };
   isAdmin?: boolean;
   isFacilitator?: boolean;
+  activeWorkspace?: Workspace;
+  workspaces: Workspace[];
 }) {
   const navMain = data.navMain
     .filter(
@@ -273,6 +287,12 @@ export function AppSidebar({
                 </span>
               </div>
             </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <WorkspaceSwitcher
+              activeWorkspace={activeWorkspace}
+              workspaces={workspaces}
+            />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>

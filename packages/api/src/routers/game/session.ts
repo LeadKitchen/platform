@@ -6,6 +6,7 @@ import {
   GameOrder,
   GameProductEvent,
   GameSession,
+  GameTrainingAssignment,
   GameVariant,
 } from "@acme/db";
 import { ORPCError } from "@orpc/server";
@@ -47,6 +48,7 @@ export const create = protectedProcedure
     z.object({
       title: z.string().min(1).max(256),
       round: roundSchema.optional(),
+      assignmentId: z.uuid().optional(),
     }),
   )
   .handler(async ({ context, input }) => {
@@ -59,6 +61,30 @@ export const create = protectedProcedure
     if (round === 3 && !settings.allowRoundThree) {
       throw new ORPCError("BAD_REQUEST", {
         message: "Третий раунд отключён администратором",
+      });
+    }
+
+    const [assignment] = input.assignmentId
+      ? await context.db
+          .select()
+          .from(GameTrainingAssignment)
+          .where(
+            and(
+              eq(GameTrainingAssignment.id, input.assignmentId),
+              eq(GameTrainingAssignment.participantId, context.session.user.id),
+              eq(GameTrainingAssignment.status, "assigned"),
+            ),
+          )
+          .limit(1)
+      : [undefined];
+    if (input.assignmentId && !assignment) {
+      throw new ORPCError("NOT_FOUND", {
+        message: "Назначенная практика больше недоступна",
+      });
+    }
+    if (assignment && assignment.orgId !== orgId) {
+      throw new ORPCError("FORBIDDEN", {
+        message: "Назначенная практика относится к другой организации",
       });
     }
 
@@ -95,9 +121,27 @@ export const create = protectedProcedure
           variantId,
           createdBy: context.session.user.id,
           orgId,
+          trainingAssignmentId: assignment?.id,
         })
         .returning();
       if (!session) throw new Error("Не удалось создать сессию");
+      if (assignment) {
+        const [started] = await tx
+          .update(GameTrainingAssignment)
+          .set({ status: "in_progress", startedAt: new Date() })
+          .where(
+            and(
+              eq(GameTrainingAssignment.id, assignment.id),
+              eq(GameTrainingAssignment.status, "assigned"),
+            ),
+          )
+          .returning({ id: GameTrainingAssignment.id });
+        if (!started) {
+          throw new ORPCError("CONFLICT", {
+            message: "Практика уже начата в другой сессии",
+          });
+        }
+      }
       await tx.insert(GameProductEvent).values({
         userId: context.session.user.id,
         sessionId: session.id,
@@ -174,6 +218,18 @@ export const end = protectedProcedure
 
     if (!session) {
       throw new ORPCError("NOT_FOUND", { message: "Сессия не найдена" });
+    }
+    if (session.trainingAssignmentId) {
+      await context.db
+        .update(GameTrainingAssignment)
+        .set({ status: "completed", completedAt: new Date() })
+        .where(
+          and(
+            eq(GameTrainingAssignment.id, session.trainingAssignmentId),
+            eq(GameTrainingAssignment.participantId, context.session.user.id),
+            eq(GameTrainingAssignment.status, "in_progress"),
+          ),
+        );
     }
     return session;
   });

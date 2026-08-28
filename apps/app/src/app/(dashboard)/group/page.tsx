@@ -13,8 +13,14 @@ import {
   TableHeader,
   TableRow,
 } from "@acme/ui";
-import { IconDownload } from "@tabler/icons-react";
+import {
+  IconArrowDown,
+  IconArrowRight,
+  IconArrowUp,
+  IconDownload,
+} from "@tabler/icons-react";
 import { redirect } from "next/navigation";
+import { AssignPracticeButton } from "~/components/group/assign-practice-button";
 import { SiteHeader } from "~/components/layout";
 import { api } from "~/orpc/server";
 
@@ -26,6 +32,11 @@ const STATUS_LABELS: Record<string, string> = {
   archived: "в архиве",
 };
 
+const ASSIGNMENT_STATUS_LABELS: Record<string, string> = {
+  assigned: "ожидает практики",
+  in_progress: "в работе",
+};
+
 function dateLabel(value: Date | string): string {
   return new Intl.DateTimeFormat("ru-RU", {
     dateStyle: "short",
@@ -33,11 +44,42 @@ function dateLabel(value: Date | string): string {
   }).format(new Date(value));
 }
 
+function TrendBadge({ trend }: { trend: number | null }) {
+  if (trend === null) {
+    return <Badge variant="outline">мало данных</Badge>;
+  }
+  if (trend > 0) {
+    return (
+      <Badge variant="success">
+        <IconArrowUp data-icon="inline-start" />+{trend}
+      </Badge>
+    );
+  }
+  if (trend < 0) {
+    return (
+      <Badge variant="destructive">
+        <IconArrowDown data-icon="inline-start" />
+        {trend}
+      </Badge>
+    );
+  }
+  return (
+    <Badge variant="outline">
+      <IconArrowRight data-icon="inline-start" />
+      без изменений
+    </Badge>
+  );
+}
+
 export default async function GroupPage() {
   const mine = await api.org.mine();
   if (!mine.isFacilitator) redirect("/game");
 
-  const sessions = await api.org.sessions.list({ limit: 100, offset: 0 });
+  const [sessions, { people, topMissedOrg }, assignments] = await Promise.all([
+    api.org.sessions.list({ limit: 100, offset: 0 }),
+    api.org.people.list({}),
+    api.org.training.list(),
+  ]);
   const dialogsTotal = sessions.reduce((sum, row) => sum + row.dialogs, 0);
   const scored = sessions.filter((row) => row.avgScore !== null);
   const avgScore =
@@ -57,9 +99,9 @@ export default async function GroupPage() {
             <p className="text-muted-foreground text-sm">
               {mine.orgName ?? "Организация"}
             </p>
-            <h1 className="text-2xl font-semibold">Сессии вашей группы</h1>
+            <h1 className="text-2xl font-semibold">Дашборд вашей группы</h1>
             <p className="text-muted-foreground text-sm">
-              Игры участников, которые состоят в вашей организации.
+              Успехи участников и сессии, которые они провели.
             </p>
           </div>
           <Button
@@ -97,6 +139,148 @@ export default async function GroupPage() {
             </CardHeader>
           </Card>
         </div>
+
+        <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
+          <Card>
+            <CardHeader>
+              <CardTitle>По участникам</CardTitle>
+              <CardDescription>
+                Динамика — разница среднего балла второй половины диалогов
+                участника относительно первой.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Участник</TableHead>
+                    <TableHead>Диалогов</TableHead>
+                    <TableHead>Средний балл</TableHead>
+                    <TableHead>Стиль в точку</TableHead>
+                    <TableHead>Динамика</TableHead>
+                    <TableHead>Чаще всего пропускает</TableHead>
+                    <TableHead>Практика</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {people.length === 0 ? (
+                    <TableRow>
+                      <TableCell
+                        colSpan={7}
+                        className="text-muted-foreground text-center"
+                      >
+                        Пока никто из группы не играл.
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    people.map((person) => (
+                      <TableRow key={person.userId}>
+                        <TableCell className="font-medium">
+                          {person.name}
+                        </TableCell>
+                        <TableCell className="tabular-nums">
+                          {person.dialogs}
+                        </TableCell>
+                        <TableCell className="tabular-nums">
+                          {person.avgScore}%
+                        </TableCell>
+                        <TableCell className="tabular-nums">
+                          {Math.round(person.styleMatchRate * 100)}%
+                        </TableCell>
+                        <TableCell>
+                          <TrendBadge trend={person.trend} />
+                        </TableCell>
+                        <TableCell className="text-muted-foreground text-sm">
+                          {person.topMissed.length > 0
+                            ? person.topMissed
+                                .map((item) => `${item.title} ×${item.missed}`)
+                                .join(", ")
+                            : "—"}
+                        </TableCell>
+                        <TableCell>
+                          <AssignPracticeButton
+                            participantId={person.userId}
+                            participantName={person.name}
+                            focus={person.topMissed[0]}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Проблемные критерии</CardTitle>
+              <CardDescription>
+                Что чаще всего пропускает вся группа.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              {topMissedOrg.length === 0 ? (
+                <p className="text-muted-foreground text-sm">
+                  Пока недостаточно данных.
+                </p>
+              ) : (
+                topMissedOrg.map((item) => (
+                  <div key={item.id} className="flex flex-col gap-1.5">
+                    <div className="flex items-center justify-between gap-2 text-sm">
+                      <span>{item.title}</span>
+                      <span className="text-muted-foreground tabular-nums">
+                        {Math.round(item.share * 100)}%
+                      </span>
+                    </div>
+                    <div className="bg-muted h-1.5 w-full overflow-hidden rounded-full">
+                      <div
+                        className="bg-destructive h-full rounded-full"
+                        style={{ width: `${Math.round(item.share * 100)}%` }}
+                      />
+                    </div>
+                  </div>
+                ))
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Назначенная практика</CardTitle>
+            <CardDescription>
+              Ведущий назначает повторную попытку прямо из слабого критерия
+              участника. Сессия автоматически закрывает назначение после
+              завершения.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-2">
+            {assignments.length === 0 ? (
+              <p className="text-muted-foreground text-sm">
+                Активных назначений пока нет.
+              </p>
+            ) : (
+              assignments.map(({ assignment, participant }) => (
+                <div
+                  key={assignment.id}
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-md border px-3 py-2"
+                >
+                  <span className="flex flex-col gap-0.5">
+                    <span className="font-medium">{participant}</span>
+                    <span className="text-muted-foreground text-sm">
+                      {assignment.criterionTitle}
+                    </span>
+                  </span>
+                  <Badge variant="outline">
+                    {ASSIGNMENT_STATUS_LABELS[assignment.status] ??
+                      assignment.status}
+                  </Badge>
+                </div>
+              ))
+            )}
+          </CardContent>
+        </Card>
 
         <Card>
           <CardHeader>
