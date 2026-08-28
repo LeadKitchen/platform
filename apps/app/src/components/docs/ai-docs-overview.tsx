@@ -70,82 +70,67 @@ const STAGE_ACCENTS: Record<AiTechnologyStage, string> = {
 export function AiDocsOverview() {
   return (
     <div className="flex flex-1 flex-col gap-8 p-4 lg:p-6">
-      <Card className="overflow-hidden border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card">
-        <CardContent className="grid gap-8 px-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(18rem,0.7fr)] lg:px-10">
-          <div className="flex flex-col items-start justify-center gap-5 py-2 lg:py-6">
-            <Badge variant="secondary">
-              <IconSparkles />
-              Технологии качества ИИ
-            </Badge>
-            <div className="flex max-w-3xl flex-col gap-3">
-              <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
-                Семь способов сделать тренажёр точнее и надёжнее
-              </h1>
-              <p className="text-muted-foreground max-w-2xl text-base leading-relaxed sm:text-lg">
-                Эти технологии улучшают три звена системы: поиск внутренних
-                знаний, поведение игрового персонажа и оценку диалога. Здесь —
-                простое объяснение пользы и способ доказать эффект цифрами.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <Button
-                size="lg"
-                render={<a href="#technologies" />}
-                nativeButton={false}
-              >
-                Посмотреть технологии
-                <IconArrowRight data-icon="inline-end" />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                render={<a href="#benchmarks" />}
-                nativeButton={false}
-              >
-                <IconChartBar data-icon="inline-start" />
-                Отчёты о тестах
-              </Button>
-              <Button
-                size="lg"
-                variant="ghost"
-                render={<Link href="/admin/game/benchmarks" />}
-                nativeButton={false}
-              >
-                <IconFlask data-icon="inline-start" />
-                Открыть измерения
-              </Button>
-            </div>
-          </div>
+      <section className="flex min-h-[28rem] flex-col items-center justify-center gap-6 py-8 text-center">
+        <Badge variant="secondary">
+          <IconSparkles />
+          Технологии качества ИИ
+        </Badge>
+        <div className="flex max-w-3xl flex-col items-center gap-3">
+          <h1 className="text-3xl font-medium tracking-[-0.045em] sm:text-4xl lg:text-5xl">
+            Семь способов сделать тренажёр точнее и надёжнее
+          </h1>
+          <p className="text-muted-foreground max-w-2xl text-base leading-relaxed">
+            Поиск знаний, поведение игрового персонажа и оценка диалога — в
+            одной понятной системе с измеримым результатом.
+          </p>
+        </div>
+        <div className="flex flex-wrap justify-center gap-2">
+          {STAGES.map((stage, index) => {
+            const copy = AI_STAGE_COPY[stage];
+            const count = AI_TECHNOLOGIES.filter(
+              (technology) => technology.stage === stage,
+            ).length;
 
-          <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-            {STAGES.map((stage, index) => {
-              const copy = AI_STAGE_COPY[stage];
-              const count = AI_TECHNOLOGIES.filter(
-                (technology) => technology.stage === stage,
-              ).length;
-
-              return (
-                <div
-                  key={stage}
-                  className="bg-background/80 flex items-center gap-4 rounded-xl border p-4 shadow-sm backdrop-blur-sm"
+            return (
+              <a
+                key={stage}
+                href="#technologies"
+                className="hover:bg-muted flex items-center gap-2 rounded-full border px-3 py-2 text-sm transition-colors"
+              >
+                <span
+                  className={`flex size-6 items-center justify-center rounded-full text-xs font-medium ${STAGE_ACCENTS[stage]}`}
                 >
-                  <div
-                    className={`flex size-10 shrink-0 items-center justify-center rounded-lg font-semibold ${STAGE_ACCENTS[stage]}`}
-                  >
-                    {index + 1}
-                  </div>
-                  <div className="min-w-0">
-                    <p className="font-medium">{copy.title}</p>
-                    <p className="text-muted-foreground text-sm">
-                      {count} {count === 1 ? "технология" : "технологии"}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </CardContent>
-      </Card>
+                  {index + 1}
+                </span>
+                {copy.title}
+                <span className="text-muted-foreground">{count}</span>
+              </a>
+            );
+          })}
+        </div>
+        <div className="flex flex-wrap justify-center gap-3">
+          <Button render={<a href="#technologies" />} nativeButton={false}>
+            Посмотреть технологии
+            <IconArrowRight data-icon="inline-end" />
+          </Button>
+          <Button
+            variant="outline"
+            render={<a href="#benchmarks" />}
+            nativeButton={false}
+          >
+            <IconChartBar data-icon="inline-start" />
+            Отчёты о тестах
+          </Button>
+          <Button
+            variant="ghost"
+            render={<Link href="/admin/game/benchmarks" />}
+            nativeButton={false}
+          >
+            <IconFlask data-icon="inline-start" />
+            Открыть измерения
+          </Button>
+        </div>
+      </section>
 
       <section className="flex flex-col gap-4" aria-labelledby="pipeline-title">
         <div className="flex max-w-3xl flex-col gap-2">
@@ -228,11 +213,11 @@ export function AiDocsOverview() {
             return (
               <Card
                 key={technology.slug}
-                className="group h-full transition-colors hover:border-primary/40"
+                className="group h-full gap-0 overflow-hidden py-0 shadow-none transition-colors hover:border-foreground/20"
               >
-                <CardHeader>
+                <CardHeader className="border-b py-5">
                   <div className="flex items-start justify-between gap-4">
-                    <div className="bg-primary/10 text-primary flex size-11 items-center justify-center rounded-xl">
+                    <div className="bg-muted text-foreground flex size-10 items-center justify-center rounded-lg">
                       <TechnologyIcon />
                     </div>
                     <Badge variant="outline">{technology.stageLabel}</Badge>
@@ -242,7 +227,7 @@ export function AiDocsOverview() {
                   </CardTitle>
                   <CardDescription>{technology.eyebrow}</CardDescription>
                 </CardHeader>
-                <CardContent className="flex flex-1 flex-col gap-4">
+                <CardContent className="flex flex-1 flex-col gap-4 py-5">
                   <p className="text-sm leading-relaxed">
                     {technology.summary}
                   </p>
@@ -255,7 +240,7 @@ export function AiDocsOverview() {
                     </p>
                   </div>
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="pb-5">
                   <Button
                     className="w-full"
                     variant="outline"

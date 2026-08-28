@@ -2,43 +2,35 @@
 
 import { paths } from "@acme/config";
 import { cn } from "@acme/ui";
-import { Circle, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const sidebarNavItems = [
-  {
-    title: "Профиль",
-    href: paths.settings.profile,
-    icon: User,
-  },
-  {
-    title: "Аккаунт",
-    href: paths.settings.root,
-    icon: Circle,
-  },
+const navigation = [
+  { title: "Профиль", href: paths.settings.profile },
+  { title: "Предпочтения", href: paths.settings.root },
 ];
 
 export function SettingsSidebar() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex flex-col space-y-1">
-      {sidebarNavItems.map((item) => (
-        <Link
-          key={item.href}
-          href={item.href}
-          className={cn(
-            "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent",
-            pathname === item.href
-              ? "bg-accent text-foreground"
-              : "text-foreground",
-          )}
-        >
-          <item.icon className="h-4 w-4" />
-          {item.title}
-        </Link>
-      ))}
+    <nav className="flex gap-6 overflow-x-auto border-b" aria-label="Настройки">
+      {navigation.map((item) => {
+        const isActive = pathname === item.href;
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            aria-current={isActive ? "page" : undefined}
+            className={cn(
+              "text-muted-foreground -mb-px shrink-0 border-b-2 border-transparent px-0 py-3 text-sm font-medium transition-colors hover:text-foreground",
+              isActive && "border-foreground text-foreground",
+            )}
+          >
+            {item.title}
+          </Link>
+        );
+      })}
     </nav>
   );
 }

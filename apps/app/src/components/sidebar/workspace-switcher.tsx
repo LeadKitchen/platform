@@ -10,6 +10,7 @@ import {
   DrawerTitle,
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -113,20 +114,22 @@ export function WorkspaceSwitcher({
           <IconChevronDown className="text-muted-foreground ml-auto size-3.5" />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-64" align="start" side="right">
-          <DropdownMenuLabel>Ваши команды</DropdownMenuLabel>
-          {workspaces.map((workspace) => (
-            <DropdownMenuItem
-              key={workspace.id}
-              disabled={pending}
-              onClick={() => selectWorkspace(workspace.id)}
-            >
-              <IconUsersGroup />
-              <span className="min-w-0 flex-1 truncate">{workspace.name}</span>
-              {workspace.id === activeWorkspace?.id ? (
-                <IconCheck className="text-primary" />
-              ) : null}
-            </DropdownMenuItem>
-          ))}
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>Ваши команды</DropdownMenuLabel>
+            {workspaces.map((workspace) => (
+              <DropdownMenuItem
+                key={workspace.id}
+                disabled={pending}
+                onClick={() => selectWorkspace(workspace.id)}
+              >
+                <IconUsersGroup />
+                <span className="min-w-0 flex-1 truncate">{workspace.name}</span>
+                {workspace.id === activeWorkspace?.id ? (
+                  <IconCheck className="text-primary" />
+                ) : null}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setIsCreateOpen(true)}>
             <IconPlus />

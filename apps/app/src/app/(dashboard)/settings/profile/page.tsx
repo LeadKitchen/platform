@@ -1,5 +1,12 @@
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@acme/ui";
 import { ProfileForm } from "~/components/settings/profile-form";
-import { SettingsSidebar } from "~/components/settings/settings-sidebar";
+import { SettingsPageShell } from "~/components/settings/settings-page-shell";
 import { api } from "~/orpc/server";
 
 export const dynamic = "force-dynamic";
@@ -8,31 +15,24 @@ export default async function SettingsProfilePage() {
   const user = await api.user.me();
 
   return (
-    <div className="space-y-6 p-10 pb-16 max-w-5xl">
-      <div className="space-y-1">
-        <h1 className="text-2xl font-bold tracking-tight">Настройки</h1>
-        <p className="text-muted-foreground">
-          Управляйте настройками аккаунта и языком интерфейса.
-        </p>
-      </div>
-      <div className="flex flex-col gap-6 lg:flex-row">
-        <aside className="lg:w-[240px] shrink-0">
-          <div className="rounded-lg border p-2">
-            <SettingsSidebar />
-          </div>
-        </aside>
-        <div className="flex-1">
-          <div className="rounded-lg border p-6">
-            <ProfileForm
-              initialData={{
-                username: user?.username || "",
-                email: user?.email || "",
-                bio: user?.bio || "",
-              }}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
+    <SettingsPageShell>
+      <Card className="gap-0 overflow-hidden py-0">
+        <CardHeader className="border-b py-5">
+          <CardTitle>Личная информация</CardTitle>
+          <CardDescription>
+            Обновите фото, контактные данные и описание профиля.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="py-6">
+          <ProfileForm
+            initialData={{
+              username: user?.username || "",
+              email: user?.email || "",
+              bio: user?.bio || "",
+            }}
+          />
+        </CardContent>
+      </Card>
+    </SettingsPageShell>
   );
 }

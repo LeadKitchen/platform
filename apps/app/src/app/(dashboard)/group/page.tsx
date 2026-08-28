@@ -18,6 +18,7 @@ import {
   IconArrowRight,
   IconArrowUp,
   IconDownload,
+  IconSettings,
 } from "@tabler/icons-react";
 import { redirect } from "next/navigation";
 import { AssignPracticeButton } from "~/components/group/assign-practice-button";
@@ -25,6 +26,8 @@ import { SiteHeader } from "~/components/layout";
 import { api } from "~/orpc/server";
 
 export const dynamic = "force-dynamic";
+
+const SESSIONS_LIMIT = 100;
 
 const STATUS_LABELS: Record<string, string> = {
   active: "идёт",
@@ -76,7 +79,7 @@ export default async function GroupPage() {
   if (!mine.isFacilitator) redirect("/game");
 
   const [sessions, { people, topMissedOrg }, assignments] = await Promise.all([
-    api.org.sessions.list({ limit: 100, offset: 0 }),
+    api.org.sessions.list({ limit: SESSIONS_LIMIT, offset: 0 }),
     api.org.people.list({}),
     api.org.training.list(),
   ]);
@@ -95,61 +98,78 @@ export default async function GroupPage() {
       <SiteHeader breadcrumbs={[{ label: "Моя группа" }]} />
       <div className="flex flex-1 flex-col gap-6 p-4 lg:p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
+          <div className="space-y-1">
             <p className="text-muted-foreground text-sm">
               {mine.orgName ?? "Организация"}
             </p>
-            <h1 className="text-2xl font-semibold">Дашборд вашей группы</h1>
+            <h1 className="text-3xl font-medium tracking-[-0.035em]">
+              Эффективность команды
+            </h1>
             <p className="text-muted-foreground text-sm">
-              Успехи участников и сессии, которые они провели.
+              Сравнивайте активность, качество разговоров и динамику участников.
             </p>
           </div>
-          <Button
-            variant="outline"
-            render={<a href="/api/export/org-sessions" />}
-          >
-            <IconDownload data-icon="inline-start" />
-            Скачать CSV
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" render={<a href="/group/configure" />}>
+              <IconSettings data-icon="inline-start" />
+              Настроить
+            </Button>
+            <Button
+              variant="outline"
+              render={<a href="/api/export/org-sessions" />}
+            >
+              <IconDownload data-icon="inline-start" />
+              Скачать CSV
+            </Button>
+          </div>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-3">
-          <Card>
-            <CardHeader>
-              <CardDescription>Сессий</CardDescription>
-              <CardTitle className="text-3xl tabular-nums">
-                {sessions.length}
-              </CardTitle>
-            </CardHeader>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardDescription>Диалогов</CardDescription>
-              <CardTitle className="text-3xl tabular-nums">
-                {dialogsTotal}
-              </CardTitle>
-            </CardHeader>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardDescription>Средний балл</CardDescription>
-              <CardTitle className="text-3xl tabular-nums">
-                {avgScore !== null ? `${avgScore}%` : "—"}
-              </CardTitle>
-            </CardHeader>
-          </Card>
+        <div className="bg-card grid overflow-hidden rounded-xl border sm:grid-cols-3 sm:divide-x">
+          <div className="flex flex-col gap-1 border-b p-5 sm:border-b-0">
+            <span className="text-muted-foreground text-xs font-medium uppercase tracking-[0.06em]">
+              Сессии
+            </span>
+            <span className="text-3xl font-medium tracking-[-0.03em] tabular-nums">
+              {sessions.length}
+            </span>
+            <span className="text-muted-foreground text-xs">
+              До {SESSIONS_LIMIT} последних запусков
+            </span>
+          </div>
+          <div className="flex flex-col gap-1 border-b p-5 sm:border-b-0">
+            <span className="text-muted-foreground text-xs font-medium uppercase tracking-[0.06em]">
+              Диалоги
+            </span>
+            <span className="text-3xl font-medium tracking-[-0.03em] tabular-nums">
+              {dialogsTotal}
+            </span>
+            <span className="text-muted-foreground text-xs">
+              В загруженных сессиях
+            </span>
+          </div>
+          <div className="flex flex-col gap-1 p-5">
+            <span className="text-muted-foreground text-xs font-medium uppercase tracking-[0.06em]">
+              Средний балл
+            </span>
+            <span className="text-3xl font-medium tracking-[-0.03em] tabular-nums">
+              {avgScore !== null ? `${avgScore}%` : "—"}
+            </span>
+            <span className="text-muted-foreground text-xs">
+              По оценённым загруженным сессиям
+            </span>
+          </div>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
-          <Card>
-            <CardHeader>
+          <Card className="gap-0 overflow-hidden py-0">
+            <CardHeader className="border-b py-4">
               <CardTitle>По участникам</CardTitle>
               <CardDescription>
                 Динамика — разница среднего балла второй половины диалогов
                 участника относительно первой.
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -212,14 +232,14 @@ export default async function GroupPage() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
+          <Card className="gap-0 overflow-hidden py-0">
+            <CardHeader className="border-b py-4">
               <CardTitle>Проблемные критерии</CardTitle>
               <CardDescription>
                 Что чаще всего пропускает вся группа.
               </CardDescription>
             </CardHeader>
-            <CardContent className="flex flex-col gap-4">
+            <CardContent className="flex flex-col gap-4 py-5">
               {topMissedOrg.length === 0 ? (
                 <p className="text-muted-foreground text-sm">
                   Пока недостаточно данных.
@@ -246,8 +266,8 @@ export default async function GroupPage() {
           </Card>
         </div>
 
-        <Card>
-          <CardHeader>
+        <Card className="gap-0 overflow-hidden py-0">
+          <CardHeader className="border-b py-4">
             <CardTitle>Назначенная практика</CardTitle>
             <CardDescription>
               Ведущий назначает повторную попытку прямо из слабого критерия
@@ -255,7 +275,7 @@ export default async function GroupPage() {
               завершения.
             </CardDescription>
           </CardHeader>
-          <CardContent className="flex flex-col gap-2">
+          <CardContent className="flex flex-col gap-2 py-5">
             {assignments.length === 0 ? (
               <p className="text-muted-foreground text-sm">
                 Активных назначений пока нет.
@@ -264,7 +284,7 @@ export default async function GroupPage() {
               assignments.map(({ assignment, participant }) => (
                 <div
                   key={assignment.id}
-                  className="flex flex-wrap items-center justify-between gap-3 rounded-md border px-3 py-2"
+                  className="hover:bg-muted/40 flex flex-wrap items-center justify-between gap-3 rounded-lg border px-3 py-2.5 transition-colors"
                 >
                   <span className="flex flex-col gap-0.5">
                     <span className="font-medium">{participant}</span>
@@ -282,14 +302,14 @@ export default async function GroupPage() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
+        <Card className="gap-0 overflow-hidden py-0">
+          <CardHeader className="border-b py-4">
             <CardTitle>Сессии</CardTitle>
             <CardDescription>
               Новые сессии появляются здесь, как только участник открывает игру.
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-0">
             <Table>
               <TableHeader>
                 <TableRow>

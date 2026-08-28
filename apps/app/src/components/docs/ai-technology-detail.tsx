@@ -91,8 +91,7 @@ export function AiTechnologyDetail({ technology }: AiTechnologyDetailProps) {
 
   return (
     <div className="flex flex-1 flex-col gap-8 p-4 lg:p-6">
-      <Card className="overflow-hidden border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card">
-        <CardContent className="grid gap-8 px-6 lg:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.75fr)] lg:px-10">
+      <section className="grid gap-8 py-4 lg:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.75fr)] lg:py-8">
           <div className="flex flex-col items-start gap-5 py-2 lg:py-6">
             <div className="flex flex-wrap gap-2">
               <Badge variant="secondary">{technology.stageLabel}</Badge>
@@ -102,13 +101,13 @@ export function AiTechnologyDetail({ technology }: AiTechnologyDetailProps) {
               </Badge>
             </div>
             <div className="flex max-w-3xl flex-col gap-3">
-              <p className="text-primary text-sm font-semibold">
+              <p className="text-muted-foreground text-sm font-medium">
                 {technology.eyebrow}
               </p>
-              <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+              <h1 className="text-3xl font-medium tracking-[-0.035em] sm:text-4xl">
                 {technology.name}
               </h1>
-              <p className="text-muted-foreground text-base leading-relaxed sm:text-lg">
+              <p className="text-muted-foreground text-base leading-relaxed">
                 {technology.summary}
               </p>
             </div>
@@ -143,8 +142,8 @@ export function AiTechnologyDetail({ technology }: AiTechnologyDetailProps) {
           </div>
 
           <div className="flex items-center justify-center py-4">
-            <div className="bg-background/80 flex w-full max-w-sm flex-col gap-5 rounded-2xl border p-6 shadow-sm backdrop-blur-sm">
-              <div className="bg-primary/10 text-primary flex size-14 items-center justify-center rounded-2xl">
+            <div className="flex w-full max-w-sm flex-col gap-5 rounded-xl border p-6">
+              <div className="bg-muted text-foreground flex size-12 items-center justify-center rounded-xl">
                 <TechnologyIcon />
               </div>
               <div className="flex flex-col gap-2">
@@ -160,8 +159,7 @@ export function AiTechnologyDetail({ technology }: AiTechnologyDetailProps) {
               </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+      </section>
 
       <section className="grid gap-4 lg:grid-cols-2" aria-label="Суть и польза">
         <Card className="h-full">

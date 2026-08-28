@@ -67,8 +67,10 @@ export function AccountForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {/* Name Field */}
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="max-w-2xl space-y-6"
+      >
         <FormField
           control={form.control}
           name="name"
@@ -76,7 +78,7 @@ export function AccountForm({
             <FormItem>
               <FormLabel className="text-foreground font-medium">Имя</FormLabel>
               <Input placeholder="Ваше имя" {...field} />
-              <p className="text-sm text-amber-700/70">
+              <p className="text-muted-foreground text-sm">
                 Это имя будет показываться в вашем профиле и в письмах.
               </p>
               <FormMessage />
@@ -84,7 +86,6 @@ export function AccountForm({
           )}
         />
 
-        {/* Language Field */}
         <FormField
           control={form.control}
           name="language"
@@ -105,7 +106,7 @@ export function AccountForm({
                   ))}
                 </SelectContent>
               </Select>
-              <p className="text-sm text-amber-700/70">
+              <p className="text-muted-foreground text-sm">
                 Этот язык будет использоваться в интерфейсе.
               </p>
               <FormMessage />
@@ -113,11 +114,7 @@ export function AccountForm({
           )}
         />
 
-        <Button
-          type="submit"
-          className="bg-foreground text-background hover:bg-foreground/90"
-          disabled={updateAccount.isPending}
-        >
+        <Button type="submit" disabled={updateAccount.isPending}>
           {updateAccount.isPending ? "Сохранение…" : "Сохранить"}
         </Button>
       </form>

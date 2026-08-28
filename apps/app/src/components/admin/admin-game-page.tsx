@@ -21,6 +21,8 @@ const SECTION_TITLES: Record<AdminGameSection, string> = {
   settings: "Настройки",
 };
 
+const DIALOGS_PAGE_SIZE = 100;
+
 export async function AdminGamePage({
   section,
 }: {
@@ -50,7 +52,7 @@ export async function AdminGamePage({
   ] = await Promise.all([
     api.admin.game.analytics({ limit: 5000 }),
     api.admin.game.productAnalytics({ limit: 10000 }),
-    api.admin.game.dialogs({ limit: 100, offset: 0 }),
+    api.admin.game.dialogs({ limit: DIALOGS_PAGE_SIZE, offset: 0 }),
     api.admin.game.variants.list(),
     api.admin.game.catalog.list(),
     api.admin.game.sessions.list({ limit: 100, offset: 0 }),
