@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { index, pgTable, uniqueIndex } from "drizzle-orm/pg-core";
+import { index, pgTable, primaryKey, uniqueIndex } from "drizzle-orm/pg-core";
 
 import { user } from "../auth/user";
 
@@ -124,39 +124,71 @@ export const GameOrganization = pgTable("game_organizations", (t) => ({
 }));
 
 /**
- * Which org a user plays under. A user belongs to at most one org — same
- * "one row, one fact" shape as {@link GameFacilitator} and `AppAdmin`, rather
- * than a full membership-role matrix nothing here needs yet.
+ * Which workspaces a user belongs to. A composite key lets a person be a
+ * member of several teams without duplicating their profile.
  */
-export const GameOrgMember = pgTable("game_org_members", (t) => ({
-  userId: t
-    .text()
-    .primaryKey()
-    .references(() => user.id, { onDelete: "cascade" }),
-  orgId: t
-    .text()
-    .notNull()
-    .references(() => GameOrganization.id, { onDelete: "cascade" }),
-  createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
-}));
+export const GameOrgMember = pgTable(
+  "game_org_members",
+  (t) => ({
+    userId: t
+      .text()
+      .notNull()
+      .references(() => user.id, {
+        onDelete: "cascade",
+      }),
+    orgId: t
+      .text()
+      .notNull()
+      .references(() => GameOrganization.id, { onDelete: "cascade" }),
+    createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+  }),
+  (table) => [primaryKey({ columns: [table.userId, table.orgId] })],
+);
 
 /**
  * Facilitator grant, scoped to one org. Mirrors `AppAdmin`'s "row exists =
  * privilege" pattern — a facilitator is not a global role, so it needs the
  * org on the grant itself rather than a boolean.
  */
-export const GameFacilitator = pgTable("game_facilitators", (t) => ({
-  userId: t
-    .text()
-    .primaryKey()
-    .references(() => user.id, { onDelete: "cascade" }),
-  orgId: t
-    .text()
-    .notNull()
-    .references(() => GameOrganization.id, { onDelete: "cascade" }),
-  grantedBy: t.text().references(() => user.id, { onDelete: "set null" }),
-  createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
-}));
+export const GameFacilitator = pgTable(
+  "game_facilitators",
+  (t) => ({
+    userId: t
+      .text()
+      .notNull()
+      .references(() => user.id, {
+        onDelete: "cascade",
+      }),
+    orgId: t
+      .text()
+      .notNull()
+      .references(() => GameOrganization.id, { onDelete: "cascade" }),
+    grantedBy: t.text().references(() => user.id, { onDelete: "set null" }),
+    createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+  }),
+  (table) => [primaryKey({ columns: [table.userId, table.orgId] })],
+);
+
+/** The workspace currently selected in the sidebar for a user. */
+export const GameActiveOrganization = pgTable(
+  "game_active_organizations",
+  (t) => ({
+    userId: t
+      .text()
+      .primaryKey()
+      .references(() => user.id, { onDelete: "cascade" }),
+    orgId: t
+      .text()
+      .notNull()
+      .references(() => GameOrganization.id, { onDelete: "cascade" }),
+    updatedAt: t
+      .timestamp({ mode: "date", withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdateFn(() => sql`now()`),
+  }),
+  (table) => [index("game_active_organizations_org_idx").on(table.orgId)],
+);
 
 /**
  * A focused practice request from a facilitator to one participant.

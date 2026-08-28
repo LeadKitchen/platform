@@ -1,30 +1,127 @@
-import { type Database, eq, GameFacilitator, GameOrgMember } from "@acme/db";
+import {
+  and,
+  asc,
+  type Database,
+  eq,
+  GameActiveOrganization,
+  GameFacilitator,
+  GameOrganization,
+  GameOrgMember,
+} from "@acme/db";
 import { ORPCError } from "@orpc/server";
 
-/** Org a user belongs to as a participant, or `null` outside any org. */
-export async function getMemberOrgId(
+/** The saved sidebar selection, provided it is still a valid membership. */
+async function getSavedActiveOrgId(
   db: Database,
   userId: string,
 ): Promise<string | null> {
   const [row] = await db
-    .select({ orgId: GameOrgMember.orgId })
-    .from(GameOrgMember)
-    .where(eq(GameOrgMember.userId, userId))
+    .select({ orgId: GameActiveOrganization.orgId })
+    .from(GameActiveOrganization)
+    .innerJoin(
+      GameOrgMember,
+      and(
+        eq(GameOrgMember.userId, GameActiveOrganization.userId),
+        eq(GameOrgMember.orgId, GameActiveOrganization.orgId),
+      ),
+    )
+    .where(eq(GameActiveOrganization.userId, userId))
     .limit(1);
   return row?.orgId ?? null;
 }
 
-/** Org a user facilitates, or `null` if they hold no facilitator grant. */
+/** Active workspace a user plays under, or `null` outside any workspace. */
+export async function getMemberOrgId(
+  db: Database,
+  userId: string,
+): Promise<string | null> {
+  const activeOrgId = await getSavedActiveOrgId(db, userId);
+  if (activeOrgId) return activeOrgId;
+
+  const [row] = await db
+    .select({ orgId: GameOrgMember.orgId })
+    .from(GameOrgMember)
+    .where(eq(GameOrgMember.userId, userId))
+    .orderBy(asc(GameOrgMember.createdAt))
+    .limit(1);
+  return row?.orgId ?? null;
+}
+
+/** Whether the active workspace is one the user facilitates. */
 export async function getFacilitatorOrgId(
   db: Database,
   userId: string,
 ): Promise<string | null> {
+  const orgId = await getMemberOrgId(db, userId);
+  if (!orgId) return null;
+
   const [row] = await db
     .select({ orgId: GameFacilitator.orgId })
     .from(GameFacilitator)
-    .where(eq(GameFacilitator.userId, userId))
+    .where(
+      and(eq(GameFacilitator.userId, userId), eq(GameFacilitator.orgId, orgId)),
+    )
     .limit(1);
   return row?.orgId ?? null;
+}
+
+export async function listWorkspaces(db: Database, userId: string) {
+  const [activeOrgId, rows] = await Promise.all([
+    getMemberOrgId(db, userId),
+    db
+      .select({
+        id: GameOrganization.id,
+        name: GameOrganization.name,
+        facilitatorUserId: GameFacilitator.userId,
+      })
+      .from(GameOrgMember)
+      .innerJoin(GameOrganization, eq(GameOrganization.id, GameOrgMember.orgId))
+      .leftJoin(
+        GameFacilitator,
+        and(
+          eq(GameFacilitator.userId, userId),
+          eq(GameFacilitator.orgId, GameOrgMember.orgId),
+        ),
+      )
+      .where(eq(GameOrgMember.userId, userId))
+      .orderBy(asc(GameOrganization.name)),
+  ]);
+
+  return {
+    activeOrgId,
+    workspaces: rows.map((row) => ({
+      id: row.id,
+      name: row.name,
+      isFacilitator: row.facilitatorUserId !== null,
+    })),
+  };
+}
+
+export async function setActiveWorkspace(
+  db: Database,
+  userId: string,
+  orgId: string,
+): Promise<void> {
+  const [membership] = await db
+    .select({ orgId: GameOrgMember.orgId })
+    .from(GameOrgMember)
+    .where(
+      and(eq(GameOrgMember.userId, userId), eq(GameOrgMember.orgId, orgId)),
+    )
+    .limit(1);
+  if (!membership) {
+    throw new ORPCError("FORBIDDEN", {
+      message: "Нет доступа к этой команде",
+    });
+  }
+
+  await db
+    .insert(GameActiveOrganization)
+    .values({ userId, orgId })
+    .onConflictDoUpdate({
+      target: GameActiveOrganization.userId,
+      set: { orgId },
+    });
 }
 
 /**

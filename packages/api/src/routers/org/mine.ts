@@ -1,5 +1,4 @@
-import { eq, GameOrganization } from "@acme/db";
-import { getFacilitatorOrgId, getMemberOrgId } from "../../game/organizations";
+import { listWorkspaces } from "../../game/organizations";
 import { protectedProcedure } from "../../orpc";
 
 /**
@@ -11,23 +10,13 @@ import { protectedProcedure } from "../../orpc";
  */
 export const mine = protectedProcedure.handler(async ({ context }) => {
   const userId = context.session.user.id;
-  const [memberOrgId, facilitatorOrgId] = await Promise.all([
-    getMemberOrgId(context.db, userId),
-    getFacilitatorOrgId(context.db, userId),
-  ]);
-
-  const orgId = facilitatorOrgId ?? memberOrgId;
-  if (!orgId) return { orgId: null, orgName: null, isFacilitator: false };
-
-  const [org] = await context.db
-    .select({ name: GameOrganization.name })
-    .from(GameOrganization)
-    .where(eq(GameOrganization.id, orgId))
-    .limit(1);
+  const { activeOrgId, workspaces } = await listWorkspaces(context.db, userId);
+  const activeWorkspace = workspaces.find((item) => item.id === activeOrgId);
 
   return {
-    orgId,
-    orgName: org?.name ?? null,
-    isFacilitator: facilitatorOrgId !== null,
+    orgId: activeWorkspace?.id ?? null,
+    orgName: activeWorkspace?.name ?? null,
+    isFacilitator: activeWorkspace?.isFacilitator ?? false,
+    workspaces,
   };
 });
