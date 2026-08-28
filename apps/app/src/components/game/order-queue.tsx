@@ -66,6 +66,7 @@ export interface OrderRow {
   deadlineMinutes: number;
   status: string;
   dialogId?: string;
+  scorePercent?: number;
 }
 
 const STATUS_LABELS: Record<string, string> = {
@@ -175,8 +176,8 @@ export function OrderQueue(props: {
   }
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="gap-0 overflow-hidden py-0">
+      <CardHeader className="border-b py-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <CardTitle>Новая рабочая ситуация</CardTitle>
@@ -186,7 +187,7 @@ export function OrderQueue(props: {
             </CardDescription>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <Badge>Следующий шаг</Badge>
+            <Badge variant="outline">Новая ситуация</Badge>
             <Button
               type="button"
               variant="outline"
@@ -201,8 +202,11 @@ export function OrderQueue(props: {
         </div>
       </CardHeader>
 
-      <CardContent className="flex flex-col gap-6">
-        <form onSubmit={addOrder}>
+      <CardContent className="grid p-0 xl:grid-cols-[340px_minmax(0,1fr)]">
+        <form
+          onSubmit={addOrder}
+          className="p-5 sm:p-6 xl:col-start-2 xl:row-start-1"
+        >
           <FieldGroup className="grid gap-5 md:grid-cols-2">
             <Field>
               <FieldLabel htmlFor="order-task">
@@ -304,61 +308,84 @@ export function OrderQueue(props: {
         </form>
 
         {error ? (
-          <Alert variant="destructive">
-            <IconAlertTriangle />
-            <AlertTitle>Не удалось открыть ситуацию</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
+          <div className="px-5 pb-5 sm:px-6 xl:col-start-2">
+            <Alert variant="destructive">
+              <IconAlertTriangle />
+              <AlertTitle>Не удалось открыть ситуацию</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          </div>
         ) : null}
 
-        <div className="flex flex-col gap-3">
-          <div>
-            <h3 className="font-semibold">Ситуации этой смены</h3>
+        <div className="flex flex-col gap-3 border-b p-3 xl:col-start-1 xl:row-start-1 xl:min-h-[520px] xl:border-b-0 xl:border-r">
+          <div className="px-2 pt-2">
+            <h3 className="font-semibold">Ситуации</h3>
             <p className="text-muted-foreground text-sm">
-              Можно вернуться к любому разговору.
+              Выберите разговор или создайте новый.
             </p>
           </div>
-          <ul className="flex flex-col gap-2">
+          <ul className="flex flex-col gap-1">
             {props.orders.length === 0 ? (
-              <li className="text-muted-foreground flex flex-col items-center gap-3 rounded-lg border border-dashed p-8 text-center text-sm">
+              <li className="text-muted-foreground flex min-h-64 flex-col items-center justify-center gap-3 rounded-lg border border-dashed p-8 text-center text-sm">
                 <TicketIllustration className="size-12" />
-                Первая ситуация появится здесь после начала разговора.
+                <span>
+                  <span className="text-foreground block font-medium">
+                    Ситуаций пока нет
+                  </span>
+                  Создайте первый разговор справа.
+                </span>
               </li>
             ) : null}
 
             {props.orders.map((order, index) => (
               <li
                 key={order.id}
-                className="animate-in fade-in slide-in-from-top-2 flex flex-wrap items-center justify-between gap-3 rounded-md border px-3 py-2 duration-300"
+                className="animate-in fade-in slide-in-from-top-2 hover:bg-muted flex flex-col items-stretch gap-3 rounded-lg px-3 py-3 duration-300"
                 style={{ animationDelay: `${Math.min(index, 6) * 40}ms` }}
               >
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="flex items-center gap-2 font-medium">
-                    <IconUser />
-                    {employeeById.get(order.employeeId)?.name ??
-                      order.employeeId}
+                <div className="flex items-start gap-3">
+                  <span className="bg-background flex size-9 shrink-0 items-center justify-center rounded-lg border">
+                    <IconUser className="size-4" />
                   </span>
-                  <span className="text-muted-foreground text-sm">
-                    · {taskById.get(order.taskId)?.title ?? order.taskId}
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-medium">
+                      {employeeById.get(order.employeeId)?.name ??
+                        order.employeeId}
+                    </span>
+                    <span className="text-muted-foreground block truncate text-xs">
+                      {taskById.get(order.taskId)?.title ?? order.taskId}
+                    </span>
                   </span>
-                  <Badge variant="outline">{order.portions} шт.</Badge>
-                  <Badge variant="outline">
-                    <IconClock /> {order.deadlineMinutes} мин
-                  </Badge>
-                  <Badge variant={STATUS_VARIANTS[order.status] ?? "secondary"}>
-                    {STATUS_LABELS[order.status] ?? order.status}
-                  </Badge>
+                  {order.scorePercent !== undefined ? (
+                    <Badge>{order.scorePercent}%</Badge>
+                  ) : (
+                    <Badge
+                      variant={STATUS_VARIANTS[order.status] ?? "secondary"}
+                    >
+                      {STATUS_LABELS[order.status] ?? order.status}
+                    </Badge>
+                  )}
                 </div>
 
-                <Button
-                  size="sm"
-                  variant="outline"
-                  disabled={pending}
-                  onClick={() => openDialog(order)}
-                >
-                  {order.dialogId ? "Продолжить" : "Открыть"}
-                  <IconArrowRight data-icon="inline-end" />
-                </Button>
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground flex items-center gap-1 text-xs">
+                    <IconClock className="size-3.5" /> {order.deadlineMinutes}{" "}
+                    мин
+                  </span>
+                  <span className="text-muted-foreground text-xs">
+                    {order.portions} порц.
+                  </span>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="ml-auto"
+                    disabled={pending}
+                    onClick={() => openDialog(order)}
+                  >
+                    {order.dialogId ? "Продолжить" : "Открыть"}
+                    <IconArrowRight data-icon="inline-end" />
+                  </Button>
+                </div>
               </li>
             ))}
           </ul>

@@ -2,6 +2,7 @@ export { CreateSessionForm, type VariantOption } from "./create-session-form";
 export { DemoTour } from "./demo-tour";
 export { DialogRoom, type DialogRoomProps } from "./dialog-room";
 export { EvaluationCard, type EvaluationView } from "./evaluation-card";
+export { GameSectionHeader } from "./game-section-header";
 export {
   ChefHatIllustration,
   KitchenPatternBackdrop,
