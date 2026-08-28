@@ -2,12 +2,11 @@
 
 import {
   Button,
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -52,6 +51,7 @@ export function WorkspaceSwitcher({
   const nameInputId = useId();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const [pending, setPending] = useState(false);
 
   async function selectWorkspace(orgId: string) {
@@ -76,8 +76,9 @@ export function WorkspaceSwitcher({
 
     setPending(true);
     try {
-      await client.org.workspace.create({ name });
+      await client.org.workspace.create({ name, description });
       setName("");
+      setDescription("");
       setIsCreateOpen(false);
       router.push("/game");
       router.refresh();
@@ -92,6 +93,10 @@ export function WorkspaceSwitcher({
 
   const workspaceName = activeWorkspace?.name ?? "Моя команда";
   const workspaceInitial = workspaceName.trim().charAt(0).toUpperCase() || "К";
+
+  function openCreateWorkspace() {
+    setIsCreateOpen(true);
+  }
 
   return (
     <>
@@ -123,7 +128,9 @@ export function WorkspaceSwitcher({
                 onClick={() => selectWorkspace(workspace.id)}
               >
                 <IconUsersGroup />
-                <span className="min-w-0 flex-1 truncate">{workspace.name}</span>
+                <span className="min-w-0 flex-1 truncate">
+                  {workspace.name}
+                </span>
                 {workspace.id === activeWorkspace?.id ? (
                   <IconCheck className="text-primary" />
                 ) : null}
@@ -131,27 +138,23 @@ export function WorkspaceSwitcher({
             ))}
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => setIsCreateOpen(true)}>
+          <DropdownMenuItem onClick={openCreateWorkspace}>
             <IconPlus />
             Создать команду
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <Drawer
-        direction="right"
-        open={isCreateOpen}
-        onOpenChange={setIsCreateOpen}
-      >
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>Создать команду</DrawerTitle>
-            <DrawerDescription>
-              Вы станете ведущим команды и сразу переключитесь на неё.
-            </DrawerDescription>
-          </DrawerHeader>
-          <form onSubmit={createWorkspace}>
-            <FieldGroup className="px-4">
+      <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <IconUsersGroup className="size-5" />
+            <DialogTitle className="text-2xl">
+              Создать новую команду
+            </DialogTitle>
+          </DialogHeader>
+          <form onSubmit={createWorkspace} className="flex flex-col gap-6">
+            <FieldGroup>
               <Field>
                 <FieldLabel htmlFor={nameInputId}>Название команды</FieldLabel>
                 <Input
@@ -164,24 +167,28 @@ export function WorkspaceSwitcher({
                   required
                 />
               </Field>
+              <Field>
+                <FieldLabel htmlFor={`${nameInputId}-description`}>
+                  Описание{" "}
+                  <span className="text-muted-foreground">(необязательно)</span>
+                </FieldLabel>
+                <Input
+                  id={`${nameInputId}-description`}
+                  value={description}
+                  onChange={(event) => setDescription(event.target.value)}
+                  placeholder="Коротко о команде"
+                  maxLength={256}
+                />
+              </Field>
             </FieldGroup>
-            <DrawerFooter>
+            <DialogFooter>
               <Button type="submit" disabled={pending}>
-                <IconPlus data-icon="inline-start" />
                 {pending ? "Создаём…" : "Создать команду"}
               </Button>
-              <Button
-                type="button"
-                variant="outline"
-                disabled={pending}
-                onClick={() => setIsCreateOpen(false)}
-              >
-                Отмена
-              </Button>
-            </DrawerFooter>
+            </DialogFooter>
           </form>
-        </DrawerContent>
-      </Drawer>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

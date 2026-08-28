@@ -122,6 +122,7 @@ export const GameSession = pgTable(
 export const GameOrganization = pgTable("game_organizations", (t) => ({
   id: t.text().primaryKey(),
   name: t.varchar({ length: 128 }).notNull(),
+  description: t.varchar({ length: 256 }).default("").notNull(),
   createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
 }));
 

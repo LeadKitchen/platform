@@ -53,7 +53,6 @@ function useCountUp(target: number, durationMs = 900) {
     }
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-    // biome-ignore lint/correctness/useExhaustiveDependencies: анимация должна проиграться один раз, от начального значения target.
   }, [durationMs]);
 
   return value;
