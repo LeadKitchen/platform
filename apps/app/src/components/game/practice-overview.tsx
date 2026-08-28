@@ -66,10 +66,8 @@ export function PracticeOverview({
   const activityByDate = new Map(
     dailyActivity.map((item) => [item.date, item.dialogs]),
   );
-  const lastActivityDate = dailyActivity.at(-1)?.date;
-  const lastDate = lastActivityDate
-    ? new Date(`${lastActivityDate}T00:00:00Z`)
-    : new Date();
+  const lastDate = new Date();
+  lastDate.setUTCHours(0, 0, 0, 0);
   const activityCells = Array.from({ length: 364 }, (_, index) => {
     const date = new Date(lastDate);
     date.setUTCDate(lastDate.getUTCDate() - (363 - index));
@@ -118,7 +116,17 @@ export function PracticeOverview({
               <span className="text-center">6 месяцев назад</span>
               <span className="text-right">Сегодня</span>
             </div>
-            <div className="grid grid-flow-col grid-rows-7 gap-1">
+            <ul className="sr-only">
+              {activityCells.map((item) => (
+                <li key={item.date}>
+                  {item.date}: {item.dialogs} разборов
+                </li>
+              ))}
+            </ul>
+            <div
+              className="grid grid-flow-col grid-rows-7 gap-1"
+              aria-hidden="true"
+            >
               {activityCells.map((item) => (
                 <div
                   key={item.date}

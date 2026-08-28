@@ -246,23 +246,25 @@ export default async function GamePage() {
                 Ведущий команды выделил этот критерий как следующий фокус.
               </CardDescription>
             </CardHeader>
-            <CardFooter>
-              <Button
-                render={
-                  <Link
-                    href={
-                      inProgressSession
-                        ? `/game/${inProgressSession.id}`
-                        : "#start-practice"
-                    }
-                  />
-                }
-                nativeButton={false}
-              >
-                {inProgressSession ? "Продолжить смену" : "Начать практику"}
-                <IconArrowRight data-icon="inline-end" />
-              </Button>
-            </CardFooter>
+            {inProgressSession || (!inProgressTraining && assignedTraining) ? (
+              <CardFooter>
+                <Button
+                  render={
+                    <Link
+                      href={
+                        inProgressSession
+                          ? `/game/${inProgressSession.id}`
+                          : "#start-practice"
+                      }
+                    />
+                  }
+                  nativeButton={false}
+                >
+                  {inProgressSession ? "Продолжить смену" : "Начать практику"}
+                  <IconArrowRight data-icon="inline-end" />
+                </Button>
+              </CardFooter>
+            ) : null}
           </Card>
         ) : null}
 
