@@ -156,7 +156,10 @@ export function DemoTour() {
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="flex items-center gap-3">
               <Avatar className="size-12">
-                <AvatarImage src={employeeAvatar} alt={scenario.employee.name} />
+                <AvatarImage
+                  src={employeeAvatar}
+                  alt={scenario.employee.name}
+                />
                 <AvatarFallback>{scenario.employee.initials}</AvatarFallback>
               </Avatar>
               <div>

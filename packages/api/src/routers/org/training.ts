@@ -54,7 +54,11 @@ export const assign = protectedProcedure
       if (!assignment) throw new Error("Не удалось назначить практику");
       return { ...assignment, duplicate: false };
     } catch (cause) {
-      if (!(cause instanceof Error) || !("code" in cause) || cause.code !== "23505") {
+      if (
+        !(cause instanceof Error) ||
+        !("code" in cause) ||
+        cause.code !== "23505"
+      ) {
         throw cause;
       }
       const [existing] = await context.db
@@ -65,10 +69,7 @@ export const assign = protectedProcedure
             eq(GameTrainingAssignment.orgId, orgId),
             eq(GameTrainingAssignment.participantId, input.participantId),
             eq(GameTrainingAssignment.criterionId, input.criterionId),
-            inArray(GameTrainingAssignment.status, [
-              "assigned",
-              "in_progress",
-            ]),
+            inArray(GameTrainingAssignment.status, ["assigned", "in_progress"]),
           ),
         )
         .limit(1);

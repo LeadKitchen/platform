@@ -245,10 +245,7 @@ export const end = protectedProcedure
           .where(
             and(
               eq(GameTrainingAssignment.id, session.trainingAssignmentId),
-              eq(
-                GameTrainingAssignment.participantId,
-                context.session.user.id,
-              ),
+              eq(GameTrainingAssignment.participantId, context.session.user.id),
               eq(GameTrainingAssignment.status, "in_progress"),
             ),
           )
