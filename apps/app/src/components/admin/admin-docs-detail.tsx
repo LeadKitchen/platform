@@ -27,20 +27,19 @@ export function AdminDocsDetail({ section }: AdminDocsDetailProps) {
   const SectionIcon = section.icon;
 
   return (
-    <div className="flex flex-1 flex-col gap-8 p-4 lg:p-6">
-      <Card className="overflow-hidden border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card">
-        <CardContent className="flex flex-col items-start gap-5 px-6 py-8 lg:px-10">
-          <div className="bg-background/80 text-primary flex size-12 items-center justify-center rounded-2xl border shadow-sm backdrop-blur-sm">
+    <div className="flex flex-1 flex-col gap-6 p-4 lg:p-6">
+      <section className="flex flex-col items-start gap-5 py-4 lg:py-8">
+          <div className="bg-muted text-foreground flex size-11 items-center justify-center rounded-xl">
             <SectionIcon />
           </div>
           <div className="flex max-w-3xl flex-col gap-3">
-            <p className="text-primary text-sm font-semibold">
+            <p className="text-muted-foreground text-sm font-medium">
               {section.eyebrow}
             </p>
-            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+            <h1 className="text-3xl font-medium tracking-[-0.035em] sm:text-4xl">
               {section.title}
             </h1>
-            <p className="text-muted-foreground text-base leading-relaxed sm:text-lg">
+            <p className="text-muted-foreground text-base leading-relaxed">
               {section.summary}
             </p>
           </div>
@@ -53,18 +52,17 @@ export function AdminDocsDetail({ section }: AdminDocsDetailProps) {
               <IconArrowRight data-icon="inline-end" />
             </Button>
           )}
-        </CardContent>
-      </Card>
+      </section>
 
       <div className="flex flex-col gap-6">
         {section.blocks.map((block) => (
-          <Card key={block.title}>
-            <CardHeader>
+          <Card key={block.title} className="gap-0 overflow-hidden py-0 shadow-none">
+            <CardHeader className="border-b py-5">
               <CardTitle>
                 <h2>{block.title}</h2>
               </CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-col gap-4">
+            <CardContent className="flex flex-col gap-4 py-5">
               {block.paragraphs?.map((paragraph) => (
                 <p key={paragraph} className="text-sm leading-relaxed">
                   {paragraph}

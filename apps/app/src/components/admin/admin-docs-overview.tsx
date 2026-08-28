@@ -1,5 +1,4 @@
 import {
-  Badge,
   Button,
   Card,
   CardContent,
@@ -17,27 +16,46 @@ import {
 
 export function AdminDocsOverview() {
   return (
-    <div className="flex flex-1 flex-col gap-8 p-4 lg:p-6">
-      <Card className="overflow-hidden border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card">
-        <CardContent className="flex flex-col items-start gap-5 px-6 py-8 lg:px-10">
-          <Badge variant="secondary">
-            <IconBook2 />
-            Документация
-          </Badge>
-          <div className="flex max-w-3xl flex-col gap-3">
-            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-              {ADMIN_DOC_CATEGORY_COPY.title}
-            </h1>
-            <p className="text-muted-foreground text-base leading-relaxed sm:text-lg">
-              {ADMIN_DOC_CATEGORY_COPY.description}
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+    <div className="flex flex-1 flex-col gap-6 p-4 lg:p-6">
+      <div className="flex max-w-3xl flex-col gap-2">
+        <div className="text-muted-foreground flex items-center gap-2 text-sm">
+          <IconBook2 className="size-4" />
+          База знаний
+        </div>
+        <h1 className="text-3xl font-medium tracking-[-0.035em] sm:text-4xl">
+          {ADMIN_DOC_CATEGORY_COPY.title}
+        </h1>
+        <p className="text-muted-foreground text-sm leading-relaxed sm:text-base">
+          {ADMIN_DOC_CATEGORY_COPY.description}
+        </p>
+      </div>
+
+      <div className="grid overflow-hidden rounded-xl border sm:grid-cols-3">
+        <div className="border-b p-4 sm:border-r sm:border-b-0">
+          <p className="text-muted-foreground text-xs uppercase tracking-wide">
+            Разделов
+          </p>
+          <p className="mt-1 text-2xl font-medium tabular-nums">
+            {ADMIN_DOC_SECTIONS.length}
+          </p>
+        </div>
+        <div className="border-b p-4 sm:border-r sm:border-b-0">
+          <p className="text-muted-foreground text-xs uppercase tracking-wide">
+            Формат
+          </p>
+          <p className="mt-1 text-sm font-medium">Практические руководства</p>
+        </div>
+        <div className="p-4">
+          <p className="text-muted-foreground text-xs uppercase tracking-wide">
+            Доступ
+          </p>
+          <p className="mt-1 text-sm font-medium">Для администраторов</p>
+        </div>
+      </div>
 
       <section className="flex flex-col gap-4" aria-labelledby="sections-title">
         <div className="flex max-w-3xl flex-col gap-2">
-          <h2 id="sections-title" className="text-2xl font-semibold">
+          <h2 id="sections-title" className="text-xl font-medium">
             Разделы
           </h2>
           <p className="text-muted-foreground">
@@ -52,10 +70,10 @@ export function AdminDocsOverview() {
             return (
               <Card
                 key={section.slug}
-                className="group flex h-full flex-col transition-colors hover:border-primary/40"
+                className="group flex h-full flex-col gap-0 overflow-hidden py-0 shadow-none transition-colors hover:border-foreground/20"
               >
-                <CardHeader>
-                  <div className="bg-primary/10 text-primary flex size-11 items-center justify-center rounded-xl">
+                <CardHeader className="border-b py-5">
+                  <div className="bg-muted text-foreground flex size-10 items-center justify-center rounded-lg">
                     <SectionIcon />
                   </div>
                   <CardTitle>
@@ -63,10 +81,10 @@ export function AdminDocsOverview() {
                   </CardTitle>
                   <CardDescription>{section.eyebrow}</CardDescription>
                 </CardHeader>
-                <CardContent className="flex flex-1 flex-col gap-4">
+                <CardContent className="flex flex-1 flex-col gap-4 py-5">
                   <p className="text-sm leading-relaxed">{section.summary}</p>
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="pb-5">
                   <Button
                     className="w-full"
                     variant="outline"

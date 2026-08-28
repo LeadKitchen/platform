@@ -38,7 +38,9 @@ import {
 import {
   IconDatabase,
   IconDeviceFloppy,
+  IconMessageCircle,
   IconRefresh,
+  IconSearch,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -382,6 +384,7 @@ export function AdminGameDashboard({
   const [sessions, setSessions] = useState(initialData.sessions);
   const [users, setUsers] = useState(initialData.users);
   const [userQuery, setUserQuery] = useState("");
+  const [dialogQuery, setDialogQuery] = useState("");
   const [organizations, setOrganizations] = useState(initialData.organizations);
   const [newOrgName, setNewOrgName] = useState("");
   const [settings, setSettings] = useState<GameSettings>(
@@ -409,6 +412,15 @@ export function AdminGameDashboard({
       ),
     );
   }, [userQuery, users]);
+  const visibleDialogs = useMemo(() => {
+    const query = dialogQuery.trim().toLocaleLowerCase("ru");
+    if (!query) return initialData.dialogs;
+    return initialData.dialogs.filter((item) =>
+      [item.sessionTitle, item.employeeName, item.taskTitle].some((value) =>
+        value.toLocaleLowerCase("ru").includes(query),
+      ),
+    );
+  }, [dialogQuery, initialData.dialogs]);
 
   function chooseEmployee(id: string | null) {
     const selected = employees.find((item) => item.id === id) ?? emptyEmployee;
@@ -651,7 +663,7 @@ export function AdminGameDashboard({
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-muted-foreground text-sm">Администрирование</p>
-          <h1 className="text-2xl font-semibold">
+          <h1 className="text-3xl font-medium tracking-[-0.035em]">
             {SECTION_COPY[section].title}
           </h1>
           <p className="text-muted-foreground text-sm">
@@ -664,8 +676,12 @@ export function AdminGameDashboard({
         </Button>
       </div>
 
-      <AdminAiAssistant />
-      <AdminConfigHistory />
+      {section === "overview" || section === "settings" ? (
+        <>
+          <AdminAiAssistant />
+          <AdminConfigHistory />
+        </>
+      ) : null}
 
       {section === "overview" ? (
         <div className="flex flex-col gap-6">
@@ -715,14 +731,14 @@ export function AdminGameDashboard({
 
       {section === "sessions" ? (
         <div>
-          <Card>
-            <CardHeader>
+          <Card className="gap-0 overflow-hidden py-0">
+            <CardHeader className="border-b py-4">
               <CardTitle>Игровые сессии</CardTitle>
               <CardDescription>
                 Все запуски игры, количество заказов и диалогов.
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -788,91 +804,106 @@ export function AdminGameDashboard({
       ) : null}
 
       {section === "dialogs" ? (
-        <div>
-          <Card>
-            <CardHeader>
-              <CardTitle>Диалоги и оценки</CardTitle>
-              <CardDescription>
-                История разговоров, фактический стиль и итоговый балл.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Сессия</TableHead>
-                    <TableHead>Сотрудник / задача</TableHead>
-                    <TableHead>Вариант</TableHead>
-                    <TableHead>Стиль</TableHead>
-                    <TableHead>Оценка</TableHead>
-                    <TableHead>Дата</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {initialData.dialogs.map((row) => (
-                    <TableRow key={row.dialog.id}>
-                      <TableCell className="font-medium">
-                        <Link
-                          className="hover:underline"
-                          href={`/admin/game/dialogs/${row.dialog.id}`}
-                        >
+        <div className="bg-card grid min-h-[620px] overflow-hidden rounded-xl border xl:grid-cols-[380px_1fr]">
+          <div className="flex min-h-0 flex-col border-b xl:border-r xl:border-b-0">
+            <div className="border-b p-3">
+              <div className="relative">
+                <IconSearch className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
+                <Input
+                  value={dialogQuery}
+                  onChange={(event) => setDialogQuery(event.target.value)}
+                  placeholder="Поиск разговоров"
+                  className="pl-9"
+                />
+              </div>
+            </div>
+            <div className="flex items-center justify-between border-b px-4 py-3 text-sm">
+              <span className="font-medium">Все разговоры</span>
+              <Badge variant="secondary">{visibleDialogs.length}</Badge>
+            </div>
+            <div className="max-h-[540px] flex-1 overflow-y-auto">
+              {visibleDialogs.length === 0 ? (
+                <div className="text-muted-foreground flex min-h-56 flex-col items-center justify-center gap-2 p-6 text-center text-sm">
+                  <IconMessageCircle className="size-6" />
+                  Ничего не найдено
+                </div>
+              ) : (
+                visibleDialogs.map((row) => (
+                  <Link
+                    key={row.dialog.id}
+                    href={`/admin/game/dialogs/${row.dialog.id}`}
+                    className="hover:bg-muted/50 flex flex-col gap-2 border-b p-4 transition-colors"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-medium">
                           {row.sessionTitle}
-                        </Link>
-                      </TableCell>
-                      <TableCell>
-                        <div>{row.employeeName}</div>
-                        <div className="text-muted-foreground text-xs">
-                          {row.taskTitle}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="secondary">
-                          {row.dialog.variantId}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
+                        </p>
+                        <p className="text-muted-foreground truncate text-xs">
+                          {row.employeeName} · {row.taskTitle}
+                        </p>
+                      </div>
+                      {row.evaluation ? (
+                        <Badge>{row.evaluation.scorePercent}%</Badge>
+                      ) : (
+                        <Badge variant="outline">Без оценки</Badge>
+                      )}
+                    </div>
+                    <div className="text-muted-foreground flex items-center justify-between gap-3 text-xs">
+                      <span>
                         {row.evaluation
                           ? `${styleLabel(row.evaluation.expectedStyle)} → ${styleLabel(row.evaluation.actualStyle)}`
-                          : "—"}
-                      </TableCell>
-                      <TableCell>
-                        {row.evaluation ? (
-                          <Badge>{row.evaluation.scorePercent}%</Badge>
-                        ) : (
-                          <Badge variant="outline">Без оценки</Badge>
-                        )}
-                      </TableCell>
-                      <TableCell>{dateLabel(row.dialog.startedAt)}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+                          : row.dialog.variantId}
+                      </span>
+                      <span>{dateLabel(row.dialog.startedAt)}</span>
+                    </div>
+                  </Link>
+                ))
+              )}
+            </div>
+          </div>
+          <div className="text-muted-foreground flex min-h-80 flex-col items-center justify-center gap-3 p-8 text-center">
+            <div className="bg-muted flex size-12 items-center justify-center rounded-full">
+              <IconMessageCircle className="size-5" />
+            </div>
+            <div>
+              <p className="text-foreground font-medium">Выберите разговор</p>
+              <p className="mt-1 max-w-sm text-sm">
+                Откройте запись из списка, чтобы увидеть хронологию, стиль и
+                итоговую оценку.
+              </p>
+            </div>
+          </div>
         </div>
       ) : null}
 
       {section === "employees" ? (
         <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
-          <Card>
-            <CardHeader>
+          <Card className="gap-0 overflow-hidden py-0">
+            <CardHeader className="border-b py-5">
               <CardTitle>Каталог сотрудников</CardTitle>
               <CardDescription>
                 {employees.length} профилей персонажей.
               </CardDescription>
             </CardHeader>
-            <CardContent className="flex flex-col gap-2">
+            <CardContent className="grid gap-3 py-5 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
               {employees.map((item) => (
                 <Button
                   variant="outline"
                   type="button"
                   key={item.id}
                   onClick={() => chooseEmployee(item.id)}
-                  className="h-auto justify-between p-3 text-left"
+                  className={`h-auto min-h-28 items-start justify-between gap-3 rounded-xl p-4 text-left shadow-none transition-colors ${
+                    employee.id === item.id
+                      ? "border-primary bg-primary/5"
+                      : "hover:border-foreground/20 hover:bg-muted/40"
+                  }`}
                 >
-                  <span>
-                    <span className="block font-medium">{item.name}</span>
-                    <span className="text-muted-foreground text-sm">
+                  <span className="min-w-0">
+                    <span className="block truncate font-medium">
+                      {item.name}
+                    </span>
+                    <span className="text-muted-foreground mt-1 block text-sm font-normal whitespace-normal">
                       {item.role} · {item.level}
                     </span>
                   </span>
@@ -883,8 +914,8 @@ export function AdminGameDashboard({
               ))}
             </CardContent>
           </Card>
-          <Card>
-            <CardHeader>
+          <Card className="gap-0 overflow-hidden py-0">
+            <CardHeader className="border-b py-5">
               <CardTitle>
                 {employee.id ? "Редактирование сотрудника" : "Новый сотрудник"}
               </CardTitle>
@@ -892,7 +923,7 @@ export function AdminGameDashboard({
                 Компетенции и профиль личности задаются JSON-объектами.
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="py-5">
               <form onSubmit={saveEmployee}>
                 <FieldGroup>
                   <div className="grid gap-4 sm:grid-cols-2">
@@ -1024,23 +1055,29 @@ export function AdminGameDashboard({
 
       {section === "tasks" ? (
         <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
-          <Card>
-            <CardHeader>
+          <Card className="gap-0 overflow-hidden py-0">
+            <CardHeader className="border-b py-5">
               <CardTitle>Каталог заданий</CardTitle>
               <CardDescription>{tasks.length} игровых заказов.</CardDescription>
             </CardHeader>
-            <CardContent className="flex flex-col gap-2">
+            <CardContent className="grid gap-3 py-5 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
               {tasks.map((item) => (
                 <Button
                   variant="outline"
                   type="button"
                   key={item.id}
                   onClick={() => chooseTask(item.id)}
-                  className="h-auto justify-between p-3 text-left"
+                  className={`h-auto min-h-28 items-start justify-between gap-3 rounded-xl p-4 text-left shadow-none transition-colors ${
+                    task.id === item.id
+                      ? "border-primary bg-primary/5"
+                      : "hover:border-foreground/20 hover:bg-muted/40"
+                  }`}
                 >
-                  <span>
-                    <span className="block font-medium">{item.title}</span>
-                    <span className="text-muted-foreground text-sm">
+                  <span className="min-w-0">
+                    <span className="block font-medium whitespace-normal">
+                      {item.title}
+                    </span>
+                    <span className="text-muted-foreground mt-1 block text-sm font-normal whitespace-normal">
                       {item.type} · сложность {item.complexity}/5
                     </span>
                   </span>
@@ -1051,8 +1088,8 @@ export function AdminGameDashboard({
               ))}
             </CardContent>
           </Card>
-          <Card>
-            <CardHeader>
+          <Card className="gap-0 overflow-hidden py-0">
+            <CardHeader className="border-b py-5">
               <CardTitle>
                 {task.id ? "Редактирование задания" : "Новое задание"}
               </CardTitle>
@@ -1061,7 +1098,7 @@ export function AdminGameDashboard({
                 заказа.
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="py-5">
               <form onSubmit={saveTask}>
                 <FieldGroup>
                   <div className="grid gap-4 sm:grid-cols-2">
@@ -1197,25 +1234,29 @@ export function AdminGameDashboard({
 
       {section === "variants" ? (
         <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
-          <Card>
-            <CardHeader>
+          <Card className="gap-0 overflow-hidden py-0">
+            <CardHeader className="border-b py-5">
               <CardTitle>Варианты AI-конвейера</CardTitle>
               <CardDescription>
                 Экспериментальные ветки, доступные новым игровым сессиям.
               </CardDescription>
             </CardHeader>
-            <CardContent className="flex flex-col gap-2">
+            <CardContent className="grid gap-3 py-5">
               {variants.map((item) => (
                 <Button
                   variant="outline"
                   type="button"
                   key={item.id}
                   onClick={() => chooseVariant(item.id)}
-                  className="h-auto items-start justify-between gap-3 p-3 text-left"
+                  className={`h-auto min-h-28 items-start justify-between gap-3 rounded-xl p-4 text-left shadow-none transition-colors ${
+                    variant.id === item.id
+                      ? "border-primary bg-primary/5"
+                      : "hover:border-foreground/20 hover:bg-muted/40"
+                  }`}
                 >
-                  <span>
+                  <span className="min-w-0">
                     <span className="block font-medium">{item.name}</span>
-                    <span className="text-muted-foreground text-sm">
+                    <span className="text-muted-foreground mt-1 block text-sm font-normal whitespace-normal">
                       {item.knowledge} · {item.persona} · {item.evaluation}
                     </span>
                   </span>
@@ -1229,8 +1270,8 @@ export function AdminGameDashboard({
               ))}
             </CardContent>
           </Card>
-          <Card>
-            <CardHeader>
+          <Card className="gap-0 overflow-hidden py-0">
+            <CardHeader className="border-b py-5">
               <CardTitle>
                 {variant.id ? "Настройка варианта" : "Новый вариант"}
               </CardTitle>
@@ -1238,7 +1279,7 @@ export function AdminGameDashboard({
                 Изменения применяются только к новым диалогам.
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="py-5">
               <form onSubmit={saveVariant}>
                 <FieldGroup>
                   <Field>

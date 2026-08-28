@@ -47,25 +47,24 @@ export function ProfileForm({
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-      {/* Avatar section */}
-      <div className="flex items-center gap-4">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <div className="flex flex-wrap items-center gap-4 border-b pb-6">
+        <div className="bg-brand-soft text-brand flex h-16 w-16 items-center justify-center rounded-xl">
           {avatarUrl ? (
             <Image
               src={avatarUrl || "/placeholder.svg"}
               alt="Avatar"
               width={64}
               height={64}
-              className="h-16 w-16 rounded-full object-cover"
+              className="h-16 w-16 rounded-xl object-cover"
             />
           ) : (
-            <User className="h-8 w-8 text-muted-foreground" />
+            <User className="h-7 w-7" />
           )}
         </div>
         <Button
           type="button"
-          className="bg-foreground text-background hover:bg-foreground/90"
+          variant="outline"
           onClick={() => document.getElementById("avatar-upload")?.click()}
         >
           Загрузить фото
@@ -85,32 +84,29 @@ export function ProfileForm({
         />
       </div>
 
-      {/* Username */}
-      <div className="space-y-2">
-        <Label htmlFor="username">Имя пользователя</Label>
-        <Input
-          id="username"
-          placeholder="ivan_ivanov"
-          {...form.register("username")}
-        />
-        <p className="text-sm text-amber-700/70">
-          Отображается в интерфейсе игры и в списке ведущих. Может быть вашим
-          именем или псевдонимом.
-        </p>
+      <div className="grid gap-5 md:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="username">Имя пользователя</Label>
+          <Input
+            id="username"
+            placeholder="ivan_ivanov"
+            {...form.register("username")}
+          />
+          <p className="text-muted-foreground text-sm">
+            Отображается в интерфейсе игры и списке ведущих.
+          </p>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="email@example.com"
+            {...form.register("email")}
+          />
+        </div>
       </div>
 
-      {/* Email */}
-      <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
-        <Input
-          id="email"
-          type="email"
-          placeholder="email@example.com"
-          {...form.register("email")}
-        />
-      </div>
-
-      {/* Bio */}
       <div className="space-y-2">
         <Label htmlFor="bio">О себе</Label>
         <Textarea
@@ -121,11 +117,7 @@ export function ProfileForm({
         />
       </div>
 
-      <Button
-        type="submit"
-        className="bg-foreground text-background hover:bg-foreground/90"
-        disabled={updateProfile.isPending}
-      >
+      <Button type="submit" disabled={updateProfile.isPending}>
         {updateProfile.isPending ? "Сохранение…" : "Сохранить"}
       </Button>
     </form>
