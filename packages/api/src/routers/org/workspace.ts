@@ -26,7 +26,12 @@ export const orgWorkspaceRouter = {
     }),
 
   create: protectedProcedure
-    .input(z.object({ name: z.string().trim().min(2).max(128) }))
+    .input(
+      z.object({
+        name: z.string().trim().min(2).max(128),
+        description: z.string().trim().max(256).optional().default(""),
+      }),
+    )
     .handler(async ({ context, input }) => {
       const base = slugifyOrgId(input.name);
       let id = base;
@@ -41,7 +46,11 @@ export const orgWorkspaceRouter = {
       }
 
       await context.db.transaction(async (tx) => {
-        await tx.insert(GameOrganization).values({ id, name: input.name });
+        await tx.insert(GameOrganization).values({
+          id,
+          name: input.name,
+          description: input.description,
+        });
         await tx.insert(GameOrgMember).values({
           userId: context.session.user.id,
           orgId: id,
@@ -54,6 +63,11 @@ export const orgWorkspaceRouter = {
         await setActiveWorkspace(tx, context.session.user.id, id);
       });
 
-      return { id, name: input.name, isFacilitator: true };
+      return {
+        id,
+        name: input.name,
+        description: input.description,
+        isFacilitator: true,
+      };
     }),
 };

@@ -29,34 +29,37 @@ export function AdminDocsDetail({ section }: AdminDocsDetailProps) {
   return (
     <div className="flex flex-1 flex-col gap-6 p-4 lg:p-6">
       <section className="flex flex-col items-start gap-5 py-4 lg:py-8">
-          <div className="bg-muted text-foreground flex size-11 items-center justify-center rounded-xl">
-            <SectionIcon />
-          </div>
-          <div className="flex max-w-3xl flex-col gap-3">
-            <p className="text-muted-foreground text-sm font-medium">
-              {section.eyebrow}
-            </p>
-            <h1 className="text-3xl font-medium tracking-[-0.035em] sm:text-4xl">
-              {section.title}
-            </h1>
-            <p className="text-muted-foreground text-base leading-relaxed">
-              {section.summary}
-            </p>
-          </div>
-          {section.relatedLink && (
-            <Button
-              render={<Link href={section.relatedLink.href} />}
-              nativeButton={false}
-            >
-              {section.relatedLink.label}
-              <IconArrowRight data-icon="inline-end" />
-            </Button>
-          )}
+        <div className="bg-muted text-foreground flex size-11 items-center justify-center rounded-xl">
+          <SectionIcon />
+        </div>
+        <div className="flex max-w-3xl flex-col gap-3">
+          <p className="text-muted-foreground text-sm font-medium">
+            {section.eyebrow}
+          </p>
+          <h1 className="text-3xl font-medium tracking-[-0.035em] sm:text-4xl">
+            {section.title}
+          </h1>
+          <p className="text-muted-foreground text-base leading-relaxed">
+            {section.summary}
+          </p>
+        </div>
+        {section.relatedLink && (
+          <Button
+            render={<Link href={section.relatedLink.href} />}
+            nativeButton={false}
+          >
+            {section.relatedLink.label}
+            <IconArrowRight data-icon="inline-end" />
+          </Button>
+        )}
       </section>
 
       <div className="flex flex-col gap-6">
         {section.blocks.map((block) => (
-          <Card key={block.title} className="gap-0 overflow-hidden py-0 shadow-none">
+          <Card
+            key={block.title}
+            className="gap-0 overflow-hidden py-0 shadow-none"
+          >
             <CardHeader className="border-b py-5 [.border-b]:pb-5">
               <CardTitle>
                 <h2>{block.title}</h2>

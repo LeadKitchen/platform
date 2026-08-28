@@ -92,73 +92,73 @@ export function AiTechnologyDetail({ technology }: AiTechnologyDetailProps) {
   return (
     <div className="flex flex-1 flex-col gap-8 p-4 lg:p-6">
       <section className="grid gap-8 py-4 lg:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.75fr)] lg:py-8">
-          <div className="flex flex-col items-start gap-5 py-2 lg:py-6">
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="secondary">{technology.stageLabel}</Badge>
-              <Badge variant="outline">Вариант: {technology.variantId}</Badge>
-              <Badge variant="outline">
-                Контроль: {technology.referenceVariantId}
-              </Badge>
-            </div>
-            <div className="flex max-w-3xl flex-col gap-3">
-              <p className="text-muted-foreground text-sm font-medium">
-                {technology.eyebrow}
-              </p>
-              <h1 className="text-3xl font-medium tracking-[-0.035em] sm:text-4xl">
-                {technology.name}
-              </h1>
-              <p className="text-muted-foreground text-base leading-relaxed">
-                {technology.summary}
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <Button
-                size="lg"
-                render={<a href="#how-it-works" />}
-                nativeButton={false}
-              >
-                Как это работает
-                <IconArrowRight data-icon="inline-end" />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                render={<a href="#benchmark" />}
-                nativeButton={false}
-              >
-                <IconChartBar data-icon="inline-start" />
-                Отчёт о тестах
-              </Button>
-              <Button
-                size="lg"
-                variant="ghost"
-                render={<Link href="/admin/game/benchmarks" />}
-                nativeButton={false}
-              >
-                <IconFlask data-icon="inline-start" />
-                Все прогоны
-              </Button>
-            </div>
+        <div className="flex flex-col items-start gap-5 py-2 lg:py-6">
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="secondary">{technology.stageLabel}</Badge>
+            <Badge variant="outline">Вариант: {technology.variantId}</Badge>
+            <Badge variant="outline">
+              Контроль: {technology.referenceVariantId}
+            </Badge>
           </div>
+          <div className="flex max-w-3xl flex-col gap-3">
+            <p className="text-muted-foreground text-sm font-medium">
+              {technology.eyebrow}
+            </p>
+            <h1 className="text-3xl font-medium tracking-[-0.035em] sm:text-4xl">
+              {technology.name}
+            </h1>
+            <p className="text-muted-foreground text-base leading-relaxed">
+              {technology.summary}
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Button
+              size="lg"
+              render={<a href="#how-it-works" />}
+              nativeButton={false}
+            >
+              Как это работает
+              <IconArrowRight data-icon="inline-end" />
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              render={<a href="#benchmark" />}
+              nativeButton={false}
+            >
+              <IconChartBar data-icon="inline-start" />
+              Отчёт о тестах
+            </Button>
+            <Button
+              size="lg"
+              variant="ghost"
+              render={<Link href="/admin/game/benchmarks" />}
+              nativeButton={false}
+            >
+              <IconFlask data-icon="inline-start" />
+              Все прогоны
+            </Button>
+          </div>
+        </div>
 
-          <div className="flex items-center justify-center py-4">
-            <div className="flex w-full max-w-sm flex-col gap-5 rounded-xl border p-6">
-              <div className="bg-muted text-foreground flex size-12 items-center justify-center rounded-xl">
-                <TechnologyIcon />
-              </div>
-              <div className="flex flex-col gap-2">
-                <span className="text-muted-foreground text-xs font-medium uppercase tracking-wide">
-                  Вычислительный профиль
-                </span>
-                <span className="text-lg font-semibold">
-                  {technology.computeLabel}
-                </span>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  {technology.computeDescription}
-                </p>
-              </div>
+        <div className="flex items-center justify-center py-4">
+          <div className="flex w-full max-w-sm flex-col gap-5 rounded-xl border p-6">
+            <div className="bg-muted text-foreground flex size-12 items-center justify-center rounded-xl">
+              <TechnologyIcon />
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-muted-foreground text-xs font-medium uppercase tracking-wide">
+                Вычислительный профиль
+              </span>
+              <span className="text-lg font-semibold">
+                {technology.computeLabel}
+              </span>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                {technology.computeDescription}
+              </p>
             </div>
           </div>
+        </div>
       </section>
 
       <section className="grid gap-4 lg:grid-cols-2" aria-label="Суть и польза">
