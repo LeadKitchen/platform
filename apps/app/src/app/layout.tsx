@@ -1,22 +1,15 @@
 import { APP_CONFIG } from "@acme/config";
 import { ThemeProvider, Toaster } from "@acme/ui";
 import type { Metadata, Viewport } from "next";
-import { Inter, Manrope } from "next/font/google";
+import { Geist } from "next/font/google";
 import { env } from "~/env";
 import { ORPCReactProvider } from "~/orpc/react";
 
 import "~/app/styles.css";
 
-const inter = Inter({
+const geist = Geist({
   subsets: ["latin", "cyrillic"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const manrope = Manrope({
-  subsets: ["latin", "cyrillic"],
-  weight: ["600", "700", "800"],
-  variable: "--font-manrope",
+  variable: "--font-geist",
   display: "swap",
 });
 
@@ -45,11 +38,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
-    <html
-      lang="ru"
-      suppressHydrationWarning
-      className={`${inter.variable} ${manrope.variable}`}
-    >
+    <html lang="ru" suppressHydrationWarning className={geist.variable}>
       <body className="bg-background text-foreground min-h-screen font-sans antialiased">
         <ThemeProvider>
           <ORPCReactProvider>{props.children}</ORPCReactProvider>
