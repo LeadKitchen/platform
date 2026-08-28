@@ -1,6 +1,5 @@
 "use client";
 
-import type * as React from "react";
 import { Menu as MenuPrimitive } from "@base-ui/react/menu";
 import { CheckIcon, ChevronRightIcon } from "lucide-react";
 
@@ -62,11 +61,11 @@ function DropdownMenuLabel({
   className,
   inset,
   ...props
-}: React.ComponentProps<"div"> & {
+}: MenuPrimitive.GroupLabel.Props & {
   inset?: boolean;
 }) {
   return (
-    <div
+    <MenuPrimitive.GroupLabel
       data-slot="dropdown-menu-label"
       data-inset={inset}
       className={cn(
