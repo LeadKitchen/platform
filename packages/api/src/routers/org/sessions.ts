@@ -1,4 +1,5 @@
 import {
+  and,
   avg,
   count,
   desc,
@@ -6,6 +7,9 @@ import {
   GameDialog,
   GameEvaluation,
   GameSession,
+  inArray,
+  lt,
+  or,
   user,
 } from "@acme/db";
 import { ORPCError } from "@orpc/server";
@@ -39,6 +43,12 @@ export const list = protectedProcedure
     z.object({
       limit: z.number().int().min(1).max(200).default(50),
       offset: z.number().int().min(0).default(0),
+      cursor: z
+        .object({
+          createdAt: z.date(),
+          id: z.string().uuid(),
+        })
+        .optional(),
     }),
   )
   .handler(async ({ context, input }) => {
@@ -47,27 +57,45 @@ export const list = protectedProcedure
       context.session.user.id,
     );
 
-    const [sessions, scores] = await Promise.all([
-      context.db
-        .select({ session: GameSession, participant: user.name })
-        .from(GameSession)
-        .leftJoin(user, eq(user.id, GameSession.createdBy))
-        .where(eq(GameSession.orgId, orgId))
-        .orderBy(desc(GameSession.createdAt))
-        .limit(input.limit)
-        .offset(input.offset),
-      context.db
-        .select({
-          sessionId: GameDialog.sessionId,
-          dialogs: count(),
-          avgScore: avg(GameEvaluation.scorePercent),
-        })
-        .from(GameDialog)
-        .leftJoin(GameEvaluation, eq(GameEvaluation.dialogId, GameDialog.id))
-        .innerJoin(GameSession, eq(GameSession.id, GameDialog.sessionId))
-        .where(eq(GameSession.orgId, orgId))
-        .groupBy(GameDialog.sessionId),
-    ]);
+    const sessions = await context.db
+      .select({ session: GameSession, participant: user.name })
+      .from(GameSession)
+      .leftJoin(user, eq(user.id, GameSession.createdBy))
+      .where(
+        and(
+          eq(GameSession.orgId, orgId),
+          input.cursor
+            ? or(
+                lt(GameSession.createdAt, input.cursor.createdAt),
+                and(
+                  eq(GameSession.createdAt, input.cursor.createdAt),
+                  lt(GameSession.id, input.cursor.id),
+                ),
+              )
+            : undefined,
+        ),
+      )
+      .orderBy(desc(GameSession.createdAt), desc(GameSession.id))
+      .limit(input.limit)
+      .offset(input.cursor ? 0 : input.offset);
+
+    const sessionIds = sessions.map((row) => row.session.id);
+    const scores =
+      sessionIds.length === 0
+        ? []
+        : await context.db
+            .select({
+              sessionId: GameDialog.sessionId,
+              dialogs: count(),
+              avgScore: avg(GameEvaluation.scorePercent),
+            })
+            .from(GameDialog)
+            .leftJoin(
+              GameEvaluation,
+              eq(GameEvaluation.dialogId, GameDialog.id),
+            )
+            .where(inArray(GameDialog.sessionId, sessionIds))
+            .groupBy(GameDialog.sessionId);
 
     const scoreBySession = new Map(
       scores.map((row) => [
