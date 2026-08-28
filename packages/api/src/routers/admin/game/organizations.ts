@@ -1,4 +1,5 @@
 import {
+  and,
   count,
   eq,
   GameActiveOrganization,
@@ -101,15 +102,17 @@ export const setMember = adminProcedure
     }
 
     if (input.orgId === null) {
-      await context.db
-        .delete(GameOrgMember)
-        .where(eq(GameOrgMember.userId, input.userId));
-      await context.db
-        .delete(GameFacilitator)
-        .where(eq(GameFacilitator.userId, input.userId));
-      await context.db
-        .delete(GameActiveOrganization)
-        .where(eq(GameActiveOrganization.userId, input.userId));
+      await context.db.transaction(async (tx) => {
+        await tx
+          .delete(GameOrgMember)
+          .where(eq(GameOrgMember.userId, input.userId));
+        await tx
+          .delete(GameFacilitator)
+          .where(eq(GameFacilitator.userId, input.userId));
+        await tx
+          .delete(GameActiveOrganization)
+          .where(eq(GameActiveOrganization.userId, input.userId));
+      });
       return { userId: input.userId, orgId: null };
     }
 
@@ -124,22 +127,23 @@ export const setMember = adminProcedure
 
     // Admin reassignment keeps its original single-team behavior, while the
     // sidebar can still add a personal workspace without collapsing data.
-    await context.db
-      .delete(GameOrgMember)
-      .where(eq(GameOrgMember.userId, input.userId));
-    await context.db
-      .delete(GameFacilitator)
-      .where(eq(GameFacilitator.userId, input.userId));
-    await context.db
-      .insert(GameOrgMember)
-      .values({ userId: input.userId, orgId: input.orgId });
-    await context.db
-      .insert(GameActiveOrganization)
-      .values({ userId: input.userId, orgId: input.orgId })
-      .onConflictDoUpdate({
-        target: GameActiveOrganization.userId,
-        set: { orgId: input.orgId },
-      });
+    const orgId = input.orgId;
+    await context.db.transaction(async (tx) => {
+      await tx
+        .delete(GameOrgMember)
+        .where(eq(GameOrgMember.userId, input.userId));
+      await tx
+        .delete(GameFacilitator)
+        .where(eq(GameFacilitator.userId, input.userId));
+      await tx.insert(GameOrgMember).values({ userId: input.userId, orgId });
+      await tx
+        .insert(GameActiveOrganization)
+        .values({ userId: input.userId, orgId })
+        .onConflictDoUpdate({
+          target: GameActiveOrganization.userId,
+          set: { orgId },
+        });
+    });
 
     return { userId: input.userId, orgId: input.orgId };
   });
@@ -148,12 +152,13 @@ export const setMember = adminProcedure
  * Grant or revoke the facilitator role for a user within their current org.
  * The user must already be a member of that org (`setMember` first).
  *
- * @example client.admin.game.organizations.setFacilitator({ userId, isFacilitator: true })
+ * @example client.admin.game.organizations.setFacilitator({ userId, orgId, isFacilitator: true })
  */
 export const setFacilitator = adminProcedure
   .input(
     z.object({
       userId: z.string().min(1),
+      orgId: z.string().min(1),
       isFacilitator: z.boolean(),
     }),
   )
@@ -161,14 +166,24 @@ export const setFacilitator = adminProcedure
     if (!input.isFacilitator) {
       await context.db
         .delete(GameFacilitator)
-        .where(eq(GameFacilitator.userId, input.userId));
-      return { userId: input.userId, isFacilitator: false };
+        .where(
+          and(
+            eq(GameFacilitator.userId, input.userId),
+            eq(GameFacilitator.orgId, input.orgId),
+          ),
+        );
+      return { userId: input.userId, orgId: input.orgId, isFacilitator: false };
     }
 
     const [membership] = await context.db
       .select({ orgId: GameOrgMember.orgId })
       .from(GameOrgMember)
-      .where(eq(GameOrgMember.userId, input.userId))
+      .where(
+        and(
+          eq(GameOrgMember.userId, input.userId),
+          eq(GameOrgMember.orgId, input.orgId),
+        ),
+      )
       .limit(1);
     if (!membership) {
       throw new ORPCError("BAD_REQUEST", {
@@ -188,7 +203,7 @@ export const setFacilitator = adminProcedure
         set: { orgId: membership.orgId, grantedBy: context.session.user.id },
       });
 
-    return { userId: input.userId, isFacilitator: true };
+    return { userId: input.userId, orgId: input.orgId, isFacilitator: true };
   });
 
 export const adminGameOrganizationsRouter = {

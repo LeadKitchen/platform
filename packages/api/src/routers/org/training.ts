@@ -40,32 +40,41 @@ export const assign = protectedProcedure
       throw new ORPCError("NOT_FOUND", { message: "Участник не найден" });
     }
 
-    const [existing] = await context.db
-      .select({ id: GameTrainingAssignment.id })
-      .from(GameTrainingAssignment)
-      .where(
-        and(
-          eq(GameTrainingAssignment.orgId, orgId),
-          eq(GameTrainingAssignment.participantId, input.participantId),
-          eq(GameTrainingAssignment.criterionId, input.criterionId),
-          inArray(GameTrainingAssignment.status, ["assigned", "in_progress"]),
-        ),
-      )
-      .limit(1);
-    if (existing) return { id: existing.id, duplicate: true };
-
-    const [assignment] = await context.db
-      .insert(GameTrainingAssignment)
-      .values({
-        orgId,
-        participantId: input.participantId,
-        assignedBy: context.session.user.id,
-        criterionId: input.criterionId,
-        criterionTitle: input.criterionTitle,
-      })
-      .returning({ id: GameTrainingAssignment.id });
-    if (!assignment) throw new Error("Не удалось назначить практику");
-    return { ...assignment, duplicate: false };
+    try {
+      const [assignment] = await context.db
+        .insert(GameTrainingAssignment)
+        .values({
+          orgId,
+          participantId: input.participantId,
+          assignedBy: context.session.user.id,
+          criterionId: input.criterionId,
+          criterionTitle: input.criterionTitle,
+        })
+        .returning({ id: GameTrainingAssignment.id });
+      if (!assignment) throw new Error("Не удалось назначить практику");
+      return { ...assignment, duplicate: false };
+    } catch (cause) {
+      if (!(cause instanceof Error) || !("code" in cause) || cause.code !== "23505") {
+        throw cause;
+      }
+      const [existing] = await context.db
+        .select({ id: GameTrainingAssignment.id })
+        .from(GameTrainingAssignment)
+        .where(
+          and(
+            eq(GameTrainingAssignment.orgId, orgId),
+            eq(GameTrainingAssignment.participantId, input.participantId),
+            eq(GameTrainingAssignment.criterionId, input.criterionId),
+            inArray(GameTrainingAssignment.status, [
+              "assigned",
+              "in_progress",
+            ]),
+          ),
+        )
+        .limit(1);
+      if (!existing) throw cause;
+      return { id: existing.id, duplicate: true };
+    }
   });
 
 /** Active assignments, for a facilitator's own organization only. */
