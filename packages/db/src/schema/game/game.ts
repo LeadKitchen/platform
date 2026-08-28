@@ -193,13 +193,31 @@ export const GameActiveOrganization = pgTable(
 );
 
 /** Team-owned configuration used by scorecards, scenario context and routing. */
-export const GameOrganizationConfigure = pgTable("game_organization_configure", (t) => ({
-  orgId: t.text().primaryKey().references(() => GameOrganization.id, { onDelete: "cascade" }),
-  context: t.jsonb().$type<Record<string, string>>().default({}).notNull(),
-  scorecard: t.jsonb().$type<{ criterionIds: string[]; name: string }>().default({ name: "Общая рубрика", criterionIds: [] }).notNull(),
-  automation: t.jsonb().$type<{ enabled: boolean; threshold: number }>().default({ enabled: false, threshold: 60 }).notNull(),
-  updatedAt: t.timestamp({ withTimezone: true }).defaultNow().notNull().$onUpdateFn(() => sql`now()`),
-}));
+export const GameOrganizationConfigure = pgTable(
+  "game_organization_configure",
+  (t) => ({
+    orgId: t
+      .text()
+      .primaryKey()
+      .references(() => GameOrganization.id, { onDelete: "cascade" }),
+    context: t.jsonb().$type<Record<string, string>>().default({}).notNull(),
+    scorecard: t
+      .jsonb()
+      .$type<{ criterionIds: string[]; name: string }>()
+      .default({ name: "Общая рубрика", criterionIds: [] })
+      .notNull(),
+    automation: t
+      .jsonb()
+      .$type<{ enabled: boolean; threshold: number }>()
+      .default({ enabled: false, threshold: 60 })
+      .notNull(),
+    updatedAt: t
+      .timestamp({ withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdateFn(() => sql`now()`),
+  }),
+);
 
 /**
  * A focused practice request from a facilitator to one participant.
