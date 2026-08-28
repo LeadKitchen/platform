@@ -1732,13 +1732,15 @@ export function AdminGameDashboard({
                               user.isFacilitator ? "outline" : "secondary"
                             }
                             disabled={pending}
-                            onClick={() =>
+                            onClick={() => {
+                              const orgId = user.orgId;
+                              if (!orgId) return;
                               updateFacilitator(
                                 user.id,
-                                user.orgId!,
+                                orgId,
                                 !user.isFacilitator,
-                              )
-                            }
+                              );
+                            }}
                           >
                             {user.isFacilitator
                               ? "Снять с ведущего"

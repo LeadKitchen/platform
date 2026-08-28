@@ -5,9 +5,11 @@ import { orgTrainingRouter } from "./training";
 import { orgWorkspaceRouter } from "./workspace";
 
 export const orgRouter = {
+  configure: orgConfigureRouter,
   mine,
   sessions: orgSessionsRouter,
   people: orgPeopleRouter,
   training: orgTrainingRouter,
   workspace: orgWorkspaceRouter,
 };
+import { orgConfigureRouter } from "./configure";
