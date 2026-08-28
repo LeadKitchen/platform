@@ -30,12 +30,20 @@ export function AppearanceSettings() {
       </CardHeader>
       <CardContent className="py-6">
         <div className="flex flex-col gap-3">
-          <span className="text-sm font-medium">Тема</span>
-          <div className="flex flex-wrap gap-2">
+          <span id="theme-mode-label" className="text-sm font-medium">
+            Тема
+          </span>
+          <div
+            className="flex flex-wrap gap-2"
+            role="radiogroup"
+            aria-labelledby="theme-mode-label"
+          >
             {modes.map((mode) => (
               <Button
                 key={mode.value}
                 type="button"
+                role="radio"
+                aria-checked={themeMode === mode.value}
                 variant={themeMode === mode.value ? "default" : "secondary"}
                 onClick={() => setTheme(mode.value)}
               >

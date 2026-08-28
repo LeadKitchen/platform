@@ -57,7 +57,7 @@ export function AdminDocsDetail({ section }: AdminDocsDetailProps) {
       <div className="flex flex-col gap-6">
         {section.blocks.map((block) => (
           <Card key={block.title} className="gap-0 overflow-hidden py-0 shadow-none">
-            <CardHeader className="border-b py-5">
+            <CardHeader className="border-b py-5 [.border-b]:pb-5">
               <CardTitle>
                 <h2>{block.title}</h2>
               </CardTitle>

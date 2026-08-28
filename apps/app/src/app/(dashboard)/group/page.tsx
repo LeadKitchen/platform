@@ -27,6 +27,8 @@ import { api } from "~/orpc/server";
 
 export const dynamic = "force-dynamic";
 
+const SESSIONS_LIMIT = 100;
+
 const STATUS_LABELS: Record<string, string> = {
   active: "идёт",
   completed: "завершена",
@@ -77,7 +79,7 @@ export default async function GroupPage() {
   if (!mine.isFacilitator) redirect("/game");
 
   const [sessions, { people, topMissedOrg }, assignments] = await Promise.all([
-    api.org.sessions.list({ limit: 100, offset: 0 }),
+    api.org.sessions.list({ limit: SESSIONS_LIMIT, offset: 0 }),
     api.org.people.list({}),
     api.org.training.list(),
   ]);
@@ -131,7 +133,7 @@ export default async function GroupPage() {
               {sessions.length}
             </span>
             <span className="text-muted-foreground text-xs">
-              Всего запусков
+              До {SESSIONS_LIMIT} последних запусков
             </span>
           </div>
           <div className="flex flex-col gap-1 border-b p-5 sm:border-b-0">
@@ -142,7 +144,7 @@ export default async function GroupPage() {
               {dialogsTotal}
             </span>
             <span className="text-muted-foreground text-xs">
-              Завершённые разговоры
+              В загруженных сессиях
             </span>
           </div>
           <div className="flex flex-col gap-1 p-5">
@@ -153,7 +155,7 @@ export default async function GroupPage() {
               {avgScore !== null ? `${avgScore}%` : "—"}
             </span>
             <span className="text-muted-foreground text-xs">
-              По оценённым сессиям
+              По оценённым загруженным сессиям
             </span>
           </div>
         </div>

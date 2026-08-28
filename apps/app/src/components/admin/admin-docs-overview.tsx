@@ -72,7 +72,7 @@ export function AdminDocsOverview() {
                 key={section.slug}
                 className="group flex h-full flex-col gap-0 overflow-hidden py-0 shadow-none transition-colors hover:border-foreground/20"
               >
-                <CardHeader className="border-b py-5">
+                <CardHeader className="border-b py-5 [.border-b]:pb-5">
                   <div className="bg-muted text-foreground flex size-10 items-center justify-center rounded-lg">
                     <SectionIcon />
                   </div>

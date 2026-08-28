@@ -44,7 +44,7 @@ import {
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { VariantComparison, type VariantStats } from "~/components/game";
 import { client } from "~/orpc/react";
@@ -183,6 +183,8 @@ const SECTION_COPY: Record<
     description: "Системная конфигурация и значения для новых сессий.",
   },
 };
+
+const DIALOGS_PAGE_SIZE = 100;
 
 interface SessionRow {
   session: {
@@ -385,6 +387,14 @@ export function AdminGameDashboard({
   const [users, setUsers] = useState(initialData.users);
   const [userQuery, setUserQuery] = useState("");
   const [dialogQuery, setDialogQuery] = useState("");
+  const [dialogs, setDialogs] = useState(initialData.dialogs);
+  const [dialogsHasMore, setDialogsHasMore] = useState(
+    initialData.dialogs.length === DIALOGS_PAGE_SIZE,
+  );
+  const [dialogsLoading, setDialogsLoading] = useState(false);
+  const [dialogsLoadingMore, setDialogsLoadingMore] = useState(false);
+  const dialogRequestId = useRef(0);
+  const didMountDialogs = useRef(false);
   const [organizations, setOrganizations] = useState(initialData.organizations);
   const [newOrgName, setNewOrgName] = useState("");
   const [settings, setSettings] = useState<GameSettings>(
@@ -412,15 +422,61 @@ export function AdminGameDashboard({
       ),
     );
   }, [userQuery, users]);
-  const visibleDialogs = useMemo(() => {
-    const query = dialogQuery.trim().toLocaleLowerCase("ru");
-    if (!query) return initialData.dialogs;
-    return initialData.dialogs.filter((item) =>
-      [item.sessionTitle, item.employeeName, item.taskTitle].some((value) =>
-        value.toLocaleLowerCase("ru").includes(query),
-      ),
-    );
-  }, [dialogQuery, initialData.dialogs]);
+
+  useEffect(() => {
+    if (!didMountDialogs.current) {
+      didMountDialogs.current = true;
+      return;
+    }
+
+    const requestId = ++dialogRequestId.current;
+    const query = dialogQuery.trim();
+    setDialogsLoading(true);
+    setDialogsLoadingMore(false);
+    const timeoutId = window.setTimeout(async () => {
+      try {
+        const result = await client.admin.game.dialogs({
+          query: query || undefined,
+          limit: DIALOGS_PAGE_SIZE,
+          offset: 0,
+        });
+        if (requestId !== dialogRequestId.current) return;
+        setDialogs(result);
+        setDialogsHasMore(result.length === DIALOGS_PAGE_SIZE);
+      } catch (cause) {
+        if (requestId !== dialogRequestId.current) return;
+        toast.error(
+          cause instanceof Error ? cause.message : "Ошибка загрузки диалогов",
+        );
+      } finally {
+        if (requestId === dialogRequestId.current) setDialogsLoading(false);
+      }
+    }, 300);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [dialogQuery]);
+
+  async function loadMoreDialogs() {
+    const requestId = ++dialogRequestId.current;
+    setDialogsLoadingMore(true);
+    try {
+      const result = await client.admin.game.dialogs({
+        query: dialogQuery.trim() || undefined,
+        limit: DIALOGS_PAGE_SIZE,
+        offset: dialogs.length,
+      });
+      if (requestId !== dialogRequestId.current) return;
+      setDialogs((current) => [...current, ...result]);
+      setDialogsHasMore(result.length === DIALOGS_PAGE_SIZE);
+    } catch (cause) {
+      if (requestId !== dialogRequestId.current) return;
+      toast.error(
+        cause instanceof Error ? cause.message : "Ошибка загрузки диалогов",
+      );
+    } finally {
+      if (requestId === dialogRequestId.current) setDialogsLoadingMore(false);
+    }
+  }
 
   function chooseEmployee(id: string | null) {
     const selected = employees.find((item) => item.id === id) ?? emptyEmployee;
@@ -813,22 +869,27 @@ export function AdminGameDashboard({
                   value={dialogQuery}
                   onChange={(event) => setDialogQuery(event.target.value)}
                   placeholder="Поиск разговоров"
+                  aria-label="Поиск разговоров"
                   className="pl-9"
                 />
               </div>
             </div>
             <div className="flex items-center justify-between border-b px-4 py-3 text-sm">
-              <span className="font-medium">Все разговоры</span>
-              <Badge variant="secondary">{visibleDialogs.length}</Badge>
+              <span className="font-medium">Загруженные разговоры</span>
+              <Badge variant="secondary">{dialogs.length}</Badge>
             </div>
             <div className="max-h-[540px] flex-1 overflow-y-auto">
-              {visibleDialogs.length === 0 ? (
+              {dialogsLoading ? (
+                <div className="text-muted-foreground flex min-h-56 items-center justify-center p-6 text-sm">
+                  Загрузка…
+                </div>
+              ) : dialogs.length === 0 ? (
                 <div className="text-muted-foreground flex min-h-56 flex-col items-center justify-center gap-2 p-6 text-center text-sm">
                   <IconMessageCircle className="size-6" />
                   Ничего не найдено
                 </div>
               ) : (
-                visibleDialogs.map((row) => (
+                dialogs.map((row) => (
                   <Link
                     key={row.dialog.id}
                     href={`/admin/game/dialogs/${row.dialog.id}`}
@@ -860,6 +921,19 @@ export function AdminGameDashboard({
                   </Link>
                 ))
               )}
+              {dialogsHasMore && !dialogsLoading ? (
+                <div className="border-t p-3">
+                  <Button
+                    className="w-full"
+                    type="button"
+                    variant="outline"
+                    disabled={dialogsLoadingMore}
+                    onClick={loadMoreDialogs}
+                  >
+                    {dialogsLoadingMore ? "Загрузка…" : "Показать ещё"}
+                  </Button>
+                </div>
+              ) : null}
             </div>
           </div>
           <div className="text-muted-foreground flex min-h-80 flex-col items-center justify-center gap-3 p-8 text-center">

@@ -8,6 +8,8 @@ import {
   GameEvent,
   GameSession,
   GameTask,
+  ilike,
+  or,
 } from "@acme/db";
 import { z } from "zod";
 
@@ -23,6 +25,7 @@ export const dialogs = adminProcedure
     z.object({
       variantId: z.string().max(64).optional(),
       round: z.union([z.literal(2), z.literal(3)]).optional(),
+      query: z.string().trim().max(200).optional(),
       limit: z.number().int().min(1).max(200).default(50),
       offset: z.number().int().min(0).default(0),
     }),
@@ -35,6 +38,13 @@ export const dialogs = adminProcedure
     const conditions = [
       input.variantId ? eq(GameDialog.variantId, input.variantId) : undefined,
       input.round ? eq(GameDialog.round, input.round) : undefined,
+      input.query
+        ? or(
+            ilike(GameSession.title, `%${input.query}%`),
+            ilike(GameEmployee.name, `%${input.query}%`),
+            ilike(GameTask.title, `%${input.query}%`),
+          )
+        : undefined,
     ].filter((condition) => condition !== undefined);
 
     return context.db
@@ -51,7 +61,7 @@ export const dialogs = adminProcedure
       .innerJoin(GameEmployee, eq(GameEmployee.id, GameDialog.employeeId))
       .innerJoin(GameTask, eq(GameTask.id, GameDialog.taskId))
       .where(conditions.length > 0 ? and(...conditions) : undefined)
-      .orderBy(desc(GameDialog.startedAt))
+      .orderBy(desc(GameDialog.startedAt), desc(GameDialog.id))
       .limit(input.limit)
       .offset(input.offset);
   });
