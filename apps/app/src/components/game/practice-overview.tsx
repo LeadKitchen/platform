@@ -66,6 +66,7 @@ function formatDate(date: string) {
   return new Intl.DateTimeFormat("ru-RU", {
     day: "numeric",
     month: "short",
+    timeZone: "UTC",
   }).format(new Date(`${date}T00:00:00Z`));
 }
 

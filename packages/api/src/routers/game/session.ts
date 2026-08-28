@@ -174,6 +174,24 @@ export const list = protectedProcedure
       .offset(input.offset),
   );
 
+/** The current participant's session for an assigned practice. */
+export const byAssignment = protectedProcedure
+  .input(z.object({ assignmentId: z.uuid() }))
+  .handler(async ({ context, input }) => {
+    const [session] = await context.db
+      .select()
+      .from(GameSession)
+      .where(
+        and(
+          eq(GameSession.trainingAssignmentId, input.assignmentId),
+          eq(GameSession.createdBy, context.session.user.id),
+        ),
+      )
+      .orderBy(desc(GameSession.createdAt))
+      .limit(1);
+    return session;
+  });
+
 /**
  * A session with its order queue.
  *
@@ -245,4 +263,4 @@ export const end = protectedProcedure
     }),
   );
 
-export const gameSessionRouter = { create, list, byId, end };
+export const gameSessionRouter = { create, list, byAssignment, byId, end };

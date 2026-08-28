@@ -1,1 +1,1 @@
-ALTER TABLE "game_sessions" ADD CONSTRAINT "game_sessions_training_assignment_id_game_training_assignments_id_fk" FOREIGN KEY ("training_assignment_id") REFERENCES "public"."game_training_assignments"("id") ON DELETE set null ON UPDATE no action;
+ALTER TABLE "game_sessions" ADD CONSTRAINT "game_sessions_training_assignment_id_game_training_assignments_id_fk" FOREIGN KEY ("training_assignment_id") REFERENCES "public"."game_training_assignments"("id") ON DELETE set null ON UPDATE no action NOT VALID;

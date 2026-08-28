@@ -70,9 +70,9 @@ export default async function GamePage() {
     (item) => item.status === "in_progress",
   );
   const inProgressSession = inProgressTraining
-    ? sessions.find(
-        (session) => session.trainingAssignmentId === inProgressTraining.id,
-      )
+    ? await api.game.session.byAssignment({
+        assignmentId: inProgressTraining.id,
+      })
     : undefined;
   const latestDialogId = playerProgress.recent[0]?.dialogId;
   const onboardingSteps = [
