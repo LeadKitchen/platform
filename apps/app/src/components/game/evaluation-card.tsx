@@ -302,7 +302,7 @@ export function EvaluationCard({
             nativeButton={false}
           >
             <IconPrinter data-icon="inline-start" />
-            Скачать отчёт
+            Открыть отчёт
           </Button>
         ) : null}
         <Button
