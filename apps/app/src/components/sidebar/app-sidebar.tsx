@@ -63,6 +63,7 @@ const data = {
           icon: IconChefHat,
           exact: true,
         },
+        { title: "AI Roleplay", url: "/game/roleplay", icon: IconMessages },
         { title: "Раунд 1 · Теория", url: "/game/round-1", icon: IconSchool },
         { title: "Моя группа", url: "/group", icon: IconUsersGroup },
         {

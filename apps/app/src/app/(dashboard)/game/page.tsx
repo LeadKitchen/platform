@@ -20,6 +20,7 @@ import {
   IconChefHat,
   IconClock,
   IconListCheck,
+  IconMessages,
   IconPlayerPlay,
   IconSchool,
   IconTarget,
@@ -366,7 +367,7 @@ export default async function GamePage() {
           </Card>
         </section>
 
-        <section className="grid gap-4 md:grid-cols-3">
+        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <Card className="gap-4">
             <CardHeader>
               <IconSchool className="text-primary size-5" />
@@ -383,6 +384,26 @@ export default async function GamePage() {
                 nativeButton={false}
               >
                 Открыть разминку
+              </Button>
+            </CardFooter>
+          </Card>
+          <Card className="gap-4">
+            <CardHeader>
+              <IconMessages className="text-primary size-5" />
+              <CardTitle className="text-base">AI Roleplay</CardTitle>
+              <CardDescription>
+                Выберите управленческую ситуацию или создайте собственного
+                сотрудника для живой тренировки.
+              </CardDescription>
+            </CardHeader>
+            <CardFooter>
+              <Button
+                variant="outline"
+                size="sm"
+                render={<Link href="/game/roleplay" />}
+                nativeButton={false}
+              >
+                Открыть сценарии
               </Button>
             </CardFooter>
           </Card>

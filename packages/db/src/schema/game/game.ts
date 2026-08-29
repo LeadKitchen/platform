@@ -98,6 +98,10 @@ export const GameSession = pgTable(
     trainingAssignmentId: t.uuid().references(() => GameTrainingAssignment.id, {
       onDelete: "set null",
     }),
+    /** Scenario from the participant-facing AI roleplay library. */
+    roleplayScenarioId: t.text(),
+    /** Whether the participant practises a full conversation or objections. */
+    roleplayMode: t.varchar({ length: 32 }),
     /**
      * Org the creator belonged to at the time (via `GameOrgMember`), copied
      * onto the row so a session keeps its group even if membership changes
@@ -112,6 +116,7 @@ export const GameSession = pgTable(
   (table) => [
     index("game_sessions_variant_idx").on(table.variantId),
     index("game_sessions_org_idx").on(table.orgId),
+    index("game_sessions_roleplay_scenario_idx").on(table.roleplayScenarioId),
   ],
 );
 
@@ -125,6 +130,56 @@ export const GameOrganization = pgTable("game_organizations", (t) => ({
   description: t.varchar({ length: 256 }).default("").notNull(),
   createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
 }));
+
+/**
+ * Participant-owned scenarios for the AI roleplay library.
+ *
+ * Built-in templates stay in application code so they can evolve with the
+ * methodical catalog. This table stores only scenarios created by users; a
+ * session keeps the scenario key as a snapshot link even when it is archived.
+ */
+export const GameRoleplayScenario = pgTable(
+  "game_roleplay_scenarios",
+  (t) => ({
+    id: t.uuid().primaryKey().defaultRandom(),
+    createdBy: t
+      .text()
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    orgId: t.text().references(() => GameOrganization.id, {
+      onDelete: "set null",
+    }),
+    baseEmployeeId: t
+      .text()
+      .notNull()
+      .references(() => GameEmployee.id),
+    baseTaskId: t
+      .text()
+      .notNull()
+      .references(() => GameTask.id),
+    title: t.varchar({ length: 180 }).notNull(),
+    employeeName: t.varchar({ length: 128 }).notNull(),
+    employeeRole: t.varchar({ length: 128 }).notNull(),
+    employeeLevel: t.varchar({ length: 8 }).notNull(),
+    category: t.varchar({ length: 48 }).notNull(),
+    description: t.text().notNull(),
+    trainingObjectives: t.jsonb().$type<string[]>().default([]).notNull(),
+    objections: t.jsonb().$type<string[]>().default([]).notNull(),
+    privateBeliefs: t.jsonb().$type<string[]>().default([]).notNull(),
+    isFavorite: t.boolean().default(false).notNull(),
+    isArchived: t.boolean().default(false).notNull(),
+    createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+    updatedAt: t
+      .timestamp({ mode: "date", withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdateFn(() => sql`now()`),
+  }),
+  (table) => [
+    index("game_roleplay_scenarios_creator_idx").on(table.createdBy),
+    index("game_roleplay_scenarios_org_idx").on(table.orgId),
+  ],
+);
 
 /**
  * Which workspaces a user belongs to. A composite key lets a person be a
