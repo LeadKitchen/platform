@@ -21,6 +21,7 @@ import {
   mapStoredRoleplayScenario,
   ROLEPLAY_CATEGORIES,
   resolveRoleplayScenario,
+  snapshotRoleplayScenario,
 } from "../../game/roleplay";
 import { loadCatalog, loadEngine } from "../../game/service";
 import { loadGameSettings } from "../../game/settings";
@@ -220,6 +221,9 @@ export const start = protectedProcedure
       input.scenarioId,
       context.session.user.id,
     );
+    if (scenario.isArchived) {
+      throw new ORPCError("NOT_FOUND", { message: "Сценарий не найден" });
+    }
 
     const [activeSessions] = await context.db
       .select({ count: count() })
@@ -253,6 +257,7 @@ export const start = protectedProcedure
           createdBy: context.session.user.id,
           orgId,
           roleplayScenarioId: scenario.id,
+          roleplayScenarioSnapshot: snapshotRoleplayScenario(scenario),
           roleplayMode: input.mode,
         })
         .returning();

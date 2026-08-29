@@ -5,6 +5,7 @@ import {
   applyRoleplayScenario,
   buildRoleplayNotes,
   buildRoleplayTemplates,
+  resolveRoleplayScenario,
 } from "./roleplay";
 
 describe("roleplay scenarios", () => {
@@ -52,5 +53,29 @@ describe("roleplay scenarios", () => {
     expect(notes).toContain("Цели руководителя");
     expect(notes).toContain("Вероятные возражения");
     expect(notes).toContain("отработка возражений");
+  });
+
+  it("rejects an unknown template ID without querying custom scenarios", async () => {
+    const db = {
+      select() {
+        throw new Error("unexpected query");
+      },
+    } as never;
+
+    await expect(
+      resolveRoleplayScenario(db, defaultCatalog, "template:unknown"),
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
+  });
+
+  it("rejects an invalid custom scenario UUID without querying", async () => {
+    const db = {
+      select() {
+        throw new Error("unexpected query");
+      },
+    } as never;
+
+    await expect(
+      resolveRoleplayScenario(db, defaultCatalog, "not-a-uuid"),
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
   });
 });

@@ -83,6 +83,23 @@ export const GameSettings = pgTable("game_settings", (t) => ({
     .$onUpdateFn(() => sql`now()`),
 }));
 
+export interface GameRoleplayScenarioSnapshot {
+  id: string;
+  source: "template" | "custom";
+  title: string;
+  baseEmployeeId: string;
+  baseTaskId: string;
+  employeeName: string;
+  employeeRole: string;
+  employeeLevel: "L1" | "L2" | "L3" | "L4";
+  category: "tasking" | "feedback" | "resistance" | "overload" | "delegation";
+  description: string;
+  trainingObjectives: string[];
+  objections: string[];
+  privateBeliefs: string[];
+  isFavorite: boolean;
+}
+
 export const GameSession = pgTable(
   "game_sessions",
   (t) => ({
@@ -100,6 +117,8 @@ export const GameSession = pgTable(
     }),
     /** Scenario from the participant-facing AI roleplay library. */
     roleplayScenarioId: t.text(),
+    /** Immutable scenario data used when continuing a roleplay session. */
+    roleplayScenarioSnapshot: t.jsonb().$type<GameRoleplayScenarioSnapshot>(),
     /** Whether the participant practises a full conversation or objections. */
     roleplayMode: t.varchar({ length: 32 }),
     /**

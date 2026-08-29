@@ -184,6 +184,20 @@ function initials(name: string): string {
     .toUpperCase();
 }
 
+function attemptLabel(count: number): string {
+  const lastTwoDigits = count % 100;
+  const lastDigit = count % 10;
+  const suffix =
+    lastTwoDigits >= 11 && lastTwoDigits <= 14
+      ? "попыток"
+      : lastDigit === 1
+        ? "попытка"
+        : lastDigit >= 2 && lastDigit <= 4
+          ? "попытки"
+          : "попыток";
+  return `${count} ${suffix}`;
+}
+
 function emptyDraft(reference: RoleplayReference): ScenarioDraft {
   const employee = reference.employees[0];
   const task = reference.tasks[0];
@@ -246,6 +260,7 @@ function ScenarioEditorDialog({
   }
 
   const stepOneValid =
+    draft.baseEmployeeId.trim().length > 0 &&
     draft.employeeName.trim().length >= 2 &&
     draft.employeeRole.trim().length >= 2 &&
     draft.description.trim().length >= 20;
@@ -1299,7 +1314,7 @@ export function RoleplayCatalog({
                   </div>
                   <div className="text-muted-foreground mt-auto flex items-center gap-1.5 text-xs">
                     <IconHistory className="size-4" />
-                    {attemptCount.get(scenario.id) ?? 0} попыток
+                    {attemptLabel(attemptCount.get(scenario.id) ?? 0)}
                   </div>
                 </CardContent>
                 <CardFooter className="border-t py-4">

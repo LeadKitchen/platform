@@ -231,11 +231,13 @@ export async function loadDialog(
   }
 
   if (row.session.roleplayScenarioId) {
-    const scenario = await resolveRoleplayScenario(
-      db,
-      catalog,
-      row.session.roleplayScenarioId,
-    );
+    const scenario =
+      row.session.roleplayScenarioSnapshot ??
+      (await resolveRoleplayScenario(
+        db,
+        catalog,
+        row.session.roleplayScenarioId,
+      ));
     const applied = applyRoleplayScenario(scenario, employee, task);
     employee = applied.employee;
     task = applied.task;

@@ -1,4 +1,9 @@
-import { type Database, eq, GameRoleplayScenario } from "@acme/db";
+import {
+  type Database,
+  eq,
+  GameRoleplayScenario,
+  type GameRoleplayScenarioSnapshot,
+} from "@acme/db";
 import type {
   Catalog,
   CompetenceState,
@@ -7,6 +12,7 @@ import type {
   Task,
 } from "@acme/game";
 import { ORPCError } from "@orpc/server";
+import { z } from "zod";
 
 export const ROLEPLAY_CATEGORIES = [
   "tasking",
@@ -34,6 +40,7 @@ export interface RoleplayScenario {
   objections: string[];
   privateBeliefs: string[];
   isFavorite: boolean;
+  isArchived: boolean;
   createdAt: Date | null;
   updatedAt: Date | null;
 }
@@ -206,6 +213,7 @@ export function buildRoleplayTemplates(catalog: Catalog): RoleplayScenario[] {
         objections: definition.objections,
         privateBeliefs: definition.privateBeliefs,
         isFavorite: false,
+        isArchived: false,
         createdAt: null,
         updatedAt: null,
       },
@@ -231,6 +239,7 @@ export function mapStoredRoleplayScenario(
     objections: row.objections,
     privateBeliefs: row.privateBeliefs,
     isFavorite: row.isFavorite,
+    isArchived: row.isArchived,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
   };
@@ -247,6 +256,10 @@ export async function resolveRoleplayScenario(
   );
   if (template) return template;
 
+  if (!z.uuid().safeParse(scenarioId).success) {
+    throw new ORPCError("NOT_FOUND", { message: "Сценарий не найден" });
+  }
+
   const [row] = await db
     .select()
     .from(GameRoleplayScenario)
@@ -258,6 +271,27 @@ export async function resolveRoleplayScenario(
   return mapStoredRoleplayScenario(row);
 }
 
+export function snapshotRoleplayScenario(
+  scenario: RoleplayScenario,
+): GameRoleplayScenarioSnapshot {
+  return {
+    id: scenario.id,
+    source: scenario.source,
+    title: scenario.title,
+    baseEmployeeId: scenario.baseEmployeeId,
+    baseTaskId: scenario.baseTaskId,
+    employeeName: scenario.employeeName,
+    employeeRole: scenario.employeeRole,
+    employeeLevel: scenario.employeeLevel,
+    category: scenario.category,
+    description: scenario.description,
+    trainingObjectives: [...scenario.trainingObjectives],
+    objections: [...scenario.objections],
+    privateBeliefs: [...scenario.privateBeliefs],
+    isFavorite: scenario.isFavorite,
+  };
+}
+
 const COMPETENCE_BY_LEVEL: Record<EmployeeLevel, CompetenceState> = {
   L1: "novice",
   L2: "learning",
@@ -266,7 +300,15 @@ const COMPETENCE_BY_LEVEL: Record<EmployeeLevel, CompetenceState> = {
 };
 
 export function applyRoleplayScenario(
-  scenario: RoleplayScenario,
+  scenario: Pick<
+    RoleplayScenario,
+    | "title"
+    | "employeeName"
+    | "employeeRole"
+    | "employeeLevel"
+    | "description"
+    | "objections"
+  >,
   employee: Employee,
   task: Task,
 ): { employee: Employee; task: Task } {
