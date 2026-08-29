@@ -170,6 +170,23 @@ function criteriaCount(categories: ScorecardCategory[]) {
   );
 }
 
+function pluralizeRussian(
+  count: number,
+  one: string,
+  few: string,
+  many: string,
+) {
+  const absoluteCount = Math.abs(count);
+  const lastTwoDigits = absoluteCount % 100;
+
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 14) return many;
+
+  const lastDigit = absoluteCount % 10;
+  if (lastDigit === 1) return one;
+  if (lastDigit >= 2 && lastDigit <= 4) return few;
+  return many;
+}
+
 function ScorecardEditor({
   open,
   scorecard,
@@ -440,8 +457,13 @@ function ScorecardEditor({
                       </div>
                       <div className="grid gap-4 md:grid-cols-[1fr_10rem]">
                         <Field>
-                          <FieldLabel>Название критерия</FieldLabel>
+                          <FieldLabel
+                            htmlFor={`criterion-title-${category.id}-${criterion.criterionId}`}
+                          >
+                            Название критерия
+                          </FieldLabel>
                           <Input
+                            id={`criterion-title-${category.id}-${criterion.criterionId}`}
                             value={criterion.title}
                             onChange={(event) =>
                               updateCategory(categoryIndex, (current) => ({
@@ -456,8 +478,13 @@ function ScorecardEditor({
                           />
                         </Field>
                         <Field>
-                          <FieldLabel>Баллы</FieldLabel>
+                          <FieldLabel
+                            htmlFor={`criterion-weight-${category.id}-${criterion.criterionId}`}
+                          >
+                            Баллы
+                          </FieldLabel>
                           <Input
+                            id={`criterion-weight-${category.id}-${criterion.criterionId}`}
                             type="number"
                             min={1}
                             max={100}
@@ -479,8 +506,13 @@ function ScorecardEditor({
                         </Field>
                       </div>
                       <Field>
-                        <FieldLabel>Что должен оценить AI</FieldLabel>
+                        <FieldLabel
+                          htmlFor={`criterion-description-${category.id}-${criterion.criterionId}`}
+                        >
+                          Что должен оценить AI
+                        </FieldLabel>
                         <Textarea
+                          id={`criterion-description-${category.id}-${criterion.criterionId}`}
                           rows={2}
                           value={criterion.description}
                           onChange={(event) =>
@@ -497,7 +529,11 @@ function ScorecardEditor({
                       </Field>
                       <div className="grid gap-4 md:grid-cols-2">
                         <Field>
-                          <FieldLabel>Шкала</FieldLabel>
+                          <FieldLabel
+                            htmlFor={`criterion-scoring-${category.id}-${criterion.criterionId}`}
+                          >
+                            Шкала
+                          </FieldLabel>
                           <Select
                             value={criterion.scoring}
                             onValueChange={(value) =>
@@ -516,7 +552,10 @@ function ScorecardEditor({
                               }))
                             }
                           >
-                            <SelectTrigger className="w-full">
+                            <SelectTrigger
+                              id={`criterion-scoring-${category.id}-${criterion.criterionId}`}
+                              className="w-full"
+                            >
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -530,8 +569,13 @@ function ScorecardEditor({
                           </Select>
                         </Field>
                         <Field>
-                          <FieldLabel>Применять, когда</FieldLabel>
+                          <FieldLabel
+                            htmlFor={`criterion-condition-${category.id}-${criterion.criterionId}`}
+                          >
+                            Применять, когда
+                          </FieldLabel>
                           <Input
+                            id={`criterion-condition-${category.id}-${criterion.criterionId}`}
                             value={criterion.condition ?? ""}
                             placeholder="Всегда"
                             onChange={(event) =>
@@ -577,7 +621,9 @@ function ScorecardEditor({
 
                   {unusedCriteria.length > 0 ? (
                     <Field>
-                      <FieldLabel>Добавить критерий</FieldLabel>
+                      <FieldLabel htmlFor={`add-criterion-${category.id}`}>
+                        Добавить критерий
+                      </FieldLabel>
                       <Select
                         value={null}
                         onValueChange={(value) => {
@@ -602,7 +648,10 @@ function ScorecardEditor({
                           }));
                         }}
                       >
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger
+                          id={`add-criterion-${category.id}`}
+                          className="w-full"
+                        >
                           <SelectValue placeholder="Выберите методический сигнал" />
                         </SelectTrigger>
                         <SelectContent>
@@ -818,7 +867,13 @@ export function ScorecardLibrary({
       </CardContent>
       <CardFooter className="mt-auto justify-between border-t pt-4">
         <span className="text-muted-foreground text-xs">
-          {scorecard.criteriaCount} критериев
+          {scorecard.criteriaCount}{" "}
+          {pluralizeRussian(
+            scorecard.criteriaCount,
+            "критерий",
+            "критерия",
+            "критериев",
+          )}
         </span>
         {scorecard.isActive ? (
           <Badge variant="accent">Активен</Badge>
@@ -841,7 +896,15 @@ export function ScorecardLibrary({
             активной рубрике команды.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
-            <Badge variant="outline">{scorecards.length + 1} рубрик</Badge>
+            <Badge variant="outline">
+              {scorecards.length + 1}{" "}
+              {pluralizeRussian(
+                scorecards.length + 1,
+                "рубрика",
+                "рубрики",
+                "рубрик",
+              )}
+            </Badge>
             <Badge variant="outline">Каждая новая сессия</Badge>
             <Badge variant="accent">{active.name}</Badge>
           </div>
@@ -873,7 +936,15 @@ export function ScorecardLibrary({
                 </CardDescription>
               </div>
               <div className="flex flex-wrap gap-2">
-                <Badge variant="outline">{active.criteriaCount} сигналов</Badge>
+                <Badge variant="outline">
+                  {active.criteriaCount}{" "}
+                  {pluralizeRussian(
+                    active.criteriaCount,
+                    "сигнал",
+                    "сигнала",
+                    "сигналов",
+                  )}
+                </Badge>
                 <Badge variant="outline">AI Roleplay</Badge>
                 <Badge variant="outline">Деловая игра</Badge>
               </div>
@@ -906,7 +977,13 @@ export function ScorecardLibrary({
                 </CardHeader>
                 <CardFooter className="mt-auto justify-between border-t pt-4">
                   <span className="text-muted-foreground text-xs">
-                    {system.criteriaCount} сигналов
+                    {system.criteriaCount}{" "}
+                    {pluralizeRussian(
+                      system.criteriaCount,
+                      "сигнал",
+                      "сигнала",
+                      "сигналов",
+                    )}
                   </span>
                   <Button
                     size="sm"
@@ -945,7 +1022,13 @@ export function ScorecardLibrary({
                 {template.description}
               </span>
               <span className="text-muted-foreground mt-auto flex items-center gap-1 pt-4 text-xs">
-                {criteriaCount(template.categories)} критериев{" "}
+                {criteriaCount(template.categories)}{" "}
+                {pluralizeRussian(
+                  criteriaCount(template.categories),
+                  "критерий",
+                  "критерия",
+                  "критериев",
+                )}{" "}
                 <IconChevronRight className="size-3" />
               </span>
             </button>

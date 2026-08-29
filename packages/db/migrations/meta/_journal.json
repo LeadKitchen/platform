@@ -141,6 +141,13 @@
       "when": 1788012076791,
       "tag": "0019_sloppy_puff_adder",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1788026650000,
+      "tag": "0020_validate_scorecard_fks",
+      "breakpoints": true
     }
   ]
 }
