@@ -40,7 +40,12 @@ export {
   type ScorecardView,
 } from "./scorecard-library";
 export { useSpeechRecognition } from "./use-speech-recognition";
+export { useSpeechSynthesis } from "./use-speech-synthesis";
 export {
   VariantComparison,
   type VariantStats,
 } from "./variant-comparison";
+export {
+  VoiceDialogRoom,
+  type VoiceDialogRoomProps,
+} from "./voice-dialog-room";

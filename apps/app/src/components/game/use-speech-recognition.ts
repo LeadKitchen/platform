@@ -108,6 +108,10 @@ export function useSpeechRecognition(options: {
     };
 
     recognition.onerror = (event) => {
+      if (event.error === "no-speech" || event.error === "aborted") {
+        setListening(false);
+        return;
+      }
       setError(
         event.error === "not-allowed"
           ? "Нет доступа к микрофону"

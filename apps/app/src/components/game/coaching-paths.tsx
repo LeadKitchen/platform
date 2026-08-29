@@ -420,7 +420,7 @@ export function CoachingPaths({
         assignmentId: assignment.id,
         mode: "full",
       });
-      router.push(`/game/dialog/${result.dialog.id}`);
+      router.push(`/game/dialog/${result.dialog.id}?voice=1`);
     } catch (cause) {
       toast.error(
         cause instanceof Error ? cause.message : "Не удалось начать шаг",
