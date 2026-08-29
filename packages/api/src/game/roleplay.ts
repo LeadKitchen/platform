@@ -292,6 +292,17 @@ export function snapshotRoleplayScenario(
   };
 }
 
+export function roleplayScenarioFromSnapshot(
+  snapshot: GameRoleplayScenarioSnapshot,
+): RoleplayScenario {
+  return {
+    ...snapshot,
+    isArchived: false,
+    createdAt: null,
+    updatedAt: null,
+  };
+}
+
 const COMPETENCE_BY_LEVEL: Record<EmployeeLevel, CompetenceState> = {
   L1: "novice",
   L2: "learning",

@@ -1,3 +1,13 @@
+export {
+  type CoachingMemberView,
+  type CoachingPathAssignmentRow,
+  CoachingPathDetail,
+} from "./coaching-path-detail";
+export {
+  type CoachingAssignmentView,
+  CoachingPaths,
+  type CoachingPathView,
+} from "./coaching-paths";
 export { CreateSessionForm, type VariantOption } from "./create-session-form";
 export { DemoTour } from "./demo-tour";
 export { DialogRoom, type DialogRoomProps } from "./dialog-room";
