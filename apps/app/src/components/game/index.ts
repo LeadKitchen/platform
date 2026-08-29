@@ -18,6 +18,11 @@ export {
 } from "./order-queue";
 export { PracticeOverview } from "./practice-overview";
 export { PrintButton } from "./print-button";
+export {
+  type RoleplayAttemptView,
+  RoleplayCatalog,
+  type RoleplayScenarioView,
+} from "./roleplay-catalog";
 export { RoundOneTraining } from "./round-one-training";
 export { useSpeechRecognition } from "./use-speech-recognition";
 export {

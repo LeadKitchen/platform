@@ -15,6 +15,7 @@ import {
   GameEvaluation,
   GameEvent,
   GameOrder,
+  GameSession,
   GameSkillPolicy,
   GameTask,
   GameVariant,
@@ -33,6 +34,7 @@ import {
   type Task,
 } from "@acme/game";
 import { ORPCError } from "@orpc/server";
+import { applyRoleplayScenario, resolveRoleplayScenario } from "./roleplay";
 
 /**
  * Glue between the persisted game state and the stateless AI engine.
@@ -207,23 +209,38 @@ export async function loadDialog(
     .select({
       dialog: GameDialog,
       order: GameOrder,
+      session: GameSession,
     })
     .from(GameDialog)
     .innerJoin(GameOrder, eq(GameOrder.id, GameDialog.orderId))
+    .innerJoin(GameSession, eq(GameSession.id, GameDialog.sessionId))
     .where(eq(GameDialog.id, dialogId))
     .limit(1);
 
   if (!row) throw new ORPCError("NOT_FOUND", { message: "Диалог не найден" });
 
   const catalog = await loadCatalog(db);
-  const employee = catalog.employees.find(
+  let employee = catalog.employees.find(
     (item) => item.id === row.dialog.employeeId,
   );
-  const task = catalog.tasks.find((item) => item.id === row.dialog.taskId);
+  let task = catalog.tasks.find((item) => item.id === row.dialog.taskId);
   if (!employee || !task) {
     throw new ORPCError("NOT_FOUND", {
       message: "Справочник сотрудников или задач изменился",
     });
+  }
+
+  if (row.session.roleplayScenarioId) {
+    const scenario =
+      row.session.roleplayScenarioSnapshot ??
+      (await resolveRoleplayScenario(
+        db,
+        catalog,
+        row.session.roleplayScenarioId,
+      ));
+    const applied = applyRoleplayScenario(scenario, employee, task);
+    employee = applied.employee;
+    task = applied.task;
   }
 
   const events = await db

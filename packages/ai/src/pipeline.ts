@@ -163,6 +163,19 @@ export function createPipeline(
         { dialog, expectation, query: utterance },
         requestDeps,
       );
+      if (
+        dialog.order.notes &&
+        !knowledgeResult.snippets.some((snippet) =>
+          snippet.text.includes(dialog.order.notes ?? ""),
+        )
+      ) {
+        knowledgeResult.snippets.push({
+          id: `order-notes:${dialog.order.id}`,
+          source: "task",
+          score: 1,
+          text: dialog.order.notes,
+        });
+      }
 
       const personaResult = await persona.respond(
         {
