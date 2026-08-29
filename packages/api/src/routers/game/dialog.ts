@@ -381,29 +381,27 @@ export const finish = protectedProcedure
       .where(eq(GameSession.id, loaded.record.sessionId))
       .limit(1);
     if (coachingSession?.assignmentId && coachingSession.stepId) {
-      const [assignment] = await context.db
-        .select()
-        .from(GameCoachingPathAssignment)
-        .where(eq(GameCoachingPathAssignment.id, coachingSession.assignmentId))
-        .limit(1);
-      if (assignment) {
+      const { assignmentId, stepId } = coachingSession;
+      const progressEvent = await context.db.transaction(async (tx) => {
+        const [assignment] = await tx
+          .select()
+          .from(GameCoachingPathAssignment)
+          .where(eq(GameCoachingPathAssignment.id, assignmentId))
+          .limit(1)
+          .for("update");
+        if (!assignment) return null;
         const scorePercent = result.evaluation.scorePercent;
         const progress = advanceCoachingPath({
           snapshot: assignment.pathSnapshot,
           currentStep: assignment.currentStep,
           stepResults: assignment.stepResults,
-          stepId: coachingSession.stepId,
+          stepId,
           sessionId: loaded.record.sessionId,
           dialogId: input.dialogId,
           scorePercent,
         });
-        if (!progress)
-          return {
-            evaluation: result.evaluation,
-            variantId: loaded.record.variantId,
-            telemetry: { latencyMs, inputTokens, outputTokens, costUsd },
-          };
-        await context.db
+        if (!progress) return null;
+        await tx
           .update(GameCoachingPathAssignment)
           .set({
             stepResults: progress.stepResults,
@@ -412,18 +410,26 @@ export const finish = protectedProcedure
             completedAt: progress.completedAt,
           })
           .where(eq(GameCoachingPathAssignment.id, assignment.id));
+        return {
+          assignmentId: assignment.id,
+          eventName: progress.eventName,
+          minScore: progress.minScore,
+          scorePercent,
+        };
+      });
+      if (progressEvent) {
         await context.db
           .insert(GameProductEvent)
           .values({
             userId: context.session.user.id,
             sessionId: loaded.record.sessionId,
             dialogId: input.dialogId,
-            name: progress.eventName,
+            name: progressEvent.eventName,
             properties: {
-              assignmentId: assignment.id,
-              stepId: coachingSession.stepId,
-              scorePercent,
-              minScore: progress.minScore,
+              assignmentId: progressEvent.assignmentId,
+              stepId,
+              scorePercent: progressEvent.scorePercent,
+              minScore: progressEvent.minScore,
             },
           })
           .catch(() => undefined);

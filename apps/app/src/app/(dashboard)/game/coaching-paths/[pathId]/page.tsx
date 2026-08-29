@@ -1,10 +1,6 @@
+import { ORPCError } from "@orpc/server";
 import { notFound, redirect } from "next/navigation";
-import {
-  type CoachingMemberView,
-  type CoachingPathAssignmentRow,
-  CoachingPathDetail,
-  type CoachingPathView,
-} from "~/components/game";
+import { CoachingPathDetail } from "~/components/game";
 import { SiteHeader } from "~/components/layout";
 import { api } from "~/orpc/server";
 
@@ -19,7 +15,10 @@ export default async function CoachingPathPage({
   if (!mine.isFacilitator) redirect("/game/coaching-paths");
   const { pathId } = await params;
   const [data, members] = await Promise.all([
-    api.org.coachingPaths.byId({ id: pathId }).catch(() => null),
+    api.org.coachingPaths.byId({ id: pathId }).catch((cause) => {
+      if (cause instanceof ORPCError && cause.code === "NOT_FOUND") return null;
+      throw cause;
+    }),
     api.org.coachingPaths.members(),
   ]);
   if (!data) notFound();
@@ -35,14 +34,9 @@ export default async function CoachingPathPage({
       />
       <main className="flex flex-1 flex-col gap-5 p-4 lg:p-6">
         <CoachingPathDetail
-          path={
-            {
-              ...data.path,
-              assignedCount: data.assignments.length,
-            } as unknown as CoachingPathView
-          }
-          assignments={data.assignments as CoachingPathAssignmentRow[]}
-          members={members as CoachingMemberView[]}
+          path={data.path}
+          assignments={data.assignments}
+          members={members}
         />
       </main>
     </>

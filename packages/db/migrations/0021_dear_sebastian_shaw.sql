@@ -39,5 +39,4 @@ CREATE INDEX "game_coaching_paths_org_idx" ON "game_coaching_paths" USING btree 
 CREATE INDEX "game_coaching_path_assignments_org_idx" ON "game_coaching_path_assignments" USING btree ("org_id");--> statement-breakpoint
 CREATE INDEX "game_coaching_path_assignments_participant_idx" ON "game_coaching_path_assignments" USING btree ("participant_id","status");--> statement-breakpoint
 CREATE UNIQUE INDEX "game_coaching_path_assignments_active_idx" ON "game_coaching_path_assignments" USING btree ("path_id","participant_id") WHERE "game_coaching_path_assignments"."status" in ('assigned', 'in_progress');--> statement-breakpoint
-ALTER TABLE "game_sessions" ADD CONSTRAINT "game_sessions_coaching_path_assignment_id_game_coaching_path_assignments_id_fk" FOREIGN KEY ("coaching_path_assignment_id") REFERENCES "public"."game_coaching_path_assignments"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-CREATE INDEX "game_sessions_coaching_path_assignment_idx" ON "game_sessions" USING btree ("coaching_path_assignment_id");
+ALTER TABLE "game_sessions" ADD CONSTRAINT "game_sessions_coaching_path_assignment_id_game_coaching_path_assignments_id_fk" FOREIGN KEY ("coaching_path_assignment_id") REFERENCES "public"."game_coaching_path_assignments"("id") ON DELETE set null ON UPDATE no action;

@@ -1,5 +1,6 @@
 "use client";
 
+import type { RouterOutputs } from "@acme/api";
 import {
   Avatar,
   AvatarFallback,
@@ -53,41 +54,11 @@ import { client } from "~/orpc/react";
 import { GameSectionHeader } from "./game-section-header";
 import type { RoleplayScenarioView } from "./roleplay-catalog";
 
-export interface CoachingPathStepView {
-  id: string;
-  minScore: number;
-  scenario: Omit<RoleplayScenarioView, "createdAt" | "updatedAt"> & {
-    createdAt?: Date | string | null;
-    updatedAt?: Date | string | null;
-  };
-}
-
-export interface CoachingPathView {
-  id: string;
-  name: string;
-  description: string;
-  steps: CoachingPathStepView[];
-  isActive: boolean;
-  assignedCount: number;
-  completedCount?: number;
-}
-
-export interface CoachingAssignmentView {
-  id: string;
-  pathId: string;
-  pathSnapshot: {
-    name: string;
-    description: string;
-    steps: CoachingPathStepView[];
-  };
-  status: "assigned" | "in_progress" | "completed";
-  currentStep: number;
-  stepResults: Array<{
-    stepId: string;
-    scorePercent: number;
-    passed: boolean;
-  }>;
-}
+export type CoachingPathView =
+  RouterOutputs["org"]["coachingPaths"]["list"][number];
+export type CoachingPathStepView = CoachingPathView["steps"][number];
+export type CoachingAssignmentView =
+  RouterOutputs["game"]["coachingPaths"]["listMine"][number];
 
 function initials(name: string) {
   return name
@@ -402,15 +373,21 @@ export function CoachingPaths({
   initialPaths,
   assignments,
   scenarios,
+  initialEditorPathId,
 }: {
   isFacilitator: boolean;
   initialPaths: CoachingPathView[];
   assignments: CoachingAssignmentView[];
   scenarios: RoleplayScenarioView[];
+  initialEditorPathId?: string;
 }) {
   const router = useRouter();
-  const [editorOpen, setEditorOpen] = useState(false);
-  const [editing, setEditing] = useState<CoachingPathView | null>(null);
+  const initialEditing =
+    initialPaths.find((path) => path.id === initialEditorPathId) ?? null;
+  const [editorOpen, setEditorOpen] = useState(initialEditing !== null);
+  const [editing, setEditing] = useState<CoachingPathView | null>(
+    initialEditing,
+  );
   const [startingId, setStartingId] = useState<string | null>(null);
 
   async function start(assignment: CoachingAssignmentView) {

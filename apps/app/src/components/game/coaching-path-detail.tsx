@@ -1,5 +1,6 @@
 "use client";
 
+import type { RouterOutputs } from "@acme/api";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -55,29 +56,14 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { employeeAvatarUri } from "~/lib/avatar";
 import { client } from "~/orpc/react";
-import type { CoachingPathView } from "./coaching-paths";
 import { GameSectionHeader } from "./game-section-header";
 
-export interface CoachingMemberView {
-  id: string;
-  name: string;
-  email: string;
-  image: string | null;
-}
-
-export interface CoachingPathAssignmentRow {
-  assignment: {
-    id: string;
-    status: "assigned" | "in_progress" | "completed";
-    currentStep: number;
-    stepResults: Array<{
-      stepId: string;
-      scorePercent: number;
-      passed: boolean;
-    }>;
-  };
-  participant: CoachingMemberView;
-}
+type CoachingPathDetailOutput = RouterOutputs["org"]["coachingPaths"]["byId"];
+export type CoachingMemberView =
+  RouterOutputs["org"]["coachingPaths"]["members"][number];
+export type CoachingPathAssignmentRow =
+  CoachingPathDetailOutput["assignments"][number];
+type CoachingPathDetailView = CoachingPathDetailOutput["path"];
 
 function initials(name: string) {
   return name
@@ -93,7 +79,7 @@ export function CoachingPathDetail({
   assignments,
   members,
 }: {
-  path: CoachingPathView;
+  path: CoachingPathDetailView;
   assignments: CoachingPathAssignmentRow[];
   members: CoachingMemberView[];
 }) {
@@ -116,12 +102,13 @@ export function CoachingPathDetail({
   const active = assignments.filter(
     (row) => row.assignment.status === "in_progress",
   ).length;
+  const stepCount = path.steps.length;
   const overall =
-    assignments.length > 0
+    assignments.length > 0 && stepCount > 0
       ? Math.round(
           (assignments.reduce(
             (sum, row) =>
-              sum + Math.min(row.assignment.currentStep / path.steps.length, 1),
+              sum + Math.min(row.assignment.currentStep / stepCount, 1),
             0,
           ) /
             assignments.length) *
@@ -188,7 +175,14 @@ export function CoachingPathDetail({
             </Button>
             <Button
               variant="outline"
-              render={<Link href="/game/coaching-paths" />}
+              render={
+                <Link
+                  href={{
+                    pathname: "/game/coaching-paths",
+                    query: { editor: path.id },
+                  }}
+                />
+              }
               nativeButton={false}
             >
               <IconEdit data-icon="inline-start" />К редактору
@@ -302,12 +296,15 @@ export function CoachingPathDetail({
               </TableHeader>
               <TableBody>
                 {assignments.map(({ assignment, participant }) => {
-                  const progress = Math.min(
-                    100,
-                    Math.round(
-                      (assignment.currentStep / path.steps.length) * 100,
-                    ),
-                  );
+                  const progress =
+                    stepCount > 0
+                      ? Math.min(
+                          100,
+                          Math.round(
+                            (assignment.currentStep / stepCount) * 100,
+                          ),
+                        )
+                      : 0;
                   return (
                     <TableRow key={assignment.id}>
                       <TableCell>
@@ -412,9 +409,16 @@ export function CoachingPathDetail({
                 filtered.length > 0 &&
                 filtered.every((member) => selected.includes(member.id))
               }
-              onCheckedChange={(checked) =>
-                setSelected(checked ? filtered.map((member) => member.id) : [])
-              }
+              onCheckedChange={(checked) => {
+                const filteredIds = new Set(
+                  filtered.map((member) => member.id),
+                );
+                setSelected((current) =>
+                  checked
+                    ? [...new Set([...current, ...filteredIds])]
+                    : current.filter((id) => !filteredIds.has(id)),
+                );
+              }}
               aria-label="Выбрать всех участников"
             />
             <span className="text-sm font-medium">
