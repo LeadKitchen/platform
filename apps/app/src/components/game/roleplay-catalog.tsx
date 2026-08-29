@@ -1,5 +1,6 @@
 "use client";
 
+import type { RouterOutputs } from "@acme/api";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -90,24 +91,8 @@ type RoleplayCategory =
 type EmployeeLevel = "L1" | "L2" | "L3" | "L4";
 type RoleplayMode = "full" | "objections";
 
-export interface RoleplayScenarioView {
-  id: string;
-  source: "template" | "custom";
-  title: string;
-  baseEmployeeId: string;
-  baseTaskId: string;
-  employeeName: string;
-  employeeRole: string;
-  employeeLevel: EmployeeLevel;
-  category: RoleplayCategory;
-  description: string;
-  trainingObjectives: string[];
-  objections: string[];
-  privateBeliefs: string[];
-  isFavorite: boolean;
-  createdAt: Date | string | null;
-  updatedAt: Date | string | null;
-}
+export type RoleplayScenarioView =
+  RouterOutputs["game"]["roleplay"]["list"]["scenarios"][number];
 
 export interface RoleplayAttemptView {
   scenarioId: string | null;

@@ -1,15 +1,15 @@
-import {
-  type CoachingAssignmentView,
-  CoachingPaths,
-  type CoachingPathView,
-  type RoleplayScenarioView,
-} from "~/components/game";
+import { CoachingPaths } from "~/components/game";
 import { SiteHeader } from "~/components/layout";
 import { api } from "~/orpc/server";
 
 export const dynamic = "force-dynamic";
 
-export default async function CoachingPathsPage() {
+export default async function CoachingPathsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ editor?: string | string[] }>;
+}) {
+  const editor = (await searchParams).editor;
   const mine = await api.org.mine();
   const paths = mine.isFacilitator ? await api.org.coachingPaths.list() : [];
   const roleplay = mine.isFacilitator ? await api.game.roleplay.list() : null;
@@ -28,9 +28,10 @@ export default async function CoachingPathsPage() {
       <main className="flex flex-1 flex-col gap-5 p-4 lg:p-6">
         <CoachingPaths
           isFacilitator={mine.isFacilitator}
-          initialPaths={paths as unknown as CoachingPathView[]}
-          assignments={assignments as unknown as CoachingAssignmentView[]}
-          scenarios={(roleplay?.scenarios ?? []) as RoleplayScenarioView[]}
+          initialPaths={paths}
+          assignments={assignments}
+          scenarios={roleplay?.scenarios ?? []}
+          initialEditorPathId={typeof editor === "string" ? editor : undefined}
         />
       </main>
     </>
