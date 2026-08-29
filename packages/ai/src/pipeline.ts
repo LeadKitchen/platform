@@ -69,6 +69,20 @@ export interface Pipeline {
   learn(feedback: PersonaFeedback): Promise<void>;
 }
 
+function resolveDialogExpectation(dialog: DialogContext): Expectation {
+  const adaptive = resolveExpectation(
+    dialog.employee,
+    dialog.task,
+    dialog.shift,
+  );
+  if (!dialog.evaluationCriteria?.length) return adaptive;
+  return {
+    ...adaptive,
+    requiredCriteria: dialog.evaluationCriteria,
+    rationale: `${adaptive.rationale} Активная рубрика: ${dialog.evaluationScorecard?.name ?? "Scorecard"}.`,
+  };
+}
+
 function silentReply(): PersonaReply {
   return {
     silent: true,
@@ -111,11 +125,7 @@ export function createPipeline(
     async respond({ dialog, utterance, signal }) {
       const requestDeps: StageDeps = { ...stageDeps, signal };
       const startedAt = Date.now();
-      const expectation = resolveExpectation(
-        dialog.employee,
-        dialog.task,
-        dialog.shift,
-      );
+      const expectation = resolveDialogExpectation(dialog);
       const managerToxic = detectToxicity(utterance);
 
       const withManagerTurn: DialogContext = {
@@ -245,11 +255,7 @@ export function createPipeline(
     },
 
     async evaluate(dialog) {
-      const expectation = resolveExpectation(
-        dialog.employee,
-        dialog.task,
-        dialog.shift,
-      );
+      const expectation = resolveDialogExpectation(dialog);
       const result = await evaluation.evaluate(
         { dialog, expectation },
         stageDeps,

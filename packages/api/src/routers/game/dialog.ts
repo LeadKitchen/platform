@@ -341,6 +341,7 @@ export const finish = protectedProcedure
       inputTokens,
       outputTokens,
       costUsd,
+      scorecard: loaded.context.evaluationScorecard,
     });
 
     await appendEvent(context.db, input.dialogId, "evaluation", {

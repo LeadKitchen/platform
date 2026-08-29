@@ -24,6 +24,11 @@ export {
   type RoleplayScenarioView,
 } from "./roleplay-catalog";
 export { RoundOneTraining } from "./round-one-training";
+export {
+  ScorecardLibrary,
+  type ScorecardTemplateView,
+  type ScorecardView,
+} from "./scorecard-library";
 export { useSpeechRecognition } from "./use-speech-recognition";
 export {
   VariantComparison,

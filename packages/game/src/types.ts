@@ -135,6 +135,8 @@ export interface Criterion {
   id: CriterionId;
   /** Russian label shown to the administrator. */
   title: string;
+  /** Optional scorecard-specific guidance for an AI judge. */
+  description?: string;
   /** Relative weight inside the "managerial actions" component. */
   weight: number;
 }
@@ -226,6 +228,9 @@ export interface DialogContext {
   engaged: boolean;
   /** −2 … +2, accumulated over the dialog. */
   emotion: number;
+  /** Session-fixed rubric. Missing means the adaptive system rubric. */
+  evaluationCriteria?: Criterion[];
+  evaluationScorecard?: { id: string; name: string };
 }
 
 /** Reference data loaded before a game starts. */

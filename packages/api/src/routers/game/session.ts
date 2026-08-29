@@ -13,6 +13,7 @@ import { ORPCError } from "@orpc/server";
 import { z } from "zod";
 import { requireOwnedSession } from "../../game/access";
 import { getMemberOrgId } from "../../game/organizations";
+import { getActiveScorecardSnapshot } from "../../game/scorecards";
 import { loadEngine } from "../../game/service";
 import { loadGameSettings } from "../../game/settings";
 import { protectedProcedure } from "../../orpc";
@@ -58,6 +59,7 @@ export const create = protectedProcedure
       getMemberOrgId(context.db, context.session.user.id),
     ]);
     const round = input.round ?? settings.defaultRound;
+    const scorecard = await getActiveScorecardSnapshot(context.db, orgId);
     if (round === 3 && !settings.allowRoundThree) {
       throw new ORPCError("BAD_REQUEST", {
         message: "Третий раунд отключён администратором",
@@ -122,6 +124,8 @@ export const create = protectedProcedure
           createdBy: context.session.user.id,
           orgId,
           trainingAssignmentId: assignment?.id,
+          scorecardId: scorecard?.id,
+          scorecardSnapshot: scorecard ?? undefined,
         })
         .returning();
       if (!session) throw new Error("Не удалось создать сессию");

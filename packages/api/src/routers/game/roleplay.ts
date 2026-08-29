@@ -23,6 +23,7 @@ import {
   resolveRoleplayScenario,
   snapshotRoleplayScenario,
 } from "../../game/roleplay";
+import { getActiveScorecardSnapshot } from "../../game/scorecards";
 import { loadCatalog, loadEngine } from "../../game/service";
 import { loadGameSettings } from "../../game/settings";
 import { protectedProcedure } from "../../orpc";
@@ -224,6 +225,7 @@ export const start = protectedProcedure
     if (scenario.isArchived) {
       throw new ORPCError("NOT_FOUND", { message: "Сценарий не найден" });
     }
+    const scorecard = await getActiveScorecardSnapshot(context.db, orgId);
 
     const [activeSessions] = await context.db
       .select({ count: count() })
@@ -259,6 +261,8 @@ export const start = protectedProcedure
           roleplayScenarioId: scenario.id,
           roleplayScenarioSnapshot: snapshotRoleplayScenario(scenario),
           roleplayMode: input.mode,
+          scorecardId: scorecard?.id,
+          scorecardSnapshot: scorecard ?? undefined,
         })
         .returning();
       if (!session) throw new Error("Не удалось создать тренировку");
