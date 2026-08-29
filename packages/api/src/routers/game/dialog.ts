@@ -2,11 +2,13 @@ import {
   asc,
   desc,
   eq,
+  GameCoachingPathAssignment,
   GameDialog,
   GameEvaluation,
   GameEvent,
   GameOrder,
   GameProductEvent,
+  GameSession,
 } from "@acme/db";
 import { detectCriteria, detectToxicity, resolveExpectation } from "@acme/game";
 import { Laminar, observe } from "@lmnr-ai/lmnr";
@@ -17,6 +19,7 @@ import {
   requireOwnedOrder,
   requireOwnedSession,
 } from "../../game/access";
+import { advanceCoachingPath } from "../../game/coaching-paths";
 import {
   appendEvent,
   countActiveOrders,
@@ -368,6 +371,70 @@ export const finish = protectedProcedure
         properties: { score: result.evaluation.scorePercent },
       })
       .catch(() => undefined);
+
+    const [coachingSession] = await context.db
+      .select({
+        assignmentId: GameSession.coachingPathAssignmentId,
+        stepId: GameSession.coachingPathStepId,
+      })
+      .from(GameSession)
+      .where(eq(GameSession.id, loaded.record.sessionId))
+      .limit(1);
+    if (coachingSession?.assignmentId && coachingSession.stepId) {
+      const { assignmentId, stepId } = coachingSession;
+      const progressEvent = await context.db.transaction(async (tx) => {
+        const [assignment] = await tx
+          .select()
+          .from(GameCoachingPathAssignment)
+          .where(eq(GameCoachingPathAssignment.id, assignmentId))
+          .limit(1)
+          .for("update");
+        if (!assignment) return null;
+        const scorePercent = result.evaluation.scorePercent;
+        const progress = advanceCoachingPath({
+          snapshot: assignment.pathSnapshot,
+          currentStep: assignment.currentStep,
+          stepResults: assignment.stepResults,
+          stepId,
+          sessionId: loaded.record.sessionId,
+          dialogId: input.dialogId,
+          scorePercent,
+        });
+        if (!progress) return null;
+        await tx
+          .update(GameCoachingPathAssignment)
+          .set({
+            stepResults: progress.stepResults,
+            currentStep: progress.currentStep,
+            status: progress.status,
+            completedAt: progress.completedAt,
+          })
+          .where(eq(GameCoachingPathAssignment.id, assignment.id));
+        return {
+          assignmentId: assignment.id,
+          eventName: progress.eventName,
+          minScore: progress.minScore,
+          scorePercent,
+        };
+      });
+      if (progressEvent) {
+        await context.db
+          .insert(GameProductEvent)
+          .values({
+            userId: context.session.user.id,
+            sessionId: loaded.record.sessionId,
+            dialogId: input.dialogId,
+            name: progressEvent.eventName,
+            properties: {
+              assignmentId: progressEvent.assignmentId,
+              stepId,
+              scorePercent: progressEvent.scorePercent,
+              minScore: progressEvent.minScore,
+            },
+          })
+          .catch(() => undefined);
+      }
+    }
 
     return {
       evaluation: result.evaluation,

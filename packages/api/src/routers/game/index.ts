@@ -1,4 +1,5 @@
 import { gameCatalogRouter } from "./catalog";
+import { gameCoachingPathsRouter } from "./coaching-paths";
 import { gameDialogRouter } from "./dialog";
 import { gameOrderRouter } from "./order";
 import { gameRoleplayRouter } from "./roleplay";
@@ -11,6 +12,7 @@ export const gameRouter = {
   session: gameSessionRouter,
   order: gameOrderRouter,
   dialog: gameDialogRouter,
+  coachingPaths: gameCoachingPathsRouter,
   roleplay: gameRoleplayRouter,
   training: gameTrainingRouter,
 };

@@ -100,6 +100,28 @@ export interface GameRoleplayScenarioSnapshot {
   isFavorite: boolean;
 }
 
+export interface GameCoachingPathStep {
+  id: string;
+  scenario: GameRoleplayScenarioSnapshot;
+  minScore: number;
+}
+
+/** Immutable version assigned to a participant. */
+export interface GameCoachingPathSnapshot {
+  name: string;
+  description: string;
+  steps: GameCoachingPathStep[];
+}
+
+export interface GameCoachingPathStepResult {
+  stepId: string;
+  sessionId: string;
+  dialogId: string;
+  scorePercent: number;
+  passed: boolean;
+  completedAt: string;
+}
+
 export interface GameScorecardCriterion {
   criterionId: string;
   title: string;
@@ -140,6 +162,13 @@ export const GameSession = pgTable(
     trainingAssignmentId: t.uuid().references(() => GameTrainingAssignment.id, {
       onDelete: "set null",
     }),
+    /** Ordered coaching journey that this roleplay attempt advances. */
+    coachingPathAssignmentId: t
+      .uuid()
+      .references(() => GameCoachingPathAssignment.id, {
+        onDelete: "set null",
+      }),
+    coachingPathStepId: t.text(),
     /** Scenario from the participant-facing AI roleplay library. */
     roleplayScenarioId: t.text(),
     /** Immutable scenario data used when continuing a roleplay session. */
@@ -167,6 +196,9 @@ export const GameSession = pgTable(
     index("game_sessions_org_idx").on(table.orgId),
     index("game_sessions_roleplay_scenario_idx").on(table.roleplayScenarioId),
     index("game_sessions_scorecard_idx").on(table.scorecardId),
+    index("game_sessions_coaching_path_assignment_idx").on(
+      table.coachingPathAssignmentId,
+    ),
   ],
 );
 
@@ -394,6 +426,84 @@ export const GameTrainingAssignment = pgTable(
     ),
     uniqueIndex("game_training_assignments_active_idx")
       .on(table.orgId, table.participantId, table.criterionId)
+      .where(sql`${table.status} in ('assigned', 'in_progress')`),
+  ],
+);
+
+/** Facilitator-authored ordered journey through AI roleplay scenarios. */
+export const GameCoachingPath = pgTable(
+  "game_coaching_paths",
+  (t) => ({
+    id: t.uuid().primaryKey().defaultRandom(),
+    orgId: t
+      .text()
+      .notNull()
+      .references(() => GameOrganization.id, { onDelete: "cascade" }),
+    createdBy: t.text().references(() => user.id, { onDelete: "set null" }),
+    name: t.varchar({ length: 160 }).notNull(),
+    description: t.text().default("").notNull(),
+    steps: t.jsonb().$type<GameCoachingPathStep[]>().notNull(),
+    isActive: t.boolean().default(true).notNull(),
+    isArchived: t.boolean().default(false).notNull(),
+    createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+    updatedAt: t
+      .timestamp({ mode: "date", withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdateFn(() => sql`now()`),
+  }),
+  (table) => [
+    index("game_coaching_paths_org_idx").on(table.orgId, table.updatedAt),
+  ],
+);
+
+/** Participant progress through an immutable snapshot of a coaching path. */
+export const GameCoachingPathAssignment = pgTable(
+  "game_coaching_path_assignments",
+  (t) => ({
+    id: t.uuid().primaryKey().defaultRandom(),
+    pathId: t
+      .uuid()
+      .notNull()
+      .references(() => GameCoachingPath.id, { onDelete: "cascade" }),
+    orgId: t
+      .text()
+      .notNull()
+      .references(() => GameOrganization.id, { onDelete: "cascade" }),
+    participantId: t
+      .text()
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    assignedBy: t.text().references(() => user.id, { onDelete: "set null" }),
+    pathSnapshot: t.jsonb().$type<GameCoachingPathSnapshot>().notNull(),
+    status: t
+      .varchar({ length: 32 })
+      .$type<"assigned" | "in_progress" | "completed">()
+      .default("assigned")
+      .notNull(),
+    currentStep: t.integer().default(0).notNull(),
+    stepResults: t
+      .jsonb()
+      .$type<GameCoachingPathStepResult[]>()
+      .default([])
+      .notNull(),
+    createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+    startedAt: t.timestamp({ withTimezone: true }),
+    completedAt: t.timestamp({ withTimezone: true }),
+    updatedAt: t
+      .timestamp({ mode: "date", withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdateFn(() => sql`now()`),
+  }),
+  (table) => [
+    index("game_coaching_path_assignments_org_idx").on(table.orgId),
+    index("game_coaching_path_assignments_participant_idx").on(
+      table.participantId,
+      table.status,
+    ),
+    uniqueIndex("game_coaching_path_assignments_active_idx")
+      .on(table.pathId, table.participantId)
       .where(sql`${table.status} in ('assigned', 'in_progress')`),
   ],
 );

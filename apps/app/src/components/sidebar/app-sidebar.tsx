@@ -30,6 +30,7 @@ import {
   IconMessages,
   IconRefresh,
   IconReportAnalytics,
+  IconRoute,
   IconScale,
   IconSchool,
   IconSettings,
@@ -65,6 +66,11 @@ const data = {
           exact: true,
         },
         { title: "AI Roleplay", url: "/game/roleplay", icon: IconMessages },
+        {
+          title: "Coaching Paths",
+          url: "/game/coaching-paths",
+          icon: IconRoute,
+        },
         {
           title: "Scorecards",
           url: "/game/scorecards",
