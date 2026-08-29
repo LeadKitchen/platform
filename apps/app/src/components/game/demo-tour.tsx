@@ -85,7 +85,7 @@ export function DemoTour() {
   const managerAvatar = userAvatarUri("demo-manager");
 
   const [visibleCount, setVisibleCount] = useState(0);
-  const [playing, setPlaying] = useState(true);
+  const [playing, setPlaying] = useState(false);
   const [speedId, setSpeedId] = useState<SpeedId>("1");
   const endRef = useRef<HTMLDivElement>(null);
 
@@ -97,7 +97,7 @@ export function DemoTour() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: сценарий нужен как триггер сброса, хотя в теле используются только setters.
   useEffect(() => {
     setVisibleCount(0);
-    setPlaying(true);
+    setPlaying(false);
   }, [scenario.id]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: visibleCount нужен в зависимостях, чтобы таймер переставлялся после каждой реплики, хотя в теле эффекта не читается.
@@ -109,7 +109,6 @@ export function DemoTour() {
     return () => window.clearTimeout(timer);
   }, [playing, finished, speed.ms, visibleCount, script.length]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: должен переисполняться при каждой новой реплике.
   useEffect(() => {
     if (visibleCount > 0) {
       endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -152,6 +151,75 @@ export function DemoTour() {
         onGroupChange={handleGroupChange}
         onScenarioChange={setScenarioId}
       />
+
+      <section className="flex flex-col gap-3">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-semibold">Все сценарии</h2>
+            <p className="text-muted-foreground text-sm">
+              Выберите сотрудника и ситуацию для просмотра.
+            </p>
+          </div>
+          <Badge variant="outline">
+            {DEMO_SCENARIOS.filter((item) => item.group === activeGroup).length}{" "}
+            сценария
+          </Badge>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {DEMO_SCENARIOS.filter((item) => item.group === activeGroup).map(
+            (item) => {
+              const selected = item.id === scenario.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => setScenarioId(item.id)}
+                  className={`group overflow-hidden rounded-xl border bg-card text-left transition-all hover:-translate-y-0.5 hover:shadow-sm ${
+                    selected ? "border-foreground ring-1 ring-foreground" : ""
+                  }`}
+                >
+                  <span className="from-primary/20 via-muted to-accent/30 flex h-28 items-end bg-gradient-to-br p-4">
+                    <Avatar className="size-12 border-2 border-background">
+                      <AvatarImage
+                        src={employeeAvatarUri(item.employee.name)}
+                        alt={item.employee.name}
+                      />
+                      <AvatarFallback>{item.employee.initials}</AvatarFallback>
+                    </Avatar>
+                  </span>
+                  <span className="flex min-h-44 flex-col p-4">
+                    <span className="flex items-start justify-between gap-3">
+                      <span>
+                        <span className="block font-semibold">
+                          {item.employee.name}
+                        </span>
+                        <span className="text-muted-foreground mt-0.5 block text-xs">
+                          {item.employee.role}
+                        </span>
+                      </span>
+                      <Badge variant="outline">{item.levelBadge}</Badge>
+                    </span>
+                    <span className="text-muted-foreground mt-3 line-clamp-3 text-sm leading-5">
+                      {item.headline}
+                    </span>
+                    <span className="mt-auto flex items-center justify-between pt-4 text-sm font-medium">
+                      {selected ? "Выбрано" : "Смотреть сценарий"}
+                      <IconPlayerPlay className="size-4 transition-transform group-hover:translate-x-0.5" />
+                    </span>
+                  </span>
+                </button>
+              );
+            },
+          )}
+        </div>
+      </section>
+
+      <div className="pt-2">
+        <p className="text-muted-foreground text-xs font-medium uppercase tracking-wide">
+          Выбранный сценарий
+        </p>
+        <h2 className="mt-1 text-lg font-semibold">{scenario.employee.name}</h2>
+      </div>
 
       <Card className="gap-0 overflow-hidden py-0">
         <CardHeader className="border-b py-5">
