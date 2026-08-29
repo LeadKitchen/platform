@@ -35,6 +35,7 @@ import {
 } from "@acme/game";
 import { ORPCError } from "@orpc/server";
 import { applyRoleplayScenario, resolveRoleplayScenario } from "./roleplay";
+import { scorecardCriteria } from "./scorecards";
 
 /**
  * Glue between the persisted game state and the stateless AI engine.
@@ -293,6 +294,17 @@ export async function loadDialog(
       turns,
       engaged: row.dialog.engaged,
       emotion: row.dialog.emotion,
+      ...(row.session.scorecardSnapshot
+        ? {
+            evaluationCriteria: scorecardCriteria(
+              row.session.scorecardSnapshot,
+            ),
+            evaluationScorecard: {
+              id: row.session.scorecardSnapshot.id,
+              name: row.session.scorecardSnapshot.name,
+            },
+          }
+        : {}),
     },
   };
 }
@@ -350,11 +362,14 @@ export async function saveEvaluation(
     inputTokens: number;
     outputTokens: number;
     costUsd: number;
+    scorecard?: { id: string; name: string };
   },
 ): Promise<void> {
   const values = {
     dialogId: args.dialogId,
     variantId: args.variantId,
+    scorecardId: args.scorecard?.id,
+    scorecardName: args.scorecard?.name,
     scorePercent: args.evaluation.scorePercent,
     expectedStyle: args.evaluation.expectedStyle,
     actualStyle: args.evaluation.actualStyle,

@@ -13,6 +13,7 @@ import {
   IconChecklist,
   IconWand,
 } from "@tabler/icons-react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { SiteHeader } from "~/components/layout";
 import { api } from "~/orpc/server";
@@ -100,6 +101,14 @@ export default async function ConfigurePage() {
                 </div>
               ))}
             </CardContent>
+            <div className="border-t p-5">
+              <Button
+                render={<Link href="/game/scorecards" />}
+                nativeButton={false}
+              >
+                Управлять Scorecards
+              </Button>
+            </div>
           </Card>
           <div className="flex flex-col gap-4">
             <Card className="gap-0 overflow-hidden py-0">

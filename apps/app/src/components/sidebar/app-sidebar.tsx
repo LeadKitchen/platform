@@ -35,6 +35,7 @@ import {
   IconSettings,
   IconShieldLock,
   IconSparkles,
+  IconTargetArrow,
   IconUsers,
   IconUsersGroup,
   IconWand,
@@ -64,6 +65,11 @@ const data = {
           exact: true,
         },
         { title: "AI Roleplay", url: "/game/roleplay", icon: IconMessages },
+        {
+          title: "Scorecards",
+          url: "/game/scorecards",
+          icon: IconTargetArrow,
+        },
         { title: "Раунд 1 · Теория", url: "/game/round-1", icon: IconSchool },
         { title: "Моя группа", url: "/group", icon: IconUsersGroup },
         {
@@ -271,7 +277,15 @@ export function AppSidebar({
     )
     .map((item) =>
       item.url === "/game" && !isFacilitator
-        ? { ...item, items: item.items.filter((sub) => sub.url !== "/group") }
+        ? {
+            ...item,
+            items: item.items.filter(
+              (sub) =>
+                sub.url !== "/group" &&
+                sub.url !== "/group/configure" &&
+                sub.url !== "/game/scorecards",
+            ),
+          }
         : item,
     );
 

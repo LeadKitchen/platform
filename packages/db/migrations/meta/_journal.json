@@ -127,6 +127,20 @@
       "when": 1788006404840,
       "tag": "0017_redundant_weapon_omega",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1788011331704,
+      "tag": "0018_medical_blur",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1788012076791,
+      "tag": "0019_sloppy_puff_adder",
+      "breakpoints": true
     }
   ]
 }

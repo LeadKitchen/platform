@@ -70,7 +70,10 @@ export async function judgeCriteria(
   usage: ReturnType<typeof addUsage>;
 }> {
   const criteriaList = expectation.requiredCriteria
-    .map((criterion) => `- ${criterion.id}: ${criterion.title}`)
+    .map(
+      (criterion) =>
+        `- ${criterion.id}: ${criterion.title}${criterion.description ? ` — ${criterion.description}` : ""}`,
+    )
     .join("\n");
 
   const result = await deps.provider.generate({

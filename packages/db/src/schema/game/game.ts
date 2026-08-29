@@ -100,6 +100,31 @@ export interface GameRoleplayScenarioSnapshot {
   isFavorite: boolean;
 }
 
+export interface GameScorecardCriterion {
+  criterionId: string;
+  title: string;
+  description: string;
+  weight: number;
+  required: boolean;
+  scoring: "percent" | "pass_fail";
+  condition?: string;
+}
+
+export interface GameScorecardCategory {
+  id: string;
+  name: string;
+  weight: number;
+  criteria: GameScorecardCriterion[];
+}
+
+/** Immutable rubric attached to a session when it starts. */
+export interface GameScorecardSnapshot {
+  id: string;
+  name: string;
+  description: string;
+  categories: GameScorecardCategory[];
+}
+
 export const GameSession = pgTable(
   "game_sessions",
   (t) => ({
@@ -121,6 +146,11 @@ export const GameSession = pgTable(
     roleplayScenarioSnapshot: t.jsonb().$type<GameRoleplayScenarioSnapshot>(),
     /** Whether the participant practises a full conversation or objections. */
     roleplayMode: t.varchar({ length: 32 }),
+    /** Custom evaluation rubric fixed for the lifetime of this session. */
+    scorecardId: t
+      .uuid()
+      .references(() => GameScorecard.id, { onDelete: "set null" }),
+    scorecardSnapshot: t.jsonb().$type<GameScorecardSnapshot>(),
     /**
      * Org the creator belonged to at the time (via `GameOrgMember`), copied
      * onto the row so a session keeps its group even if membership changes
@@ -136,6 +166,7 @@ export const GameSession = pgTable(
     index("game_sessions_variant_idx").on(table.variantId),
     index("game_sessions_org_idx").on(table.orgId),
     index("game_sessions_roleplay_scenario_idx").on(table.roleplayScenarioId),
+    index("game_sessions_scorecard_idx").on(table.scorecardId),
   ],
 );
 
@@ -149,6 +180,36 @@ export const GameOrganization = pgTable("game_organizations", (t) => ({
   description: t.varchar({ length: 256 }).default("").notNull(),
   createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
 }));
+
+/** Organization-owned evaluation rubrics. Only one can be active at a time. */
+export const GameScorecard = pgTable(
+  "game_scorecards",
+  (t) => ({
+    id: t.uuid().primaryKey().defaultRandom(),
+    orgId: t
+      .text()
+      .notNull()
+      .references(() => GameOrganization.id, { onDelete: "cascade" }),
+    createdBy: t.text().references(() => user.id, { onDelete: "set null" }),
+    name: t.varchar({ length: 160 }).notNull(),
+    description: t.text().default("").notNull(),
+    categories: t.jsonb().$type<GameScorecardCategory[]>().notNull(),
+    isActive: t.boolean().default(false).notNull(),
+    isArchived: t.boolean().default(false).notNull(),
+    createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+    updatedAt: t
+      .timestamp({ mode: "date", withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdateFn(() => sql`now()`),
+  }),
+  (table) => [
+    index("game_scorecards_org_idx").on(table.orgId, table.updatedAt),
+    uniqueIndex("game_scorecards_active_org_idx")
+      .on(table.orgId)
+      .where(sql`${table.isActive} = true and ${table.isArchived} = false`),
+  ],
+);
 
 /**
  * Participant-owned scenarios for the AI roleplay library.
@@ -560,6 +621,10 @@ export const GameEvaluation = pgTable(
       .notNull()
       .references(() => GameDialog.id, { onDelete: "cascade" }),
     variantId: t.text().notNull(),
+    scorecardId: t
+      .uuid()
+      .references(() => GameScorecard.id, { onDelete: "set null" }),
+    scorecardName: t.varchar({ length: 160 }),
     scorePercent: t.integer().notNull(),
     expectedStyle: t.varchar({ length: 32 }).notNull(),
     actualStyle: t.varchar({ length: 32 }).notNull(),

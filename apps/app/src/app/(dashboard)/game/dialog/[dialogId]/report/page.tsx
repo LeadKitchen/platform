@@ -96,7 +96,12 @@ export default async function DialogReportPage({
                 Разговор провёл {session?.user.name ?? "Участник"}
               </p>
             </div>
-            <Badge variant="outline">Раунд {data.dialog.round}</Badge>
+            <div className="flex flex-wrap gap-2">
+              {evaluation.scorecardName ? (
+                <Badge variant="accent">{evaluation.scorecardName}</Badge>
+              ) : null}
+              <Badge variant="outline">Раунд {data.dialog.round}</Badge>
+            </div>
           </CardHeader>
           <CardContent className="grid p-0 sm:grid-cols-2 xl:grid-cols-4">
             <Metric

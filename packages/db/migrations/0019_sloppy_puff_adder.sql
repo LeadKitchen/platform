@@ -1,0 +1,2 @@
+ALTER TABLE "game_evaluations" ADD CONSTRAINT "game_evaluations_scorecard_id_game_scorecards_id_fk" FOREIGN KEY ("scorecard_id") REFERENCES "public"."game_scorecards"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "game_sessions" ADD CONSTRAINT "game_sessions_scorecard_id_game_scorecards_id_fk" FOREIGN KEY ("scorecard_id") REFERENCES "public"."game_scorecards"("id") ON DELETE set null ON UPDATE no action;
