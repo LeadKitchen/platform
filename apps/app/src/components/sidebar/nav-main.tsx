@@ -28,7 +28,7 @@ interface NavigationItem {
   }[];
 }
 
-/** Flat, section-led navigation inspired by Kendo's product shell. */
+/** Плоская навигация по разделам в основной оболочке приложения. */
 export function NavMain({ items }: { items: NavigationItem[] }) {
   const pathname = usePathname();
 

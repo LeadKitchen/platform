@@ -19,10 +19,10 @@ export default async function CoachingPathsPage({
   return (
     <>
       <SiteHeader
-        title="Coaching Paths"
+        title="Траектории обучения"
         breadcrumbs={[
           { label: "Деловая игра", href: "/game" },
-          { label: "Coaching Paths" },
+          { label: "Траектории обучения" },
         ]}
       />
       <main className="flex flex-1 flex-col gap-5 p-4 lg:p-6">

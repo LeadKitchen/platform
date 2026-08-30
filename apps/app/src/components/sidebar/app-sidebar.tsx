@@ -65,14 +65,18 @@ const data = {
           icon: IconChefHat,
           exact: true,
         },
-        { title: "AI Roleplay", url: "/game/roleplay", icon: IconMessages },
         {
-          title: "Coaching Paths",
+          title: "Ролевые диалоги с ИИ",
+          url: "/game/roleplay",
+          icon: IconMessages,
+        },
+        {
+          title: "Траектории обучения",
           url: "/game/coaching-paths",
           icon: IconRoute,
         },
         {
-          title: "Scorecards",
+          title: "Рубрики оценки",
           url: "/game/scorecards",
           icon: IconTargetArrow,
         },

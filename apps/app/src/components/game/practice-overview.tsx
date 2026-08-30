@@ -52,7 +52,7 @@ function activityTone(value: number) {
   return "bg-muted";
 }
 
-/** Dense activity and coaching overview inspired by Kendo's Overview page. */
+/** Плотная сводка активности и коучинга для страницы «Обзор» сотрудника. */
 export function PracticeOverview({
   dialogs,
   averageScore,

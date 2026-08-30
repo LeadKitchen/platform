@@ -390,7 +390,7 @@ export default async function GamePage() {
           <Card className="gap-4">
             <CardHeader>
               <IconMessages className="text-primary size-5" />
-              <CardTitle className="text-base">AI Roleplay</CardTitle>
+              <CardTitle className="text-base">Ролевые диалоги с ИИ</CardTitle>
               <CardDescription>
                 Выберите управленческую ситуацию или создайте собственного
                 сотрудника для живой тренировки.

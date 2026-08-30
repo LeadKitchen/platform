@@ -42,7 +42,7 @@ interface WorkspaceSwitcherProps {
   workspaces: Workspace[];
 }
 
-/** Kendo-style workspace picker, kept in the sidebar where context changes. */
+/** Переключатель команды в сайдбаре — здесь меняется рабочий контекст. */
 export function WorkspaceSwitcher({
   activeWorkspace,
   workspaces,
@@ -161,7 +161,7 @@ export function WorkspaceSwitcher({
                   id={nameInputId}
                   value={name}
                   onChange={(event) => setName(event.target.value)}
-                  placeholder="Например, Команда продаж"
+                  placeholder="Например, Кухня ресторана «Вкус»"
                   minLength={2}
                   maxLength={128}
                   required

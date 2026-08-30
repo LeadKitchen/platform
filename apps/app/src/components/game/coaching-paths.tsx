@@ -176,7 +176,7 @@ function PathEditor({
               {path ? "Редактировать путь" : "Создать путь обучения"}
             </DialogTitle>
             <DialogDescription>
-              Соберите до 10 последовательных AI Roleplay-тренировок и задайте
+              Соберите до 10 последовательных ролевых диалогов с ИИ и задайте
               проходной балл.
             </DialogDescription>
           </DialogHeader>
@@ -304,7 +304,7 @@ function PathEditor({
                 onClick={() => setPickerOpen(true)}
               >
                 <IconPlus className="size-5" />
-                Добавьте первый AI Roleplay-сценарий
+                Добавьте первый сценарий ролевого диалога
               </button>
             ) : null}
           </div>
@@ -328,7 +328,7 @@ function PathEditor({
       <Dialog open={pickerOpen} onOpenChange={setPickerOpen}>
         <DialogContent className="max-h-[86vh] overflow-y-auto sm:max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Добавить AI Roleplay</DialogTitle>
+            <DialogTitle>Добавить ролевой диалог</DialogTitle>
             <DialogDescription>
               Выберите персонажа и ситуацию для следующего шага.
             </DialogDescription>
@@ -410,7 +410,7 @@ export function CoachingPaths({
     return (
       <>
         <GameSectionHeader
-          eyebrow="Практика · Coaching Paths"
+          eyebrow="Практика · Траектории обучения"
           title="Мои пути обучения"
           description="Проходите ролевые тренировки последовательно. Следующий шаг откроется после достижения проходного балла."
         />
@@ -514,7 +514,7 @@ export function CoachingPaths({
                 nativeButton={false}
               >
                 <IconPlayerPlay data-icon="inline-start" />
-                Открыть AI Roleplay
+                Открыть ролевой диалог
               </Button>
             </EmptyContent>
           </Empty>
@@ -543,7 +543,7 @@ export function CoachingPaths({
       />
       <div className="flex items-center justify-between gap-3">
         <p className="text-muted-foreground text-sm">
-          AI Roleplay-сценарии, собранные в последовательную программу.
+          Сценарии ролевых диалогов, собранные в последовательную программу.
         </p>
         <Badge variant="outline">
           {initialPaths.length} {initialPaths.length === 1 ? "путь" : "путей"}
@@ -631,7 +631,7 @@ export function CoachingPaths({
             </EmptyMedia>
             <EmptyTitle>Создайте первый путь обучения</EmptyTitle>
             <EmptyDescription>
-              Добавьте AI Roleplay-сценарии, задайте проходной балл и назначьте
+              Добавьте сценарии ролевых диалогов, задайте проходной балл и назначьте
               участников.
             </EmptyDescription>
           </EmptyHeader>
