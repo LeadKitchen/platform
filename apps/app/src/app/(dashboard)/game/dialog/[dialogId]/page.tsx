@@ -15,10 +15,11 @@ export default async function DialogPage({
   searchParams,
 }: {
   params: Promise<{ dialogId: string }>;
-  searchParams: Promise<{ voice?: string }>;
+  searchParams: Promise<{ voice?: string | string[] }>;
 }) {
   const { dialogId } = await params;
   const { voice } = await searchParams;
+  const voiceParam = Array.isArray(voice) ? voice[0] : voice;
   const [data, session] = await Promise.all([
     api.game.dialog.byId({ dialogId }),
     getSession(),
@@ -57,7 +58,7 @@ export default async function DialogPage({
     uploadedAvatarUrl: session?.user.image ?? undefined,
   };
 
-  if (voice === "1") {
+  if (voiceParam === "1") {
     return (
       <>
         <SiteHeader title="AI Roleplay" />

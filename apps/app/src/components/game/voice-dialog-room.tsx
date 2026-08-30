@@ -419,9 +419,7 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
           <Button
             size="icon"
             variant={micMuted ? "destructive" : "outline"}
-            aria-label={
-              micMuted ? "Включить микрофон" : "Выключить микрофон"
-            }
+            aria-label={micMuted ? "Включить микрофон" : "Выключить микрофон"}
             onClick={toggleMic}
           >
             <IconMicrophone />
