@@ -3,6 +3,7 @@ import {
   DialogRoom,
   type EvaluationView,
   GameSectionHeader,
+  VoiceDialogRoom,
 } from "~/components/game";
 import { SiteHeader } from "~/components/layout";
 import { api } from "~/orpc/server";
@@ -11,10 +12,14 @@ export const dynamic = "force-dynamic";
 
 export default async function DialogPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ dialogId: string }>;
+  searchParams: Promise<{ voice?: string | string[] }>;
 }) {
   const { dialogId } = await params;
+  const { voice } = await searchParams;
+  const voiceParam = Array.isArray(voice) ? voice[0] : voice;
   const [data, session] = await Promise.all([
     api.game.dialog.byId({ dialogId }),
     getSession(),
@@ -35,6 +40,35 @@ export default async function DialogPage({
       }
     : null;
 
+  const commonProps = {
+    dialogId: data.dialog.id,
+    employee: { name: data.employee.name, role: data.employee.role },
+    task: { title: data.task.title },
+    shift: {
+      round: data.shift.round,
+      activeOrders: data.shift.activeOrders,
+      soloOnShift: data.shift.soloOnShift,
+    },
+    initialTurns: data.turns.map((turn) => ({
+      role: turn.role,
+      text: turn.text,
+    })),
+    initialFinished: data.dialog.status !== "active",
+    userAvatarSeed: session?.user.email,
+    uploadedAvatarUrl: session?.user.image ?? undefined,
+  };
+
+  if (voiceParam === "1") {
+    return (
+      <>
+        <SiteHeader title="AI Roleplay" />
+        <main className="flex flex-1 flex-col p-4 lg:p-6">
+          <VoiceDialogRoom {...commonProps} />
+        </main>
+      </>
+    );
+  }
+
   return (
     <>
       <SiteHeader title="Roleplay" />
@@ -45,23 +79,9 @@ export default async function DialogPage({
           description="Сотрудник отвечает в своей роли. Ведите естественный диалог и завершите его, когда договоритесь о результате, сроке и контроле."
         />
         <DialogRoom
-          dialogId={data.dialog.id}
+          {...commonProps}
           variantId={data.dialog.variantId}
-          employee={{ name: data.employee.name, role: data.employee.role }}
-          task={{ title: data.task.title }}
-          shift={{
-            round: data.shift.round,
-            activeOrders: data.shift.activeOrders,
-            soloOnShift: data.shift.soloOnShift,
-          }}
-          initialTurns={data.turns.map((turn) => ({
-            role: turn.role,
-            text: turn.text,
-          }))}
           initialEvaluation={evaluation}
-          initialFinished={data.dialog.status !== "active"}
-          userAvatarSeed={session?.user.email}
-          uploadedAvatarUrl={session?.user.image ?? undefined}
         />
       </main>
     </>

@@ -2,6 +2,8 @@
 
 import type { RouterOutputs } from "@acme/api";
 import {
+  Alert,
+  AlertDescription,
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -10,6 +12,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  AlertTitle,
   Avatar,
   AvatarFallback,
   AvatarImage,
@@ -66,6 +69,7 @@ import {
   IconEdit,
   IconHistory,
   IconMessages,
+  IconMicrophone,
   IconPlayerPlay,
   IconPlus,
   IconSearch,
@@ -352,7 +356,6 @@ function ScenarioEditorDialog({
                 изменить.
               </FieldDescription>
             </Field>
-
             <div className="grid gap-4 md:grid-cols-2">
               <Field>
                 <FieldLabel htmlFor="roleplay-name">Имя сотрудника</FieldLabel>
@@ -688,7 +691,7 @@ function StartTrainingDialog({
         scenarioId: scenario.id,
         mode,
       });
-      router.push(`/game/dialog/${result.dialog.id}`);
+      router.push(`/game/dialog/${result.dialog.id}?voice=1`);
     } catch (cause) {
       toast.error(
         cause instanceof Error ? cause.message : "Не удалось начать тренировку",
@@ -768,6 +771,15 @@ function StartTrainingDialog({
                   : "Персонаж быстрее перейдёт к сопротивлению и сложным вопросам."}
               </FieldDescription>
             </Field>
+            <Alert>
+              <IconMicrophone />
+              <AlertTitle>Живой голосовой разговор</AlertTitle>
+              <AlertDescription>
+                После запуска откроется отдельная комната. Разрешите доступ к
+                микрофону, говорите естественно и получайте озвученные ответы
+                персонажа с транскриптом в реальном времени.
+              </AlertDescription>
+            </Alert>
           </div>
         ) : null}
         <DialogFooter className="justify-end">
@@ -780,7 +792,7 @@ function StartTrainingDialog({
           </Button>
           <Button disabled={pending || !scenario} onClick={start}>
             <IconPlayerPlay data-icon="inline-start" />
-            {pending ? "Запускаем…" : "Начать тренировку"}
+            {pending ? "Подключаем…" : "Перейти в голосовую комнату"}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -856,7 +868,7 @@ function ScenarioDetailsDialog({
                       href={
                         attempt.dialogId
                           ? attempt.dialogStatus === "active"
-                            ? `/game/dialog/${attempt.dialogId}`
+                            ? `/game/dialog/${attempt.dialogId}?voice=1`
                             : `/game/dialog/${attempt.dialogId}/report`
                           : `/game/${attempt.sessionId}`
                       }
@@ -1062,7 +1074,7 @@ export function RoleplayCatalog({
                 if (latestAttempt.dialogId) {
                   router.push(
                     latestAttempt.dialogStatus === "active"
-                      ? `/game/dialog/${latestAttempt.dialogId}`
+                      ? `/game/dialog/${latestAttempt.dialogId}?voice=1`
                       : `/game/dialog/${latestAttempt.dialogId}/report`,
                   );
                 } else {
