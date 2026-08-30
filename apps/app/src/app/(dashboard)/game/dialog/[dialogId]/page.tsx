@@ -61,7 +61,7 @@ export default async function DialogPage({
   if (voiceParam === "1") {
     return (
       <>
-        <SiteHeader title="AI Roleplay" />
+        <SiteHeader title="Ролевой диалог с ИИ" />
         <main className="flex flex-1 flex-col p-4 lg:p-6">
           <VoiceDialogRoom {...commonProps} />
         </main>
@@ -71,7 +71,7 @@ export default async function DialogPage({
 
   return (
     <>
-      <SiteHeader title="Roleplay" />
+      <SiteHeader title="Ролевой диалог" />
       <main className="flex flex-1 flex-col gap-4 p-4 lg:p-6">
         <GameSectionHeader
           eyebrow={`Практика · Раунд ${data.shift.round}`}

@@ -1044,7 +1044,7 @@ export function RoleplayCatalog({
   return (
     <>
       <GameSectionHeader
-        eyebrow="Практика · AI Roleplay"
+        eyebrow="Практика · Ролевые диалоги с ИИ"
         title="Управленческие ролевые тренировки"
         description="Выберите готовую ситуацию или создайте собственного сотрудника. Проведите живой разговор и получите разбор управленческого подхода."
         action={
@@ -1356,7 +1356,7 @@ export function RoleplayCatalog({
           <div>
             <CardTitle className="flex items-center gap-2">
               <IconSparkles className="size-5" />
-              Как работает AI Roleplay
+              Как работают ролевые диалоги с ИИ
             </CardTitle>
             <CardDescription>
               Персонаж знает свой контекст, сопротивляется в рамках роли, а

@@ -300,13 +300,13 @@ function ScorecardEditor({
         ...saved,
         isActive: activate || saved.isActive,
       } as ScorecardView);
-      toast.success(scorecard ? "Scorecard обновлён" : "Scorecard создан");
+      toast.success(scorecard ? "Рубрика обновлена" : "Рубрика создана");
       onOpenChange(false);
     } catch (cause) {
       toast.error(
         cause instanceof Error
           ? cause.message
-          : "Не удалось сохранить Scorecard",
+          : "Не удалось сохранить рубрику",
       );
     } finally {
       setPending(false);
@@ -318,7 +318,7 @@ function ScorecardEditor({
       <DialogContent className="max-h-[92vh] overflow-y-auto sm:max-w-4xl">
         <DialogHeader>
           <DialogTitle>
-            {scorecard ? "Редактировать Scorecard" : "Новый Scorecard"}
+            {scorecard ? "Редактировать рубрику" : "Новая рубрика"}
           </DialogTitle>
           <DialogDescription>
             Настройте, какие управленческие действия AI оценивает после
@@ -775,12 +775,12 @@ export function ScorecardLibrary({
       if (archiving.isActive)
         setSystem((current) => ({ ...current, isActive: true }));
       setArchiving(null);
-      toast.success("Scorecard перемещён в архив");
+      toast.success("Рубрика перемещена в архив");
     } catch (cause) {
       toast.error(
         cause instanceof Error
           ? cause.message
-          : "Не удалось архивировать Scorecard",
+          : "Не удалось архивировать рубрику",
       );
     } finally {
       setPendingId(null);
@@ -889,11 +889,11 @@ export function ScorecardLibrary({
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-2xl">
           <h1 className="text-3xl font-medium tracking-[-0.035em]">
-            Scorecards
+            Рубрики оценки
           </h1>
           <p className="text-muted-foreground mt-2 text-sm leading-6">
-            AI автоматически оценивает каждую завершённую смену и AI Roleplay по
-            активной рубрике команды.
+            AI автоматически оценивает каждую завершённую смену и ролевой
+            диалог с ИИ по активной рубрике команды.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             <Badge variant="outline">
@@ -910,7 +910,7 @@ export function ScorecardLibrary({
           </div>
         </div>
         <Button onClick={() => setChooserOpen(true)}>
-          <IconPlus /> Создать Scorecard
+          <IconPlus /> Создать рубрику
         </Button>
       </header>
 
@@ -945,7 +945,7 @@ export function ScorecardLibrary({
                     "сигналов",
                   )}
                 </Badge>
-                <Badge variant="outline">AI Roleplay</Badge>
+                <Badge variant="outline">Ролевой диалог с ИИ</Badge>
                 <Badge variant="outline">Деловая игра</Badge>
               </div>
             </CardHeader>
@@ -1003,7 +1003,7 @@ export function ScorecardLibrary({
 
       <section className="flex flex-col gap-3">
         <div>
-          <h2 className="text-base font-semibold">Добавить Scorecard</h2>
+          <h2 className="text-base font-semibold">Добавить рубрику</h2>
           <p className="text-muted-foreground text-sm">
             Начните с готовой методической основы или соберите свою.
           </p>
@@ -1053,7 +1053,7 @@ export function ScorecardLibrary({
       <Dialog open={chooserOpen} onOpenChange={setChooserOpen}>
         <DialogContent className="sm:max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Создать Scorecard</DialogTitle>
+            <DialogTitle>Создать рубрику</DialogTitle>
             <DialogDescription>
               Выберите методическую основу. Всё можно изменить перед
               сохранением.
@@ -1104,7 +1104,7 @@ export function ScorecardLibrary({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Переместить Scorecard в архив?</AlertDialogTitle>
+            <AlertDialogTitle>Переместить рубрику в архив?</AlertDialogTitle>
             <AlertDialogDescription>
               Рубрика «{archiving?.name}» исчезнет из библиотеки. Завершённые
               сессии сохранят её снимок и результаты.

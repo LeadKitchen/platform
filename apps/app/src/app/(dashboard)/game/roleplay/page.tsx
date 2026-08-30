@@ -14,10 +14,10 @@ export default async function RoleplayPage() {
   return (
     <>
       <SiteHeader
-        title="AI Roleplay"
+        title="Ролевые диалоги с ИИ"
         breadcrumbs={[
           { label: "Деловая игра", href: "/game" },
-          { label: "AI Roleplay" },
+          { label: "Ролевые диалоги с ИИ" },
         ]}
       />
       <main className="flex flex-1 flex-col gap-4 p-4 lg:p-6">

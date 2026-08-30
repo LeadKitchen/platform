@@ -335,7 +335,7 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
               </p>
               <div className="mt-2 flex flex-wrap gap-2">
                 <Badge variant="outline">Раунд {props.shift.round}</Badge>
-                <Badge variant="outline">AI Roleplay</Badge>
+                <Badge variant="outline">Ролевой диалог с ИИ</Badge>
               </div>
             </div>
           </div>
@@ -406,7 +406,7 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
               <IconSparkles />
             </div>
             <div>
-              <p className="text-sm font-semibold">AI Roleplay</p>
+              <p className="text-sm font-semibold">Ролевой диалог с ИИ</p>
               <p className="text-muted-foreground text-xs">
                 {props.employee.name} · {props.task.title}
               </p>

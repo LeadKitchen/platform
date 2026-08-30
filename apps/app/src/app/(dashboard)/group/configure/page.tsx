@@ -20,7 +20,7 @@ import { api } from "~/orpc/server";
 
 export const dynamic = "force-dynamic";
 
-/** Workspace-level Configure hub, mirroring Kendo's useful setup layers. */
+/** Хаб настройки команды: рубрика оценки, контекст и правила практики. */
 export default async function ConfigurePage() {
   const [mine, methodology] = await Promise.all([
     api.org.mine(),
@@ -33,7 +33,7 @@ export default async function ConfigurePage() {
       <SiteHeader
         breadcrumbs={[
           { label: "Моя группа", href: "/group" },
-          { label: "Configure" },
+          { label: "Настройка" },
         ]}
       />
       <main className="flex flex-1 flex-col gap-6 p-4 lg:p-6">
@@ -106,7 +106,7 @@ export default async function ConfigurePage() {
                 render={<Link href="/game/scorecards" />}
                 nativeButton={false}
               >
-                Управлять Scorecards
+                Управлять рубриками
               </Button>
             </div>
           </Card>

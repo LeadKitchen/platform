@@ -28,7 +28,7 @@ export default async function CoachingPathPage({
         title={data.path.name}
         breadcrumbs={[
           { label: "Деловая игра", href: "/game" },
-          { label: "Coaching Paths", href: "/game/coaching-paths" },
+          { label: "Траектории обучения", href: "/game/coaching-paths" },
           { label: data.path.name },
         ]}
       />

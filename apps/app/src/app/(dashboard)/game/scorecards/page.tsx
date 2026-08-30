@@ -17,10 +17,10 @@ export default async function ScorecardsPage() {
   return (
     <>
       <SiteHeader
-        title="Scorecards"
+        title="Рубрики оценки"
         breadcrumbs={[
           { label: "Деловая игра", href: "/game" },
-          { label: "Scorecards" },
+          { label: "Рубрики оценки" },
         ]}
       />
       <main className="flex flex-1 flex-col p-4 lg:p-6">

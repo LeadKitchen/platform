@@ -164,7 +164,7 @@ export function CoachingPathDetail({
         <IconArrowLeft className="size-4" />К путям обучения
       </Link>
       <GameSectionHeader
-        eyebrow="Обучение · Coaching Path"
+        eyebrow="Обучение · Траектория обучения"
         title={path.name}
         description={path.description || "Структурированный путь обучения"}
         action={
