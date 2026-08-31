@@ -46,7 +46,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { employeeAvatarUri, userAvatarUri } from "~/lib/avatar";
 import { client } from "~/orpc/react";
-import { useSpeechRecognition } from "./use-speech-recognition";
+import { useDeepgramRecognition } from "./use-deepgram-recognition";
 import { useSpeechSynthesis } from "./use-speech-synthesis";
 
 interface VoiceTurn {
@@ -96,7 +96,6 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
     props.initialTurns.map((turn) => ({ ...turn, at: "Ранее" })),
   );
   const [pending, setPending] = useState(false);
-  const [micMuted, setMicMuted] = useState(false);
   const [transcriptVisible, setTranscriptVisible] = useState(true);
   const [selfViewVisible, setSelfViewVisible] = useState(true);
   const [duration, setDuration] = useState(0);
@@ -109,11 +108,12 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
   const managerAvatar =
     props.uploadedAvatarUrl ?? userAvatarUri(props.userAvatarSeed ?? "manager");
 
-  const speech = useSpeechRecognition({
+  const speech = useDeepgramRecognition({
+    dialogId: props.dialogId,
     onFinal: (text) => void sendVoice(text),
   });
   const voice = useSpeechSynthesis();
-  const latestActivity = `${turns.length}:${pending}:${speech.interim}`;
+  const latestActivity = `${turns.length}:${pending}:${speech.transcribing}`;
 
   useEffect(() => {
     if (phase !== "active") return;
@@ -134,31 +134,6 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
   }, [latestActivity]);
 
   useEffect(() => {
-    if (
-      phase !== "active" ||
-      micMuted ||
-      pending ||
-      voice.speaking ||
-      speech.listening ||
-      speech.error ||
-      !speech.supported
-    ) {
-      return;
-    }
-    const timer = window.setTimeout(speech.start, 350);
-    return () => window.clearTimeout(timer);
-  }, [
-    micMuted,
-    pending,
-    phase,
-    speech.error,
-    speech.listening,
-    speech.start,
-    speech.supported,
-    voice.speaking,
-  ]);
-
-  useEffect(() => {
     if (phase !== "active") return;
     function onKeyDown(event: KeyboardEvent) {
       if (
@@ -167,21 +142,25 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
       ) {
         return;
       }
-      if (event.key.toLowerCase() === "m") {
-        setMicMuted((current) => !current);
-      }
       if (event.key.toLowerCase() === "t") {
         setTranscriptVisible((current) => !current);
       }
+      if (event.key.toLowerCase() === "m" && !event.repeat) {
+        speech.pressStart();
+      }
+    }
+    function onKeyUp(event: KeyboardEvent) {
+      if (event.key.toLowerCase() === "m") {
+        speech.pressEnd();
+      }
     }
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [phase]);
-
-  useEffect(() => {
-    if (phase !== "active") return;
-    if (micMuted) speech.stop();
-  }, [micMuted, phase, speech.stop]);
+    window.addEventListener("keyup", onKeyUp);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("keyup", onKeyUp);
+    };
+  }, [phase, speech.pressStart, speech.pressEnd]);
 
   function startCall() {
     setPhase("active");
@@ -198,8 +177,6 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
       const greeting = `Здравствуйте. Я ${props.employee.name}. Слушаю вас.`;
       setTurns([{ role: "employee", text: greeting, at: nowLabel() }]);
       voice.speak(greeting);
-    } else {
-      speech.start();
     }
   }
 
@@ -207,7 +184,6 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
     const text = rawText.trim();
     if (!text || pending || phase !== "active") return;
 
-    speech.stop();
     setPending(true);
     setError(null);
     setNotice(null);
@@ -252,7 +228,7 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
     setEndDialog(null);
     setPending(true);
     setError(null);
-    speech.stop();
+    speech.cancel();
     voice.stop();
     try {
       const check = await client.game.dialog.preflight({
@@ -281,7 +257,7 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
     setEndDialog(null);
     setPending(true);
     setError(null);
-    speech.stop();
+    speech.cancel();
     voice.stop();
     try {
       await client.game.dialog.finish({ dialogId: props.dialogId });
@@ -296,15 +272,6 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
       );
       setPending(false);
     }
-  }
-
-  function toggleMic() {
-    setMicMuted((current) => {
-      const next = !current;
-      if (next) speech.stop();
-      else speech.start();
-      return next;
-    });
   }
 
   if (phase === "lobby") {
@@ -342,12 +309,12 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
           <Alert>
             <IconMicrophone />
             <AlertTitle>
-              {speech.supported ? "Микрофон готов" : "Нужен Chrome или Edge"}
+              {speech.supported ? "Микрофон готов" : "Микрофон недоступен"}
             </AlertTitle>
             <AlertDescription>
               {speech.supported
-                ? "После старта говорите естественно. Законченная фраза автоматически появится в транскрипте и уйдёт персонажу."
-                : "В этом браузере голосовое распознавание недоступно. В комнате останется текстовый резервный ввод."}
+                ? "Зажмите кнопку микрофона (или клавишу M), скажите реплику и отпустите — она уйдёт персонажу."
+                : "Этот браузер не поддерживает запись с микрофона. В комнате останется текстовый резервный ввод."}
             </AlertDescription>
           </Alert>
           <div className="rounded-xl border p-4">
@@ -418,9 +385,20 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
           </Badge>
           <Button
             size="icon"
-            variant={micMuted ? "destructive" : "outline"}
-            aria-label={micMuted ? "Включить микрофон" : "Выключить микрофон"}
-            onClick={toggleMic}
+            variant={speech.recording ? "destructive" : "outline"}
+            aria-label={
+              speech.recording
+                ? "Идёт запись — отпустите, чтобы отправить"
+                : "Зажмите и удерживайте, чтобы говорить"
+            }
+            disabled={pending || speech.transcribing || voice.speaking}
+            onPointerDown={(event) => {
+              event.preventDefault();
+              speech.pressStart();
+            }}
+            onPointerUp={speech.pressEnd}
+            onPointerLeave={speech.pressEnd}
+            onPointerCancel={speech.pressEnd}
           >
             <IconMicrophone />
           </Button>
@@ -524,10 +502,11 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
                       </p>
                     </div>
                   ))}
-                  {speech.interim ? (
-                    <div className="bg-primary/5 ml-auto max-w-[92%] rounded-xl border border-dashed px-3 py-2">
+                  {speech.transcribing ? (
+                    <div className="bg-primary/5 ml-auto flex max-w-[92%] items-center gap-2 rounded-xl border border-dashed px-3 py-2">
+                      <IconLoader2 className="animate-spin" />
                       <p className="text-muted-foreground text-sm italic">
-                        {speech.interim}…
+                        Распознаём реплику…
                       </p>
                     </div>
                   ) : null}
@@ -584,13 +563,13 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
               <p className="text-muted-foreground text-center text-sm">
                 {pending
                   ? "AI анализирует вашу реплику"
-                  : voice.speaking
-                    ? "Слушайте ответ персонажа"
-                    : micMuted
-                      ? "Микрофон выключен"
-                      : speech.listening
-                        ? "Говорите — фраза отправится автоматически"
-                        : "Подключаем микрофон…"}
+                  : speech.transcribing
+                    ? "Распознаём вашу реплику…"
+                    : voice.speaking
+                      ? "Слушайте ответ персонажа"
+                      : speech.recording
+                        ? "Идёт запись — отпустите кнопку, чтобы отправить"
+                        : "Зажмите кнопку микрофона и говорите"}
               </p>
             </CardContent>
           </Card>
@@ -614,11 +593,20 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
                 <div className="flex flex-wrap items-center justify-center gap-2">
                   <Button
                     size="icon"
-                    variant={micMuted ? "destructive" : "secondary"}
+                    variant={speech.recording ? "destructive" : "secondary"}
                     aria-label={
-                      micMuted ? "Включить микрофон" : "Выключить микрофон"
+                      speech.recording
+                        ? "Идёт запись — отпустите, чтобы отправить"
+                        : "Зажмите и удерживайте, чтобы говорить"
                     }
-                    onClick={toggleMic}
+                    disabled={pending || speech.transcribing || voice.speaking}
+                    onPointerDown={(event) => {
+                      event.preventDefault();
+                      speech.pressStart();
+                    }}
+                    onPointerUp={speech.pressEnd}
+                    onPointerLeave={speech.pressEnd}
+                    onPointerCancel={speech.pressEnd}
                   >
                     <IconMicrophone />
                   </Button>
@@ -645,7 +633,7 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
                   </Button>
                 </div>
                 <p className="text-muted-foreground text-xs">
-                  M — микрофон · T — транскрипт
+                  Удерживайте M — говорить · T — транскрипт
                 </p>
               </CardContent>
             </Card>
