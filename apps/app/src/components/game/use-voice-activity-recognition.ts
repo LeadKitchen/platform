@@ -1,6 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { z } from "zod";
+
+const transcribeResponseSchema = z.object({ text: z.string() });
 
 const CANDIDATE_MIME_TYPES = [
   "audio/webm;codecs=opus",
@@ -108,8 +111,12 @@ export function useVoiceActivityRecognition(options: {
             body?.error ?? `Ошибка распознавания: ${response.status}`,
           );
         }
-        const data = (await response.json()) as { text: string };
-        if (data.text) onFinalRef.current(data.text);
+        const parsed = transcribeResponseSchema.safeParse(
+          await response.json(),
+        );
+        if (parsed.success && parsed.data.text) {
+          onFinalRef.current(parsed.data.text);
+        }
       } catch (cause) {
         setError(
           cause instanceof Error ? cause.message : "Не удалось распознать речь",
