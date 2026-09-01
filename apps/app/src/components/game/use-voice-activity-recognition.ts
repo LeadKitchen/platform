@@ -146,7 +146,9 @@ export function useVoiceActivityRecognition(options: {
       const skip = skipNextRef.current;
       skipNextRef.current = false;
       if (skip) return;
-      const blob = new Blob(chunks, { type: recorder.mimeType || "audio/webm" });
+      const blob = new Blob(chunks, {
+        type: recorder.mimeType || "audio/webm",
+      });
       if (blob.size < MIN_UTTERANCE_BYTES) return;
       void transcribe(blob);
     };

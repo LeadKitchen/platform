@@ -104,7 +104,12 @@ export function fallbackResponder(request: {
       ),
     );
     const archetypes = [
-      { name: "Нина Волкова", role: "Повар смены", level: "L3", gender: "female" },
+      {
+        name: "Нина Волкова",
+        role: "Повар смены",
+        level: "L3",
+        gender: "female",
+      },
       {
         name: "Роман Беляев",
         role: "Стажёр горячего цеха",
