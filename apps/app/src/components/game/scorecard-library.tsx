@@ -890,8 +890,13 @@ export function ScorecardLibrary({
             Рубрики оценки
           </h1>
           <p className="text-muted-foreground mt-2 text-sm leading-6">
+<<<<<<< HEAD
             AI автоматически оценивает каждую завершённую смену и ролевой диалог
             с ИИ по активной рубрике команды.
+=======
+            AI автоматически оценивает каждую завершённую смену и каждый ролевой
+            диалог с ИИ по активной рубрике команды.
+>>>>>>> eb9fab4e9e6eff1e1371752903457c8297032a95
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             <Badge variant="outline">

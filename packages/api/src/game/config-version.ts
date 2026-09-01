@@ -179,6 +179,7 @@ export async function restoreSnapshot(
       name: employee.name,
       role: employee.role,
       level: employee.level,
+      gender: employee.gender,
       competences: employee.competences,
       personality: employee.personality,
       isActive: employee.isActive,

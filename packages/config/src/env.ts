@@ -37,6 +37,14 @@ export const env = createEnv({
     /** Вариант конвейера по умолчанию для новых сессий. */
     AI_DEFAULT_VARIANT: z.string().optional(),
 
+    // Голосовой ролевой диалог (деловая игра)
+    /** @see https://elevenlabs.io — премиальный TTS вместо системного голоса браузера. */
+    ELEVENLABS_API_KEY: z.string().optional(),
+    /** ID премадж-голоса ElevenLabs для персонажей-мужчин (по умолчанию — Adam). */
+    ELEVENLABS_VOICE_ID_MALE: z.string().default("pNInz6obpgDQGcFmaJgB"),
+    /** ID премадж-голоса ElevenLabs для персонажей-женщин (по умолчанию — Rachel). */
+    ELEVENLABS_VOICE_ID_FEMALE: z.string().default("21m00Tcm4TlvDq8ikWAM"),
+
     // AWS S3
     AWS_S3_ENDPOINT: z.string().optional(),
     AWS_S3_FORCE_PATH_STYLE: z.string().optional(),
@@ -70,6 +78,9 @@ export const env = createEnv({
     AI_MODEL: process.env.AI_MODEL,
     AI_EFFORT: process.env.AI_EFFORT,
     AI_DEFAULT_VARIANT: process.env.AI_DEFAULT_VARIANT,
+    ELEVENLABS_API_KEY: process.env.ELEVENLABS_API_KEY,
+    ELEVENLABS_VOICE_ID_MALE: process.env.ELEVENLABS_VOICE_ID_MALE,
+    ELEVENLABS_VOICE_ID_FEMALE: process.env.ELEVENLABS_VOICE_ID_FEMALE,
     AWS_S3_ENDPOINT: process.env.AWS_S3_ENDPOINT,
     AWS_S3_FORCE_PATH_STYLE: process.env.AWS_S3_FORCE_PATH_STYLE,
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,

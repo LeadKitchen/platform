@@ -36,6 +36,7 @@ import {
   IconLoader2,
   IconMessageCircle,
   IconMicrophone,
+  IconMicrophoneOff,
   IconPlayerPlay,
   IconPlayerStop,
   IconSend,
@@ -46,8 +47,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { employeeAvatarUri, userAvatarUri } from "~/lib/avatar";
 import { client } from "~/orpc/react";
-import { useDeepgramRecognition } from "./use-deepgram-recognition";
 import { useSpeechSynthesis } from "./use-speech-synthesis";
+import { useVoiceActivityRecognition } from "./use-voice-activity-recognition";
 
 interface VoiceTurn {
   role: "manager" | "employee";
@@ -57,7 +58,7 @@ interface VoiceTurn {
 
 export interface VoiceDialogRoomProps {
   dialogId: string;
-  employee: { name: string; role: string };
+  employee: { name: string; role: string; gender: "male" | "female" };
   task: { title: string };
   shift: { round: number; activeOrders: number; soloOnShift: boolean };
   initialTurns: Array<{ role: "manager" | "employee"; text: string }>;
@@ -108,11 +109,14 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
   const managerAvatar =
     props.uploadedAvatarUrl ?? userAvatarUri(props.userAvatarSeed ?? "manager");
 
-  const speech = useDeepgramRecognition({
+  const speech = useVoiceActivityRecognition({
     dialogId: props.dialogId,
     onFinal: (text) => void sendVoice(text),
   });
-  const voice = useSpeechSynthesis();
+  const voice = useSpeechSynthesis({
+    dialogId: props.dialogId,
+    gender: props.employee.gender,
+  });
   const latestActivity = `${turns.length}:${pending}:${speech.transcribing}`;
 
   useEffect(() => {
@@ -133,6 +137,13 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
     }
   }, [latestActivity]);
 
+  // The mic keeps listening continuously — pause voice-activity detection
+  // while the character is talking or a reply is in flight, so the app never
+  // tries to transcribe over itself.
+  useEffect(() => {
+    speech.setPaused(pending || voice.speaking);
+  }, [pending, voice.speaking, speech.setPaused]);
+
   useEffect(() => {
     if (phase !== "active") return;
     function onKeyDown(event: KeyboardEvent) {
@@ -145,44 +156,18 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
       if (event.key.toLowerCase() === "t") {
         setTranscriptVisible((current) => !current);
       }
-      if (
-        event.key.toLowerCase() === "m" &&
-        !event.repeat &&
-        !pending &&
-        !speech.transcribing &&
-        !voice.speaking
-      ) {
-        speech.pressStart();
+      if (event.key.toLowerCase() === "m" && !event.repeat) {
+        speech.setMuted(!speech.muted);
       }
-    }
-    function onKeyUp(event: KeyboardEvent) {
-      if (event.key.toLowerCase() === "m") {
-        speech.pressEnd();
-      }
-    }
-    function onBlur() {
-      speech.pressEnd();
     }
     window.addEventListener("keydown", onKeyDown);
-    window.addEventListener("keyup", onKeyUp);
-    window.addEventListener("blur", onBlur);
-    return () => {
-      window.removeEventListener("keydown", onKeyDown);
-      window.removeEventListener("keyup", onKeyUp);
-      window.removeEventListener("blur", onBlur);
-    };
-  }, [
-    pending,
-    phase,
-    speech.pressStart,
-    speech.pressEnd,
-    speech.transcribing,
-    voice.speaking,
-  ]);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [phase, speech.setMuted, speech.muted]);
 
   function startCall() {
     setPhase("active");
     setError(null);
+    speech.start();
     void client.game.activity
       .track({
         name: "voice_used",
@@ -246,7 +231,9 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
     setEndDialog(null);
     setPending(true);
     setError(null);
-    speech.cancel();
+    // Leave the mic listening — `pending` already pauses voice-activity
+    // detection, and closing it here would strand the manager without voice
+    // input if the check comes back not-ready and the conversation continues.
     voice.stop();
     try {
       const check = await client.game.dialog.preflight({
@@ -275,10 +262,13 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
     setEndDialog(null);
     setPending(true);
     setError(null);
-    speech.cancel();
     voice.stop();
     try {
       await client.game.dialog.finish({ dialogId: props.dialogId });
+      // Only close the mic once the dialog has actually ended — closing it
+      // eagerly would leave the manager without voice input if this call
+      // fails and the conversation continues.
+      speech.stop();
       setPhase("finished");
       router.push(`/game/dialog/${props.dialogId}/report`);
       router.refresh();
@@ -331,7 +321,7 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
             </AlertTitle>
             <AlertDescription>
               {speech.supported
-                ? "Зажмите кнопку микрофона (или клавишу M), скажите реплику и отпустите — она уйдёт персонажу."
+                ? "Микрофон включится сам, как только начнётся разговор — просто говорите, реплика уйдёт персонажу без нажатия кнопок."
                 : "Этот браузер не поддерживает запись с микрофона. В комнате останется текстовый резервный ввод."}
             </AlertDescription>
           </Alert>
@@ -399,26 +389,24 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
           </div>
           <Badge variant="outline">
             <IconActivity />
-            Сигнал: {speech.error ? "нужна проверка" : "отличный"}
+            {speech.error
+              ? "Сигнал: нужна проверка"
+              : speech.recording
+                ? "Слушаю вас…"
+                : speech.muted
+                  ? "Микрофон выключен"
+                  : "Сигнал: отличный"}
           </Badge>
           <Button
             size="icon"
-            variant={speech.recording ? "destructive" : "outline"}
+            variant={speech.muted ? "destructive" : "outline"}
             aria-label={
-              speech.recording
-                ? "Идёт запись — отпустите, чтобы отправить"
-                : "Зажмите и удерживайте, чтобы говорить"
+              speech.muted ? "Включить микрофон" : "Выключить микрофон"
             }
-            disabled={pending || speech.transcribing || voice.speaking}
-            onPointerDown={(event) => {
-              event.preventDefault();
-              speech.pressStart();
-            }}
-            onPointerUp={speech.pressEnd}
-            onPointerLeave={speech.pressEnd}
-            onPointerCancel={speech.pressEnd}
+            disabled={!speech.supported}
+            onClick={() => speech.setMuted(!speech.muted)}
           >
-            <IconMicrophone />
+            {speech.muted ? <IconMicrophoneOff /> : <IconMicrophone />}
           </Button>
           <Button
             size="icon"
@@ -585,9 +573,11 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
                     ? "Распознаём вашу реплику…"
                     : voice.speaking
                       ? "Слушайте ответ персонажа"
-                      : speech.recording
-                        ? "Идёт запись — отпустите кнопку, чтобы отправить"
-                        : "Зажмите кнопку микрофона и говорите"}
+                      : speech.muted
+                        ? "Микрофон выключен — включите, чтобы говорить"
+                        : speech.recording
+                          ? "Слушаю вас — договорите и сделайте паузу"
+                          : "Говорите в любой момент, микрофон уже слушает"}
               </p>
             </CardContent>
           </Card>
@@ -611,22 +601,14 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
                 <div className="flex flex-wrap items-center justify-center gap-2">
                   <Button
                     size="icon"
-                    variant={speech.recording ? "destructive" : "secondary"}
+                    variant={speech.muted ? "destructive" : "secondary"}
                     aria-label={
-                      speech.recording
-                        ? "Идёт запись — отпустите, чтобы отправить"
-                        : "Зажмите и удерживайте, чтобы говорить"
+                      speech.muted ? "Включить микрофон" : "Выключить микрофон"
                     }
-                    disabled={pending || speech.transcribing || voice.speaking}
-                    onPointerDown={(event) => {
-                      event.preventDefault();
-                      speech.pressStart();
-                    }}
-                    onPointerUp={speech.pressEnd}
-                    onPointerLeave={speech.pressEnd}
-                    onPointerCancel={speech.pressEnd}
+                    disabled={!speech.supported}
+                    onClick={() => speech.setMuted(!speech.muted)}
                   >
-                    <IconMicrophone />
+                    {speech.muted ? <IconMicrophoneOff /> : <IconMicrophone />}
                   </Button>
                   <Button
                     size="icon"
@@ -651,7 +633,7 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
                   </Button>
                 </div>
                 <p className="text-muted-foreground text-xs">
-                  Удерживайте M — говорить · T — транскрипт
+                  Говорите свободно · M — выключить микрофон · T — транскрипт
                 </p>
               </CardContent>
             </Card>
