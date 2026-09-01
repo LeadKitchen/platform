@@ -7,6 +7,7 @@ import {
   Button,
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -32,6 +33,7 @@ import {
   TableRow,
 } from "@acme/ui";
 import {
+  IconAlertTriangle,
   IconDots,
   IconPlus,
   IconRefresh,
@@ -86,6 +88,22 @@ function scoreBucket(avgScore: number | null): ScoreFilter {
   if (avgScore >= 80) return "high";
   if (avgScore >= 50) return "mid";
   return "low";
+}
+
+const russianPluralRules = new Intl.PluralRules("ru-RU");
+
+function sessionCountLabel(
+  count: number,
+  forms: { one: string; few: string; many: string },
+): string {
+  switch (russianPluralRules.select(count)) {
+    case "one":
+      return `${count} ${forms.one}`;
+    case "few":
+      return `${count} ${forms.few}`;
+    default:
+      return `${count} ${forms.many}`;
+  }
 }
 
 /** Add-member dialog: adds an already-registered user to the workspace by email. */
@@ -160,6 +178,7 @@ function AddMemberDialog({
 function ManageMemberMenu({ member }: { member: MemberRow }) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
+  const [removeOpen, setRemoveOpen] = useState(false);
 
   async function toggleFacilitator() {
     if (pending) return;
@@ -190,6 +209,7 @@ function ManageMemberMenu({ member }: { member: MemberRow }) {
     try {
       await client.org.members.remove({ userId: member.userId });
       toast.success(`${member.name} удалён(а) из команды`);
+      setRemoveOpen(false);
       router.refresh();
     } catch (cause) {
       toast.error(
@@ -209,29 +229,66 @@ function ManageMemberMenu({ member }: { member: MemberRow }) {
   }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger
-        render={<Button size="sm" variant="outline" disabled={pending} />}
-      >
-        Управлять
-        <IconDots data-icon="inline-end" />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem disabled={pending} onClick={toggleFacilitator}>
-          {member.isFacilitator
-            ? "Забрать роль фасилитатора"
-            : "Назначить фасилитатором"}
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          variant="destructive"
-          disabled={pending}
-          onClick={removeMember}
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          render={<Button size="sm" variant="outline" disabled={pending} />}
         >
-          Удалить из команды
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          Управлять
+          <IconDots data-icon="inline-end" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem disabled={pending} onClick={toggleFacilitator}>
+            {member.isFacilitator
+              ? "Забрать роль фасилитатора"
+              : "Назначить фасилитатором"}
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            variant="destructive"
+            disabled={pending}
+            onClick={() => setRemoveOpen(true)}
+          >
+            Удалить из команды
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <Dialog
+        open={removeOpen}
+        onOpenChange={(open) => {
+          if (!pending) setRemoveOpen(open);
+        }}
+      >
+        <DialogContent showCloseButton={!pending}>
+          <DialogHeader>
+            <IconAlertTriangle className="text-destructive size-5" />
+            <DialogTitle className="text-2xl">
+              Удалить «{member.name}» из команды?
+            </DialogTitle>
+            <DialogDescription>
+              Участник потеряет доступ к команде. Это действие нельзя отменить.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2">
+            <Button
+              variant="outline"
+              disabled={pending}
+              onClick={() => setRemoveOpen(false)}
+            >
+              Отмена
+            </Button>
+            <Button
+              variant="destructive"
+              disabled={pending}
+              onClick={removeMember}
+            >
+              {pending ? "Удаляем…" : "Удалить участника"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
@@ -377,8 +434,18 @@ export function MembersWorkspace({ members }: { members: MemberRow[] }) {
                           ) : null}
                         </span>
                         <span className="text-muted-foreground truncate text-xs">
-                          {member.liveSessions} игр · {member.roleplaySessions}{" "}
-                          ролевых · {member.email}
+                          {sessionCountLabel(member.liveSessions, {
+                            one: "игра",
+                            few: "игры",
+                            many: "игр",
+                          })}{" "}
+                          ·{" "}
+                          {sessionCountLabel(member.roleplaySessions, {
+                            one: "ролевая",
+                            few: "ролевые",
+                            many: "ролевых",
+                          })}{" "}
+                          · {member.email}
                         </span>
                       </div>
                     </div>

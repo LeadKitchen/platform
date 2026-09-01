@@ -25,8 +25,6 @@ import {
 import { accountFormSchema, profileFormSchema } from "@acme/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import Image from "next/image";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -71,7 +69,6 @@ export function ProfileSection({
 }: {
   initialData: ProfileSectionValues;
 }) {
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   const form = useForm<ProfileSectionValues>({
@@ -79,24 +76,15 @@ export function ProfileSection({
     defaultValues: initialData,
   });
 
-  const updateProfile = useMutation(orpc.user.updateProfile.mutationOptions());
-  const updateAccount = useMutation(orpc.user.updateAccount.mutationOptions());
+  const updateProfileSettings = useMutation(
+    orpc.user.updateProfileSettings.mutationOptions(),
+  );
 
-  const isPending = updateProfile.isPending || updateAccount.isPending;
+  const isPending = updateProfileSettings.isPending;
 
   async function onSubmit(data: ProfileSectionValues) {
     try {
-      await Promise.all([
-        updateProfile.mutateAsync({
-          username: data.username,
-          email: data.email,
-          bio: data.bio,
-        }),
-        updateAccount.mutateAsync({
-          name: data.name,
-          language: data.language,
-        }),
-      ]);
+      await updateProfileSettings.mutateAsync(data);
       toast.success("Профиль обновлён");
       await queryClient.invalidateQueries({ queryKey: orpc.user.key() });
     } catch (err) {
@@ -113,7 +101,7 @@ export function ProfileSection({
       <CardHeader className="border-b py-5">
         <CardTitle>Личная информация</CardTitle>
         <CardDescription>
-          Обновите фото, контактные данные и язык интерфейса.
+          Обновите контактные данные и язык интерфейса.
         </CardDescription>
       </CardHeader>
 
@@ -121,44 +109,13 @@ export function ProfileSection({
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardContent className="flex flex-wrap items-center gap-4 border-b py-6">
             <div className="bg-brand-soft text-brand flex h-16 w-16 shrink-0 items-center justify-center rounded-xl text-lg font-semibold">
-              {avatarUrl ? (
-                <Image
-                  src={avatarUrl}
-                  alt="Аватар"
-                  width={64}
-                  height={64}
-                  className="h-16 w-16 rounded-xl object-cover"
-                />
-              ) : (
-                getInitials(name || "")
-              )}
+              {getInitials(name || "")}
             </div>
             <div className="flex flex-col gap-1">
               <span className="text-sm font-medium">Фото профиля</span>
-              <button
-                type="button"
-                className="text-foreground w-fit text-sm underline-offset-2 hover:underline"
-                onClick={() =>
-                  document.getElementById("avatar-upload")?.click()
-                }
-              >
-                Загрузить фото
-              </button>
               <span className="text-muted-foreground text-xs">
-                JPG, PNG или WebP, до 4 МБ
+                Инициалы формируются из вашего имени
               </span>
-              <input
-                id="avatar-upload"
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setAvatarUrl(URL.createObjectURL(file));
-                  }
-                }}
-              />
             </div>
           </CardContent>
 

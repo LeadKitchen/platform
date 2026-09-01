@@ -7,7 +7,7 @@ import {
   GameFacilitator,
   GameOrgMember,
   GameSession,
-  ilike,
+  sql,
   user,
 } from "@acme/db";
 import { ORPCError } from "@orpc/server";
@@ -151,7 +151,8 @@ const add = protectedProcedure
     const [candidate] = await context.db
       .select({ id: user.id, name: user.name })
       .from(user)
-      .where(ilike(user.email, input.email))
+      .where(eq(sql`lower(${user.email})`, sql`lower(${input.email})`))
+      .orderBy(asc(user.id))
       .limit(1);
     if (!candidate) {
       throw new ORPCError("NOT_FOUND", {

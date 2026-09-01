@@ -152,6 +152,7 @@ function ToggleRow({
         <p className="text-muted-foreground text-sm">{description}</p>
       </div>
       <Switch
+        aria-label={`${title}, ${channel}`}
         checked={checked}
         disabled={disabled}
         onCheckedChange={onCheckedChange}
