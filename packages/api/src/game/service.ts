@@ -122,6 +122,7 @@ export async function loadCatalog(db: Database): Promise<Catalog> {
         name: row.name,
         role: row.role,
         level: row.level as EmployeeLevel,
+        gender: row.gender,
         competences: row.competences as Record<string, CompetenceState>,
         personality: row.personality as unknown as Employee["personality"],
       }),

@@ -23,6 +23,8 @@ export const employeePersonalitySchema = z.object({
   boundaries: shortList.optional(),
 });
 
+export const employeeGenderSchema = z.enum(["male", "female"]);
+
 export const employeeProfileSchema = z.object({
   id: z
     .string()
@@ -33,6 +35,8 @@ export const employeeProfileSchema = z.object({
   name: z.string().trim().min(2).max(128),
   role: z.string().trim().min(2).max(128),
   level: z.enum(["L1", "L2", "L3", "L4"]),
+  /** Drives which TTS voice reads the character's lines — must match `name`. */
+  gender: employeeGenderSchema,
   competences: z.record(z.string(), competenceStateSchema),
   personality: employeePersonalitySchema,
 });

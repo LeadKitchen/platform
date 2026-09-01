@@ -21,6 +21,7 @@ function snapshot(): ConfigSnapshot {
         name: "Анна",
         role: "Стажёр",
         level: "R2",
+        gender: "female",
         competences: { prep: "D2" },
         personality: {},
         isActive: true,

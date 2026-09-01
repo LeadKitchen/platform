@@ -24,6 +24,7 @@ function roster(): CharacterRosterDraft {
           name: "Нина Волкова",
           role: "Повар смены",
           level: "L3",
+          gender: "female",
           competences: { prep: "expert", hot_line: "learning" },
           personality: {
             tone: "confident",

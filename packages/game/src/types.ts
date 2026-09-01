@@ -47,6 +47,11 @@ export const SHIFT_LOADS = ["normal", "high", "overload"] as const;
 
 export type ShiftLoad = (typeof SHIFT_LOADS)[number];
 
+/** Grammatical/voice gender — drives which TTS voice reads the character's lines. */
+export const EMPLOYEE_GENDERS = ["male", "female"] as const;
+
+export type EmployeeGender = (typeof EMPLOYEE_GENDERS)[number];
+
 export interface EmployeePersonality {
   /** Baseline tone of voice. */
   tone: "confident" | "anxious" | "independent";
@@ -71,6 +76,7 @@ export interface Employee {
   /** Job title shown to participants, e.g. "повар десертов". */
   role: string;
   level: EmployeeLevel;
+  gender: EmployeeGender;
   /** Competence per task type (`Task.type`). Missing entry ⇒ `novice`. */
   competences: Record<string, CompetenceState>;
   personality: EmployeePersonality;

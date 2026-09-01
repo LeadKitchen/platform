@@ -63,6 +63,7 @@ interface Employee {
   name: string;
   role: string;
   level: string;
+  gender: "male" | "female";
   competences: Record<string, string>;
   personality: Record<string, unknown>;
   isActive: boolean;
@@ -282,6 +283,7 @@ const emptyEmployee: Employee = {
   name: "",
   role: "",
   level: "L2",
+  gender: "female",
   competences: {},
   personality: {
     tone: "confident",
@@ -504,6 +506,7 @@ export function AdminGameDashboard({
       const saved = await client.admin.game.catalog.upsertEmployee({
         ...employee,
         level: employee.level as "L1" | "L2" | "L3" | "L4",
+        gender: employee.gender,
         competences: parseObject(employeeCompetences, "Компетенции") as Record<
           string,
           CompetenceState
@@ -1000,7 +1003,7 @@ export function AdminGameDashboard({
             <CardContent className="py-5">
               <form onSubmit={saveEmployee}>
                 <FieldGroup>
-                  <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="grid gap-4 sm:grid-cols-3">
                     <Field>
                       <FieldLabel htmlFor="employee-id">ID</FieldLabel>
                       <Input
@@ -1033,6 +1036,30 @@ export function AdminGameDashboard({
                                 {level}
                               </SelectItem>
                             ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </Field>
+                    <Field>
+                      <FieldLabel htmlFor="employee-gender">
+                        Голос (пол)
+                      </FieldLabel>
+                      <Select
+                        value={employee.gender}
+                        onValueChange={(value) =>
+                          setEmployee({
+                            ...employee,
+                            gender: value === "male" ? "male" : "female",
+                          })
+                        }
+                      >
+                        <SelectTrigger id="employee-gender">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem value="female">Женский</SelectItem>
+                            <SelectItem value="male">Мужской</SelectItem>
                           </SelectGroup>
                         </SelectContent>
                       </Select>

@@ -42,7 +42,11 @@ export default async function DialogPage({
 
   const commonProps = {
     dialogId: data.dialog.id,
-    employee: { name: data.employee.name, role: data.employee.role },
+    employee: {
+      name: data.employee.name,
+      role: data.employee.role,
+      gender: data.employee.gender,
+    },
     task: { title: data.task.title },
     shift: {
       round: data.shift.round,

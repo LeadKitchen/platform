@@ -304,9 +304,7 @@ function ScorecardEditor({
       onOpenChange(false);
     } catch (cause) {
       toast.error(
-        cause instanceof Error
-          ? cause.message
-          : "Не удалось сохранить рубрику",
+        cause instanceof Error ? cause.message : "Не удалось сохранить рубрику",
       );
     } finally {
       setPending(false);
@@ -892,7 +890,7 @@ export function ScorecardLibrary({
             Рубрики оценки
           </h1>
           <p className="text-muted-foreground mt-2 text-sm leading-6">
-            AI автоматически оценивает каждую завершённую смену и ролевой
+            AI автоматически оценивает каждую завершённую смену и каждый ролевой
             диалог с ИИ по активной рубрике команды.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">

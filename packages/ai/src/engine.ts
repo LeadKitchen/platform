@@ -104,11 +104,26 @@ export function fallbackResponder(request: {
       ),
     );
     const archetypes = [
-      { name: "Нина Волкова", role: "Повар смены", level: "L3" },
-      { name: "Роман Беляев", role: "Стажёр горячего цеха", level: "L1" },
-      { name: "Лейла Ахметова", role: "Су-шеф", level: "L4" },
-      { name: "Виктор Цой", role: "Повар-заготовщик", level: "L2" },
-      { name: "Софья Орлова", role: "Кондитер", level: "L3" },
+      {
+        name: "Нина Волкова",
+        role: "Повар смены",
+        level: "L3",
+        gender: "female",
+      },
+      {
+        name: "Роман Беляев",
+        role: "Стажёр горячего цеха",
+        level: "L1",
+        gender: "male",
+      },
+      { name: "Лейла Ахметова", role: "Су-шеф", level: "L4", gender: "female" },
+      {
+        name: "Виктор Цой",
+        role: "Повар-заготовщик",
+        level: "L2",
+        gender: "male",
+      },
+      { name: "Софья Орлова", role: "Кондитер", level: "L3", gender: "female" },
     ] as const;
     const characters = archetypes.slice(0, count).map((archetype, index) => {
       let id = `demo_character_${index + 1}`;
@@ -126,6 +141,7 @@ export function fallbackResponder(request: {
           name: archetype.name,
           role: archetype.role,
           level: archetype.level,
+          gender: archetype.gender,
           competences,
           personality: {
             tone:

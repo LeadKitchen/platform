@@ -21,6 +21,8 @@ export const GameEmployee = pgTable("game_employees", (t) => ({
   name: t.varchar({ length: 128 }).notNull(),
   role: t.varchar({ length: 128 }).notNull(),
   level: t.varchar({ length: 8 }).notNull(),
+  /** Drives which TTS voice reads the character's lines. */
+  gender: t.varchar({ length: 8 }).$type<"male" | "female">().notNull(),
   /** Record<taskType, CompetenceState>. */
   competences: t.jsonb().$type<Record<string, string>>().notNull(),
   personality: t.jsonb().$type<Record<string, unknown>>().notNull(),

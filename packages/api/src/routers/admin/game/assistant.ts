@@ -21,6 +21,7 @@ import {
   loadConfigSnapshot,
   mutateConfig,
 } from "../../../game/config-version";
+import { employeeGenderSchema } from "../../../game/character-studio";
 import { adminProcedure } from "../../../orpc";
 
 const settingsDraftSchema = z.object({
@@ -40,6 +41,7 @@ const employeeDraftSchema = z.object({
   name: z.string().min(1).max(128),
   role: z.string().min(1).max(128),
   level: z.enum(["L1", "L2", "L3", "L4"]),
+  gender: employeeGenderSchema,
   competences: z.record(z.string(), z.string()),
   personality: z.record(z.string(), z.unknown()),
   isActive: z.boolean(),
@@ -173,6 +175,7 @@ export const draftConfiguration = adminProcedure
           "Преобразуй запрос администратора в безопасный структурированный черновик конфигурации.",
           "Отвечай по-русски. Меняй только сущности, которые действительно нужны для запроса; остальные поля верни null.",
           "Для обновления существующей сущности сохрани её id. Для новой придумай короткий стабильный id в lowercase-kebab-case.",
+          "Поле gender сотрудника (male/female) обязано грамматически совпадать с его именем — оно определяет голос озвучивания.",
           "Не придумывай названия стратегий ИИ: используй только id из переданного списка.",
           "Если запрос неоднозначен, выбери консервативные значения и явно добавь предупреждение.",
           "Не обещай, что изменения уже применены: это только черновик для проверки человеком.",

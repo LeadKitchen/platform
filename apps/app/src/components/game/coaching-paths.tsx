@@ -631,8 +631,8 @@ export function CoachingPaths({
             </EmptyMedia>
             <EmptyTitle>Создайте первый путь обучения</EmptyTitle>
             <EmptyDescription>
-              Добавьте сценарии ролевых диалогов, задайте проходной балл и назначьте
-              участников.
+              Добавьте сценарии ролевых диалогов, задайте проходной балл и
+              назначьте участников.
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
