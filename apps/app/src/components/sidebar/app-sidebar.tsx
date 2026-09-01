@@ -21,6 +21,7 @@ import {
   IconChartBar,
   IconChefHat,
   IconClipboardList,
+  IconCode,
   IconDatabase,
   IconFileSearch,
   IconGavel,
@@ -245,6 +246,11 @@ const data = {
           title: "ИИ и качество",
           url: "/admin/docs/ai-quality",
           icon: IconBrain,
+        },
+        {
+          title: "Промпты LLM",
+          url: "/admin/docs/llm-prompts",
+          icon: IconCode,
         },
         {
           title: "Отчёты и тесты",
