@@ -32,7 +32,7 @@
     "@acme/game": "workspace:*",
     "@ax-llm/ax": "24.0.12",
     "@lmnr-ai/lmnr": "^0.8.45",
-    "zod": "4.4.3"
+    "zod": "4.5.4"
   },
   "devDependencies": {
     "@acme/tsconfig": "workspace:*",

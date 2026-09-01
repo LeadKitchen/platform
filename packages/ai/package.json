@@ -26,7 +26,7 @@
     "@ai-sdk/openai-compatible": "3.0.39",
     "@lmnr-ai/lmnr": "^0.8.45",
     "ai": "7.0.83",
-    "zod": "4.4.3"
+    "zod": "4.5.4"
   },
   "devDependencies": {
     "@acme/tsconfig": "workspace:*",
