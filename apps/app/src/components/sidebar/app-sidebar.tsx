@@ -65,6 +65,11 @@ const data = {
         },
         { title: "Раунд 1 · Теория", url: "/game/round-1", icon: IconSchool },
         { title: "Моя группа", url: "/group", icon: IconUsersGroup },
+        {
+          title: "Configure команды",
+          url: "/group/configure",
+          icon: IconAdjustments,
+        },
       ],
     },
     {

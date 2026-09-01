@@ -174,6 +174,24 @@ export const list = protectedProcedure
       .offset(input.offset),
   );
 
+/** The current participant's session for an assigned practice. */
+export const byAssignment = protectedProcedure
+  .input(z.object({ assignmentId: z.uuid() }))
+  .handler(async ({ context, input }) => {
+    const [session] = await context.db
+      .select()
+      .from(GameSession)
+      .where(
+        and(
+          eq(GameSession.trainingAssignmentId, input.assignmentId),
+          eq(GameSession.createdBy, context.session.user.id),
+        ),
+      )
+      .orderBy(desc(GameSession.createdAt))
+      .limit(1);
+    return session;
+  });
+
 /**
  * A session with its order queue.
  *
@@ -204,34 +222,45 @@ export const byId = protectedProcedure
  */
 export const end = protectedProcedure
   .input(z.object({ id: z.uuid() }))
-  .handler(async ({ context, input }) => {
-    const [session] = await context.db
-      .update(GameSession)
-      .set({ status: "completed", endedAt: new Date() })
-      .where(
-        and(
-          eq(GameSession.id, input.id),
-          eq(GameSession.createdBy, context.session.user.id),
-        ),
-      )
-      .returning();
-
-    if (!session) {
-      throw new ORPCError("NOT_FOUND", { message: "Сессия не найдена" });
-    }
-    if (session.trainingAssignmentId) {
-      await context.db
-        .update(GameTrainingAssignment)
-        .set({ status: "completed", completedAt: new Date() })
+  .handler(async ({ context, input }) =>
+    context.db.transaction(async (tx) => {
+      const [session] = await tx
+        .update(GameSession)
+        .set({ status: "completed", endedAt: new Date() })
         .where(
           and(
-            eq(GameTrainingAssignment.id, session.trainingAssignmentId),
-            eq(GameTrainingAssignment.participantId, context.session.user.id),
-            eq(GameTrainingAssignment.status, "in_progress"),
+            eq(GameSession.id, input.id),
+            eq(GameSession.createdBy, context.session.user.id),
           ),
-        );
-    }
-    return session;
-  });
+        )
+        .returning();
 
-export const gameSessionRouter = { create, list, byId, end };
+      if (!session) {
+        throw new ORPCError("NOT_FOUND", { message: "Сессия не найдена" });
+      }
+      if (session.trainingAssignmentId) {
+        const [assignment] = await tx
+          .update(GameTrainingAssignment)
+          .set({ status: "completed", completedAt: new Date() })
+          .where(
+            and(
+              eq(GameTrainingAssignment.id, session.trainingAssignmentId),
+              eq(
+                GameTrainingAssignment.participantId,
+                context.session.user.id,
+              ),
+              eq(GameTrainingAssignment.status, "in_progress"),
+            ),
+          )
+          .returning({ id: GameTrainingAssignment.id });
+        if (!assignment) {
+          throw new ORPCError("CONFLICT", {
+            message: "Назначение практики уже изменилось",
+          });
+        }
+      }
+      return session;
+    }),
+  );
+
+export const gameSessionRouter = { create, list, byAssignment, byId, end };

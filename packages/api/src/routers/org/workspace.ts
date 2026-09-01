@@ -40,19 +40,19 @@ export const orgWorkspaceRouter = {
         id = `${base}-${suffix}`;
       }
 
-      await context.db
-        .insert(GameOrganization)
-        .values({ id, name: input.name });
-      await context.db.insert(GameOrgMember).values({
-        userId: context.session.user.id,
-        orgId: id,
+      await context.db.transaction(async (tx) => {
+        await tx.insert(GameOrganization).values({ id, name: input.name });
+        await tx.insert(GameOrgMember).values({
+          userId: context.session.user.id,
+          orgId: id,
+        });
+        await tx.insert(GameFacilitator).values({
+          userId: context.session.user.id,
+          orgId: id,
+          grantedBy: context.session.user.id,
+        });
+        await setActiveWorkspace(tx, context.session.user.id, id);
       });
-      await context.db.insert(GameFacilitator).values({
-        userId: context.session.user.id,
-        orgId: id,
-        grantedBy: context.session.user.id,
-      });
-      await setActiveWorkspace(context.db, context.session.user.id, id);
 
       return { id, name: input.name, isFacilitator: true };
     }),

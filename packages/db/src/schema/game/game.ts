@@ -95,7 +95,9 @@ export const GameSession = pgTable(
     /** Participant who opened the session. */
     createdBy: t.text().references(() => user.id, { onDelete: "set null" }),
     /** Optional facilitator-assigned practice that this session fulfils. */
-    trainingAssignmentId: t.uuid(),
+    trainingAssignmentId: t.uuid().references(() => GameTrainingAssignment.id, {
+      onDelete: "set null",
+    }),
     /**
      * Org the creator belonged to at the time (via `GameOrgMember`), copied
      * onto the row so a session keeps its group even if membership changes
@@ -190,6 +192,15 @@ export const GameActiveOrganization = pgTable(
   (table) => [index("game_active_organizations_org_idx").on(table.orgId)],
 );
 
+/** Team-owned configuration used by scorecards, scenario context and routing. */
+export const GameOrganizationConfigure = pgTable("game_organization_configure", (t) => ({
+  orgId: t.text().primaryKey().references(() => GameOrganization.id, { onDelete: "cascade" }),
+  context: t.jsonb().$type<Record<string, string>>().default({}).notNull(),
+  scorecard: t.jsonb().$type<{ criterionIds: string[]; name: string }>().default({ name: "Общая рубрика", criterionIds: [] }).notNull(),
+  automation: t.jsonb().$type<{ enabled: boolean; threshold: number }>().default({ enabled: false, threshold: 60 }).notNull(),
+  updatedAt: t.timestamp({ withTimezone: true }).defaultNow().notNull().$onUpdateFn(() => sql`now()`),
+}));
+
 /**
  * A focused practice request from a facilitator to one participant.
  *
@@ -227,6 +238,9 @@ export const GameTrainingAssignment = pgTable(
       table.participantId,
       table.status,
     ),
+    uniqueIndex("game_training_assignments_active_idx")
+      .on(table.orgId, table.participantId, table.criterionId)
+      .where(sql`${table.status} in ('assigned', 'in_progress')`),
   ],
 );
 

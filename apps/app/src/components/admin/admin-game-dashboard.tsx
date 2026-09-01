@@ -619,11 +619,16 @@ export function AdminGameDashboard({
     }
   }
 
-  async function updateFacilitator(userId: string, isFacilitator: boolean) {
+  async function updateFacilitator(
+    userId: string,
+    orgId: string,
+    isFacilitator: boolean,
+  ) {
     setPending(true);
     try {
       await client.admin.game.organizations.setFacilitator({
         userId,
+        orgId,
         isFacilitator,
       });
       setUsers((current) =>
@@ -1727,9 +1732,15 @@ export function AdminGameDashboard({
                               user.isFacilitator ? "outline" : "secondary"
                             }
                             disabled={pending}
-                            onClick={() =>
-                              updateFacilitator(user.id, !user.isFacilitator)
-                            }
+                            onClick={() => {
+                              const orgId = user.orgId;
+                              if (!orgId) return;
+                              updateFacilitator(
+                                user.id,
+                                orgId,
+                                !user.isFacilitator,
+                              );
+                            }}
                           >
                             {user.isFacilitator
                               ? "Снять с ведущего"

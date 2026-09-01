@@ -26,6 +26,7 @@ import Link from "next/link";
 import {
   CreateSessionForm,
   KitchenPatternBackdrop,
+  PracticeOverview,
   TicketIllustration,
 } from "~/components/game";
 import { SiteHeader } from "~/components/layout";
@@ -62,7 +63,17 @@ export default async function GamePage() {
     ["completed", "finished"].includes(session.status),
   ).length;
   const focus = playerProgress.criteria[0];
-  const assignment = assignments[0];
+  const assignedTraining = assignments.find(
+    (item) => item.status === "assigned",
+  );
+  const inProgressTraining = assignments.find(
+    (item) => item.status === "in_progress",
+  );
+  const inProgressSession = inProgressTraining
+    ? await api.game.session.byAssignment({
+        assignmentId: inProgressTraining.id,
+      })
+    : undefined;
   const latestDialogId = playerProgress.recent[0]?.dialogId;
   const onboardingSteps = [
     {
@@ -212,14 +223,25 @@ export default async function GamePage() {
           </CardContent>
         </Card>
 
-        {assignment ? (
+        <PracticeOverview
+          dialogs={playerProgress.dialogs}
+          averageScore={playerProgress.averageScore}
+          improvement={playerProgress.improvement}
+          activeDays={playerProgress.activeDays}
+          styleMatchRate={playerProgress.styleMatchRate}
+          dailyActivity={playerProgress.dailyActivity}
+          scoreTrend={playerProgress.scoreTrend}
+          criteria={playerProgress.criteria}
+        />
+
+        {assignedTraining ? (
           <Card>
             <CardHeader>
               <Badge variant="accent" className="w-fit">
                 Назначенная практика
               </Badge>
               <CardTitle className="flex items-center gap-2">
-                <IconTarget /> Закрепите навык: {assignment.criterionTitle}
+                <IconTarget /> Закрепите навык: {assignedTraining.criterionTitle}
               </CardTitle>
               <CardDescription>
                 Ведущий выделил этот критерий как следующий фокус. Создайте
@@ -235,6 +257,34 @@ export default async function GamePage() {
                 Начать назначенную практику
                 <IconArrowRight data-icon="inline-end" />
               </Button>
+            </CardFooter>
+          </Card>
+        ) : null}
+
+        {inProgressTraining ? (
+          <Card>
+            <CardHeader>
+              <Badge variant="accent" className="w-fit">
+                Назначенная практика
+              </Badge>
+              <CardTitle className="flex items-center gap-2">
+                <IconTarget /> Продолжите: {inProgressTraining.criterionTitle}
+              </CardTitle>
+              <CardDescription>
+                Смена по этому назначению уже идёт. Завершите её, чтобы
+                отметить практику выполненной.
+              </CardDescription>
+            </CardHeader>
+            <CardFooter>
+              {inProgressSession ? (
+                <Button
+                  render={<Link href={`/game/${inProgressSession.id}`} />}
+                  nativeButton={false}
+                >
+                  Продолжить смену
+                  <IconArrowRight data-icon="inline-end" />
+                </Button>
+              ) : null}
             </CardFooter>
           </Card>
         ) : null}
@@ -377,10 +427,10 @@ export default async function GamePage() {
                 defaultVariantId: catalog.settings.defaultVariantId,
                 defaultRound: catalog.settings.defaultRound,
                 allowRoundThree: catalog.settings.allowRoundThree,
-                assignment: assignment
+                assignment: assignedTraining
                   ? {
-                      id: assignment.id,
-                      criterionTitle: assignment.criterionTitle,
+                      id: assignedTraining.id,
+                      criterionTitle: assignedTraining.criterionTitle,
                     }
                   : undefined,
               }}
