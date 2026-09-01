@@ -145,7 +145,13 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
       if (event.key.toLowerCase() === "t") {
         setTranscriptVisible((current) => !current);
       }
-      if (event.key.toLowerCase() === "m" && !event.repeat) {
+      if (
+        event.key.toLowerCase() === "m" &&
+        !event.repeat &&
+        !pending &&
+        !speech.transcribing &&
+        !voice.speaking
+      ) {
         speech.pressStart();
       }
     }
@@ -154,13 +160,25 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
         speech.pressEnd();
       }
     }
+    function onBlur() {
+      speech.pressEnd();
+    }
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp);
+    window.addEventListener("blur", onBlur);
     return () => {
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("keyup", onKeyUp);
+      window.removeEventListener("blur", onBlur);
     };
-  }, [phase, speech.pressStart, speech.pressEnd]);
+  }, [
+    pending,
+    phase,
+    speech.pressStart,
+    speech.pressEnd,
+    speech.transcribing,
+    voice.speaking,
+  ]);
 
   function startCall() {
     setPhase("active");

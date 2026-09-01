@@ -1,10 +1,13 @@
 import { ORPCError } from "@orpc/server";
+import { z } from "zod";
 import { api } from "~/orpc/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const DEEPGRAM_URL = "https://api.deepgram.com/v1/listen";
+const DEEPGRAM_TIMEOUT_MS = 15_000;
+const MAX_AUDIO_BYTES = 10 * 1024 * 1024;
 
 interface DeepgramResponse {
   results?: {
@@ -22,23 +25,16 @@ interface DeepgramResponse {
  * and behaves inconsistently across browsers. Recording locally with
  * MediaRecorder and transcribing server-side removes that dependency.
  *
- * @example POST /api/game/dialog/transcribe  (multipart: dialogId, audio)
+ * @example POST /api/game/dialog/transcribe?dialogId=<uuid>  (multipart: audio)
  */
 export async function POST(request: Request) {
-  const apiKey = process.env.DEEPGRAM_API_KEY;
-  if (!apiKey) {
-    return Response.json(
-      { error: "Распознавание речи не настроено на сервере" },
-      { status: 503 },
-    );
-  }
-
-  const form = await request.formData();
-  const dialogId = form.get("dialogId");
-  const audio = form.get("audio");
-  if (typeof dialogId !== "string" || !(audio instanceof Blob)) {
+  const dialogIdResult = z
+    .uuid()
+    .safeParse(new URL(request.url).searchParams.get("dialogId"));
+  if (!dialogIdResult.success) {
     return Response.json({ error: "Некорректный запрос" }, { status: 400 });
   }
+  const dialogId = dialogIdResult.data;
 
   try {
     // Reuses the existing ownership check rather than re-implementing it here.
@@ -51,17 +47,59 @@ export async function POST(request: Request) {
     throw cause;
   }
 
-  const deepgramResponse = await fetch(
-    `${DEEPGRAM_URL}?language=ru&smart_format=true&punctuate=true`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Token ${apiKey}`,
-        "Content-Type": audio.type || "audio/webm",
+  const contentLength = Number(request.headers.get("content-length"));
+  if (contentLength > MAX_AUDIO_BYTES) {
+    return Response.json(
+      { error: "Аудиозапись слишком большая" },
+      { status: 400 },
+    );
+  }
+
+  const apiKey = process.env.DEEPGRAM_API_KEY;
+  if (!apiKey) {
+    return Response.json(
+      { error: "Распознавание речи не настроено на сервере" },
+      { status: 503 },
+    );
+  }
+
+  const form = await request.formData();
+  const audio = form.get("audio");
+  if (!(audio instanceof Blob)) {
+    return Response.json({ error: "Некорректный запрос" }, { status: 400 });
+  }
+  if (audio.size > MAX_AUDIO_BYTES) {
+    return Response.json(
+      { error: "Аудиозапись слишком большая" },
+      { status: 400 },
+    );
+  }
+
+  let deepgramResponse: Response;
+  try {
+    deepgramResponse = await fetch(
+      `${DEEPGRAM_URL}?language=ru&smart_format=true&punctuate=true`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Token ${apiKey}`,
+          "Content-Type": audio.type || "audio/webm",
+        },
+        body: audio,
+        signal: AbortSignal.timeout(DEEPGRAM_TIMEOUT_MS),
       },
-      body: audio,
-    },
-  );
+    );
+  } catch (cause) {
+    const timedOut = cause instanceof Error && cause.name === "TimeoutError";
+    return Response.json(
+      {
+        error: timedOut
+          ? "Сервис распознавания не ответил вовремя"
+          : "Не удалось связаться с сервисом распознавания",
+      },
+      { status: timedOut ? 504 : 502 },
+    );
+  }
 
   if (!deepgramResponse.ok) {
     return Response.json(

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface UseDeepgramRecognitionResult {
   supported: boolean;
@@ -44,24 +44,45 @@ export function useDeepgramRecognition(options: {
   const [recording, setRecording] = useState(false);
   const [transcribing, setTranscribing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [supported, setSupported] = useState(false);
 
   const recorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const heldRef = useRef(false);
+  const mountedRef = useRef(false);
+  const startingRef = useRef(false);
   const skipNextRef = useRef(false);
   const onFinalRef = useRef(onFinal);
   onFinalRef.current = onFinal;
-
-  const supported =
-    typeof window !== "undefined" &&
-    !!navigator.mediaDevices?.getUserMedia &&
-    typeof MediaRecorder !== "undefined";
 
   const releaseStream = useCallback(() => {
     for (const track of streamRef.current?.getTracks() ?? []) track.stop();
     streamRef.current = null;
   }, []);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    setSupported(
+      typeof window !== "undefined" &&
+        !!navigator.mediaDevices?.getUserMedia &&
+        typeof MediaRecorder !== "undefined",
+    );
+
+    return () => {
+      mountedRef.current = false;
+      heldRef.current = false;
+      startingRef.current = false;
+      const recorder = recorderRef.current;
+      if (recorder && recorder.state !== "inactive") {
+        recorder.ondataavailable = null;
+        recorder.onstop = null;
+        recorder.stop();
+      }
+      recorderRef.current = null;
+      releaseStream();
+    };
+  }, [releaseStream]);
 
   const transcribe = useCallback(
     async (blob: Blob) => {
@@ -69,12 +90,14 @@ export function useDeepgramRecognition(options: {
       setError(null);
       try {
         const form = new FormData();
-        form.append("dialogId", dialogId);
         form.append("audio", blob, "utterance.webm");
-        const response = await fetch("/api/game/dialog/transcribe", {
-          method: "POST",
-          body: form,
-        });
+        const response = await fetch(
+          `/api/game/dialog/transcribe?dialogId=${encodeURIComponent(dialogId)}`,
+          {
+            method: "POST",
+            body: form,
+          },
+        );
         if (!response.ok) {
           const body = (await response.json().catch(() => null)) as {
             error?: string;
@@ -97,7 +120,8 @@ export function useDeepgramRecognition(options: {
   );
 
   const pressStart = useCallback(() => {
-    if (!supported || recorderRef.current) return;
+    if (!supported || recorderRef.current || startingRef.current) return;
+    startingRef.current = true;
     setError(null);
     heldRef.current = true;
     chunksRef.current = [];
@@ -107,14 +131,16 @@ export function useDeepgramRecognition(options: {
       try {
         stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       } catch {
-        setError("Нет доступа к микрофону");
+        startingRef.current = false;
+        if (mountedRef.current) setError("Нет доступа к микрофону");
         return;
       }
 
       // The button may already have been released while we were waiting on
       // the permission prompt — don't start recording in that case.
-      if (!heldRef.current) {
+      if (!heldRef.current || !mountedRef.current) {
         for (const track of stream.getTracks()) track.stop();
+        startingRef.current = false;
         return;
       }
 
@@ -149,6 +175,7 @@ export function useDeepgramRecognition(options: {
 
       recorderRef.current = recorder;
       recorder.start();
+      startingRef.current = false;
       setRecording(true);
     })();
   }, [releaseStream, supported, transcribe]);
@@ -162,10 +189,11 @@ export function useDeepgramRecognition(options: {
 
   const cancel = useCallback(() => {
     heldRef.current = false;
-    skipNextRef.current = true;
     if (recorderRef.current?.state === "recording") {
+      skipNextRef.current = true;
       recorderRef.current.stop();
     } else {
+      skipNextRef.current = false;
       releaseStream();
     }
   }, [releaseStream]);
