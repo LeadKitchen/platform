@@ -46,6 +46,7 @@ interface EmployeeDraft {
   name: string;
   role: string;
   level: "L1" | "L2" | "L3" | "L4";
+  gender: "male" | "female";
   competences: Record<string, string>;
   personality: Record<string, unknown>;
   isActive: boolean;
@@ -359,7 +360,7 @@ export function AdminAiAssistant() {
                   {draft.employee ? (
                     <DraftCard
                       title={draft.employee.name}
-                      description={`${draft.employee.role} · ${draft.employee.level}`}
+                      description={`${draft.employee.role} · ${draft.employee.level} · ${draft.employee.gender === "male" ? "муж." : "жен."}`}
                       details={[
                         `ID: ${draft.employee.id}`,
                         `Компетенции: ${Object.keys(draft.employee.competences).join(", ") || "не заданы"}`,

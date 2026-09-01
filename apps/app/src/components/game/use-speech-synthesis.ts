@@ -11,27 +11,41 @@ export interface UseSpeechSynthesisResult {
   stop(): void;
 }
 
-/** Озвучивает реплики персонажа средствами браузера, без передачи аудио наружу. */
-export function useSpeechSynthesis(options?: {
+/**
+ * Voices character lines through a premium server-side TTS (ElevenLabs),
+ * picking a voice that matches the character's gender.
+ *
+ * Falls back to the browser's own `speechSynthesis` when the provider isn't
+ * configured server-side or the request fails, so the room stays usable in
+ * local dev without an API key — at the cost of the flatter system voice.
+ */
+export function useSpeechSynthesis(options: {
+  dialogId: string;
+  gender: "male" | "female";
   lang?: string;
   onEnd?: () => void;
 }): UseSpeechSynthesisResult {
-  const { lang = "ru-RU", onEnd } = options ?? {};
+  const { dialogId, gender, lang = "ru-RU", onEnd } = options;
   const [supported, setSupported] = useState(false);
   const [speaking, setSpeaking] = useState(false);
   const [enabled, setEnabledState] = useState(true);
   const onEndRef = useRef(onEnd);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const objectUrlRef = useRef<string | null>(null);
+  // Bumped on every speak()/stop() so a stale in-flight fetch can't resurrect
+  // audio for a turn the caller has already moved on from.
+  const requestIdRef = useRef(0);
 
   onEndRef.current = onEnd;
 
   useEffect(() => {
     setSupported(
       typeof window !== "undefined" &&
-        "speechSynthesis" in window &&
-        "SpeechSynthesisUtterance" in window,
+        (typeof Audio !== "undefined" || "speechSynthesis" in window),
     );
-
     return () => {
+      audioRef.current?.pause();
+      if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
       window.speechSynthesis?.cancel();
     };
   }, []);
@@ -42,21 +56,27 @@ export function useSpeechSynthesis(options?: {
   }, []);
 
   const stop = useCallback(() => {
+    requestIdRef.current += 1;
+    if (audioRef.current) {
+      audioRef.current.onended = null;
+      audioRef.current.onerror = null;
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    if (objectUrlRef.current) {
+      URL.revokeObjectURL(objectUrlRef.current);
+      objectUrlRef.current = null;
+    }
     if (typeof window !== "undefined") window.speechSynthesis?.cancel();
     setSpeaking(false);
   }, []);
 
-  const speak = useCallback(
+  const speakWithBrowser = useCallback(
     (text: string) => {
-      if (
-        !enabled ||
-        typeof window === "undefined" ||
-        !("speechSynthesis" in window)
-      ) {
+      if (typeof window === "undefined" || !("speechSynthesis" in window)) {
         finish();
         return;
       }
-
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = lang;
@@ -76,7 +96,46 @@ export function useSpeechSynthesis(options?: {
       setSpeaking(true);
       window.speechSynthesis.speak(utterance);
     },
-    [enabled, finish, lang],
+    [finish, lang],
+  );
+
+  const speak = useCallback(
+    (text: string) => {
+      if (!enabled) {
+        finish();
+        return;
+      }
+      const requestId = ++requestIdRef.current;
+      setSpeaking(true);
+
+      void (async () => {
+        try {
+          const response = await fetch("/api/game/dialog/speak", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ dialogId, text, gender }),
+          });
+          if (requestId !== requestIdRef.current) return;
+          if (!response.ok) {
+            speakWithBrowser(text);
+            return;
+          }
+          const blob = await response.blob();
+          if (requestId !== requestIdRef.current) return;
+
+          const url = URL.createObjectURL(blob);
+          objectUrlRef.current = url;
+          const audio = new Audio(url);
+          audioRef.current = audio;
+          audio.onended = finish;
+          audio.onerror = () => speakWithBrowser(text);
+          await audio.play();
+        } catch {
+          if (requestId === requestIdRef.current) speakWithBrowser(text);
+        }
+      })();
+    },
+    [dialogId, enabled, finish, gender, speakWithBrowser],
   );
 
   const setEnabled = useCallback(

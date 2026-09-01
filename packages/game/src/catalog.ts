@@ -21,6 +21,7 @@ export const EMPLOYEES: Employee[] = [
     name: "Анна Соколова",
     role: "Повар десертов",
     level: "L4",
+    gender: "female",
     competences: {
       baking: "expert",
       decorating: "novice",
@@ -44,6 +45,7 @@ export const EMPLOYEES: Employee[] = [
     name: "Игорь Петров",
     role: "Повар горячего цеха",
     level: "L3",
+    gender: "male",
     competences: {
       hot_line: "capable",
       prep: "capable",
@@ -65,6 +67,7 @@ export const EMPLOYEES: Employee[] = [
     name: "Марина Ким",
     role: "Помощник повара",
     level: "L2",
+    gender: "female",
     competences: {
       prep: "learning",
       cold_starters: "learning",
@@ -86,6 +89,7 @@ export const EMPLOYEES: Employee[] = [
     name: "Тимур Асланов",
     role: "Стажёр",
     level: "L1",
+    gender: "male",
     competences: {
       prep: "novice",
       cold_starters: "novice",
@@ -107,6 +111,7 @@ export const EMPLOYEES: Employee[] = [
     name: "Ольга Веретенникова",
     role: "Су-шеф",
     level: "L4",
+    gender: "female",
     competences: {
       hot_line: "expert",
       cold_starters: "expert",

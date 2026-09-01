@@ -125,6 +125,7 @@ export function inflateCatalog(size: number, seed = 20260812): Catalog {
       name: `${pick(FIRST_NAMES)} ${pick(LAST_NAMES)}`,
       role: pick(ROLES),
       level: pick(LEVELS),
+      gender: pick(["male", "female"] as const),
       competences,
       personality: {
         tone: pick(["confident", "anxious", "independent"] as const),
