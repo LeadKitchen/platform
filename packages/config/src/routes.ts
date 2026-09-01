@@ -18,6 +18,5 @@ export const paths = {
   },
   settings: {
     root: ROOTS.SETTINGS,
-    profile: `${ROOTS.SETTINGS}/profile`,
   },
 } as const;

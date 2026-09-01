@@ -1,4 +1,4 @@
-import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, jsonb, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 export const user = pgTable("users", {
   id: text("id").primaryKey(),
@@ -9,6 +9,14 @@ export const user = pgTable("users", {
   username: text("username"),
   bio: text("bio"),
   language: text("language").default("en"),
+  /**
+   * Sparse overrides on top of `defaultNotificationPreferences`
+   * (`@acme/validators`). Missing keys fall back to the default at read time.
+   */
+  notificationPreferences: jsonb("notification_preferences")
+    .$type<Record<string, boolean>>()
+    .default({})
+    .notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
