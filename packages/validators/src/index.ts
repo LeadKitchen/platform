@@ -3,5 +3,6 @@
 export * from "./account";
 export * from "./data-table";
 export * from "./login";
+export * from "./notification-preferences";
 export * from "./otp";
 export * from "./profile";

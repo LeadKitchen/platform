@@ -105,9 +105,9 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem render={<a href={paths.settings.profile} />}>
+              <DropdownMenuItem render={<a href={paths.settings.root} />}>
                 <IconUserCircle />
-                Профиль
+                Аккаунт
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
