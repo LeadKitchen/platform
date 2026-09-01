@@ -6,10 +6,12 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
+  Field,
+  FieldLabel,
   Input,
 } from "@acme/ui";
 import { useRouter } from "next/navigation";
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useId, useState } from "react";
 import { toast } from "sonner";
 import { client } from "~/orpc/react";
 
@@ -18,6 +20,7 @@ const MAX_LENGTH = 32;
 /** Renames the active workspace, mirroring the "Team Name" settings card. */
 export function TeamNameForm({ initialName }: { initialName: string }) {
   const router = useRouter();
+  const nameInputId = useId();
   const [name, setName] = useState(initialName);
   const [pending, setPending] = useState(false);
   const dirty = name.trim() !== initialName.trim() && name.trim().length >= 2;
@@ -51,16 +54,19 @@ export function TeamNameForm({ initialName }: { initialName: string }) {
       </CardHeader>
       <CardContent className="py-5">
         <form onSubmit={save} className="flex flex-col gap-4">
-          <Input
-            value={name}
-            onChange={(event) =>
-              setName(event.target.value.slice(0, MAX_LENGTH))
-            }
-            maxLength={MAX_LENGTH}
-            required
-            minLength={2}
-            className="max-w-md"
-          />
+          <Field className="max-w-md">
+            <FieldLabel htmlFor={nameInputId}>Название команды</FieldLabel>
+            <Input
+              id={nameInputId}
+              value={name}
+              onChange={(event) =>
+                setName(event.target.value.slice(0, MAX_LENGTH))
+              }
+              maxLength={MAX_LENGTH}
+              required
+              minLength={2}
+            />
+          </Field>
           <div className="flex items-center justify-between gap-4">
             <p className="text-muted-foreground text-xs">
               Не более {MAX_LENGTH} символов.

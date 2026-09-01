@@ -74,7 +74,7 @@ export const orgWorkspaceRouter = {
     }),
 
   rename: protectedProcedure
-    .input(z.object({ name: z.string().trim().min(2).max(32) }))
+    .input(z.object({ name: z.string().trim().min(2).max(128) }))
     .handler(async ({ context, input }) => {
       const orgId = await requireFacilitatorOrgId(
         context.db,
