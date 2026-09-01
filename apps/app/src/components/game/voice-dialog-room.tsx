@@ -231,7 +231,9 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
     setEndDialog(null);
     setPending(true);
     setError(null);
-    speech.stop();
+    // Leave the mic listening — `pending` already pauses voice-activity
+    // detection, and closing it here would strand the manager without voice
+    // input if the check comes back not-ready and the conversation continues.
     voice.stop();
     try {
       const check = await client.game.dialog.preflight({
@@ -260,10 +262,13 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
     setEndDialog(null);
     setPending(true);
     setError(null);
-    speech.stop();
     voice.stop();
     try {
       await client.game.dialog.finish({ dialogId: props.dialogId });
+      // Only close the mic once the dialog has actually ended — closing it
+      // eagerly would leave the manager without voice input if this call
+      // fails and the conversation continues.
+      speech.stop();
       setPhase("finished");
       router.push(`/game/dialog/${props.dialogId}/report`);
       router.refresh();

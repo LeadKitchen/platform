@@ -21,6 +21,7 @@ import {
   loadConfigSnapshot,
   mutateConfig,
 } from "../../../game/config-version";
+import { employeeGenderSchema } from "../../../game/character-studio";
 import { adminProcedure } from "../../../orpc";
 
 const settingsDraftSchema = z.object({
@@ -40,7 +41,7 @@ const employeeDraftSchema = z.object({
   name: z.string().min(1).max(128),
   role: z.string().min(1).max(128),
   level: z.enum(["L1", "L2", "L3", "L4"]),
-  gender: z.enum(["male", "female"]),
+  gender: employeeGenderSchema,
   competences: z.record(z.string(), z.string()),
   personality: z.record(z.string(), z.unknown()),
   isActive: z.boolean(),

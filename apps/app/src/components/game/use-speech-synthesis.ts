@@ -32,31 +32,14 @@ export function useSpeechSynthesis(options: {
   const onEndRef = useRef(onEnd);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const objectUrlRef = useRef<string | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
   // Bumped on every speak()/stop() so a stale in-flight fetch can't resurrect
   // audio for a turn the caller has already moved on from.
   const requestIdRef = useRef(0);
 
   onEndRef.current = onEnd;
 
-  useEffect(() => {
-    setSupported(
-      typeof window !== "undefined" &&
-        (typeof Audio !== "undefined" || "speechSynthesis" in window),
-    );
-    return () => {
-      audioRef.current?.pause();
-      if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
-      window.speechSynthesis?.cancel();
-    };
-  }, []);
-
-  const finish = useCallback(() => {
-    setSpeaking(false);
-    onEndRef.current?.();
-  }, []);
-
-  const stop = useCallback(() => {
-    requestIdRef.current += 1;
+  const cleanupAudio = useCallback(() => {
     if (audioRef.current) {
       audioRef.current.onended = null;
       audioRef.current.onerror = null;
@@ -67,9 +50,34 @@ export function useSpeechSynthesis(options: {
       URL.revokeObjectURL(objectUrlRef.current);
       objectUrlRef.current = null;
     }
+  }, []);
+
+  useEffect(() => {
+    setSupported(
+      typeof window !== "undefined" &&
+        (typeof Audio !== "undefined" || "speechSynthesis" in window),
+    );
+    return () => {
+      requestIdRef.current += 1;
+      abortRef.current?.abort();
+      cleanupAudio();
+      window.speechSynthesis?.cancel();
+    };
+  }, [cleanupAudio]);
+
+  const finish = useCallback(() => {
+    cleanupAudio();
+    setSpeaking(false);
+    onEndRef.current?.();
+  }, [cleanupAudio]);
+
+  const stop = useCallback(() => {
+    requestIdRef.current += 1;
+    abortRef.current?.abort();
+    cleanupAudio();
     if (typeof window !== "undefined") window.speechSynthesis?.cancel();
     setSpeaking(false);
-  }, []);
+  }, [cleanupAudio]);
 
   const speakWithBrowser = useCallback(
     (text: string) => {
@@ -105,7 +113,10 @@ export function useSpeechSynthesis(options: {
         finish();
         return;
       }
+      cleanupAudio();
       const requestId = ++requestIdRef.current;
+      const controller = new AbortController();
+      abortRef.current = controller;
       setSpeaking(true);
 
       void (async () => {
@@ -114,6 +125,7 @@ export function useSpeechSynthesis(options: {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ dialogId, text, gender }),
+            signal: controller.signal,
           });
           if (requestId !== requestIdRef.current) return;
           if (!response.ok) {
@@ -130,12 +142,17 @@ export function useSpeechSynthesis(options: {
           audio.onended = finish;
           audio.onerror = () => speakWithBrowser(text);
           await audio.play();
-        } catch {
-          if (requestId === requestIdRef.current) speakWithBrowser(text);
+        } catch (cause) {
+          if (
+            requestId === requestIdRef.current &&
+            !(cause instanceof DOMException && cause.name === "AbortError")
+          ) {
+            speakWithBrowser(text);
+          }
         }
       })();
     },
-    [dialogId, enabled, finish, gender, speakWithBrowser],
+    [cleanupAudio, dialogId, enabled, finish, gender, speakWithBrowser],
   );
 
   const setEnabled = useCallback(

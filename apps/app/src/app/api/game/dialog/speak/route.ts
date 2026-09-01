@@ -1,5 +1,6 @@
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
+import { getSession } from "~/auth/server";
 import { api } from "~/orpc/server";
 
 export const runtime = "nodejs";
@@ -15,6 +16,24 @@ const bodySchema = z.object({
   gender: z.enum(["male", "female"]),
 });
 
+// ElevenLabs calls are billed per character, so a per-user cap protects
+// against a runaway client loop racking up cost. In-memory and per-process —
+// good enough for a single-instance deploy; move to a shared store (Redis/
+// Upstash) if this ever runs behind multiple instances.
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX_REQUESTS = 20;
+const requestTimestamps = new Map<string, number[]>();
+
+function isRateLimited(key: string): boolean {
+  const now = Date.now();
+  const recent = (requestTimestamps.get(key) ?? []).filter(
+    (at) => now - at < RATE_LIMIT_WINDOW_MS,
+  );
+  recent.push(now);
+  requestTimestamps.set(key, recent);
+  return recent.length > RATE_LIMIT_MAX_REQUESTS;
+}
+
 /**
  * Turns a character's reply into premium speech via ElevenLabs, replacing the
  * browser's built-in `speechSynthesis` (robotic, no gender-matched voices).
@@ -28,15 +47,24 @@ export async function POST(request: Request) {
   }
   const { dialogId, text, gender } = parsed.data;
 
+  let userId: string | undefined;
   try {
     // Reuses the existing ownership check rather than re-implementing it here.
     await api.game.dialog.byId({ dialogId });
+    userId = (await getSession())?.user.id;
   } catch (cause) {
     if (cause instanceof ORPCError) {
       const status = cause.code === "UNAUTHORIZED" ? 401 : 404;
       return Response.json({ error: cause.message }, { status });
     }
     throw cause;
+  }
+
+  if (isRateLimited(userId ?? dialogId)) {
+    return Response.json(
+      { error: "Слишком много запросов озвучивания — подождите немного" },
+      { status: 429 },
+    );
   }
 
   const apiKey = process.env.ELEVENLABS_API_KEY;

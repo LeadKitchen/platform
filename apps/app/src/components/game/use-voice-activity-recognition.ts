@@ -203,7 +203,12 @@ export function useVoiceActivityRecognition(options: {
     rafRef.current = requestAnimationFrame(monitor);
   }, [beginUtterance, stopRecorder]);
 
+  // Bumped on every start()/stop() so a getUserMedia() prompt the user takes
+  // a while to answer can't resurrect the mic after the call already ended.
+  const startTokenRef = useRef(0);
+
   const stop = useCallback(() => {
+    startTokenRef.current += 1;
     if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     rafRef.current = null;
     stopRecorder(true);
@@ -220,6 +225,7 @@ export function useVoiceActivityRecognition(options: {
   const start = useCallback(() => {
     if (!supported || streamRef.current) return;
     setError(null);
+    const token = ++startTokenRef.current;
 
     void (async () => {
       let stream: MediaStream;
@@ -232,7 +238,14 @@ export function useVoiceActivityRecognition(options: {
           },
         });
       } catch {
-        setError("Нет доступа к микрофону");
+        if (token === startTokenRef.current)
+          setError("Нет доступа к микрофону");
+        return;
+      }
+      if (token !== startTokenRef.current) {
+        // stop() ran while the permission prompt was still open — discard
+        // this stream instead of resurrecting the mic after the call ended.
+        for (const track of stream.getTracks()) track.stop();
         return;
       }
       streamRef.current = stream;
