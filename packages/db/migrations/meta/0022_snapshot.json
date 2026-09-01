@@ -101,12 +101,8 @@
           "name": "accounts_user_id_users_id_fk",
           "tableFrom": "accounts",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -177,12 +173,8 @@
           "name": "sessions_user_id_users_id_fk",
           "tableFrom": "sessions",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -192,9 +184,7 @@
         "sessions_token_unique": {
           "name": "sessions_token_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "token"
-          ]
+          "columns": ["token"]
         }
       },
       "policies": {},
@@ -231,12 +221,8 @@
           "name": "app_admins_user_id_users_id_fk",
           "tableFrom": "app_admins",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -244,12 +230,8 @@
           "name": "app_admins_granted_by_users_id_fk",
           "tableFrom": "app_admins",
           "tableTo": "users",
-          "columnsFrom": [
-            "granted_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["granted_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -336,9 +318,7 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -442,12 +422,8 @@
           "name": "game_active_organizations_user_id_users_id_fk",
           "tableFrom": "game_active_organizations",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -455,12 +431,8 @@
           "name": "game_active_organizations_org_id_game_organizations_id_fk",
           "tableFrom": "game_active_organizations",
           "tableTo": "game_organizations",
-          "columnsFrom": [
-            "org_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["org_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -625,12 +597,8 @@
           "name": "game_coaching_paths_org_id_game_organizations_id_fk",
           "tableFrom": "game_coaching_paths",
           "tableTo": "game_organizations",
-          "columnsFrom": [
-            "org_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["org_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -638,12 +606,8 @@
           "name": "game_coaching_paths_created_by_users_id_fk",
           "tableFrom": "game_coaching_paths",
           "tableTo": "users",
-          "columnsFrom": [
-            "created_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -808,12 +772,8 @@
           "name": "game_coaching_path_assignments_path_id_game_coaching_paths_id_fk",
           "tableFrom": "game_coaching_path_assignments",
           "tableTo": "game_coaching_paths",
-          "columnsFrom": [
-            "path_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["path_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -821,12 +781,8 @@
           "name": "game_coaching_path_assignments_org_id_game_organizations_id_fk",
           "tableFrom": "game_coaching_path_assignments",
           "tableTo": "game_organizations",
-          "columnsFrom": [
-            "org_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["org_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -834,12 +790,8 @@
           "name": "game_coaching_path_assignments_participant_id_users_id_fk",
           "tableFrom": "game_coaching_path_assignments",
           "tableTo": "users",
-          "columnsFrom": [
-            "participant_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["participant_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -847,12 +799,8 @@
           "name": "game_coaching_path_assignments_assigned_by_users_id_fk",
           "tableFrom": "game_coaching_path_assignments",
           "tableTo": "users",
-          "columnsFrom": [
-            "assigned_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["assigned_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -940,12 +888,8 @@
           "name": "game_config_versions_actor_id_users_id_fk",
           "tableFrom": "game_config_versions",
           "tableTo": "users",
-          "columnsFrom": [
-            "actor_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["actor_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1089,12 +1033,8 @@
           "name": "game_dialogs_session_id_game_sessions_id_fk",
           "tableFrom": "game_dialogs",
           "tableTo": "game_sessions",
-          "columnsFrom": [
-            "session_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["session_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1102,12 +1042,8 @@
           "name": "game_dialogs_order_id_game_orders_id_fk",
           "tableFrom": "game_dialogs",
           "tableTo": "game_orders",
-          "columnsFrom": [
-            "order_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["order_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1115,12 +1051,8 @@
           "name": "game_dialogs_employee_id_game_employees_id_fk",
           "tableFrom": "game_dialogs",
           "tableTo": "game_employees",
-          "columnsFrom": [
-            "employee_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["employee_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1128,12 +1060,8 @@
           "name": "game_dialogs_task_id_game_tasks_id_fk",
           "tableFrom": "game_dialogs",
           "tableTo": "game_tasks",
-          "columnsFrom": [
-            "task_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["task_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1375,12 +1303,8 @@
           "name": "game_evaluations_dialog_id_game_dialogs_id_fk",
           "tableFrom": "game_evaluations",
           "tableTo": "game_dialogs",
-          "columnsFrom": [
-            "dialog_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["dialog_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1388,12 +1312,8 @@
           "name": "game_evaluations_scorecard_id_game_scorecards_id_fk",
           "tableFrom": "game_evaluations",
           "tableTo": "game_scorecards",
-          "columnsFrom": [
-            "scorecard_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["scorecard_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1475,12 +1395,8 @@
           "name": "game_events_dialog_id_game_dialogs_id_fk",
           "tableFrom": "game_events",
           "tableTo": "game_dialogs",
-          "columnsFrom": [
-            "dialog_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["dialog_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1527,12 +1443,8 @@
           "name": "game_facilitators_user_id_users_id_fk",
           "tableFrom": "game_facilitators",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1540,12 +1452,8 @@
           "name": "game_facilitators_org_id_game_organizations_id_fk",
           "tableFrom": "game_facilitators",
           "tableTo": "game_organizations",
-          "columnsFrom": [
-            "org_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["org_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1553,12 +1461,8 @@
           "name": "game_facilitators_granted_by_users_id_fk",
           "tableFrom": "game_facilitators",
           "tableTo": "users",
-          "columnsFrom": [
-            "granted_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["granted_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1566,10 +1470,7 @@
       "compositePrimaryKeys": {
         "game_facilitators_user_id_org_id_pk": {
           "name": "game_facilitators_user_id_org_id_pk",
-          "columns": [
-            "user_id",
-            "org_id"
-          ]
+          "columns": ["user_id", "org_id"]
         }
       },
       "uniqueConstraints": {},
@@ -1663,12 +1564,8 @@
           "name": "game_orders_session_id_game_sessions_id_fk",
           "tableFrom": "game_orders",
           "tableTo": "game_sessions",
-          "columnsFrom": [
-            "session_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["session_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1676,12 +1573,8 @@
           "name": "game_orders_task_id_game_tasks_id_fk",
           "tableFrom": "game_orders",
           "tableTo": "game_tasks",
-          "columnsFrom": [
-            "task_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["task_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1689,12 +1582,8 @@
           "name": "game_orders_employee_id_game_employees_id_fk",
           "tableFrom": "game_orders",
           "tableTo": "game_employees",
-          "columnsFrom": [
-            "employee_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["employee_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1735,12 +1624,8 @@
           "name": "game_org_members_user_id_users_id_fk",
           "tableFrom": "game_org_members",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1748,12 +1633,8 @@
           "name": "game_org_members_org_id_game_organizations_id_fk",
           "tableFrom": "game_org_members",
           "tableTo": "game_organizations",
-          "columnsFrom": [
-            "org_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["org_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1761,10 +1642,7 @@
       "compositePrimaryKeys": {
         "game_org_members_user_id_org_id_pk": {
           "name": "game_org_members_user_id_org_id_pk",
-          "columns": [
-            "user_id",
-            "org_id"
-          ]
+          "columns": ["user_id", "org_id"]
         }
       },
       "uniqueConstraints": {},
@@ -1856,12 +1734,8 @@
           "name": "game_organization_configure_org_id_game_organizations_id_fk",
           "tableFrom": "game_organization_configure",
           "tableTo": "game_organizations",
-          "columnsFrom": [
-            "org_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["org_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1959,12 +1833,8 @@
           "name": "game_product_events_user_id_users_id_fk",
           "tableFrom": "game_product_events",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -1972,12 +1842,8 @@
           "name": "game_product_events_session_id_game_sessions_id_fk",
           "tableFrom": "game_product_events",
           "tableTo": "game_sessions",
-          "columnsFrom": [
-            "session_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["session_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2230,12 +2096,8 @@
           "name": "game_roleplay_scenarios_created_by_users_id_fk",
           "tableFrom": "game_roleplay_scenarios",
           "tableTo": "users",
-          "columnsFrom": [
-            "created_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_by"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2243,12 +2105,8 @@
           "name": "game_roleplay_scenarios_org_id_game_organizations_id_fk",
           "tableFrom": "game_roleplay_scenarios",
           "tableTo": "game_organizations",
-          "columnsFrom": [
-            "org_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["org_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -2256,12 +2114,8 @@
           "name": "game_roleplay_scenarios_base_employee_id_game_employees_id_fk",
           "tableFrom": "game_roleplay_scenarios",
           "tableTo": "game_employees",
-          "columnsFrom": [
-            "base_employee_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["base_employee_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2269,12 +2123,8 @@
           "name": "game_roleplay_scenarios_base_task_id_game_tasks_id_fk",
           "tableFrom": "game_roleplay_scenarios",
           "tableTo": "game_tasks",
-          "columnsFrom": [
-            "base_task_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["base_task_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -2400,12 +2250,8 @@
           "name": "game_scorecards_org_id_game_organizations_id_fk",
           "tableFrom": "game_scorecards",
           "tableTo": "game_organizations",
-          "columnsFrom": [
-            "org_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["org_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2413,12 +2259,8 @@
           "name": "game_scorecards_created_by_users_id_fk",
           "tableFrom": "game_scorecards",
           "tableTo": "users",
-          "columnsFrom": [
-            "created_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2621,12 +2463,8 @@
           "name": "game_sessions_variant_id_game_variants_id_fk",
           "tableFrom": "game_sessions",
           "tableTo": "game_variants",
-          "columnsFrom": [
-            "variant_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["variant_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2634,12 +2472,8 @@
           "name": "game_sessions_created_by_users_id_fk",
           "tableFrom": "game_sessions",
           "tableTo": "users",
-          "columnsFrom": [
-            "created_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -2647,12 +2481,8 @@
           "name": "game_sessions_training_assignment_id_game_training_assignments_id_fk",
           "tableFrom": "game_sessions",
           "tableTo": "game_training_assignments",
-          "columnsFrom": [
-            "training_assignment_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["training_assignment_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -2660,12 +2490,8 @@
           "name": "game_sessions_coaching_path_assignment_id_game_coaching_path_assignments_id_fk",
           "tableFrom": "game_sessions",
           "tableTo": "game_coaching_path_assignments",
-          "columnsFrom": [
-            "coaching_path_assignment_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["coaching_path_assignment_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -2673,12 +2499,8 @@
           "name": "game_sessions_scorecard_id_game_scorecards_id_fk",
           "tableFrom": "game_sessions",
           "tableTo": "game_scorecards",
-          "columnsFrom": [
-            "scorecard_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["scorecard_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -2686,12 +2508,8 @@
           "name": "game_sessions_org_id_game_organizations_id_fk",
           "tableFrom": "game_sessions",
           "tableTo": "game_organizations",
-          "columnsFrom": [
-            "org_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["org_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -2760,12 +2578,8 @@
           "name": "game_settings_default_variant_id_game_variants_id_fk",
           "tableFrom": "game_settings",
           "tableTo": "game_variants",
-          "columnsFrom": [
-            "default_variant_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["default_variant_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -3023,12 +2837,8 @@
           "name": "game_training_assignments_org_id_game_organizations_id_fk",
           "tableFrom": "game_training_assignments",
           "tableTo": "game_organizations",
-          "columnsFrom": [
-            "org_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["org_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3036,12 +2846,8 @@
           "name": "game_training_assignments_participant_id_users_id_fk",
           "tableFrom": "game_training_assignments",
           "tableTo": "users",
-          "columnsFrom": [
-            "participant_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["participant_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3049,12 +2855,8 @@
           "name": "game_training_assignments_assigned_by_users_id_fk",
           "tableFrom": "game_training_assignments",
           "tableTo": "users",
-          "columnsFrom": [
-            "assigned_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["assigned_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
