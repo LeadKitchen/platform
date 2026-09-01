@@ -82,6 +82,7 @@ const data = {
         },
         { title: "Раунд 1 · Теория", url: "/game/round-1", icon: IconSchool },
         { title: "Моя группа", url: "/group", icon: IconUsersGroup },
+        { title: "Участники", url: "/group/members", icon: IconUsers },
         {
           title: "Настроить команды",
           url: "/group/configure",
@@ -292,6 +293,7 @@ export function AppSidebar({
             items: item.items.filter(
               (sub) =>
                 sub.url !== "/group" &&
+                sub.url !== "/group/members" &&
                 sub.url !== "/group/configure" &&
                 sub.url !== "/game/scorecards",
             ),

@@ -1,8 +1,10 @@
 import { eq, GameFacilitator, GameOrganization, GameOrgMember } from "@acme/db";
+import { ORPCError } from "@orpc/server";
 import { z } from "zod";
 
 import {
   listWorkspaces,
+  requireFacilitatorOrgId,
   setActiveWorkspace,
   slugifyOrgId,
 } from "../../game/organizations";
@@ -70,4 +72,42 @@ export const orgWorkspaceRouter = {
         isFacilitator: true,
       };
     }),
+
+  rename: protectedProcedure
+    .input(z.object({ name: z.string().trim().min(2).max(32) }))
+    .handler(async ({ context, input }) => {
+      const orgId = await requireFacilitatorOrgId(
+        context.db,
+        context.session.user.id,
+      );
+      await context.db
+        .update(GameOrganization)
+        .set({ name: input.name })
+        .where(eq(GameOrganization.id, orgId));
+      return { id: orgId, name: input.name };
+    }),
+
+  /** Permanently deletes the active workspace. Refuses a user's only team. */
+  remove: protectedProcedure.handler(async ({ context }) => {
+    const orgId = await requireFacilitatorOrgId(
+      context.db,
+      context.session.user.id,
+    );
+    const { workspaces } = await listWorkspaces(
+      context.db,
+      context.session.user.id,
+    );
+    if (workspaces.length <= 1) {
+      throw new ORPCError("BAD_REQUEST", {
+        message:
+          "Нельзя удалить единственную команду. Сначала создайте другую.",
+      });
+    }
+
+    await context.db
+      .delete(GameOrganization)
+      .where(eq(GameOrganization.id, orgId));
+
+    return { id: orgId };
+  }),
 };
