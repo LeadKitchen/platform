@@ -130,7 +130,7 @@ export const startStep = protectedProcedure
           employeeId: scenario.baseEmployeeId,
           taskId: scenario.baseTaskId,
           round: 2,
-          variantId,
+          variantId: liveVariantId,
           activeOrders: 1,
           soloOnShift: false,
         })

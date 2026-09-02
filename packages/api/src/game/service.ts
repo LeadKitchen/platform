@@ -190,6 +190,10 @@ export async function loadEngine(db: Database): Promise<Engine> {
  * that assigns it to a new session, closing the window between reading the
  * admin's default variant and inserting the row during which it could have
  * been disabled. Falls back to the engine's built-in default if it was.
+ *
+ * `FOR UPDATE` locks the variant row for the rest of this transaction, so it
+ * lines up with `setActive`/`upsert`'s own row-locking update: whichever of
+ * the two commits first, the other sees a consistent, not a stale, value.
  */
 export async function resolveLiveVariantId(
   tx: Database,
@@ -200,7 +204,8 @@ export async function resolveLiveVariantId(
     .select({ isActive: GameVariant.isActive })
     .from(GameVariant)
     .where(eq(GameVariant.id, variantId))
-    .limit(1);
+    .limit(1)
+    .for("update");
   return row?.isActive === false ? fallbackVariantId : variantId;
 }
 
