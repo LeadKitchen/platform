@@ -43,7 +43,7 @@ import {
   IconSearch,
 } from "@tabler/icons-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { VariantComparison, type VariantStats } from "~/components/game";
@@ -383,6 +383,8 @@ export function AdminGameDashboard({
   section?: AdminGameSection;
 }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const appliedDeepLink = useRef(false);
   const [employees, setEmployees] = useState(initialData.catalog.employees);
   const [tasks, setTasks] = useState(initialData.catalog.tasks);
   const [variants, setVariants] = useState(initialData.variants.variants);
@@ -501,6 +503,21 @@ export function AdminGameDashboard({
     setVariant({ ...selected });
     setVariantParams(JSON.stringify(selected.params, null, 2));
   }
+
+  // Lets links from the game screens ("where do I change this character's
+  // behavior?") land directly on the right record instead of just the
+  // right section. Applied once per page load so it doesn't fight edits.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: должно выполниться только один раз при загрузке ссылки, а не при каждом обновлении каталогов или выборе.
+  useEffect(() => {
+    if (appliedDeepLink.current) return;
+    appliedDeepLink.current = true;
+    const employeeId = searchParams.get("employeeId");
+    if (employeeId) chooseEmployee(employeeId);
+    const variantId = searchParams.get("variantId");
+    if (variantId) chooseVariant(variantId);
+    const taskId = searchParams.get("taskId");
+    if (taskId) chooseTask(taskId);
+  }, [searchParams]);
 
   async function saveEmployee(event: React.FormEvent) {
     event.preventDefault();

@@ -40,9 +40,11 @@ import {
   IconPlayerPlay,
   IconPlayerStop,
   IconSend,
+  IconSettings,
   IconSparkles,
   IconVideo,
 } from "@tabler/icons-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { employeeAvatarUri, userAvatarUri } from "~/lib/avatar";
@@ -58,14 +60,22 @@ interface VoiceTurn {
 
 export interface VoiceDialogRoomProps {
   dialogId: string;
-  employee: { name: string; role: string; gender: "male" | "female" };
+  employee: {
+    id: string;
+    name: string;
+    role: string;
+    gender: "male" | "female";
+  };
   task: { title: string };
   shift: { round: number; activeOrders: number; soloOnShift: boolean };
   initialTurns: Array<{ role: "manager" | "employee"; text: string }>;
   initialFinished: boolean;
+  variantId: string;
   variantName: string;
   userAvatarSeed?: string;
   uploadedAvatarUrl?: string;
+  /** Admin/QA only: shows hints linking to where this character/AI variant is configured. */
+  isAdmin?: boolean;
 }
 
 type EndDialog =
@@ -544,6 +554,49 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
                   {pending ? "Думает" : voice.speaking ? "Говорит" : "На связи"}
                 </Badge>
               </div>
+              {props.isAdmin ? (
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-2 text-xs">
+                  <span className="text-muted-foreground flex items-center gap-1">
+                    <IconSettings className="size-3.5" />
+                    Админ: где поменять поведение
+                  </span>
+                  <Button
+                    variant="link"
+                    size="sm"
+                    className="h-auto p-0 text-xs"
+                    render={
+                      <Link
+                        href={`/admin/game/employees?employeeId=${props.employee.id}`}
+                      />
+                    }
+                    nativeButton={false}
+                  >
+                    Профиль сотрудника
+                  </Button>
+                  <Button
+                    variant="link"
+                    size="sm"
+                    className="h-auto p-0 text-xs"
+                    render={
+                      <Link
+                        href={`/admin/game/variants?variantId=${props.variantId}`}
+                      />
+                    }
+                    nativeButton={false}
+                  >
+                    ИИ-вариант «{props.variantName}»
+                  </Button>
+                  <Button
+                    variant="link"
+                    size="sm"
+                    className="h-auto p-0 text-xs"
+                    render={<Link href="/admin/game/settings" />}
+                    nativeButton={false}
+                  >
+                    Настройки игры
+                  </Button>
+                </div>
+              ) : null}
             </CardHeader>
             <CardContent className="flex min-h-[220px] flex-1 flex-col items-center justify-center gap-5">
               <div className="relative">
