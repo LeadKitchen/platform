@@ -453,7 +453,7 @@ export function DialogRoom(props: DialogRoomProps) {
                 className="h-auto p-0 text-xs"
                 render={
                   <Link
-                    href={`/admin/game/employees?employeeId=${props.employee.id}`}
+                    href={`/admin/game/employees?employeeId=${encodeURIComponent(props.employee.id)}`}
                   />
                 }
                 nativeButton={false}
@@ -466,7 +466,7 @@ export function DialogRoom(props: DialogRoomProps) {
                 className="h-auto p-0 text-xs"
                 render={
                   <Link
-                    href={`/admin/game/variants?variantId=${props.variantId}`}
+                    href={`/admin/game/variants?variantId=${encodeURIComponent(props.variantId)}`}
                   />
                 }
                 nativeButton={false}

@@ -87,7 +87,7 @@ export default async function SessionPage({
               className="h-auto p-0 text-xs"
               render={
                 <Link
-                  href={`/admin/game/variants?variantId=${session.variantId}`}
+                  href={`/admin/game/variants?variantId=${encodeURIComponent(session.variantId ?? "")}`}
                 />
               }
               nativeButton={false}

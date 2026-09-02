@@ -46,6 +46,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
+import { z } from "zod";
 import { VariantComparison, type VariantStats } from "~/components/game";
 import { client } from "~/orpc/react";
 import { AdminAiAssistant } from "./admin-ai-assistant";
@@ -57,6 +58,19 @@ import {
 import { AdminCharacterStudio } from "./admin-character-studio";
 import { AdminConfigHistory } from "./admin-config-history";
 import { AdminReviewReports, type ReviewReport } from "./admin-review-reports";
+
+const employeeIdSchema = z
+  .string()
+  .trim()
+  .min(2)
+  .max(64)
+  .regex(/^[a-z0-9_-]+$/);
+const taskIdSchema = z
+  .string()
+  .min(1)
+  .max(64)
+  .regex(/^[a-z0-9_-]+$/);
+const variantIdSchema = z.string().min(1).max(64);
 
 interface Employee {
   id: string;
@@ -511,12 +525,14 @@ export function AdminGameDashboard({
   useEffect(() => {
     if (appliedDeepLink.current) return;
     appliedDeepLink.current = true;
-    const employeeId = searchParams.get("employeeId");
-    if (employeeId) chooseEmployee(employeeId);
-    const variantId = searchParams.get("variantId");
-    if (variantId) chooseVariant(variantId);
-    const taskId = searchParams.get("taskId");
-    if (taskId) chooseTask(taskId);
+    const employeeId = employeeIdSchema.safeParse(
+      searchParams.get("employeeId"),
+    );
+    if (employeeId.success) chooseEmployee(employeeId.data);
+    const variantId = variantIdSchema.safeParse(searchParams.get("variantId"));
+    if (variantId.success) chooseVariant(variantId.data);
+    const taskId = taskIdSchema.safeParse(searchParams.get("taskId"));
+    if (taskId.success) chooseTask(taskId.data);
   }, [searchParams]);
 
   async function saveEmployee(event: React.FormEvent) {
