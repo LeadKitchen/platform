@@ -155,7 +155,8 @@ const SECTION_COPY: Record<
   },
   variants: {
     title: "Варианты ИИ",
-    description: "Конфигурации AI-конвейера и A/B-распределение.",
+    description:
+      "Технологии AI-конвейера: включайте нужные и выбирайте, какая из них работает в новых сессиях.",
   },
   benchmarks: {
     title: "Отчёты о качестве",
@@ -415,6 +416,8 @@ export function AdminGameDashboard({
     () => sessions.filter((item) => item.session.status === "completed").length,
     [sessions],
   );
+  const liveVariantId =
+    settings.defaultVariantId ?? initialData.system.runtime.defaultVariant;
   const visibleUsers = useMemo(() => {
     const query = userQuery.trim().toLocaleLowerCase("ru");
     if (!query) return users;
@@ -579,6 +582,50 @@ export function AdminGameDashboard({
       router.refresh();
     } catch (cause) {
       toast.error(cause instanceof Error ? cause.message : "Ошибка сохранения");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  async function toggleVariantActive(id: string, isActive: boolean) {
+    setPending(true);
+    try {
+      const saved = await client.admin.game.variants.setActive({
+        id,
+        isActive,
+      });
+      setVariants((current) =>
+        current.map((item) => (item.id === id ? saved : item)),
+      );
+      if (variant.id === id) setVariant((current) => ({ ...current, isActive }));
+      toast.success(isActive ? "Вариант включён" : "Вариант выключен");
+      router.refresh();
+    } catch (cause) {
+      toast.error(cause instanceof Error ? cause.message : "Ошибка обновления");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  async function makeVariantDefault(id: string) {
+    setPending(true);
+    try {
+      const saved = await client.admin.game.system.updateSettings({
+        ...settings,
+        defaultVariantId: id,
+      });
+      if (!saved) throw new Error("API не вернул сохранённые настройки");
+      setSettings({
+        defaultVariantId: saved.defaultVariantId,
+        defaultRound: saved.defaultRound === 3 ? 3 : 2,
+        defaultDeadlineMinutes: saved.defaultDeadlineMinutes,
+        allowRoundThree: saved.allowRoundThree,
+        maxActiveSessions: saved.maxActiveSessions,
+      });
+      toast.success("Этот вариант теперь работает в новых сессиях");
+      router.refresh();
+    } catch (cause) {
+      toast.error(cause instanceof Error ? cause.message : "Ошибка обновления");
     } finally {
       setPending(false);
     }
@@ -1339,36 +1386,70 @@ export function AdminGameDashboard({
             <CardHeader className="border-b py-5">
               <CardTitle>Варианты AI-конвейера</CardTitle>
               <CardDescription>
-                Экспериментальные ветки, доступные новым игровым сессиям.
+                Технологии, доступные новым игровым сессиям. «Работает в
+                игре» — вариант, который реально запускается у команд прямо
+                сейчас; выбор всегда явный, без случайного распределения.
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-3 py-5">
-              {variants.map((item) => (
-                <Button
-                  variant="outline"
-                  type="button"
-                  key={item.id}
-                  onClick={() => chooseVariant(item.id)}
-                  className={`h-auto min-h-28 items-start justify-between gap-3 rounded-xl p-4 text-left shadow-none transition-colors ${
-                    variant.id === item.id
-                      ? "border-primary bg-primary/5"
-                      : "hover:border-foreground/20 hover:bg-muted/40"
-                  }`}
-                >
-                  <span className="min-w-0">
-                    <span className="block font-medium">{item.name}</span>
-                    <span className="text-muted-foreground mt-1 block text-sm font-normal whitespace-normal">
-                      {item.knowledge} · {item.persona} · {item.evaluation}
-                    </span>
-                  </span>
-                  <span className="flex gap-2">
-                    <Badge variant="outline">вес {item.weight}</Badge>
-                    <Badge variant={item.isActive ? "default" : "secondary"}>
-                      {item.isActive ? "Включён" : "Выключен"}
-                    </Badge>
-                  </span>
-                </Button>
-              ))}
+              {variants.map((item) => {
+                const isLive = item.id === liveVariantId;
+                return (
+                  <div
+                    key={item.id}
+                    className={`flex flex-col gap-3 rounded-xl border p-4 transition-colors sm:flex-row sm:items-start sm:justify-between ${
+                      variant.id === item.id
+                        ? "border-primary bg-primary/5"
+                        : "hover:border-foreground/20 hover:bg-muted/40"
+                    }`}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => chooseVariant(item.id)}
+                      className="min-w-0 flex-1 text-left"
+                    >
+                      <span className="block font-medium">{item.name}</span>
+                      <span className="text-muted-foreground mt-1 block text-sm font-normal whitespace-normal">
+                        {item.knowledge} · {item.persona} · {item.evaluation}
+                      </span>
+                    </button>
+                    <div className="flex flex-wrap items-center gap-2">
+                      {isLive ? <Badge>Работает в игре</Badge> : null}
+                      <Badge variant={item.isActive ? "default" : "secondary"}>
+                        {item.isActive ? "Включён" : "Выключен"}
+                      </Badge>
+                      <Switch
+                        aria-label={
+                          item.isActive
+                            ? `Выключить «${item.name}»`
+                            : `Включить «${item.name}»`
+                        }
+                        checked={item.isActive}
+                        disabled={pending}
+                        onCheckedChange={(checked) =>
+                          toggleVariantActive(item.id, checked)
+                        }
+                      />
+                      {!isLive ? (
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          disabled={pending || !item.isActive}
+                          title={
+                            item.isActive
+                              ? "Сделать вариантом, который работает в новых сессиях"
+                              : "Сначала включите вариант"
+                          }
+                          onClick={() => makeVariantDefault(item.id)}
+                        >
+                          Сделать активным
+                        </Button>
+                      ) : null}
+                    </div>
+                  </div>
+                );
+              })}
             </CardContent>
           </Card>
           <Card className="gap-0 overflow-hidden py-0">
@@ -1505,27 +1586,6 @@ export function AdminGameDashboard({
                       </Select>
                     </Field>
                   </div>
-                  <Field>
-                    <FieldLabel htmlFor="variant-weight">
-                      Вес A/B-распределения
-                    </FieldLabel>
-                    <Input
-                      id="variant-weight"
-                      type="number"
-                      min={0}
-                      max={100}
-                      value={variant.weight}
-                      onChange={(event) =>
-                        setVariant({
-                          ...variant,
-                          weight: Number(event.target.value),
-                        })
-                      }
-                    />
-                    <FieldDescription>
-                      0 исключает вариант из случайного распределения.
-                    </FieldDescription>
-                  </Field>
                   <Field>
                     <FieldLabel htmlFor="variant-params">
                       Параметры JSON
@@ -1674,7 +1734,7 @@ export function AdminGameDashboard({
                       <SelectContent>
                         <SelectGroup>
                           <SelectItem value="__automatic">
-                            Из переменной окружения
+                            {`Fallback из переменной окружения (${initialData.system.runtime.defaultVariant})`}
                           </SelectItem>
                           {variants
                             .filter((item) => item.isActive)
@@ -1686,6 +1746,11 @@ export function AdminGameDashboard({
                         </SelectGroup>
                       </SelectContent>
                     </Select>
+                    <FieldDescription>
+                      Всегда один конкретный вариант, без случайного
+                      распределения между сессиями. Тот же выбор доступен
+                      кнопкой «Сделать активным» в разделе «Варианты ИИ».
+                    </FieldDescription>
                   </Field>
                   <div className="grid gap-4 sm:grid-cols-2">
                     <Field>
