@@ -20,11 +20,12 @@ export default async function SessionPage({
 }) {
   const { sessionId } = await params;
 
-  const [{ session, orders }, reference, dialogs] = await Promise.all([
-    api.game.session.byId({ id: sessionId }),
-    api.game.catalog.reference(),
-    api.game.dialog.list({ sessionId }),
-  ]);
+  const [{ session, orders, variantName }, reference, dialogs] =
+    await Promise.all([
+      api.game.session.byId({ id: sessionId }),
+      api.game.catalog.reference(),
+      api.game.dialog.list({ sessionId }),
+    ]);
 
   const finishedDialogs = dialogs.filter((row) => row.evaluation).length;
   const progress =
@@ -42,7 +43,12 @@ export default async function SessionPage({
               ? "Один сотрудник остаётся в смене: расставляйте приоритеты и поддерживайте темп."
               : "Выбирайте рабочую ситуацию, сотрудника и отрабатывайте постановку задачи."
           }
-          action={<Badge variant="outline">Активная смена</Badge>}
+          action={
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge variant="outline">ИИ: {variantName}</Badge>
+              <Badge variant="outline">Активная смена</Badge>
+            </div>
+          }
         />
 
         <Card className="gap-3 py-4">

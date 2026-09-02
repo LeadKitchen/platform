@@ -19,6 +19,7 @@ import {
   GameSkillPolicy,
   GameTask,
   GameVariant,
+  inArray,
   sql,
 } from "@acme/db";
 import {
@@ -183,6 +184,35 @@ export async function loadEngine(db: Database): Promise<Engine> {
     hydrateSkillPolicy(db),
   ]);
   return createEngine({ provider: provider(), catalog, variants });
+}
+
+/**
+ * Re-check that a resolved variant is still active right before the write
+ * that assigns it to a new session, closing the window between reading the
+ * admin's default variant and inserting the row during which it could have
+ * been disabled. Falls back to the engine's built-in default if it was.
+ *
+ * Locks both the requested and the fallback variant's rows with `FOR UPDATE`
+ * for the rest of this transaction — the fallback needs it too, since a
+ * concurrent `setActive`/`upsert` could otherwise disable it in the same
+ * window. Whichever transaction commits first, the other sees a consistent,
+ * not a stale, value. A variant absent from the table (built-in, never
+ * synced to the DB) is treated as active, same as before this check existed.
+ */
+export async function resolveLiveVariantId(
+  tx: Database,
+  variantId: string,
+  fallbackVariantId: string,
+): Promise<string> {
+  const ids = [...new Set([variantId, fallbackVariantId])];
+  const rows = await tx
+    .select({ id: GameVariant.id, isActive: GameVariant.isActive })
+    .from(GameVariant)
+    .where(inArray(GameVariant.id, ids))
+    .for("update");
+  const isActive = (id: string) =>
+    rows.find((row) => row.id === id)?.isActive !== false;
+  return isActive(variantId) ? variantId : fallbackVariantId;
 }
 
 export interface DialogRecord {

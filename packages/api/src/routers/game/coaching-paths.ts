@@ -8,7 +8,6 @@ import {
   GameOrder,
   GameProductEvent,
   GameSession,
-  GameVariant,
 } from "@acme/db";
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
@@ -18,10 +17,9 @@ import {
   roleplayScenarioFromSnapshot,
 } from "../../game/roleplay";
 import { getActiveScorecardSnapshot } from "../../game/scorecards";
-import { loadEngine } from "../../game/service";
+import { loadEngine, resolveLiveVariantId } from "../../game/service";
 import { loadGameSettings } from "../../game/settings";
 import { protectedProcedure } from "../../orpc";
-import { selectWeightedVariant } from "./session";
 
 export const listMine = protectedProcedure.handler(async ({ context }) => {
   const orgId = await getMemberOrgId(context.db, context.session.user.id);
@@ -85,25 +83,21 @@ export const startStep = protectedProcedure
         message: `Достигнут лимит активных сессий: ${settings.maxActiveSessions}`,
       });
     }
-    const weightedVariants = settings.defaultVariantId
-      ? []
-      : await context.db
-          .select({ id: GameVariant.id, weight: GameVariant.weight })
-          .from(GameVariant)
-          .where(eq(GameVariant.isActive, true));
-    const variantId =
-      settings.defaultVariantId ??
-      selectWeightedVariant(weightedVariants) ??
-      engine.defaultVariantId;
+    const variantId = settings.defaultVariantId ?? engine.defaultVariantId;
     engine.pipeline(variantId);
 
     return context.db.transaction(async (tx) => {
+      const liveVariantId = await resolveLiveVariantId(
+        tx,
+        variantId,
+        engine.defaultVariantId,
+      );
       const [session] = await tx
         .insert(GameSession)
         .values({
           title: `${assignment.pathSnapshot.name} · ${scenario.title}`,
           round: 2,
-          variantId,
+          variantId: liveVariantId,
           createdBy: context.session.user.id,
           orgId: assignment.orgId,
           coachingPathAssignmentId: assignment.id,
@@ -136,7 +130,7 @@ export const startStep = protectedProcedure
           employeeId: scenario.baseEmployeeId,
           taskId: scenario.baseTaskId,
           round: 2,
-          variantId,
+          variantId: liveVariantId,
           activeOrders: 1,
           soloOnShift: false,
         })

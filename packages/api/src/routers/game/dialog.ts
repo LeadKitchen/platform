@@ -559,20 +559,27 @@ export const byId = protectedProcedure
     );
     const loaded = await loadDialog(context.db, input.dialogId);
 
-    const [evaluation] = await context.db
-      .select()
-      .from(GameEvaluation)
-      .where(eq(GameEvaluation.dialogId, input.dialogId))
-      .limit(1);
-
-    const events = await context.db
-      .select()
-      .from(GameEvent)
-      .where(eq(GameEvent.dialogId, input.dialogId))
-      .orderBy(asc(GameEvent.seq));
+    const [evaluation, events, engine] = await Promise.all([
+      context.db
+        .select()
+        .from(GameEvaluation)
+        .where(eq(GameEvaluation.dialogId, input.dialogId))
+        .limit(1)
+        .then((rows) => rows[0]),
+      context.db
+        .select()
+        .from(GameEvent)
+        .where(eq(GameEvent.dialogId, input.dialogId))
+        .orderBy(asc(GameEvent.seq)),
+      loadEngine(context.db),
+    ]);
+    const variantName =
+      engine.variants().find((item) => item.id === loaded.record.variantId)
+        ?.name ?? loaded.record.variantId;
 
     return {
       dialog: loaded.record,
+      variantName,
       employee: loaded.context.employee,
       task: loaded.context.task,
       shift: loaded.context.shift,

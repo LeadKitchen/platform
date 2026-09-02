@@ -63,6 +63,7 @@ export interface VoiceDialogRoomProps {
   shift: { round: number; activeOrders: number; soloOnShift: boolean };
   initialTurns: Array<{ role: "manager" | "employee"; text: string }>;
   initialFinished: boolean;
+  variantName: string;
   userAvatarSeed?: string;
   uploadedAvatarUrl?: string;
 }
@@ -310,6 +311,7 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
               </p>
               <div className="mt-2 flex flex-wrap gap-2">
                 <Badge variant="outline">Раунд {props.shift.round}</Badge>
+                <Badge variant="outline">ИИ: {props.variantName}</Badge>
                 <Badge variant="outline">Ролевой диалог с ИИ</Badge>
               </div>
             </div>
@@ -387,6 +389,7 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
               </p>
             </div>
           </div>
+          <Badge variant="outline">ИИ: {props.variantName}</Badge>
           <Badge variant="outline">
             <IconActivity />
             {speech.error

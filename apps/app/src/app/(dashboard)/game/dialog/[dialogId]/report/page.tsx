@@ -101,6 +101,7 @@ export default async function DialogReportPage({
                 <Badge variant="accent">{evaluation.scorecardName}</Badge>
               ) : null}
               <Badge variant="outline">Раунд {data.dialog.round}</Badge>
+              <Badge variant="outline">ИИ: {data.variantName}</Badge>
             </div>
           </CardHeader>
           <CardContent className="grid p-0 sm:grid-cols-2 xl:grid-cols-4">
