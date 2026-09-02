@@ -24,6 +24,7 @@
     "format": "biome format .",
     "lint": "biome lint .",
     "check": "biome check .",
+    "review": "bun --env-file=../../.env run src/scripts/publish-review.ts sitruk-review.md --title 'Технический анализ продукта Sitruk' --summary '10 проблем: 4 критичные (захват чужой команды, XSS в чате), 4 важные, 2 технического долга' --kind legacy-review",
     "push": "bun --env-file=../../.env run drizzle-kit push",
     "studio": "bun --env-file=../../.env run drizzle-kit studio",
     "drop": "bun --env-file=../../.env run src/scripts/drop-schema.ts",
