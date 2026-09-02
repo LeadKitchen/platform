@@ -237,6 +237,12 @@ export interface DialogContext {
   /** Session-fixed rubric. Missing means the adaptive system rubric. */
   evaluationCriteria?: Criterion[];
   evaluationScorecard?: { id: string; name: string };
+  /**
+   * Organization the session belongs to, if any. Lets an org-scoped
+   * knowledge strategy (e.g. admin-uploaded documents) know whose corpus to
+   * search — most strategies ignore it.
+   */
+  orgId?: string;
 }
 
 /** Reference data loaded before a game starts. */

@@ -25,6 +25,8 @@
     "@acme/config": "workspace:*",
     "@acme/db": "workspace:*",
     "@acme/game": "workspace:*",
+    "@acme/jobs": "workspace:*",
+    "@acme/storage": "workspace:*",
     "@acme/validators": "workspace:*",
     "@lmnr-ai/lmnr": "^0.8.45",
     "@orpc/contract": "^1.15.0",

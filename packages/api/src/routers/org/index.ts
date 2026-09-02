@@ -1,4 +1,5 @@
 import { orgCoachingPathsRouter } from "./coaching-paths";
+import { orgKnowledgeRouter } from "./knowledge";
 import { orgMembersRouter } from "./members";
 import { mine } from "./mine";
 import { orgPeopleRouter } from "./people";
@@ -17,6 +18,7 @@ export const orgRouter = {
   coachingPaths: orgCoachingPathsRouter,
   training: orgTrainingRouter,
   workspace: orgWorkspaceRouter,
+  knowledge: orgKnowledgeRouter,
 };
 
 import { orgConfigureRouter } from "./configure";

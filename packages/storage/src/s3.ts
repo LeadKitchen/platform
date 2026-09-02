@@ -1,5 +1,6 @@
 import { env } from "@acme/config";
 import {
+  DeleteObjectCommand,
   GetObjectCommand,
   PutObjectCommand,
   S3Client,
@@ -33,12 +34,26 @@ const s3Client = new S3Client({
 });
 
 const BUCKET_NAME = env.AWS_S3_BUCKET;
+export const MAX_UPLOAD_SIZE_BYTES = 20 * 1024 * 1024;
 
-export async function createPresignedUrl(key: string): Promise<string> {
+export async function createPresignedUrl(
+  key: string,
+  contentLength: number,
+): Promise<string> {
+  if (
+    !Number.isSafeInteger(contentLength) ||
+    contentLength <= 0 ||
+    contentLength > MAX_UPLOAD_SIZE_BYTES
+  ) {
+    throw new RangeError(
+      `Upload size must be between 1 and ${MAX_UPLOAD_SIZE_BYTES} bytes`,
+    );
+  }
   const command = new PutObjectCommand({
     Bucket: BUCKET_NAME,
     Key: key,
     ContentType: "application/octet-stream",
+    ContentLength: contentLength,
   });
 
   return getSignedUrl(s3Client, command, { expiresIn: 3600 }); // 1 hour
@@ -87,4 +102,30 @@ export async function getDownloadUrl(key: string): Promise<string> {
   });
 
   return getSignedUrl(s3Client, command, { expiresIn: 3600 }); // 1 hour
+}
+
+export async function deleteObjectFromS3(key: string): Promise<void> {
+  await s3Client.send(
+    new DeleteObjectCommand({ Bucket: BUCKET_NAME, Key: key }),
+  );
+}
+
+/** Fetches an object's bytes directly — for server-side processing (parsing, ingestion) rather than a browser download. */
+export async function downloadBufferFromS3(key: string): Promise<Buffer> {
+  const command = new GetObjectCommand({ Bucket: BUCKET_NAME, Key: key });
+  const res = await s3Client.send(command);
+  if (!res.Body) {
+    throw new Error(`S3 object '${key}' has no body`);
+  }
+  if (
+    typeof res.ContentLength !== "number" ||
+    !Number.isSafeInteger(res.ContentLength)
+  ) {
+    throw new Error(`S3 object '${key}' has no valid content length`);
+  }
+  if (res.ContentLength > MAX_UPLOAD_SIZE_BYTES) {
+    throw new Error(`S3 object '${key}' exceeds the maximum upload size`);
+  }
+  const bytes = await res.Body.transformToByteArray();
+  return Buffer.from(bytes);
 }

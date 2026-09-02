@@ -21,6 +21,10 @@ export {
   WhiskIllustration,
 } from "./illustrations";
 export {
+  type KnowledgeDocumentView,
+  KnowledgeLibrary,
+} from "./knowledge-library";
+export {
   type EmployeeOption,
   OrderQueue,
   type OrderRow,

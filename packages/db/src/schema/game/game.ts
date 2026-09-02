@@ -1,5 +1,13 @@
 import { sql } from "drizzle-orm";
-import { index, pgTable, primaryKey, uniqueIndex } from "drizzle-orm/pg-core";
+import {
+  check,
+  foreignKey,
+  index,
+  pgTable,
+  primaryKey,
+  unique,
+  uniqueIndex,
+} from "drizzle-orm/pg-core";
 
 import { user } from "../auth/user";
 
@@ -721,6 +729,152 @@ export const GameReviewReport = pgTable(
   (table) => [
     index("game_review_reports_created_idx").on(table.createdAt),
     index("game_review_reports_kind_idx").on(table.kind),
+  ],
+);
+
+/**
+ * Who may see a piece of retrieved knowledge.
+ *
+ * `judge` covers content that would hand the participant the answer if the
+ * character could see it (scoring methodology, expected style, readiness
+ * levels). Mirrors the `audience` field on the built-in `KnowledgeDoc`
+ * corpus (`packages/ai/src/knowledge/corpus.ts`) — any retrieval strategy
+ * reading from this table must apply the same filter before the character
+ * prompt sees a snippet.
+ */
+export type GameKnowledgeAudience = "character" | "judge" | "both";
+
+/** One-time authorization for completing a direct-to-S3 knowledge upload. */
+export const GameKnowledgePendingUpload = pgTable(
+  "game_knowledge_pending_uploads",
+  (t) => ({
+    key: t.text().primaryKey(),
+    orgId: t
+      .text()
+      .notNull()
+      .references(() => GameOrganization.id, { onDelete: "cascade" }),
+    userId: t
+      .text()
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    sourceType: t
+      .varchar({ length: 16 })
+      .$type<"pdf" | "docx" | "txt">()
+      .notNull(),
+    size: t.integer().notNull(),
+    createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+  }),
+  (table) => [
+    check(
+      "game_knowledge_pending_uploads_source_type_check",
+      sql`${table.sourceType} in ('pdf', 'docx', 'txt')`,
+    ),
+  ],
+);
+
+/**
+ * An admin-uploaded knowledge source (PDF/DOCX/plain text) for one
+ * organization's RAG-fed "virtual employee". The file itself lives in S3
+ * (`s3Key`); this row tracks ingestion status and the org-wide default
+ * audience for chunks that don't override it.
+ */
+export const GameKnowledgeDocument = pgTable(
+  "game_knowledge_documents",
+  (t) => ({
+    id: t.uuid().primaryKey().defaultRandom(),
+    orgId: t
+      .text()
+      .notNull()
+      .references(() => GameOrganization.id, { onDelete: "cascade" }),
+    title: t.varchar({ length: 200 }).notNull(),
+    sourceType: t
+      .varchar({ length: 16 })
+      .$type<"pdf" | "docx" | "txt">()
+      .notNull(),
+    s3Key: t.text().notNull(),
+    /**
+     * `needs_review`: ingested and chunked, but the LLM-suggested audience
+     * labels have not been confirmed by an admin yet — excluded from
+     * retrieval until then. `ready` is the only status `org-rag` reads from.
+     */
+    status: t
+      .varchar({ length: 16 })
+      .$type<"processing" | "needs_review" | "ready" | "failed">()
+      .default("processing")
+      .notNull(),
+    /** Parse/ingestion failure reason, shown to the admin. */
+    statusMessage: t.text(),
+    /** Default for chunks that don't set their own `audience`. */
+    audience: t
+      .varchar({ length: 16 })
+      .$type<GameKnowledgeAudience>()
+      .default("character")
+      .notNull(),
+    /** Bumped on re-upload; old chunks are replaced, not appended. */
+    version: t.integer().default(1).notNull(),
+    uploadedBy: t.text().references(() => user.id, { onDelete: "set null" }),
+    createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+    updatedAt: t
+      .timestamp({ mode: "date", withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdateFn(() => sql`now()`),
+  }),
+  (table) => [
+    index("game_knowledge_documents_org_idx").on(table.orgId, table.createdAt),
+    unique("game_knowledge_documents_id_org_id_unique").on(
+      table.id,
+      table.orgId,
+    ),
+    check(
+      "game_knowledge_documents_audience_check",
+      sql`${table.audience} in ('character', 'judge', 'both')`,
+    ),
+  ],
+);
+
+/**
+ * One retrieval-sized fragment of an uploaded document, embedded for dense
+ * search. `orgId` is denormalized from the parent document so the org-rag
+ * strategy can filter by org (and by `audience`) without a join on the hot
+ * retrieval path.
+ */
+export const GameKnowledgeChunk = pgTable(
+  "game_knowledge_chunks",
+  (t) => ({
+    id: t.uuid().primaryKey().defaultRandom(),
+    documentId: t.uuid().notNull(),
+    orgId: t
+      .text()
+      .notNull()
+      .references(() => GameOrganization.id, { onDelete: "cascade" }),
+    chunkIndex: t.integer().notNull(),
+    text: t.text().notNull(),
+    /** May override the parent document's default for mixed-content docs. */
+    audience: t
+      .varchar({ length: 16 })
+      .$type<GameKnowledgeAudience>()
+      .notNull(),
+    tags: t.jsonb().$type<string[]>().default([]).notNull(),
+    /** text-embedding-3-small is 1536-dimensional. */
+    embedding: t.vector("embedding", { dimensions: 1536 }),
+    createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+  }),
+  (table) => [
+    index("game_knowledge_chunks_document_idx").on(table.documentId),
+    index("game_knowledge_chunks_org_audience_idx").on(
+      table.orgId,
+      table.audience,
+    ),
+    foreignKey({
+      columns: [table.documentId, table.orgId],
+      foreignColumns: [GameKnowledgeDocument.id, GameKnowledgeDocument.orgId],
+      name: "game_knowledge_chunks_document_org_fk",
+    }).onDelete("cascade"),
+    check(
+      "game_knowledge_chunks_audience_check",
+      sql`${table.audience} in ('character', 'judge', 'both')`,
+    ),
   ],
 );
 

@@ -6,12 +6,28 @@ export {
   fallbackResponder,
 } from "./engine";
 export {
+  type AudienceClassification,
+  classifyChunkAudience,
+} from "./knowledge/audience-classifier";
+export {
+  type ChunkOptions,
+  chunkText,
+  type TextChunk,
+} from "./knowledge/chunk";
+export {
   buildCorpus,
   type KnowledgeDoc,
   type ScoredDoc,
   searchCorpus,
   tokenize,
 } from "./knowledge/corpus";
+export {
+  cosineSimilarity,
+  createEmbeddingProvider,
+  EmbeddingIndex,
+  type EmbeddingOptions,
+  type EmbeddingProvider,
+} from "./knowledge/embeddings";
 export {
   buildGraph,
   type GraphEdge,
@@ -99,6 +115,7 @@ export { correctiveRagKnowledge } from "./strategies/knowledge/crag";
 export { graphRagKnowledge } from "./strategies/knowledge/graph-rag";
 export { hybridRagKnowledge } from "./strategies/knowledge/hybrid-rag";
 export { hydeKnowledge } from "./strategies/knowledge/hyde-rag";
+export { orgRagKnowledge } from "./strategies/knowledge/org-rag";
 export { ragKnowledge } from "./strategies/knowledge/rag";
 export { rerankRagKnowledge } from "./strategies/knowledge/rerank-rag";
 export { promptPersona } from "./strategies/persona/prompt";
