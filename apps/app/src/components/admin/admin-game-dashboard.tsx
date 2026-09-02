@@ -43,9 +43,10 @@ import {
   IconSearch,
 } from "@tabler/icons-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
+import { z } from "zod";
 import { VariantComparison, type VariantStats } from "~/components/game";
 import { client } from "~/orpc/react";
 import { AdminAiAssistant } from "./admin-ai-assistant";
@@ -57,6 +58,19 @@ import {
 import { AdminCharacterStudio } from "./admin-character-studio";
 import { AdminConfigHistory } from "./admin-config-history";
 import { AdminReviewReports, type ReviewReport } from "./admin-review-reports";
+
+const employeeIdSchema = z
+  .string()
+  .trim()
+  .min(2)
+  .max(64)
+  .regex(/^[a-z0-9_-]+$/);
+const taskIdSchema = z
+  .string()
+  .min(1)
+  .max(64)
+  .regex(/^[a-z0-9_-]+$/);
+const variantIdSchema = z.string().min(1).max(64);
 
 interface Employee {
   id: string;
@@ -383,6 +397,8 @@ export function AdminGameDashboard({
   section?: AdminGameSection;
 }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const appliedDeepLink = useRef(false);
   const [employees, setEmployees] = useState(initialData.catalog.employees);
   const [tasks, setTasks] = useState(initialData.catalog.tasks);
   const [variants, setVariants] = useState(initialData.variants.variants);
@@ -501,6 +517,23 @@ export function AdminGameDashboard({
     setVariant({ ...selected });
     setVariantParams(JSON.stringify(selected.params, null, 2));
   }
+
+  // Lets links from the game screens ("where do I change this character's
+  // behavior?") land directly on the right record instead of just the
+  // right section. Applied once per page load so it doesn't fight edits.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: должно выполниться только один раз при загрузке ссылки, а не при каждом обновлении каталогов или выборе.
+  useEffect(() => {
+    if (appliedDeepLink.current) return;
+    appliedDeepLink.current = true;
+    const employeeId = employeeIdSchema.safeParse(
+      searchParams.get("employeeId"),
+    );
+    if (employeeId.success) chooseEmployee(employeeId.data);
+    const variantId = variantIdSchema.safeParse(searchParams.get("variantId"));
+    if (variantId.success) chooseVariant(variantId.data);
+    const taskId = taskIdSchema.safeParse(searchParams.get("taskId"));
+    if (taskId.success) chooseTask(taskId.data);
+  }, [searchParams]);
 
   async function saveEmployee(event: React.FormEvent) {
     event.preventDefault();

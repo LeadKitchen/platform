@@ -1,12 +1,16 @@
+import { AppAdmin, db, eq } from "@acme/db";
 import {
   Badge,
+  Button,
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   Progress,
 } from "@acme/ui";
-import { IconActivity } from "@tabler/icons-react";
+import { IconActivity, IconSettings } from "@tabler/icons-react";
+import Link from "next/link";
+import { getSession } from "~/auth/server";
 import { GameSectionHeader, OrderQueue } from "~/components/game";
 import { SiteHeader } from "~/components/layout";
 import { api } from "~/orpc/server";
@@ -20,12 +24,32 @@ export default async function SessionPage({
 }) {
   const { sessionId } = await params;
 
-  const [{ session, orders, variantName }, reference, dialogs] =
+  const [{ session, orders, variantName }, reference, dialogs, authSession] =
     await Promise.all([
       api.game.session.byId({ id: sessionId }),
       api.game.catalog.reference(),
       api.game.dialog.list({ sessionId }),
+      getSession(),
     ]);
+
+  // Mirrors the check in `(dashboard)/layout.tsx` — there is no shared
+  // helper across server components, only the oRPC `adminProcedure`
+  // middleware, so the "am I admin" question is answered the same way here.
+  const isBootstrapAdmin = (process.env.ADMIN_EMAILS ?? "")
+    .split(",")
+    .some(
+      (email) =>
+        authSession?.user &&
+        email.trim().toLowerCase() === authSession.user.email.toLowerCase(),
+    );
+  const persistedAdmin =
+    isBootstrapAdmin || !authSession?.user
+      ? undefined
+      : await db.query.AppAdmin.findFirst({
+          where: eq(AppAdmin.userId, authSession.user.id),
+          columns: { userId: true },
+        });
+  const isAdmin = isBootstrapAdmin || persistedAdmin !== undefined;
 
   const finishedDialogs = dialogs.filter((row) => row.evaluation).length;
   const progress =
@@ -50,6 +74,46 @@ export default async function SessionPage({
             </div>
           }
         />
+
+        {isAdmin ? (
+          <div className="text-muted-foreground flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
+            <span className="flex items-center gap-1">
+              <IconSettings className="size-3.5" />
+              Админ: где поменять поведение этой игры
+            </span>
+            <Button
+              variant="link"
+              size="sm"
+              className="h-auto p-0 text-xs"
+              render={
+                <Link
+                  href={`/admin/game/variants?variantId=${encodeURIComponent(session.variantId ?? "")}`}
+                />
+              }
+              nativeButton={false}
+            >
+              ИИ-вариант «{variantName}»
+            </Button>
+            <Button
+              variant="link"
+              size="sm"
+              className="h-auto p-0 text-xs"
+              render={<Link href="/admin/game/settings" />}
+              nativeButton={false}
+            >
+              Настройки игры
+            </Button>
+            <Button
+              variant="link"
+              size="sm"
+              className="h-auto p-0 text-xs"
+              render={<Link href="/admin/game/employees" />}
+              nativeButton={false}
+            >
+              Сотрудники и их поведение
+            </Button>
+          </div>
+        ) : null}
 
         <Card className="gap-3 py-4">
           <CardHeader className="items-center sm:grid-cols-[1fr_auto]">

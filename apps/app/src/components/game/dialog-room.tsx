@@ -52,7 +52,9 @@ import {
   IconPlayerStop,
   IconRefresh,
   IconSend,
+  IconSettings,
 } from "@tabler/icons-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { employeeAvatarUri, userAvatarUri } from "~/lib/avatar";
@@ -82,7 +84,7 @@ const CONVERSATION_STARTERS = [
 
 export interface DialogRoomProps {
   dialogId: string;
-  employee: { name: string; role: string };
+  employee: { id: string; name: string; role: string };
   task: { title: string };
   shift: { round: number; activeOrders: number; soloOnShift: boolean };
   initialTurns: Turn[];
@@ -438,6 +440,50 @@ export function DialogRoom(props: DialogRoomProps) {
               поставьте задачу и продолжайте разговор, реагируя на его ответы.
             </CardDescription>
           </CardHeader>
+
+          {props.isAdmin ? (
+            <div className="bg-muted/30 flex flex-wrap items-center gap-x-4 gap-y-1 border-b px-4 py-2 text-xs">
+              <span className="text-muted-foreground flex items-center gap-1">
+                <IconSettings className="size-3.5" />
+                Админ: где поменять поведение
+              </span>
+              <Button
+                variant="link"
+                size="sm"
+                className="h-auto p-0 text-xs"
+                render={
+                  <Link
+                    href={`/admin/game/employees?employeeId=${encodeURIComponent(props.employee.id)}`}
+                  />
+                }
+                nativeButton={false}
+              >
+                Профиль сотрудника
+              </Button>
+              <Button
+                variant="link"
+                size="sm"
+                className="h-auto p-0 text-xs"
+                render={
+                  <Link
+                    href={`/admin/game/variants?variantId=${encodeURIComponent(props.variantId)}`}
+                  />
+                }
+                nativeButton={false}
+              >
+                ИИ-вариант «{props.variantName}»
+              </Button>
+              <Button
+                variant="link"
+                size="sm"
+                className="h-auto p-0 text-xs"
+                render={<Link href="/admin/game/settings" />}
+                nativeButton={false}
+              >
+                Настройки игры
+              </Button>
+            </div>
+          ) : null}
 
           <CardContent className="flex flex-col gap-4 py-5">
             <Collapsible>

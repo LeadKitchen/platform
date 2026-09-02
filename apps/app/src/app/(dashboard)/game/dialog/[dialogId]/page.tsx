@@ -63,6 +63,7 @@ export default async function DialogPage({
   const commonProps = {
     dialogId: data.dialog.id,
     employee: {
+      id: data.employee.id,
       name: data.employee.name,
       role: data.employee.role,
       gender: data.employee.gender,
@@ -79,6 +80,7 @@ export default async function DialogPage({
       promptEventId: "promptEventId" in turn ? turn.promptEventId : undefined,
     })),
     initialFinished: data.dialog.status !== "active",
+    variantId: data.dialog.variantId,
     variantName: data.variantName,
     userAvatarSeed: session?.user.email,
     uploadedAvatarUrl: session?.user.image ?? undefined,
@@ -105,11 +107,7 @@ export default async function DialogPage({
           title={`Разговор с ${data.employee.name}`}
           description="Сотрудник отвечает в своей роли. Ведите естественный диалог и завершите его, когда договоритесь о результате, сроке и контроле."
         />
-        <DialogRoom
-          {...commonProps}
-          variantId={data.dialog.variantId}
-          initialEvaluation={evaluation}
-        />
+        <DialogRoom {...commonProps} initialEvaluation={evaluation} />
       </main>
     </>
   );
