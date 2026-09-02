@@ -58,6 +58,7 @@ export default async function DialogPage({
       text: turn.text,
     })),
     initialFinished: data.dialog.status !== "active",
+    variantName: data.variantName,
     userAvatarSeed: session?.user.email,
     uploadedAvatarUrl: session?.user.image ?? undefined,
   };

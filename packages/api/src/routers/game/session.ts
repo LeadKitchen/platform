@@ -186,13 +186,19 @@ export const byId = protectedProcedure
       context.session.user.id,
     );
 
-    const orders = await context.db
-      .select()
-      .from(GameOrder)
-      .where(eq(GameOrder.sessionId, session.id))
-      .orderBy(desc(GameOrder.createdAt));
+    const [orders, engine] = await Promise.all([
+      context.db
+        .select()
+        .from(GameOrder)
+        .where(eq(GameOrder.sessionId, session.id))
+        .orderBy(desc(GameOrder.createdAt)),
+      loadEngine(context.db),
+    ]);
+    const variantName =
+      engine.variants().find((item) => item.id === session.variantId)
+        ?.name ?? session.variantId;
 
-    return { session, orders };
+    return { session, orders, variantName };
   });
 
 /**
