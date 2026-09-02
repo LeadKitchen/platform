@@ -130,6 +130,11 @@ export function DialogRoom(props: DialogRoomProps) {
   const evaluationTracked = useRef(false);
   const requestController = useRef<AbortController | null>(null);
   const promptCache = useRef<Map<string, PromptDebugData>>(new Map());
+  const promptRequestId = useRef(0);
+  const activePromptRequest = useRef<{
+    eventId: string;
+    requestId: number;
+  } | null>(null);
   const draftKey = `sitruk:dialog-draft:${props.dialogId}`;
   const latestActivity = `${turns.length}:${pending}`;
   const managerTurns = turns.filter((turn) => turn.role === "manager").length;
@@ -276,11 +281,14 @@ export function DialogRoom(props: DialogRoomProps) {
   }
 
   async function openPromptDebug(eventId: string) {
+    const request = { eventId, requestId: ++promptRequestId.current };
+    activePromptRequest.current = request;
     setPromptDialogEventId(eventId);
     const cached = promptCache.current.get(eventId);
     if (cached) {
       setPromptData(cached);
       setPromptError(null);
+      setPromptLoading(false);
       return;
     }
     setPromptData(null);
@@ -292,13 +300,19 @@ export function DialogRoom(props: DialogRoomProps) {
         eventId,
       });
       promptCache.current.set(eventId, result);
-      setPromptData(result);
+      if (activePromptRequest.current === request) {
+        setPromptData(result);
+      }
     } catch (cause) {
-      setPromptError(
-        cause instanceof Error ? cause.message : "Не удалось получить промпт",
-      );
+      if (activePromptRequest.current === request) {
+        setPromptError(
+          cause instanceof Error ? cause.message : "Не удалось получить промпт",
+        );
+      }
     } finally {
-      setPromptLoading(false);
+      if (activePromptRequest.current === request) {
+        setPromptLoading(false);
+      }
     }
   }
 
@@ -774,7 +788,11 @@ export function DialogRoom(props: DialogRoomProps) {
       <Dialog
         open={promptDialogEventId !== null}
         onOpenChange={(open) => {
-          if (!open) setPromptDialogEventId(null);
+          if (!open) {
+            activePromptRequest.current = null;
+            setPromptDialogEventId(null);
+            setPromptLoading(false);
+          }
         }}
       >
         <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-2xl">
