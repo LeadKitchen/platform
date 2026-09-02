@@ -59,16 +59,26 @@ function recommendation(comparison: VariantComparison): string {
 function pickExample(
   items: ItemResult[],
   variantId: string,
+  epoch: number,
   order: "best" | "worst",
 ): ItemResult | undefined {
   const candidates = items.filter(
     (item) =>
-      item.variantId === variantId && item.turns && item.turns.length > 0,
+      item.variantId === variantId &&
+      item.epoch === epoch &&
+      item.turns &&
+      item.turns.length > 0,
   );
   if (candidates.length === 0) return undefined;
   return [...candidates].sort((a, b) =>
     order === "worst" ? b.absError - a.absError : a.absError - b.absError,
   )[0];
+}
+
+function escapeMarkdownText(text: string): string {
+  return text
+    .replace(/\r\n?|\n/g, " ")
+    .replace(/[\\`*_{}[\]()<>#+\-.!|~>]/g, "\\$&");
 }
 
 function renderExample(item: ItemResult): string[] {
@@ -79,11 +89,11 @@ function renderExample(item: ItemResult): string[] {
   ];
   for (const turn of item.turns ?? []) {
     const speaker = turn.role === "manager" ? "Менеджер" : "Сотрудник";
-    lines.push(`> **${speaker}:** ${turn.text.replace(/\n/g, " ")}`);
+    lines.push(`> **${speaker}:** ${escapeMarkdownText(turn.text)}`);
   }
   lines.push("");
   if (item.summary) {
-    lines.push(`**Вывод модели:** ${item.summary}`, "");
+    lines.push(`**Вывод модели:** ${escapeMarkdownText(item.summary)}`, "");
   }
   return lines;
 }
@@ -246,6 +256,7 @@ export function renderMarkdownReport(result: RunResult): string {
     const referenceExample = pickExample(
       result.items,
       result.referenceVariantId,
+      result.epochs,
       "best",
     );
     if (referenceExample) {
@@ -259,8 +270,18 @@ export function renderMarkdownReport(result: RunResult): string {
     for (const comparison of result.comparisons) {
       lines.push(`### \`${comparison.variantId}\``, "");
 
-      const best = pickExample(result.items, comparison.variantId, "best");
-      const worst = pickExample(result.items, comparison.variantId, "worst");
+      const best = pickExample(
+        result.items,
+        comparison.variantId,
+        result.epochs,
+        "best",
+      );
+      const worst = pickExample(
+        result.items,
+        comparison.variantId,
+        result.epochs,
+        "worst",
+      );
 
       if (!best && !worst) {
         lines.push(

@@ -84,6 +84,7 @@ interface DialogTurn {
 interface RunItem {
   fixtureId: string;
   variantId: string;
+  epoch: number;
   score: number;
   expertScore: number;
   absError: number;
@@ -172,11 +173,15 @@ function recommendation(comparison: VariantComparison): string {
 function pickExample(
   items: RunItem[],
   variantId: string,
+  epoch: number,
   order: "best" | "worst",
 ): RunItem | undefined {
   const candidates = items.filter(
     (item) =>
-      item.variantId === variantId && item.turns && item.turns.length > 0,
+      item.variantId === variantId &&
+      item.epoch === epoch &&
+      item.turns &&
+      item.turns.length > 0,
   );
   if (candidates.length === 0) return undefined;
   return [...candidates].sort((a, b) =>
@@ -574,6 +579,7 @@ export function AdminBenchmarkReports({ runs }: { runs: BenchmarkRun[] }) {
               const referenceExample = pickExample(
                 items,
                 result.referenceVariantId,
+                result.epochs,
                 "best",
               );
               return (
@@ -591,14 +597,26 @@ export function AdminBenchmarkReports({ runs }: { runs: BenchmarkRun[] }) {
                     const best = pickExample(
                       items,
                       comparison.variantId,
+                      result.epochs,
                       "best",
                     );
                     const worst = pickExample(
                       items,
                       comparison.variantId,
+                      result.epochs,
                       "worst",
                     );
-                    if (!best && !worst) return null;
+                    if (!best && !worst) {
+                      return (
+                        <p
+                          key={comparison.variantId}
+                          className="text-sm text-muted-foreground"
+                        >
+                          Транскрипт для варианта{" "}
+                          <code>{comparison.variantId}</code> не сохранён.
+                        </p>
+                      );
+                    }
                     return (
                       <div key={comparison.variantId}>
                         <h4 className="mb-3 font-medium">

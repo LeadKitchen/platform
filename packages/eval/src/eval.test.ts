@@ -126,6 +126,48 @@ describe("runEvaluation", () => {
     expect(report).toContain("не доказано");
   });
 
+  test("the report uses transcript examples only from the final epoch", async () => {
+    const result = await runEvaluation({
+      variantIds: ["baseline", "rag"],
+      provider: createSimulatedProvider(),
+      fixtures: FIXTURES.slice(0, 3),
+      epochs: 2,
+    });
+
+    for (const item of result.items) {
+      item.summary = `summary-epoch-${item.epoch}`;
+    }
+
+    const report = renderMarkdownReport(result);
+
+    expect(report).toContain("summary\\-epoch\\-2");
+    expect(report).not.toContain("summary\\-epoch\\-1");
+  });
+
+  test("multiline Markdown in transcript text cannot change report structure", async () => {
+    const result = await runEvaluation({
+      variantIds: ["baseline", "rag"],
+      provider: createSimulatedProvider(),
+      fixtures: FIXTURES.slice(0, 3),
+    });
+    const itemsWithTranscripts = result.items.filter(
+      (item) => item.turns && item.turns.length > 0,
+    );
+
+    for (const item of itemsWithTranscripts) {
+      item.summary = "Первая строка\r\n## Ложный раздел\n- **важно**";
+      item.turns = [{ role: "manager", text: "Вопрос\r\n> чужая цитата" }];
+    }
+
+    const report = renderMarkdownReport(result);
+
+    expect(report).toContain(
+      "**Вывод модели:** Первая строка \\#\\# Ложный раздел \\- \\*\\*важно\\*\\*",
+    );
+    expect(report).toContain("Вопрос \\> чужая цитата");
+    expect(report).not.toMatch(/^## Ложный раздел$/m);
+  });
+
   test("repeated runs expose the model's own variance", async () => {
     const result = await runEvaluation({
       variantIds: ["baseline"],
