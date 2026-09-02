@@ -185,6 +185,25 @@ export async function loadEngine(db: Database): Promise<Engine> {
   return createEngine({ provider: provider(), catalog, variants });
 }
 
+/**
+ * Re-check that a resolved variant is still active right before the write
+ * that assigns it to a new session, closing the window between reading the
+ * admin's default variant and inserting the row during which it could have
+ * been disabled. Falls back to the engine's built-in default if it was.
+ */
+export async function resolveLiveVariantId(
+  tx: Database,
+  variantId: string,
+  fallbackVariantId: string,
+): Promise<string> {
+  const [row] = await tx
+    .select({ isActive: GameVariant.isActive })
+    .from(GameVariant)
+    .where(eq(GameVariant.id, variantId))
+    .limit(1);
+  return row?.isActive === false ? fallbackVariantId : variantId;
+}
+
 export interface DialogRecord {
   id: string;
   sessionId: string;

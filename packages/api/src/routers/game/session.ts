@@ -13,7 +13,7 @@ import { z } from "zod";
 import { requireOwnedSession } from "../../game/access";
 import { getMemberOrgId } from "../../game/organizations";
 import { getActiveScorecardSnapshot } from "../../game/scorecards";
-import { loadEngine } from "../../game/service";
+import { loadEngine, resolveLiveVariantId } from "../../game/service";
 import { loadGameSettings } from "../../game/settings";
 import { protectedProcedure } from "../../orpc";
 
@@ -91,12 +91,17 @@ export const create = protectedProcedure
     engine.pipeline(variantId);
 
     return context.db.transaction(async (tx) => {
+      const liveVariantId = await resolveLiveVariantId(
+        tx,
+        variantId,
+        engine.defaultVariantId,
+      );
       const [session] = await tx
         .insert(GameSession)
         .values({
           title: input.title,
           round,
-          variantId,
+          variantId: liveVariantId,
           createdBy: context.session.user.id,
           orgId,
           trainingAssignmentId: assignment?.id,

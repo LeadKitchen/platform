@@ -17,7 +17,7 @@ import {
   roleplayScenarioFromSnapshot,
 } from "../../game/roleplay";
 import { getActiveScorecardSnapshot } from "../../game/scorecards";
-import { loadEngine } from "../../game/service";
+import { loadEngine, resolveLiveVariantId } from "../../game/service";
 import { loadGameSettings } from "../../game/settings";
 import { protectedProcedure } from "../../orpc";
 
@@ -87,12 +87,17 @@ export const startStep = protectedProcedure
     engine.pipeline(variantId);
 
     return context.db.transaction(async (tx) => {
+      const liveVariantId = await resolveLiveVariantId(
+        tx,
+        variantId,
+        engine.defaultVariantId,
+      );
       const [session] = await tx
         .insert(GameSession)
         .values({
           title: `${assignment.pathSnapshot.name} · ${scenario.title}`,
           round: 2,
-          variantId,
+          variantId: liveVariantId,
           createdBy: context.session.user.id,
           orgId: assignment.orgId,
           coachingPathAssignmentId: assignment.id,

@@ -389,6 +389,7 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
               </p>
             </div>
           </div>
+          <Badge variant="outline">ИИ: {props.variantName}</Badge>
           <Badge variant="outline">
             <IconActivity />
             {speech.error

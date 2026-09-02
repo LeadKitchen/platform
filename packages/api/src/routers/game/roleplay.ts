@@ -23,7 +23,11 @@ import {
   snapshotRoleplayScenario,
 } from "../../game/roleplay";
 import { getActiveScorecardSnapshot } from "../../game/scorecards";
-import { loadCatalog, loadEngine } from "../../game/service";
+import {
+  loadCatalog,
+  loadEngine,
+  resolveLiveVariantId,
+} from "../../game/service";
 import { loadGameSettings } from "../../game/settings";
 import { protectedProcedure } from "../../orpc";
 
@@ -239,12 +243,17 @@ export const start = protectedProcedure
     engine.pipeline(variantId);
 
     return context.db.transaction(async (tx) => {
+      const liveVariantId = await resolveLiveVariantId(
+        tx,
+        variantId,
+        engine.defaultVariantId,
+      );
       const [session] = await tx
         .insert(GameSession)
         .values({
           title: scenario.title,
           round: 2,
-          variantId,
+          variantId: liveVariantId,
           createdBy: context.session.user.id,
           orgId,
           roleplayScenarioId: scenario.id,
