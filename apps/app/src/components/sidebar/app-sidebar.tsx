@@ -21,6 +21,7 @@ import {
   IconChartBar,
   IconChefHat,
   IconClipboardList,
+  IconCode,
   IconDatabase,
   IconFileSearch,
   IconGavel,
@@ -53,11 +54,12 @@ import {
 const data = {
   navMain: [
     {
-      group: "Практика",
+      group: "Игра",
       title: "Деловая игра",
       url: "/game",
       icon: IconListDetails,
-      isActive: true,
+      adminOnly: false,
+      facilitatorOnly: false,
       items: [
         {
           title: "Главная игры",
@@ -75,17 +77,28 @@ const data = {
           url: "/game/coaching-paths",
           icon: IconRoute,
         },
-        {
-          title: "Рубрики оценки",
-          url: "/game/scorecards",
-          icon: IconTargetArrow,
-        },
         { title: "Раунд 1 · Теория", url: "/game/round-1", icon: IconSchool },
+      ],
+    },
+    {
+      group: "Команда",
+      title: "Управление командой",
+      url: "/group",
+      icon: IconUsersGroup,
+      adminOnly: false,
+      facilitatorOnly: true,
+      items: [
         { title: "Моя группа", url: "/group", icon: IconUsersGroup },
+        { title: "Участники", url: "/group/members", icon: IconUsers },
         {
           title: "Настроить команды",
           url: "/group/configure",
           icon: IconAdjustments,
+        },
+        {
+          title: "Рубрики оценки",
+          url: "/game/scorecards",
+          icon: IconTargetArrow,
         },
       ],
     },
@@ -94,6 +107,8 @@ const data = {
       title: "Технологии ИИ",
       url: "/docs/ai",
       icon: IconBrain,
+      adminOnly: true,
+      facilitatorOnly: false,
       items: [
         {
           title: "Обзор",
@@ -131,10 +146,12 @@ const data = {
       ],
     },
     {
-      group: "Управление",
-      title: "Администрирование",
+      group: "Игровой процесс",
+      title: "Игровой процесс (админ)",
       url: "/admin/game/overview",
-      icon: IconShieldLock,
+      icon: IconChartBar,
+      adminOnly: true,
+      facilitatorOnly: false,
       items: [
         {
           title: "Обзор",
@@ -152,19 +169,54 @@ const data = {
           icon: IconMessages,
         },
         {
+          title: "Задания",
+          url: "/admin/game/tasks",
+          icon: IconAdjustments,
+        },
+        {
+          title: "Настройки игры",
+          url: "/admin/game/settings",
+          icon: IconSettings,
+        },
+      ],
+    },
+    {
+      group: "Люди и организации",
+      title: "Люди и организации",
+      url: "/admin/game/employees",
+      icon: IconUsers,
+      adminOnly: true,
+      facilitatorOnly: false,
+      items: [
+        {
           title: "Сотрудники",
           url: "/admin/game/employees",
           icon: IconUsers,
         },
         {
+          title: "Организации",
+          url: "/admin/game/organizations",
+          icon: IconBuildingStore,
+        },
+        {
+          title: "Пользователи",
+          url: "/admin/game/users",
+          icon: IconUsers,
+        },
+      ],
+    },
+    {
+      group: "ИИ и качество",
+      title: "ИИ и качество (админ)",
+      url: "/admin/game/characters",
+      icon: IconSparkles,
+      adminOnly: true,
+      facilitatorOnly: false,
+      items: [
+        {
           title: "Лаборатория персонажей",
           url: "/admin/game/characters",
           icon: IconSparkles,
-        },
-        {
-          title: "Задания",
-          url: "/admin/game/tasks",
-          icon: IconAdjustments,
         },
         {
           title: "Варианты ИИ",
@@ -186,28 +238,15 @@ const data = {
           url: "/admin/game/comparisons",
           icon: IconGitCompare,
         },
-        {
-          title: "Организации",
-          url: "/admin/game/organizations",
-          icon: IconBuildingStore,
-        },
-        {
-          title: "Пользователи",
-          url: "/admin/game/users",
-          icon: IconUsers,
-        },
-        {
-          title: "Настройки игры",
-          url: "/admin/game/settings",
-          icon: IconSettings,
-        },
       ],
     },
     {
-      group: "Справка",
-      title: "Документация",
+      group: "О продукте",
+      title: "Документация: о продукте",
       url: "/admin/docs",
       icon: IconBook2,
+      adminOnly: true,
+      facilitatorOnly: false,
       items: [
         {
           title: "Обзор",
@@ -226,6 +265,21 @@ const data = {
           icon: IconClipboardList,
         },
         {
+          title: "Роли и доступы",
+          url: "/admin/docs/roles-access",
+          icon: IconUsers,
+        },
+      ],
+    },
+    {
+      group: "Для администраторов",
+      title: "Документация: для администраторов",
+      url: "/admin/docs/admin-panel",
+      icon: IconShieldLock,
+      adminOnly: true,
+      facilitatorOnly: false,
+      items: [
+        {
           title: "Админ-панель",
           url: "/admin/docs/admin-panel",
           icon: IconShieldLock,
@@ -236,24 +290,34 @@ const data = {
           icon: IconWand,
         },
         {
-          title: "Роли и доступы",
-          url: "/admin/docs/roles-access",
-          icon: IconUsers,
+          title: "Настройки",
+          url: "/admin/docs/settings-integrations",
+          icon: IconSettings,
         },
+      ],
+    },
+    {
+      group: "Технические детали",
+      title: "Документация: технические детали",
+      url: "/admin/docs/ai-quality",
+      icon: IconCode,
+      adminOnly: true,
+      facilitatorOnly: false,
+      items: [
         {
           title: "ИИ и качество",
           url: "/admin/docs/ai-quality",
           icon: IconBrain,
         },
         {
+          title: "Промпты LLM",
+          url: "/admin/docs/llm-prompts",
+          icon: IconCode,
+        },
+        {
           title: "Отчёты и тесты",
           url: "/admin/docs/reports-benchmarks",
           icon: IconReportAnalytics,
-        },
-        {
-          title: "Настройки",
-          url: "/admin/docs/settings-integrations",
-          icon: IconSettings,
         },
       ],
     },
@@ -277,27 +341,11 @@ export function AppSidebar({
   activeWorkspace?: Workspace;
   workspaces: Workspace[];
 }) {
-  const navMain = data.navMain
-    .filter(
-      (item) =>
-        isAdmin ||
-        (item.url !== "/admin/game/overview" &&
-          item.url !== "/admin/docs" &&
-          item.url !== "/docs/ai"),
-    )
-    .map((item) =>
-      item.url === "/game" && !isFacilitator
-        ? {
-            ...item,
-            items: item.items.filter(
-              (sub) =>
-                sub.url !== "/group" &&
-                sub.url !== "/group/configure" &&
-                sub.url !== "/game/scorecards",
-            ),
-          }
-        : item,
-    );
+  const navMain = data.navMain.filter(
+    (section) =>
+      (!section.adminOnly || isAdmin) &&
+      (!section.facilitatorOnly || isFacilitator),
+  );
 
   return (
     <Sidebar collapsible="icon" {...props}>

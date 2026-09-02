@@ -81,6 +81,28 @@ export function AdminDocsDetail({ section }: AdminDocsDetailProps) {
                   ))}
                 </ul>
               )}
+              {block.prompts && (
+                <div className="flex flex-col gap-4">
+                  {block.prompts.map((prompt) => (
+                    <div
+                      key={prompt.title}
+                      className="overflow-hidden rounded-lg border"
+                    >
+                      <div className="bg-muted/50 flex flex-col gap-1 border-b px-4 py-3">
+                        <p className="text-sm font-medium">{prompt.title}</p>
+                        {prompt.description && (
+                          <p className="text-muted-foreground text-xs leading-relaxed">
+                            {prompt.description}
+                          </p>
+                        )}
+                      </div>
+                      <pre className="overflow-x-auto px-4 py-3 font-mono text-xs leading-relaxed whitespace-pre-wrap">
+                        {prompt.text}
+                      </pre>
+                    </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         ))}

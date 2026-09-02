@@ -19,6 +19,7 @@ import {
   IconArrowUp,
   IconDownload,
   IconSettings,
+  IconUsers,
 } from "@tabler/icons-react";
 import { redirect } from "next/navigation";
 import { AssignPracticeButton } from "~/components/group/assign-practice-button";
@@ -110,6 +111,10 @@ export default async function GroupPage() {
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
+            <Button variant="outline" render={<a href="/group/members" />}>
+              <IconUsers data-icon="inline-start" />
+              Участники
+            </Button>
             <Button variant="outline" render={<a href="/group/configure" />}>
               <IconSettings data-icon="inline-start" />
               Настроить

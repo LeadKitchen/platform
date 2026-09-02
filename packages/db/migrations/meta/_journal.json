@@ -162,6 +162,13 @@
       "when": 1788040000000,
       "tag": "0022_add_employee_gender",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1788289340877,
+      "tag": "0023_add_user_notification_preferences",
+      "breakpoints": true
     }
   ]
 }
