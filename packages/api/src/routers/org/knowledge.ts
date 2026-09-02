@@ -11,7 +11,7 @@ import {
   ne,
   sql,
 } from "@acme/db";
-import { ingestKnowledgeDocumentWorkflow } from "@acme/jobs";
+import { ingestKnowledgeDocumentTask } from "@acme/jobs";
 import {
   createPresignedUrl,
   deleteObjectFromS3,
@@ -57,6 +57,26 @@ async function assertOwnedDocument(
     throw new ORPCError("NOT_FOUND", { message: "Документ не найден" });
   }
   return row;
+}
+
+async function markDocumentEnqueueFailed(
+  context: Parameters<typeof assertOwnedDocument>[0],
+  documentId: string,
+  version: number,
+) {
+  await context
+    .update(GameKnowledgeDocument)
+    .set({
+      status: "failed",
+      statusMessage: "Не удалось запустить обработку документа",
+    })
+    .where(
+      and(
+        eq(GameKnowledgeDocument.id, documentId),
+        eq(GameKnowledgeDocument.version, version),
+        eq(GameKnowledgeDocument.status, "processing"),
+      ),
+    );
 }
 
 export const list = protectedProcedure.handler(async ({ context }) => {
@@ -160,10 +180,19 @@ export const confirmUpload = protectedProcedure
     });
     if (!document) throw new Error("Не удалось создать документ");
 
-    await ingestKnowledgeDocumentWorkflow.runNoWait({
-      documentId: document.id,
-      version: document.version,
-    });
+    try {
+      await ingestKnowledgeDocumentTask.trigger({
+        documentId: document.id,
+        version: document.version,
+      });
+    } catch (error) {
+      await markDocumentEnqueueFailed(
+        context.db,
+        document.id,
+        document.version,
+      );
+      throw error;
+    }
 
     return document;
   });
@@ -202,10 +231,19 @@ export const retry = protectedProcedure
         message: "Статус документа уже изменился",
       });
     }
-    await ingestKnowledgeDocumentWorkflow.runNoWait({
-      documentId: input.id,
-      version: updatedDocument.version,
-    });
+    try {
+      await ingestKnowledgeDocumentTask.trigger({
+        documentId: input.id,
+        version: updatedDocument.version,
+      });
+    } catch (error) {
+      await markDocumentEnqueueFailed(
+        context.db,
+        input.id,
+        updatedDocument.version,
+      );
+      throw error;
+    }
     return { id: input.id };
   });
 
