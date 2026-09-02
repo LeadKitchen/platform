@@ -5,6 +5,15 @@ function percent(value: number): string {
   return `${Math.round(value * 100)}%`;
 }
 
+/** Footnote marker to append to a metric's label in the significance table. */
+const METRIC_FOOTNOTES: Record<string, string> = {
+  scoreMae: "[^mae]",
+  criteriaF1: "[^f1]",
+  personaAdherence: "[^role]",
+  personaDriftRate: "[^drift]",
+  costUsd: "[^cost]",
+};
+
 function signed(value: number, digits = 2): string {
   return `${value >= 0 ? "+" : ""}${value.toFixed(digits)}`;
 }
@@ -55,7 +64,7 @@ export function renderMarkdownReport(result: RunResult): string {
     lines.push(
       `> ⚠️ Экспертными метками подписано ${result.expertLabelledFixtures} из ${result.fixtures} сценариев,`,
       `> остальные ${provisional + result.aiAssistedFixtures} — предварительные${aiNote}.`,
-      "> Колонка «MAE к эксперту» показывает расхождение с временной калибровкой,",
+      "> Колонка «MAE[^mae] к эксперту» показывает расхождение с временной калибровкой,",
       "> а не с методологом: она годится, чтобы ловить регрессии, и не годится как",
       "> основание внедрять подход.",
       "",
@@ -132,19 +141,20 @@ export function renderMarkdownReport(result: RunResult): string {
 
   lines.push("## Значимость против контрольного варианта", "");
   lines.push(
-    "Парный бутстрап по сценариям, 95% доверительный интервал.",
-    "Положительная Δ — вариант лучше контрольного. Вывод «лучше» только если интервал не пересекает ноль.",
+    "Парный бутстрап[^ci] по сценариям, 95% доверительный интервал.",
+    "Положительная Δ[^delta] — вариант лучше контрольного. Вывод «лучше» только если интервал не пересекает ноль.",
     "",
   );
 
   for (const comparison of result.comparisons) {
     lines.push(`### \`${comparison.variantId}\``, "");
-    lines.push("| Метрика | Δ | 95% ДИ | p | Вывод |");
+    lines.push("| Метрика | Δ[^delta] | 95% ДИ[^ci] | p[^pvalue] | Вывод |");
     lines.push("| --- | ---: | :---: | ---: | --- |");
     for (const metric of comparison.metrics) {
       const digits = metric.metric === "costUsd" ? 4 : 2;
+      const label = metric.label + (METRIC_FOOTNOTES[metric.metric] ?? "");
       lines.push(
-        `| ${metric.label} | ${signed(metric.delta, digits)} | [${metric.ciLow.toFixed(digits)}; ${metric.ciHigh.toFixed(digits)}] | ${metric.pValue.toFixed(3)} | ${verdict(metric)} |`,
+        `| ${label} | ${signed(metric.delta, digits)} | [${metric.ciLow.toFixed(digits)}; ${metric.ciHigh.toFixed(digits)}] | ${metric.pValue.toFixed(3)} | ${verdict(metric)} |`,
       );
     }
     lines.push("");
@@ -162,14 +172,14 @@ export function renderMarkdownReport(result: RunResult): string {
     lines.push(
       wins.length === 0
         ? `**Ни один вариант не показал доказанного улучшения точности оценки против \`${result.referenceVariantId}\`.**`
-        : `**Доказанное улучшение MAE:** ${wins.map((item) => `\`${item.variantId}\``).join(", ")}.`,
+        : `**Доказанное улучшение MAE[^mae]:** ${wins.map((item) => `\`${item.variantId}\``).join(", ")}.`,
       "",
     );
   }
 
   lines.push("## Сырые показатели", "");
   lines.push(
-    "| Вариант | MAE | σ внутри сценария | κ по стилю | F1 критериев | Роль | Дрейф | Молчание | Задержка | $/диалог |",
+    "| Вариант | MAE[^mae] | σ внутри сценария[^sigma] | κ по стилю[^kappa] | F1 критериев[^f1] | Роль[^role] | Дрейф[^drift] | Молчание[^silence] | Задержка[^latency] | $/диалог[^cost] |",
   );
   lines.push(
     "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
@@ -203,7 +213,7 @@ export function renderMarkdownReport(result: RunResult): string {
   );
   if (reference) {
     lines.push(
-      `Согласие со стилем эксперта у контрольного варианта: κ = ${reference.styleKappa.toFixed(2)} (${kappaLabel(reference.styleKappa)}).`,
+      `Согласие со стилем эксперта у контрольного варианта: κ[^kappa] = ${reference.styleKappa.toFixed(2)} (${kappaLabel(reference.styleKappa)}).`,
       "",
     );
   }
@@ -217,7 +227,7 @@ export function renderMarkdownReport(result: RunResult): string {
   }
 
   if (result.epochs > 1) {
-    lines.push("## Кривая обучения (MAE по эпохам)", "");
+    lines.push("## Кривая обучения (MAE[^mae] по эпохам)", "");
     lines.push(
       `| Вариант | ${result.epochSummaries.map((epoch) => `эпоха ${epoch.epoch}`).join(" | ")} |`,
     );
@@ -335,5 +345,33 @@ export function renderMarkdownReport(result: RunResult): string {
     lines.push("");
   }
 
+  lines.push(...glossaryFootnotes());
+
   return lines.join("\n");
+}
+
+/**
+ * Definitions for every abbreviation/term used above, as GitHub-flavored
+ * markdown footnotes (`[^id]`). Referenced inline instead of explained where
+ * they first appear, so the tables stay scannable for a reader who already
+ * knows the vocabulary while a first-time reader can still look it up.
+ */
+function glossaryFootnotes(): string[] {
+  return [
+    "## Термины",
+    "",
+    "[^mae]: **MAE** (Mean Absolute Error, средняя абсолютная ошибка) — среднее из модулей расхождений между автоматической оценкой диалога и оценкой эксперта, по шкале 0–100 баллов. 0 — автоматическая оценка ни разу не разошлась с экспертной; чем выше значение, тем сильнее расхождение. Ниже — лучше.",
+    "[^sigma]: σ (сигма) — стандартное отклонение автоматической оценки при нескольких повторных прогонах одного и того же сценария. Показывает разброс модели от прогона к прогону, а не различие между сценариями.",
+    "[^kappa]: κ (каппа Коэна) — согласие автоматической оценки стиля с экспертной за вычетом согласия, которое дало бы случайное угадывание. В отличие от простой точности не завышается на перекошенном распределении меток. Шкала от −1 до 1; 0 — не лучше случайного.",
+    "[^f1]: F1 — гармоническое среднее точности (precision) и полноты (recall) при сравнении набора критериев, распознанных моделью, с набором, ожидаемым по методике.",
+    "[^role]: «Роль» (удержание роли) — доля диалогов, где персонаж ни разу не выдал запрещённую методическую лексику (не «спалил», что он — модель, а не сотрудник).",
+    "[^drift]: «Дрейф» (дрейф персоны) — доля диалогов, где ответы персонажа сползают в ассистентский регистр, как правило во второй половине диалога.",
+    "[^silence]: «Молчание» — доля диалогов, где персонаж корректно не отвечал, пока к нему не обратились явно.",
+    "[^latency]: «Задержка» — среднее время ответа модели на одну реплику, в миллисекундах.",
+    "[^cost]: «$/диалог» — средняя стоимость одного диалога в долларах США по тарифам, зашитым в `packages/ai/src/provider/pricing.ts`.",
+    "[^delta]: Δ (дельта) — разница метрики между вариантом и контрольным вариантом, усреднённая по сценариям попарно (для каждого сценария отдельно, а не по общим средним). Положительное значение — вариант лучше контрольного.",
+    "[^ci]: 95% ДИ — доверительный интервал разницы, посчитанный процентильным бутстрапом (10 000 ресэмплов пар «сценарий → разница»). Если интервал не пересекает ноль, разница считается статистически значимой.",
+    "[^pvalue]: p (p-значение) — вероятность получить не менее выраженную разницу случайно, по двустороннему парному перестановочному тесту (смена знака разности по каждому сценарию). Чем меньше p, тем менее правдоподобно, что наблюдаемая разница — шум.",
+    "",
+  ];
 }
