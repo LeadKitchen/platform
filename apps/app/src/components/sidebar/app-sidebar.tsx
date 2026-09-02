@@ -228,6 +228,16 @@ const data = {
           url: "/admin/game/benchmarks",
           icon: IconReportAnalytics,
         },
+      ],
+    },
+    {
+      group: "Ревью старого проекта",
+      title: "Ревью старого проекта",
+      url: "/admin/game/reviews",
+      icon: IconFileSearch,
+      adminOnly: true,
+      facilitatorOnly: false,
+      items: [
         {
           title: "Ревью старого проекта",
           url: "/admin/game/reviews",
