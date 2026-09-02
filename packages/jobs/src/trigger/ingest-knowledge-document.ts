@@ -12,11 +12,10 @@ import {
 } from "@acme/db";
 import { db } from "@acme/db/client";
 import { downloadBufferFromS3 } from "@acme/storage";
+import { schemaTask, task } from "@trigger.dev/sdk";
 import mammoth from "mammoth";
 import { extractText } from "unpdf";
 import { z } from "zod";
-
-import { hatchet } from "../client";
 
 export interface IngestKnowledgeDocumentInput {
   documentId: string;
@@ -27,6 +26,12 @@ const ingestKnowledgeDocumentInputSchema = z.object({
   documentId: z.uuid(),
   version: z.number().int().positive(),
 });
+
+interface KnowledgeChunk {
+  index: number;
+  text: string;
+  audience: GameKnowledgeAudience;
+}
 
 /**
  * Turns an admin-uploaded file into searchable, org-scoped knowledge chunks
@@ -39,18 +44,16 @@ const ingestKnowledgeDocumentInputSchema = z.object({
  * so a bad guess here costs a review click, not a leak into the role-play
  * prompt (see `packages/ai/src/knowledge/audience-classifier.ts`).
  *
- * @see https://docs.hatchet.run/home/dag
+ * Each step below runs as its own task (with its own retries/timeout) and
+ * is chained with `triggerAndWait`, mirroring the previous DAG.
+ *
+ * @see https://trigger.dev/docs/triggering
  */
-export const ingestKnowledgeDocumentWorkflow = hatchet.workflow({
-  name: "ingest-knowledge-document",
-});
-
-const extractContent = ingestKnowledgeDocumentWorkflow.task({
-  name: "extract-content",
-  retries: 3,
-  executionTimeout: "2m",
-  fn: async (rawInput) => {
-    const input = ingestKnowledgeDocumentInputSchema.parse(rawInput);
+const extractContentTask = task({
+  id: "ingest-extract-content",
+  retry: { maxAttempts: 3 },
+  maxDuration: 120,
+  run: async (input: IngestKnowledgeDocumentInput) => {
     const [document] = await db
       .select()
       .from(GameKnowledgeDocument)
@@ -93,14 +96,15 @@ const extractContent = ingestKnowledgeDocumentWorkflow.task({
   },
 });
 
-const chunkAndClassify = ingestKnowledgeDocumentWorkflow.task({
-  name: "chunk-and-classify",
-  parents: [extractContent],
-  retries: 3,
-  executionTimeout: "3m",
-  fn: async (_rawInput, ctx) => {
-    const { text, defaultAudience } = await ctx.parentOutput(extractContent);
-    const chunks = chunkText(text);
+const chunkAndClassifyTask = task({
+  id: "ingest-chunk-and-classify",
+  retry: { maxAttempts: 3 },
+  maxDuration: 180,
+  run: async (input: {
+    text: string;
+    defaultAudience: GameKnowledgeAudience;
+  }) => {
+    const chunks = chunkText(input.text);
 
     let suggestions: Map<number, GameKnowledgeAudience>;
     try {
@@ -115,35 +119,36 @@ const chunkAndClassify = ingestKnowledgeDocumentWorkflow.task({
       suggestions = new Map();
     }
 
-    return {
-      chunks: chunks.map((item) => ({
-        index: item.index,
-        text: item.text,
-        audience: suggestions.get(item.index) ?? defaultAudience,
-      })),
-    };
+    const chunkList: KnowledgeChunk[] = chunks.map((item) => ({
+      index: item.index,
+      text: item.text,
+      audience: suggestions.get(item.index) ?? input.defaultAudience,
+    }));
+
+    return { chunks: chunkList };
   },
 });
 
-ingestKnowledgeDocumentWorkflow.task({
-  name: "embed-and-persist",
-  parents: [extractContent, chunkAndClassify],
-  retries: 3,
-  executionTimeout: "3m",
-  fn: async (rawInput, ctx) => {
-    const input = ingestKnowledgeDocumentInputSchema.parse(rawInput);
-    const { orgId, expectedVersion } = await ctx.parentOutput(extractContent);
-    const { chunks } = await ctx.parentOutput(chunkAndClassify);
-
-    if (input.version !== expectedVersion) {
+const embedAndPersistTask = task({
+  id: "ingest-embed-and-persist",
+  retry: { maxAttempts: 3 },
+  maxDuration: 180,
+  run: async (input: {
+    documentId: string;
+    version: number;
+    orgId: string;
+    expectedVersion: number;
+    chunks: KnowledgeChunk[];
+  }) => {
+    if (input.version !== input.expectedVersion) {
       throw new Error("Knowledge document version changed during ingestion");
     }
 
     const embeddingProvider = createEmbeddingProvider();
     const vectors = await embeddingProvider.embed(
-      chunks.map((chunk) => chunk.text),
+      input.chunks.map((chunk) => chunk.text),
     );
-    if (vectors.length !== chunks.length) {
+    if (vectors.length !== input.chunks.length) {
       throw new Error("Embedding provider returned an unexpected vector count");
     }
 
@@ -154,7 +159,7 @@ ingestKnowledgeDocumentWorkflow.task({
         .where(
           and(
             eq(GameKnowledgeDocument.id, input.documentId),
-            eq(GameKnowledgeDocument.version, expectedVersion),
+            eq(GameKnowledgeDocument.version, input.expectedVersion),
             eq(GameKnowledgeDocument.status, "processing"),
           ),
         )
@@ -166,15 +171,15 @@ ingestKnowledgeDocumentWorkflow.task({
         .where(
           and(
             eq(GameKnowledgeChunk.documentId, input.documentId),
-            eq(GameKnowledgeChunk.orgId, orgId),
+            eq(GameKnowledgeChunk.orgId, input.orgId),
           ),
         );
 
-      if (chunks.length > 0) {
+      if (input.chunks.length > 0) {
         await tx.insert(GameKnowledgeChunk).values(
-          chunks.map((chunk, position) => ({
+          input.chunks.map((chunk, position) => ({
             documentId: input.documentId,
-            orgId,
+            orgId: input.orgId,
             chunkIndex: chunk.index,
             text: chunk.text,
             audience: chunk.audience,
@@ -186,30 +191,62 @@ ingestKnowledgeDocumentWorkflow.task({
       return true;
     });
 
-    return { chunkCount: persisted ? chunks.length : 0, stale: !persisted };
+    return {
+      chunkCount: persisted ? input.chunks.length : 0,
+      stale: !persisted,
+    };
   },
 });
 
-// Runs only if a task above exhausted its retries — without this, a bad
+// Runs only once the pipeline exhausts its retries — without this, a bad
 // upload (corrupt PDF, empty file, embedding-endpoint outage) leaves the
 // document stuck in `processing` forever with no admin-visible reason.
-ingestKnowledgeDocumentWorkflow.onFailure({
-  name: "mark-failed",
-  executionTimeout: "30s",
-  fn: async (rawInput, ctx) => {
-    const input = ingestKnowledgeDocumentInputSchema.parse(rawInput);
-    const errors = Object.values(ctx.errors());
-    const message = errors.join("; ") || "Ошибка обработки документа";
-    await db
-      .update(GameKnowledgeDocument)
-      .set({ status: "failed", statusMessage: message.slice(0, 2000) })
-      .where(
-        and(
-          eq(GameKnowledgeDocument.id, input.documentId),
-          eq(GameKnowledgeDocument.version, input.version),
-          eq(GameKnowledgeDocument.status, "processing"),
-        ),
-      );
-    return { handled: true };
+async function markDocumentFailed(
+  input: IngestKnowledgeDocumentInput,
+  error: unknown,
+) {
+  const message =
+    error instanceof Error ? error.message : "Ошибка обработки документа";
+  await db
+    .update(GameKnowledgeDocument)
+    .set({ status: "failed", statusMessage: message.slice(0, 2000) })
+    .where(
+      and(
+        eq(GameKnowledgeDocument.id, input.documentId),
+        eq(GameKnowledgeDocument.version, input.version),
+        eq(GameKnowledgeDocument.status, "processing"),
+      ),
+    );
+}
+
+export const ingestKnowledgeDocumentTask = schemaTask({
+  id: "ingest-knowledge-document",
+  schema: ingestKnowledgeDocumentInputSchema,
+  // Sub-tasks already retry their own step; retrying the orchestration
+  // itself would just repeat whichever step already exhausted its retries.
+  retry: { maxAttempts: 1 },
+  maxDuration: 600,
+  onFailure: async ({ payload, error }) => {
+    await markDocumentFailed(payload, error);
+  },
+  run: async (payload) => {
+    const extracted = await extractContentTask.triggerAndWait(payload).unwrap();
+
+    const classified = await chunkAndClassifyTask
+      .triggerAndWait({
+        text: extracted.text,
+        defaultAudience: extracted.defaultAudience,
+      })
+      .unwrap();
+
+    return embedAndPersistTask
+      .triggerAndWait({
+        documentId: payload.documentId,
+        version: payload.version,
+        orgId: extracted.orgId,
+        expectedVersion: extracted.expectedVersion,
+        chunks: classified.chunks,
+      })
+      .unwrap();
   },
 });

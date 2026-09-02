@@ -1,6 +1,5 @@
-export { hatchet } from "./client";
-export type { HelloWorldInput } from "./workflows/hello-world";
-export { helloWorldTask } from "./workflows/hello-world";
-export type { IngestKnowledgeDocumentInput } from "./workflows/ingest-knowledge-document";
-export { ingestKnowledgeDocumentWorkflow } from "./workflows/ingest-knowledge-document";
-export { scheduledWorkflow } from "./workflows/scheduled";
+export type { HelloWorldInput } from "./trigger/hello-world";
+export { helloWorldTask } from "./trigger/hello-world";
+export type { IngestKnowledgeDocumentInput } from "./trigger/ingest-knowledge-document";
+export { ingestKnowledgeDocumentTask } from "./trigger/ingest-knowledge-document";
+export { scheduledTask } from "./trigger/scheduled";
