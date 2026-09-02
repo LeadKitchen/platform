@@ -12,7 +12,8 @@
   "scripts": {
     "build": "tsc",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "dev": "bun run src/worker.ts",
+    "dev": "trigger dev",
+    "deploy": "trigger deploy",
     "format": "biome format .",
     "lint": "biome lint .",
     "check": "biome check .",
@@ -22,7 +23,7 @@
     "@acme/ai": "workspace:*",
     "@acme/db": "workspace:*",
     "@acme/storage": "workspace:*",
-    "@hatchet-dev/typescript-sdk": "1.29.2",
+    "@trigger.dev/sdk": "4.5.16",
     "mammoth": "^1.12.2",
     "unpdf": "^1.8.1",
     "zod": "4.5.4"
@@ -30,6 +31,7 @@
   "devDependencies": {
     "@acme/tsconfig": "workspace:*",
     "@types/node": "26.4.0",
+    "trigger.dev": "4.5.16",
     "typescript": "7.0.2"
   }
 }

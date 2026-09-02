@@ -11,7 +11,7 @@ import {
   ne,
   sql,
 } from "@acme/db";
-import { ingestKnowledgeDocumentWorkflow } from "@acme/jobs";
+import { ingestKnowledgeDocumentTask } from "@acme/jobs";
 import {
   createPresignedUrl,
   deleteObjectFromS3,
@@ -160,7 +160,7 @@ export const confirmUpload = protectedProcedure
     });
     if (!document) throw new Error("Не удалось создать документ");
 
-    await ingestKnowledgeDocumentWorkflow.runNoWait({
+    await ingestKnowledgeDocumentTask.trigger({
       documentId: document.id,
       version: document.version,
     });
@@ -202,7 +202,7 @@ export const retry = protectedProcedure
         message: "Статус документа уже изменился",
       });
     }
-    await ingestKnowledgeDocumentWorkflow.runNoWait({
+    await ingestKnowledgeDocumentTask.trigger({
       documentId: input.id,
       version: updatedDocument.version,
     });
