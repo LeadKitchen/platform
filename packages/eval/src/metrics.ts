@@ -167,6 +167,15 @@ export interface ItemResult {
    * comparable, so the mix is carried per item rather than assumed uniform.
    */
   models: string[];
+  /**
+   * The actual dialog, kept only for the first repetition of a fixture
+   * (`run === 1`) — repeated runs exist for variance estimates, not to
+   * triple the transcript volume. This is what lets a report show a real
+   * exchange instead of only the aggregate metrics above.
+   */
+  turns?: DialogTurn[];
+  /** The evaluator's own account of what happened in this dialog, in Russian. */
+  summary?: string;
 }
 
 export interface VariantSummary {

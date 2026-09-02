@@ -1,5 +1,9 @@
-import type { MetricComparison, RunResult } from "./runner";
+import { FIXTURES } from "./fixtures";
+import type { ItemResult } from "./metrics";
+import type { MetricComparison, RunResult, VariantComparison } from "./runner";
 import { kappaLabel } from "./statistics";
+
+const FIXTURE_BY_ID = new Map(FIXTURES.map((fixture) => [fixture.id, fixture]));
 
 function percent(value: number): string {
   return `${Math.round(value * 100)}%`;
@@ -29,6 +33,69 @@ function verdict(comparison: MetricComparison): string {
   if (comparison.pairs === 0) return "нет данных";
   if (!comparison.significant) return "не доказано";
   return comparison.delta > 0 ? "**лучше**" : "**хуже**";
+}
+
+/**
+ * One-line recommendation for a variant, driven by the same significance
+ * call as `verdict()` on its primary metric (MAE to the expert) — never a
+ * separate judgment, so the prose can't disagree with the table above it.
+ */
+function recommendation(comparison: VariantComparison): string {
+  const primary = comparison.metrics.find(
+    (metric) => metric.metric === "scoreMae",
+  );
+  if (!primary || primary.pairs === 0) {
+    return "**Рекомендация:** данных недостаточно.";
+  }
+  if (!primary.significant) {
+    return "**Рекомендация:** не доказано — разница в точности статистически не подтверждена, внедрять рано.";
+  }
+  return primary.delta > 0
+    ? "**Рекомендация:** переходить — доказанное улучшение точности против контрольного варианта."
+    : "**Рекомендация:** не переходить — точность значимо хуже контрольного варианта.";
+}
+
+/** Best- or worst-matching dialog for a variant, among items with a saved transcript. */
+function pickExample(
+  items: ItemResult[],
+  variantId: string,
+  epoch: number,
+  order: "best" | "worst",
+): ItemResult | undefined {
+  const candidates = items.filter(
+    (item) =>
+      item.variantId === variantId &&
+      item.epoch === epoch &&
+      item.turns &&
+      item.turns.length > 0,
+  );
+  if (candidates.length === 0) return undefined;
+  return [...candidates].sort((a, b) =>
+    order === "worst" ? b.absError - a.absError : a.absError - b.absError,
+  )[0];
+}
+
+function escapeMarkdownText(text: string): string {
+  return text
+    .replace(/\r\n?|\n/g, " ")
+    .replace(/[\\`*_{}[\]()<>#+\-.!|~>]/g, "\\$&");
+}
+
+function renderExample(item: ItemResult): string[] {
+  const fixture = FIXTURE_BY_ID.get(item.fixtureId);
+  const lines: string[] = [
+    `_${fixture?.description ?? item.fixtureId}_ — автооценка ${item.score}, эксперт ${item.expertScore} (Δ ${item.score - item.expertScore})`,
+    "",
+  ];
+  for (const turn of item.turns ?? []) {
+    const speaker = turn.role === "manager" ? "Менеджер" : "Сотрудник";
+    lines.push(`> **${speaker}:** ${escapeMarkdownText(turn.text)}`);
+  }
+  lines.push("");
+  if (item.summary) {
+    lines.push(`**Вывод модели:** ${escapeMarkdownText(item.summary)}`, "");
+  }
+  return lines;
 }
 
 export function renderMarkdownReport(result: RunResult): string {
@@ -157,7 +224,7 @@ export function renderMarkdownReport(result: RunResult): string {
         `| ${label} | ${signed(metric.delta, digits)} | [${metric.ciLow.toFixed(digits)}; ${metric.ciHigh.toFixed(digits)}] | ${metric.pValue.toFixed(3)} | ${verdict(metric)} |`,
       );
     }
-    lines.push("");
+    lines.push("", recommendation(comparison), "");
   }
 
   if (result.comparisons.length > 0) {
@@ -175,6 +242,62 @@ export function renderMarkdownReport(result: RunResult): string {
         : `**Доказанное улучшение MAE[^mae]:** ${wins.map((item) => `\`${item.variantId}\``).join(", ")}.`,
       "",
     );
+  }
+
+  if (result.comparisons.length > 0) {
+    lines.push("## Живые примеры диалогов", "");
+    lines.push(
+      "Не только цифры: вот как каждый вариант реально отвечал на сценарий —",
+      "по одному удачному и одному проблемному диалогу из первого прогона",
+      "каждого сценария (повторные прогоны не сохраняют транскрипт).",
+      "",
+    );
+
+    const referenceExample = pickExample(
+      result.items,
+      result.referenceVariantId,
+      result.epochs,
+      "best",
+    );
+    if (referenceExample) {
+      lines.push(
+        `### Контрольный вариант: \`${result.referenceVariantId}\``,
+        "",
+        ...renderExample(referenceExample),
+      );
+    }
+
+    for (const comparison of result.comparisons) {
+      lines.push(`### \`${comparison.variantId}\``, "");
+
+      const best = pickExample(
+        result.items,
+        comparison.variantId,
+        result.epochs,
+        "best",
+      );
+      const worst = pickExample(
+        result.items,
+        comparison.variantId,
+        result.epochs,
+        "worst",
+      );
+
+      if (!best && !worst) {
+        lines.push(
+          "_Транскрипт не сохранён (нет диалогов первого прогона)._",
+          "",
+        );
+        continue;
+      }
+
+      if (best) {
+        lines.push("**Удачный пример:**", "", ...renderExample(best));
+      }
+      if (worst && worst.fixtureId !== best?.fixtureId) {
+        lines.push("**Проблемный пример:**", "", ...renderExample(worst));
+      }
+    }
   }
 
   lines.push("## Сырые показатели", "");

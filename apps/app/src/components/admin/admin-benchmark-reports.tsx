@@ -76,6 +76,23 @@ interface RunFailure {
   message: string;
 }
 
+interface DialogTurn {
+  role: "manager" | "employee";
+  text: string;
+}
+
+interface RunItem {
+  fixtureId: string;
+  variantId: string;
+  epoch: number;
+  score: number;
+  expertScore: number;
+  absError: number;
+  /** Present only for the first repetition of a fixture — see `@acme/eval`'s runner. */
+  turns?: DialogTurn[];
+  summary?: string;
+}
+
 interface RunResult {
   startedAt: string;
   finishedAt: string;
@@ -98,6 +115,8 @@ interface RunResult {
   unpricedModels?: string[];
   /** Absent on reports published before this field existed. */
   evaluationStrategyMismatch?: string[];
+  /** Absent on reports published before transcripts were captured. */
+  items?: RunItem[];
 }
 
 export interface BenchmarkRun {
@@ -130,6 +149,82 @@ function verdict(metric: MetricComparison): {
 
 function signed(value: number, digits = 2): string {
   return `${value >= 0 ? "+" : ""}${value.toFixed(digits)}`;
+}
+
+/**
+ * Mirrors `@acme/eval`'s `report.ts` recommendation: driven by the same
+ * significance call as the "Вывод" badge on MAE, so the prose can't disagree
+ * with the table above it.
+ */
+function recommendation(comparison: VariantComparison): string {
+  const primary = comparison.metrics.find(
+    (metric) => metric.metric === "scoreMae",
+  );
+  if (!primary || primary.pairs === 0) return "данных недостаточно.";
+  if (!primary.significant) {
+    return "не доказано — разница в точности статистически не подтверждена, внедрять рано.";
+  }
+  return primary.delta > 0
+    ? "переходить — доказанное улучшение точности против контрольного варианта."
+    : "не переходить — точность значимо хуже контрольного варианта.";
+}
+
+/** Best- or worst-matching dialog for a variant, among items with a saved transcript. */
+function pickExample(
+  items: RunItem[],
+  variantId: string,
+  epoch: number,
+  order: "best" | "worst",
+): RunItem | undefined {
+  const candidates = items.filter(
+    (item) =>
+      item.variantId === variantId &&
+      item.epoch === epoch &&
+      item.turns &&
+      item.turns.length > 0,
+  );
+  if (candidates.length === 0) return undefined;
+  return [...candidates].sort((a, b) =>
+    order === "worst" ? b.absError - a.absError : a.absError - b.absError,
+  )[0];
+}
+
+function DialogTranscript({ item }: { item: RunItem }) {
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
+        <code className="text-muted-foreground text-xs">{item.fixtureId}</code>
+        <span className="tabular-nums text-muted-foreground">
+          автооценка {item.score} · эксперт {item.expertScore} (Δ{" "}
+          {signed(item.score - item.expertScore, 0)})
+        </span>
+      </div>
+      <div className="flex flex-col gap-2">
+        {item.turns?.map((turn, index) => (
+          <div
+            // biome-ignore lint/suspicious/noArrayIndexKey: turns are a static, never-reordered transcript
+            key={index}
+            className={
+              turn.role === "manager"
+                ? "bg-primary/10 ml-auto max-w-[85%] rounded-lg p-3"
+                : "bg-muted mr-auto max-w-[85%] rounded-lg p-3"
+            }
+          >
+            <div className="mb-1 text-muted-foreground text-xs">
+              {turn.role === "manager" ? "Менеджер" : "Сотрудник"}
+            </div>
+            <p className="text-sm whitespace-pre-wrap">{turn.text}</p>
+          </div>
+        ))}
+      </div>
+      {item.summary ? (
+        <p className="text-sm text-muted-foreground">
+          <span className="font-medium text-foreground">Вывод: </span>
+          {item.summary}
+        </p>
+      ) : null}
+    </div>
+  );
 }
 
 /**
@@ -459,8 +554,98 @@ export function AdminBenchmarkReports({ runs }: { runs: BenchmarkRun[] }) {
                     </TableBody>
                   </Table>
                 </div>
+                <p className="mt-2 text-sm">
+                  <span className="font-medium">Рекомендация: </span>
+                  {recommendation(comparison)}
+                </p>
               </div>
             ))}
+          </CardContent>
+        </Card>
+      ) : null}
+
+      {result.items && result.items.length > 0 ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>Живые примеры диалогов</CardTitle>
+            <CardDescription>
+              Не только цифры: как каждый вариант реально отвечал на сценарий —
+              по одному удачному и одному проблемному диалогу.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-8">
+            {(() => {
+              const items = result.items ?? [];
+              const referenceExample = pickExample(
+                items,
+                result.referenceVariantId,
+                result.epochs,
+                "best",
+              );
+              return (
+                <>
+                  {referenceExample ? (
+                    <div>
+                      <h4 className="mb-3 font-medium">
+                        Контрольный вариант:{" "}
+                        <code>{result.referenceVariantId}</code>
+                      </h4>
+                      <DialogTranscript item={referenceExample} />
+                    </div>
+                  ) : null}
+                  {result.comparisons.map((comparison) => {
+                    const best = pickExample(
+                      items,
+                      comparison.variantId,
+                      result.epochs,
+                      "best",
+                    );
+                    const worst = pickExample(
+                      items,
+                      comparison.variantId,
+                      result.epochs,
+                      "worst",
+                    );
+                    if (!best && !worst) {
+                      return (
+                        <p
+                          key={comparison.variantId}
+                          className="text-sm text-muted-foreground"
+                        >
+                          Транскрипт для варианта{" "}
+                          <code>{comparison.variantId}</code> не сохранён.
+                        </p>
+                      );
+                    }
+                    return (
+                      <div key={comparison.variantId}>
+                        <h4 className="mb-3 font-medium">
+                          <code>{comparison.variantId}</code>
+                        </h4>
+                        <div className="flex flex-col gap-4">
+                          {best ? (
+                            <div>
+                              <div className="mb-2 text-muted-foreground text-xs uppercase tracking-wide">
+                                Удачный пример
+                              </div>
+                              <DialogTranscript item={best} />
+                            </div>
+                          ) : null}
+                          {worst && worst.fixtureId !== best?.fixtureId ? (
+                            <div>
+                              <div className="mb-2 text-muted-foreground text-xs uppercase tracking-wide">
+                                Проблемный пример
+                              </div>
+                              <DialogTranscript item={worst} />
+                            </div>
+                          ) : null}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </>
+              );
+            })()}
           </CardContent>
         </Card>
       ) : null}
