@@ -1,4 +1,5 @@
 import {
+  and,
   asc,
   desc,
   eq,
@@ -30,7 +31,23 @@ import {
   saveEvaluation,
   saveSkillPolicy,
 } from "../../game/service";
-import { protectedProcedure } from "../../orpc";
+import { adminProcedure, protectedProcedure, resolveIsAdmin } from "../../orpc";
+
+interface PersonaPrompt {
+  system: string;
+  messages: { role: "user" | "assistant"; content: string }[];
+}
+
+function extractPersonaPrompt(
+  payload: Record<string, unknown>,
+): PersonaPrompt | null {
+  const telemetry = payload.telemetry as
+    | { model?: string; meta?: Record<string, unknown> }
+    | undefined;
+  const prompt = telemetry?.meta?.prompt as PersonaPrompt | undefined;
+  if (!prompt || typeof prompt.system !== "string") return null;
+  return prompt;
+}
 
 function fallbackEmployeeReply(loaded: Awaited<ReturnType<typeof loadDialog>>) {
   const employee = loaded.context.employee;
@@ -225,19 +242,25 @@ export const say = protectedProcedure
       };
     }
 
+    let replyEvent: { id: string } | undefined;
     if (turn.reply.silent) {
       await appendEvent(context.db, input.dialogId, "employee_silent", {
         reason: "не включён в диалог",
       });
     } else {
-      await appendEvent(context.db, input.dialogId, "employee_reply", {
-        text: turn.reply.reply,
-        understood: turn.reply.understood,
-        readiness: turn.reply.readiness,
-        requests: turn.reply.requests,
-        confirmsCheckpoints: turn.reply.confirmsCheckpoints,
-        telemetry: turn.telemetry,
-      });
+      replyEvent = await appendEvent(
+        context.db,
+        input.dialogId,
+        "employee_reply",
+        {
+          text: turn.reply.reply,
+          understood: turn.reply.understood,
+          readiness: turn.reply.readiness,
+          requests: turn.reply.requests,
+          confirmsCheckpoints: turn.reply.confirmsCheckpoints,
+          telemetry: turn.telemetry,
+        },
+      );
     }
 
     await context.db
@@ -255,6 +278,9 @@ export const say = protectedProcedure
       engaged: turn.dialog.engaged,
       emotion: turn.dialog.emotion,
       managerToxic: turn.managerToxic,
+      // Lets an admin/QA caller fetch the exact prompt behind this reply
+      // via `promptDebug` — the id alone reveals nothing on its own.
+      promptEventId: replyEvent?.id,
     };
   });
 
@@ -559,7 +585,7 @@ export const byId = protectedProcedure
     );
     const loaded = await loadDialog(context.db, input.dialogId);
 
-    const [evaluation, events, engine] = await Promise.all([
+    const [evaluation, events, engine, isAdmin] = await Promise.all([
       context.db
         .select()
         .from(GameEvaluation)
@@ -572,10 +598,48 @@ export const byId = protectedProcedure
         .where(eq(GameEvent.dialogId, input.dialogId))
         .orderBy(asc(GameEvent.seq)),
       loadEngine(context.db),
+      resolveIsAdmin(context.db, context.session.user),
     ]);
     const variantName =
       engine.variants().find((item) => item.id === loaded.record.variantId)
         ?.name ?? loaded.record.variantId;
+
+    // Turns are derived from the same `employee_reply` events in the same
+    // order (see `loadDialog`), so zipping them by position recovers which
+    // event backs which turn — enough to let an admin ask `promptDebug` for
+    // it without carrying the (potentially large) prompt on every load.
+    const employeeReplyEvents = events.filter(
+      (event) =>
+        event.type === "employee_reply" &&
+        typeof event.payload.text === "string" &&
+        event.payload.text.length > 0,
+    );
+    let replyIndex = 0;
+    const turns = loaded.context.turns.map((turn) => {
+      if (turn.role !== "employee") return turn;
+      const event = employeeReplyEvents[replyIndex++];
+      return { ...turn, promptEventId: event?.id };
+    });
+
+    // The raw prompt text is only for admin/QA eyes — strip it from the
+    // event log before it reaches a regular player's browser.
+    const visibleEvents = isAdmin
+      ? events
+      : events.map((event) => {
+          if (event.type !== "employee_reply") return event;
+          const telemetry = event.payload.telemetry as
+            | { meta?: Record<string, unknown> }
+            | undefined;
+          if (!telemetry?.meta?.prompt) return event;
+          const { prompt: _prompt, ...restMeta } = telemetry.meta;
+          return {
+            ...event,
+            payload: {
+              ...event.payload,
+              telemetry: { ...telemetry, meta: restMeta },
+            },
+          };
+        });
 
     return {
       dialog: loaded.record,
@@ -583,11 +647,54 @@ export const byId = protectedProcedure
       employee: loaded.context.employee,
       task: loaded.context.task,
       shift: loaded.context.shift,
-      turns: loaded.context.turns,
+      turns,
       emotion: loaded.context.emotion,
       engaged: loaded.context.engaged,
-      events,
+      events: visibleEvents,
       evaluation: evaluation ?? null,
+      isAdmin,
+    };
+  });
+
+/**
+ * The exact system prompt + transcript sent to the LLM for one employee
+ * reply — the "hint" behind the debug button in the game chat.
+ *
+ * Admin/QA only: this is the prompt engineering behind the character, not
+ * something a player should be able to pull out of their own dialog.
+ *
+ * @example client.game.dialog.promptDebug({ dialogId, eventId })
+ */
+export const promptDebug = adminProcedure
+  .input(z.object({ dialogId: z.uuid(), eventId: z.uuid() }))
+  .handler(async ({ context, input }) => {
+    const [event] = await context.db
+      .select()
+      .from(GameEvent)
+      .where(
+        and(
+          eq(GameEvent.id, input.eventId),
+          eq(GameEvent.dialogId, input.dialogId),
+        ),
+      )
+      .limit(1);
+
+    if (event?.type !== "employee_reply") {
+      throw new ORPCError("NOT_FOUND", { message: "Событие не найдено" });
+    }
+
+    const prompt = extractPersonaPrompt(event.payload);
+    if (!prompt) {
+      throw new ORPCError("NOT_FOUND", {
+        message: "Промпт для этой реплики не сохранён",
+      });
+    }
+
+    const telemetry = event.payload.telemetry as { model?: string } | undefined;
+    return {
+      system: prompt.system,
+      messages: prompt.messages,
+      model: telemetry?.model,
     };
   });
 
@@ -631,4 +738,5 @@ export const gameDialogRouter = {
   byId,
   list,
   screen,
+  promptDebug,
 };

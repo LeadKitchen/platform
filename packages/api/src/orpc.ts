@@ -18,7 +18,7 @@
 
 import type { Session } from "@acme/auth";
 import { logger } from "@acme/config";
-import { AppAdmin, db, eq } from "@acme/db";
+import { AppAdmin, type Database, db, eq } from "@acme/db";
 import { ORPCError, os } from "@orpc/server";
 
 export interface CreateORPCContextOptions {
@@ -91,35 +91,44 @@ export const protectedProcedure = publicProcedure.use(({ context, next }) => {
 });
 
 /**
+ * Whether a user has admin privileges.
+ *
+ * Admin access is granted to emails listed in the ADMIN_EMAILS environment
+ * variable (comma-separated), or to users with a row in `AppAdmin`. Exported
+ * so procedures that stay on `protectedProcedure` (because non-admins need
+ * partial access too) can still branch on admin status inline.
+ *
+ * @example ADMIN_EMAILS=admin@example.com,ops@example.com
+ */
+export async function resolveIsAdmin(
+  db: Database,
+  user: { id: string; email: string },
+): Promise<boolean> {
+  const adminEmails = (process.env.ADMIN_EMAILS ?? "")
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+
+  if (adminEmails.includes(user.email.toLowerCase())) return true;
+
+  const persistedGrant = await db.query.AppAdmin.findFirst({
+    where: eq(AppAdmin.userId, user.id),
+    columns: { userId: true },
+  });
+  return persistedGrant !== undefined;
+}
+
+/**
  * Admin (privileged) procedure
  *
  * Builds on `protectedProcedure` and additionally verifies that the
  * authenticated user has admin privileges. There are only two roles in the
  * app: regular user and admin — no in-between tiers.
- *
- * Admin access is granted to emails listed in the ADMIN_EMAILS environment
- * variable (comma-separated), or to users with a row in `AppAdmin`.
- *
- * @example ADMIN_EMAILS=admin@example.com,ops@example.com
  */
 export const adminProcedure = protectedProcedure.use(
   async ({ context, next }) => {
-    const adminEmails = (process.env.ADMIN_EMAILS ?? "")
-      .split(",")
-      .map((e) => e.trim().toLowerCase())
-      .filter(Boolean);
-
-    const isBootstrapAdmin = adminEmails.includes(
-      context.session.user.email.toLowerCase(),
-    );
-    const persistedGrant = isBootstrapAdmin
-      ? undefined
-      : await context.db.query.AppAdmin.findFirst({
-          where: eq(AppAdmin.userId, context.session.user.id),
-          columns: { userId: true },
-        });
-
-    if (!isBootstrapAdmin && !persistedGrant) {
+    const isAdmin = await resolveIsAdmin(context.db, context.session.user);
+    if (!isAdmin) {
       throw new ORPCError("FORBIDDEN", { message: "Admin access required" });
     }
 

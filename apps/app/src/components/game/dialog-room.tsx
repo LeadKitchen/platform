@@ -25,6 +25,11 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
   Empty,
   EmptyDescription,
   EmptyHeader,
@@ -40,6 +45,7 @@ import {
   IconBulb,
   IconCheck,
   IconChevronDown,
+  IconInfoCircle,
   IconLoader2,
   IconMicrophone,
   IconPlayerPause,
@@ -58,6 +64,14 @@ import { useSpeechRecognition } from "./use-speech-recognition";
 interface Turn {
   role: "manager" | "employee";
   text: string;
+  /** Set only for admin/QA callers — lets the hint button fetch the LLM prompt. */
+  promptEventId?: string;
+}
+
+interface PromptDebugData {
+  system: string;
+  messages: { role: "user" | "assistant"; content: string }[];
+  model?: string;
 }
 
 const CONVERSATION_STARTERS = [
@@ -78,6 +92,8 @@ export interface DialogRoomProps {
   variantName: string;
   userAvatarSeed?: string;
   uploadedAvatarUrl?: string;
+  /** Admin/QA only: shows a hint button on employee replies with the LLM prompt behind them. */
+  isAdmin?: boolean;
 }
 
 /**
@@ -103,10 +119,17 @@ export function DialogRoom(props: DialogRoomProps) {
     missingCritical: Array<{ id: string; title: string; met: boolean }>;
   }>(null);
   const [recordingSeconds, setRecordingSeconds] = useState(0);
+  const [promptDialogEventId, setPromptDialogEventId] = useState<string | null>(
+    null,
+  );
+  const [promptData, setPromptData] = useState<PromptDebugData | null>(null);
+  const [promptLoading, setPromptLoading] = useState(false);
+  const [promptError, setPromptError] = useState<string | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const draftLoaded = useRef(false);
   const evaluationTracked = useRef(false);
   const requestController = useRef<AbortController | null>(null);
+  const promptCache = useRef<Map<string, PromptDebugData>>(new Map());
   const draftKey = `sitruk:dialog-draft:${props.dialogId}`;
   const latestActivity = `${turns.length}:${pending}`;
   const managerTurns = turns.filter((turn) => turn.role === "manager").length;
@@ -201,7 +224,13 @@ export function DialogRoom(props: DialogRoomProps) {
         { role: "manager", text },
         ...(result.silent
           ? []
-          : [{ role: "employee" as const, text: result.reply }]),
+          : [
+              {
+                role: "employee" as const,
+                text: result.reply,
+                promptEventId: result.promptEventId,
+              },
+            ]),
       ]);
 
       if (result.silent) {
@@ -244,6 +273,33 @@ export function DialogRoom(props: DialogRoomProps) {
 
   function cancelSend() {
     requestController.current?.abort();
+  }
+
+  async function openPromptDebug(eventId: string) {
+    setPromptDialogEventId(eventId);
+    const cached = promptCache.current.get(eventId);
+    if (cached) {
+      setPromptData(cached);
+      setPromptError(null);
+      return;
+    }
+    setPromptData(null);
+    setPromptError(null);
+    setPromptLoading(true);
+    try {
+      const result = await client.game.dialog.promptDebug({
+        dialogId: props.dialogId,
+        eventId,
+      });
+      promptCache.current.set(eventId, result);
+      setPromptData(result);
+    } catch (cause) {
+      setPromptError(
+        cause instanceof Error ? cause.message : "Не удалось получить промпт",
+      );
+    } finally {
+      setPromptLoading(false);
+    }
   }
 
   async function completeFinish() {
@@ -441,6 +497,20 @@ export function DialogRoom(props: DialogRoomProps) {
                       <p className="text-muted-foreground text-xs">
                         {turn.role === "manager" ? "Вы" : props.employee.name}
                       </p>
+                      {props.isAdmin && turn.promptEventId ? (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="ml-auto size-5"
+                          aria-label="Показать промпт, отправленный в LLM"
+                          onClick={() =>
+                            void openPromptDebug(turn.promptEventId ?? "")
+                          }
+                        >
+                          <IconInfoCircle className="size-3.5" />
+                        </Button>
+                      ) : null}
                     </div>
                     <p className="text-sm whitespace-pre-wrap">{turn.text}</p>
                   </div>
@@ -700,6 +770,67 @@ export function DialogRoom(props: DialogRoomProps) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <Dialog
+        open={promptDialogEventId !== null}
+        onOpenChange={(open) => {
+          if (!open) setPromptDialogEventId(null);
+        }}
+      >
+        <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Промпт, отправленный в LLM</DialogTitle>
+            <DialogDescription>
+              {promptData?.model
+                ? `Модель: ${promptData.model}`
+                : "Системный промпт и история диалога, из которых сгенерирована эта реплика."}
+            </DialogDescription>
+          </DialogHeader>
+
+          {promptLoading ? (
+            <p className="text-muted-foreground flex items-center gap-2 text-sm">
+              <IconLoader2 className="size-4 animate-spin" />
+              Загрузка…
+            </p>
+          ) : promptError ? (
+            <Alert variant="destructive">
+              <IconAlertTriangle />
+              <AlertTitle>Не удалось получить промпт</AlertTitle>
+              <AlertDescription>{promptError}</AlertDescription>
+            </Alert>
+          ) : promptData ? (
+            <div className="flex flex-col gap-4 text-sm">
+              <div>
+                <p className="text-muted-foreground mb-1 text-xs font-medium uppercase tracking-wide">
+                  System
+                </p>
+                <pre className="bg-muted overflow-x-auto rounded-md border p-3 text-xs whitespace-pre-wrap">
+                  {promptData.system}
+                </pre>
+              </div>
+              <div className="flex flex-col gap-2">
+                <p className="text-muted-foreground text-xs font-medium uppercase tracking-wide">
+                  Messages
+                </p>
+                {promptData.messages.map((message, index) => (
+                  <div
+                    // biome-ignore lint/suspicious/noArrayIndexKey: Список сообщений статичен и не переупорядочивается.
+                    key={`${index}-${message.role}`}
+                    className="rounded-md border p-3"
+                  >
+                    <p className="text-muted-foreground mb-1 text-xs font-medium uppercase">
+                      {message.role}
+                    </p>
+                    <p className="text-xs whitespace-pre-wrap">
+                      {message.content}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -352,13 +352,18 @@ export async function appendEvent(
   dialogId: string,
   type: string,
   payload: Record<string, unknown>,
-): Promise<void> {
-  await db.insert(GameEvent).values({
-    dialogId,
-    type,
-    payload,
-    seq: sql`(select coalesce(max(${GameEvent.seq}), 0) + 1 from ${GameEvent} where ${GameEvent.dialogId} = ${dialogId})`,
-  });
+): Promise<{ id: string }> {
+  const [row] = await db
+    .insert(GameEvent)
+    .values({
+      dialogId,
+      type,
+      payload,
+      seq: sql`(select coalesce(max(${GameEvent.seq}), 0) + 1 from ${GameEvent} where ${GameEvent.dialogId} = ${dialogId})`,
+    })
+    .returning({ id: GameEvent.id });
+  if (!row) throw new Error("Не удалось записать событие диалога");
+  return row;
 }
 
 /**
