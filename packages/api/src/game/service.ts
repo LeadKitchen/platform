@@ -325,6 +325,7 @@ export async function loadDialog(
       turns,
       engaged: row.dialog.engaged,
       emotion: row.dialog.emotion,
+      orgId: row.session.orgId ?? undefined,
       ...(row.session.scorecardSnapshot
         ? {
             evaluationCriteria: scorecardCriteria(

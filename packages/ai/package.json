@@ -20,6 +20,7 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
+    "@acme/db": "workspace:*",
     "@acme/game": "workspace:*",
     "@ai-sdk/anthropic": "4.0.44",
     "@ai-sdk/openai": "4.0.50",

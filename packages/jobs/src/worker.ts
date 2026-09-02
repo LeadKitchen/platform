@@ -1,6 +1,6 @@
 import { hatchet } from "./client";
 import { helloWorldTask } from "./workflows/hello-world";
-import { processDocumentWorkflow } from "./workflows/multi-step";
+import { ingestKnowledgeDocumentWorkflow } from "./workflows/ingest-knowledge-document";
 import { scheduledWorkflow } from "./workflows/scheduled";
 
 /**
@@ -21,7 +21,11 @@ import { scheduledWorkflow } from "./workflows/scheduled";
  */
 async function main() {
   const worker = await hatchet.worker("acme-worker", {
-    workflows: [helloWorldTask, scheduledWorkflow, processDocumentWorkflow],
+    workflows: [
+      helloWorldTask,
+      scheduledWorkflow,
+      ingestKnowledgeDocumentWorkflow,
+    ],
     // Maximum number of concurrent task runs this worker will accept.
     // Tune based on the workload's CPU/memory profile.
     slots: 20,

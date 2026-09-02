@@ -100,6 +100,11 @@ const data = {
           url: "/game/scorecards",
           icon: IconTargetArrow,
         },
+        {
+          title: "База знаний",
+          url: "/game/knowledge",
+          icon: IconDatabase,
+        },
       ],
     },
     {

@@ -1,5 +1,6 @@
 import { env } from "@acme/config";
 import {
+  DeleteObjectCommand,
   GetObjectCommand,
   PutObjectCommand,
   S3Client,
@@ -87,4 +88,21 @@ export async function getDownloadUrl(key: string): Promise<string> {
   });
 
   return getSignedUrl(s3Client, command, { expiresIn: 3600 }); // 1 hour
+}
+
+export async function deleteObjectFromS3(key: string): Promise<void> {
+  await s3Client.send(
+    new DeleteObjectCommand({ Bucket: BUCKET_NAME, Key: key }),
+  );
+}
+
+/** Fetches an object's bytes directly — for server-side processing (parsing, ingestion) rather than a browser download. */
+export async function downloadBufferFromS3(key: string): Promise<Buffer> {
+  const command = new GetObjectCommand({ Bucket: BUCKET_NAME, Key: key });
+  const res = await s3Client.send(command);
+  if (!res.Body) {
+    throw new Error(`S3 object '${key}' has no body`);
+  }
+  const bytes = await res.Body.transformToByteArray();
+  return Buffer.from(bytes);
 }

@@ -19,7 +19,12 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@hatchet-dev/typescript-sdk": "1.29.2"
+    "@acme/ai": "workspace:*",
+    "@acme/db": "workspace:*",
+    "@acme/storage": "workspace:*",
+    "@hatchet-dev/typescript-sdk": "1.29.2",
+    "mammoth": "^1.12.2",
+    "unpdf": "^1.8.1"
   },
   "devDependencies": {
     "@acme/tsconfig": "workspace:*",
