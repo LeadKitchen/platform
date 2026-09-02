@@ -96,12 +96,7 @@ export const CORE_FIXTURES: EvalFixture[] = [
       expectedStyle: "delegating",
       actualStyle: "delegating",
       expertScore: 88,
-      metCriteria: [
-        "avoid_micromanagement",
-        "clarify_task",
-        "delegate_authority",
-        "set_deadline",
-      ],
+      metCriteria: ["avoid_micromanagement", "clarify_task", "delegate_authority", "set_deadline"],
     },
   },
   {
@@ -124,13 +119,7 @@ export const CORE_FIXTURES: EvalFixture[] = [
       expectedStyle: "delegating",
       actualStyle: "directive",
       expertScore: 22,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "set_checkpoints",
-        "set_deadline",
-      ],
+      metCriteria: ["check_understanding", "clarify_task", "explain_how", "set_checkpoints", "set_deadline"],
     },
   },
   {
@@ -153,13 +142,7 @@ export const CORE_FIXTURES: EvalFixture[] = [
       expectedStyle: "coaching",
       actualStyle: "coaching",
       expertScore: 85,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "motivate",
-        "set_deadline",
-      ],
+      metCriteria: ["check_understanding", "clarify_task", "explain_how", "motivate", "set_deadline"],
     },
   },
   {
@@ -181,12 +164,7 @@ export const CORE_FIXTURES: EvalFixture[] = [
       expectedStyle: "coaching",
       actualStyle: "delegating",
       expertScore: 10,
-      metCriteria: [
-        "avoid_micromanagement",
-        "clarify_task",
-        "delegate_authority",
-        "set_deadline",
-      ],
+      metCriteria: ["avoid_micromanagement", "clarify_task", "delegate_authority", "set_deadline"],
     },
   },
   {
@@ -209,13 +187,7 @@ export const CORE_FIXTURES: EvalFixture[] = [
       expectedStyle: "directive",
       actualStyle: "directive",
       expertScore: 90,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "set_checkpoints",
-        "set_deadline",
-      ],
+      metCriteria: ["check_understanding", "clarify_task", "explain_how", "set_checkpoints", "set_deadline"],
     },
   },
   {
@@ -238,12 +210,7 @@ export const CORE_FIXTURES: EvalFixture[] = [
       expectedStyle: "directive",
       actualStyle: "delegating",
       expertScore: 3,
-      metCriteria: [
-        "avoid_micromanagement",
-        "clarify_task",
-        "delegate_authority",
-        "set_deadline",
-      ],
+      metCriteria: ["avoid_micromanagement", "clarify_task", "delegate_authority", "set_deadline"],
     },
   },
   {
@@ -266,13 +233,7 @@ export const CORE_FIXTURES: EvalFixture[] = [
       expectedStyle: "supporting",
       actualStyle: "supporting",
       expertScore: 87,
-      metCriteria: [
-        "ask_opinion",
-        "clarify_task",
-        "motivate",
-        "offer_help",
-        "set_deadline",
-      ],
+      metCriteria: ["ask_opinion", "clarify_task", "motivate", "offer_help", "set_deadline"],
     },
   },
   {
@@ -295,13 +256,7 @@ export const CORE_FIXTURES: EvalFixture[] = [
       expectedStyle: "supporting",
       actualStyle: "directive",
       expertScore: 18,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "set_checkpoints",
-        "set_deadline",
-      ],
+      metCriteria: ["check_understanding", "clarify_task", "explain_how", "set_checkpoints", "set_deadline"],
     },
   },
   {
@@ -326,15 +281,7 @@ export const CORE_FIXTURES: EvalFixture[] = [
       expectedStyle: "supporting",
       actualStyle: "supporting",
       expertScore: 90,
-      metCriteria: [
-        "ask_opinion",
-        "clarify_task",
-        "motivate",
-        "offer_help",
-        "prioritize",
-        "reduce_scope",
-        "set_deadline",
-      ],
+      metCriteria: ["ask_opinion", "clarify_task", "motivate", "offer_help", "prioritize", "reduce_scope", "set_deadline"],
     },
   },
   {
@@ -357,12 +304,7 @@ export const CORE_FIXTURES: EvalFixture[] = [
       expectedStyle: "supporting",
       actualStyle: "delegating",
       expertScore: 3,
-      metCriteria: [
-        "avoid_micromanagement",
-        "clarify_task",
-        "delegate_authority",
-        "set_deadline",
-      ],
+      metCriteria: ["avoid_micromanagement", "clarify_task", "delegate_authority", "set_deadline"],
     },
   },
   {
@@ -387,15 +329,7 @@ export const CORE_FIXTURES: EvalFixture[] = [
       expectedStyle: "coaching",
       actualStyle: "coaching",
       expertScore: 85,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "motivate",
-        "prioritize",
-        "reduce_scope",
-        "set_deadline",
-      ],
+      metCriteria: ["check_understanding", "clarify_task", "explain_how", "motivate", "prioritize", "reduce_scope", "set_deadline"],
     },
   },
   {
@@ -420,15 +354,7 @@ export const CORE_FIXTURES: EvalFixture[] = [
       expectedStyle: "directive",
       actualStyle: "directive",
       expertScore: 87,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "prioritize",
-        "reduce_scope",
-        "set_checkpoints",
-        "set_deadline",
-      ],
+      metCriteria: ["check_understanding", "clarify_task", "explain_how", "prioritize", "reduce_scope", "set_checkpoints", "set_deadline"],
     },
   },
 ];
@@ -444,7 +370,7 @@ export const EXTENDED_FIXTURES: EvalFixture[] = [
     round: 2,
     activeOrders: 1,
     soloOnShift: false,
-    labelSource: "provisional",
+    labelSource: "ai-assisted",
     script: [
       "Анна, нужно пироги с яблоком, 20 порций к 19:00.",
       "Как ты считаешь, успеем к 19:00? Что думаешь по подаче?",
@@ -454,8 +380,8 @@ export const EXTENDED_FIXTURES: EvalFixture[] = [
     label: {
       expectedStyle: "delegating",
       actualStyle: "supporting",
-      expertScore: 40,
-      metCriteria: ["clarify_task", "set_deadline"],
+      expertScore: 78,
+      metCriteria: ["ask_opinion", "clarify_task", "motivate", "offer_help", "set_deadline"],
     },
   },
   {
@@ -467,7 +393,7 @@ export const EXTENDED_FIXTURES: EvalFixture[] = [
     round: 2,
     activeOrders: 1,
     soloOnShift: false,
-    labelSource: "provisional",
+    labelSource: "ai-assisted",
     script: [
       "Анна, нужно салаты дня, 15 порций к 17:30.",
       "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
@@ -477,14 +403,8 @@ export const EXTENDED_FIXTURES: EvalFixture[] = [
     label: {
       expectedStyle: "coaching",
       actualStyle: "directive",
-      expertScore: 50,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "set_checkpoints",
-        "set_deadline",
-      ],
+      expertScore: 60,
+      metCriteria: ["check_understanding", "clarify_task", "explain_how", "set_checkpoints", "set_deadline"],
     },
   },
   {
@@ -496,7 +416,7 @@ export const EXTENDED_FIXTURES: EvalFixture[] = [
     round: 2,
     activeOrders: 1,
     soloOnShift: false,
-    labelSource: "provisional",
+    labelSource: "ai-assisted",
     script: [
       "Анна, нужно салаты дня, 15 порций к 21:00.",
       "Как ты считаешь, успеем к 21:00? Что думаешь по подаче?",
@@ -507,7 +427,7 @@ export const EXTENDED_FIXTURES: EvalFixture[] = [
       expectedStyle: "coaching",
       actualStyle: "supporting",
       expertScore: 25,
-      metCriteria: ["clarify_task", "motivate", "set_deadline"],
+      metCriteria: ["ask_opinion", "clarify_task", "motivate", "offer_help", "set_deadline"],
     },
   },
   {
@@ -519,7 +439,7 @@ export const EXTENDED_FIXTURES: EvalFixture[] = [
     round: 2,
     activeOrders: 1,
     soloOnShift: false,
-    labelSource: "provisional",
+    labelSource: "ai-assisted",
     script: [
       "Анна, нужно горячее на банкет, 40 порций к 19:00.",
       "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
@@ -529,13 +449,8 @@ export const EXTENDED_FIXTURES: EvalFixture[] = [
     label: {
       expectedStyle: "directive",
       actualStyle: "coaching",
-      expertScore: 34,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "set_deadline",
-      ],
+      expertScore: 58,
+      metCriteria: ["check_understanding", "clarify_task", "explain_how", "motivate", "set_deadline"],
     },
   },
   {
@@ -547,7 +462,7 @@ export const EXTENDED_FIXTURES: EvalFixture[] = [
     round: 2,
     activeOrders: 1,
     soloOnShift: false,
-    labelSource: "provisional",
+    labelSource: "ai-assisted",
     script: [
       "Анна, нужно заготовка овощей на смену к 19:00.",
       "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
@@ -557,8 +472,8 @@ export const EXTENDED_FIXTURES: EvalFixture[] = [
     label: {
       expectedStyle: "supporting",
       actualStyle: "coaching",
-      expertScore: 43,
-      metCriteria: ["clarify_task", "motivate", "set_deadline"],
+      expertScore: 35,
+      metCriteria: ["check_understanding", "clarify_task", "explain_how", "motivate", "set_deadline"],
     },
   },
   {
@@ -570,7 +485,7 @@ export const EXTENDED_FIXTURES: EvalFixture[] = [
     round: 2,
     activeOrders: 1,
     soloOnShift: false,
-    labelSource: "provisional",
+    labelSource: "ai-assisted",
     script: [
       "Анна, нужно заготовка овощей на смену к 20:00.",
       "На твоё усмотрение, как обычно — доверяю.",
@@ -579,8 +494,8 @@ export const EXTENDED_FIXTURES: EvalFixture[] = [
     label: {
       expectedStyle: "supporting",
       actualStyle: "delegating",
-      expertScore: 22,
-      metCriteria: ["clarify_task", "set_deadline"],
+      expertScore: 92,
+      metCriteria: ["avoid_micromanagement", "clarify_task", "delegate_authority", "set_deadline"],
     },
   },
   {
@@ -592,7 +507,7 @@ export const EXTENDED_FIXTURES: EvalFixture[] = [
     round: 3,
     activeOrders: 4,
     soloOnShift: true,
-    labelSource: "provisional",
+    labelSource: "ai-assisted",
     script: [
       "Анна, нужно пироги с яблоком, 20 порций к 21:00.",
       "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
@@ -602,8 +517,8 @@ export const EXTENDED_FIXTURES: EvalFixture[] = [
     label: {
       expectedStyle: "supporting",
       actualStyle: "coaching",
-      expertScore: 28,
-      metCriteria: ["clarify_task", "motivate", "set_deadline"],
+      expertScore: 25,
+      metCriteria: ["check_understanding", "clarify_task", "explain_how", "motivate", "set_deadline"],
     },
   },
   {
@@ -615,7 +530,7 @@ export const EXTENDED_FIXTURES: EvalFixture[] = [
     round: 3,
     activeOrders: 4,
     soloOnShift: true,
-    labelSource: "provisional",
+    labelSource: "ai-assisted",
     script: [
       "Анна, нужно горячее на банкет, 40 порций к 21:00.",
       "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
@@ -625,21 +540,13 @@ export const EXTENDED_FIXTURES: EvalFixture[] = [
     label: {
       expectedStyle: "directive",
       actualStyle: "coaching",
-      expertScore: 15,
-      metCriteria: [
-        "check_understanding",
-        "clarify_task",
-        "explain_how",
-        "set_deadline",
-      ],
+      expertScore: 20,
+      metCriteria: ["check_understanding", "clarify_task", "explain_how", "motivate", "set_deadline"],
     },
   },
 ];
 
-export const ALL_FIXTURES: EvalFixture[] = [
-  ...CORE_FIXTURES,
-  ...EXTENDED_FIXTURES,
-];
+export const ALL_FIXTURES: EvalFixture[] = [...CORE_FIXTURES, ...EXTENDED_FIXTURES];
 
 /** Default export used by the runner and CLI. */
 export const FIXTURES: EvalFixture[] = CORE_FIXTURES;
