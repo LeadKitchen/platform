@@ -368,6 +368,10 @@ export async function runEvaluation(options: RunOptions): Promise<RunResult> {
               run,
               turnMeta,
               models: [...models].filter(Boolean),
+              // Repeated runs of the same fixture exist for variance, not for
+              // extra transcripts — keep the dialog only from the first one.
+              turns: run === 1 ? dialog.turns : undefined,
+              summary: run === 1 ? evaluated.evaluation.summary : undefined,
             };
 
             items.push(item);
