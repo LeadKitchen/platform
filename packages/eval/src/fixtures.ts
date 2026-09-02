@@ -96,7 +96,12 @@ export const CORE_FIXTURES: EvalFixture[] = [
       expectedStyle: "delegating",
       actualStyle: "delegating",
       expertScore: 88,
-      metCriteria: ["avoid_micromanagement", "clarify_task", "delegate_authority", "set_deadline"],
+      metCriteria: [
+        "avoid_micromanagement",
+        "clarify_task",
+        "delegate_authority",
+        "set_deadline",
+      ],
     },
   },
   {
@@ -119,7 +124,13 @@ export const CORE_FIXTURES: EvalFixture[] = [
       expectedStyle: "delegating",
       actualStyle: "directive",
       expertScore: 22,
-      metCriteria: ["check_understanding", "clarify_task", "explain_how", "set_checkpoints", "set_deadline"],
+      metCriteria: [
+        "check_understanding",
+        "clarify_task",
+        "explain_how",
+        "set_checkpoints",
+        "set_deadline",
+      ],
     },
   },
   {
@@ -142,7 +153,13 @@ export const CORE_FIXTURES: EvalFixture[] = [
       expectedStyle: "coaching",
       actualStyle: "coaching",
       expertScore: 85,
-      metCriteria: ["check_understanding", "clarify_task", "explain_how", "motivate", "set_deadline"],
+      metCriteria: [
+        "check_understanding",
+        "clarify_task",
+        "explain_how",
+        "motivate",
+        "set_deadline",
+      ],
     },
   },
   {
@@ -164,7 +181,12 @@ export const CORE_FIXTURES: EvalFixture[] = [
       expectedStyle: "coaching",
       actualStyle: "delegating",
       expertScore: 10,
-      metCriteria: ["avoid_micromanagement", "clarify_task", "delegate_authority", "set_deadline"],
+      metCriteria: [
+        "avoid_micromanagement",
+        "clarify_task",
+        "delegate_authority",
+        "set_deadline",
+      ],
     },
   },
   {
@@ -187,7 +209,13 @@ export const CORE_FIXTURES: EvalFixture[] = [
       expectedStyle: "directive",
       actualStyle: "directive",
       expertScore: 90,
-      metCriteria: ["check_understanding", "clarify_task", "explain_how", "set_checkpoints", "set_deadline"],
+      metCriteria: [
+        "check_understanding",
+        "clarify_task",
+        "explain_how",
+        "set_checkpoints",
+        "set_deadline",
+      ],
     },
   },
   {
@@ -210,7 +238,12 @@ export const CORE_FIXTURES: EvalFixture[] = [
       expectedStyle: "directive",
       actualStyle: "delegating",
       expertScore: 3,
-      metCriteria: ["avoid_micromanagement", "clarify_task", "delegate_authority", "set_deadline"],
+      metCriteria: [
+        "avoid_micromanagement",
+        "clarify_task",
+        "delegate_authority",
+        "set_deadline",
+      ],
     },
   },
   {
@@ -233,7 +266,13 @@ export const CORE_FIXTURES: EvalFixture[] = [
       expectedStyle: "supporting",
       actualStyle: "supporting",
       expertScore: 87,
-      metCriteria: ["ask_opinion", "clarify_task", "motivate", "offer_help", "set_deadline"],
+      metCriteria: [
+        "ask_opinion",
+        "clarify_task",
+        "motivate",
+        "offer_help",
+        "set_deadline",
+      ],
     },
   },
   {
@@ -256,7 +295,13 @@ export const CORE_FIXTURES: EvalFixture[] = [
       expectedStyle: "supporting",
       actualStyle: "directive",
       expertScore: 18,
-      metCriteria: ["check_understanding", "clarify_task", "explain_how", "set_checkpoints", "set_deadline"],
+      metCriteria: [
+        "check_understanding",
+        "clarify_task",
+        "explain_how",
+        "set_checkpoints",
+        "set_deadline",
+      ],
     },
   },
   {
@@ -281,7 +326,15 @@ export const CORE_FIXTURES: EvalFixture[] = [
       expectedStyle: "supporting",
       actualStyle: "supporting",
       expertScore: 90,
-      metCriteria: ["ask_opinion", "clarify_task", "motivate", "offer_help", "prioritize", "reduce_scope", "set_deadline"],
+      metCriteria: [
+        "ask_opinion",
+        "clarify_task",
+        "motivate",
+        "offer_help",
+        "prioritize",
+        "reduce_scope",
+        "set_deadline",
+      ],
     },
   },
   {
@@ -304,7 +357,12 @@ export const CORE_FIXTURES: EvalFixture[] = [
       expectedStyle: "supporting",
       actualStyle: "delegating",
       expertScore: 3,
-      metCriteria: ["avoid_micromanagement", "clarify_task", "delegate_authority", "set_deadline"],
+      metCriteria: [
+        "avoid_micromanagement",
+        "clarify_task",
+        "delegate_authority",
+        "set_deadline",
+      ],
     },
   },
   {
@@ -329,7 +387,15 @@ export const CORE_FIXTURES: EvalFixture[] = [
       expectedStyle: "coaching",
       actualStyle: "coaching",
       expertScore: 85,
-      metCriteria: ["check_understanding", "clarify_task", "explain_how", "motivate", "prioritize", "reduce_scope", "set_deadline"],
+      metCriteria: [
+        "check_understanding",
+        "clarify_task",
+        "explain_how",
+        "motivate",
+        "prioritize",
+        "reduce_scope",
+        "set_deadline",
+      ],
     },
   },
   {
@@ -354,7 +420,15 @@ export const CORE_FIXTURES: EvalFixture[] = [
       expectedStyle: "directive",
       actualStyle: "directive",
       expertScore: 87,
-      metCriteria: ["check_understanding", "clarify_task", "explain_how", "prioritize", "reduce_scope", "set_checkpoints", "set_deadline"],
+      metCriteria: [
+        "check_understanding",
+        "clarify_task",
+        "explain_how",
+        "prioritize",
+        "reduce_scope",
+        "set_checkpoints",
+        "set_deadline",
+      ],
     },
   },
 ];
@@ -381,7 +455,13 @@ export const EXTENDED_FIXTURES: EvalFixture[] = [
       expectedStyle: "delegating",
       actualStyle: "supporting",
       expertScore: 78,
-      metCriteria: ["ask_opinion", "clarify_task", "motivate", "offer_help", "set_deadline"],
+      metCriteria: [
+        "ask_opinion",
+        "clarify_task",
+        "motivate",
+        "offer_help",
+        "set_deadline",
+      ],
     },
   },
   {
@@ -404,7 +484,13 @@ export const EXTENDED_FIXTURES: EvalFixture[] = [
       expectedStyle: "coaching",
       actualStyle: "directive",
       expertScore: 60,
-      metCriteria: ["check_understanding", "clarify_task", "explain_how", "set_checkpoints", "set_deadline"],
+      metCriteria: [
+        "check_understanding",
+        "clarify_task",
+        "explain_how",
+        "set_checkpoints",
+        "set_deadline",
+      ],
     },
   },
   {
@@ -427,7 +513,13 @@ export const EXTENDED_FIXTURES: EvalFixture[] = [
       expectedStyle: "coaching",
       actualStyle: "supporting",
       expertScore: 25,
-      metCriteria: ["ask_opinion", "clarify_task", "motivate", "offer_help", "set_deadline"],
+      metCriteria: [
+        "ask_opinion",
+        "clarify_task",
+        "motivate",
+        "offer_help",
+        "set_deadline",
+      ],
     },
   },
   {
@@ -450,7 +542,13 @@ export const EXTENDED_FIXTURES: EvalFixture[] = [
       expectedStyle: "directive",
       actualStyle: "coaching",
       expertScore: 58,
-      metCriteria: ["check_understanding", "clarify_task", "explain_how", "motivate", "set_deadline"],
+      metCriteria: [
+        "check_understanding",
+        "clarify_task",
+        "explain_how",
+        "motivate",
+        "set_deadline",
+      ],
     },
   },
   {
@@ -473,7 +571,13 @@ export const EXTENDED_FIXTURES: EvalFixture[] = [
       expectedStyle: "supporting",
       actualStyle: "coaching",
       expertScore: 35,
-      metCriteria: ["check_understanding", "clarify_task", "explain_how", "motivate", "set_deadline"],
+      metCriteria: [
+        "check_understanding",
+        "clarify_task",
+        "explain_how",
+        "motivate",
+        "set_deadline",
+      ],
     },
   },
   {
@@ -495,7 +599,12 @@ export const EXTENDED_FIXTURES: EvalFixture[] = [
       expectedStyle: "supporting",
       actualStyle: "delegating",
       expertScore: 92,
-      metCriteria: ["avoid_micromanagement", "clarify_task", "delegate_authority", "set_deadline"],
+      metCriteria: [
+        "avoid_micromanagement",
+        "clarify_task",
+        "delegate_authority",
+        "set_deadline",
+      ],
     },
   },
   {
@@ -518,7 +627,13 @@ export const EXTENDED_FIXTURES: EvalFixture[] = [
       expectedStyle: "supporting",
       actualStyle: "coaching",
       expertScore: 25,
-      metCriteria: ["check_understanding", "clarify_task", "explain_how", "motivate", "set_deadline"],
+      metCriteria: [
+        "check_understanding",
+        "clarify_task",
+        "explain_how",
+        "motivate",
+        "set_deadline",
+      ],
     },
   },
   {
@@ -541,12 +656,21 @@ export const EXTENDED_FIXTURES: EvalFixture[] = [
       expectedStyle: "directive",
       actualStyle: "coaching",
       expertScore: 20,
-      metCriteria: ["check_understanding", "clarify_task", "explain_how", "motivate", "set_deadline"],
+      metCriteria: [
+        "check_understanding",
+        "clarify_task",
+        "explain_how",
+        "motivate",
+        "set_deadline",
+      ],
     },
   },
 ];
 
-export const ALL_FIXTURES: EvalFixture[] = [...CORE_FIXTURES, ...EXTENDED_FIXTURES];
+export const ALL_FIXTURES: EvalFixture[] = [
+  ...CORE_FIXTURES,
+  ...EXTENDED_FIXTURES,
+];
 
 /** Default export used by the runner and CLI. */
 export const FIXTURES: EvalFixture[] = CORE_FIXTURES;
