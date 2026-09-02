@@ -1,4 +1,11 @@
 import { defineConfig } from "@trigger.dev/sdk";
+import { z } from "zod";
+
+const triggerProjectRef = z
+  .string()
+  .trim()
+  .min(1)
+  .parse(process.env.TRIGGER_PROJECT_REF);
 
 /**
  * Trigger.dev is a fully managed job queue — no server to run ourselves.
@@ -7,7 +14,7 @@ import { defineConfig } from "@trigger.dev/sdk";
  * @see https://trigger.dev/docs/config/config-file
  */
 export default defineConfig({
-  project: process.env.TRIGGER_PROJECT_REF ?? "",
+  project: triggerProjectRef,
   dirs: ["./src/trigger"],
   retries: {
     enabledInDev: true,

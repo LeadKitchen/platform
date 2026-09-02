@@ -1,8 +1,11 @@
-import { task } from "@trigger.dev/sdk";
+import { schemaTask } from "@trigger.dev/sdk";
+import { z } from "zod";
 
-export interface HelloWorldInput {
-  name: string;
-}
+const helloWorldInputSchema = z.object({
+  name: z.string().trim().min(1),
+});
+
+export type HelloWorldInput = z.infer<typeof helloWorldInputSchema>;
 
 /**
  * Simple example task. Trigger from anywhere in your app:
@@ -20,11 +23,12 @@ export interface HelloWorldInput {
  *
  * @see https://trigger.dev/docs/tasks/overview
  */
-export const helloWorldTask = task({
+export const helloWorldTask = schemaTask({
   id: "hello-world",
+  schema: helloWorldInputSchema,
   retry: { maxAttempts: 3 },
   maxDuration: 60,
-  run: async (payload: HelloWorldInput) => {
+  run: async (payload) => {
     return { message: `Hello, ${payload.name}!` };
   },
 });
