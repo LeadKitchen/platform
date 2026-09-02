@@ -597,7 +597,8 @@ export function AdminGameDashboard({
       setVariants((current) =>
         current.map((item) => (item.id === id ? saved : item)),
       );
-      if (variant.id === id) setVariant((current) => ({ ...current, isActive }));
+      if (variant.id === id)
+        setVariant((current) => ({ ...current, isActive }));
       toast.success(isActive ? "Вариант включён" : "Вариант выключен");
       router.refresh();
     } catch (cause) {
@@ -1386,9 +1387,9 @@ export function AdminGameDashboard({
             <CardHeader className="border-b py-5">
               <CardTitle>Варианты AI-конвейера</CardTitle>
               <CardDescription>
-                Технологии, доступные новым игровым сессиям. «Работает в
-                игре» — вариант, который реально запускается у команд прямо
-                сейчас; выбор всегда явный, без случайного распределения.
+                Технологии, доступные новым игровым сессиям. «Работает в игре» —
+                вариант, который реально запускается у команд прямо сейчас;
+                выбор всегда явный, без случайного распределения.
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-3 py-5">

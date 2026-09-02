@@ -195,8 +195,8 @@ export const byId = protectedProcedure
       loadEngine(context.db),
     ]);
     const variantName =
-      engine.variants().find((item) => item.id === session.variantId)
-        ?.name ?? session.variantId;
+      engine.variants().find((item) => item.id === session.variantId)?.name ??
+      session.variantId;
 
     return { session, orders, variantName };
   });
