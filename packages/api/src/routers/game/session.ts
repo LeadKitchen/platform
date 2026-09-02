@@ -7,40 +7,25 @@ import {
   GameProductEvent,
   GameSession,
   GameTrainingAssignment,
-  GameVariant,
 } from "@acme/db";
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
 import { requireOwnedSession } from "../../game/access";
 import { getMemberOrgId } from "../../game/organizations";
 import { getActiveScorecardSnapshot } from "../../game/scorecards";
-import { loadEngine } from "../../game/service";
+import { loadEngine, resolveLiveVariantId } from "../../game/service";
 import { loadGameSettings } from "../../game/settings";
 import { protectedProcedure } from "../../orpc";
 
 const roundSchema = z.union([z.literal(2), z.literal(3)]);
 
-export function selectWeightedVariant(
-  variants: Array<{ id: string; weight: number }>,
-  random = Math.random,
-): string | undefined {
-  const available = variants.filter((item) => item.weight > 0);
-  const total = available.reduce((sum, item) => sum + item.weight, 0);
-  if (total <= 0) return undefined;
-  let cursor = random() * total;
-  for (const item of available) {
-    cursor -= item.weight;
-    if (cursor < 0) return item.id;
-  }
-  return available.at(-1)?.id;
-}
-
 /**
  * Open a game session for a team.
  *
  * The variant is fixed for the whole session so a team is never scored by two
- * different approaches mid-game; leaving it empty picks the configured
- * default.
+ * different approaches mid-game. Which variant that is comes only from admin
+ * choice — the configured default in game settings, or the engine's built-in
+ * fallback — never from a random split.
  *
  * @example client.game.session.create({ title: "Смена 1", round: 2 })
  */
@@ -100,27 +85,23 @@ export const create = protectedProcedure
       });
     }
 
-    const weightedVariants = settings.defaultVariantId
-      ? []
-      : await context.db
-          .select({ id: GameVariant.id, weight: GameVariant.weight })
-          .from(GameVariant)
-          .where(eq(GameVariant.isActive, true));
-    const variantId =
-      settings.defaultVariantId ??
-      selectWeightedVariant(weightedVariants) ??
-      engine.defaultVariantId;
+    const variantId = settings.defaultVariantId ?? engine.defaultVariantId;
 
     // Fail here rather than at the first utterance of the first dialog.
     engine.pipeline(variantId);
 
     return context.db.transaction(async (tx) => {
+      const liveVariantId = await resolveLiveVariantId(
+        tx,
+        variantId,
+        engine.defaultVariantId,
+      );
       const [session] = await tx
         .insert(GameSession)
         .values({
           title: input.title,
           round,
-          variantId,
+          variantId: liveVariantId,
           createdBy: context.session.user.id,
           orgId,
           trainingAssignmentId: assignment?.id,
@@ -210,13 +191,19 @@ export const byId = protectedProcedure
       context.session.user.id,
     );
 
-    const orders = await context.db
-      .select()
-      .from(GameOrder)
-      .where(eq(GameOrder.sessionId, session.id))
-      .orderBy(desc(GameOrder.createdAt));
+    const [orders, engine] = await Promise.all([
+      context.db
+        .select()
+        .from(GameOrder)
+        .where(eq(GameOrder.sessionId, session.id))
+        .orderBy(desc(GameOrder.createdAt)),
+      loadEngine(context.db),
+    ]);
+    const variantName =
+      engine.variants().find((item) => item.id === session.variantId)?.name ??
+      session.variantId;
 
-    return { session, orders };
+    return { session, orders, variantName };
   });
 
 /**

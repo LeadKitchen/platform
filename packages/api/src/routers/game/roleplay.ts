@@ -9,7 +9,6 @@ import {
   GameProductEvent,
   GameRoleplayScenario,
   GameSession,
-  GameVariant,
   isNotNull,
 } from "@acme/db";
 import { ORPCError } from "@orpc/server";
@@ -24,10 +23,13 @@ import {
   snapshotRoleplayScenario,
 } from "../../game/roleplay";
 import { getActiveScorecardSnapshot } from "../../game/scorecards";
-import { loadCatalog, loadEngine } from "../../game/service";
+import {
+  loadCatalog,
+  loadEngine,
+  resolveLiveVariantId,
+} from "../../game/service";
 import { loadGameSettings } from "../../game/settings";
 import { protectedProcedure } from "../../orpc";
-import { selectWeightedVariant } from "./session";
 
 const categorySchema = z.enum(ROLEPLAY_CATEGORIES);
 const levelSchema = z.enum(["L1", "L2", "L3", "L4"]);
@@ -237,25 +239,21 @@ export const start = protectedProcedure
       });
     }
 
-    const weightedVariants = settings.defaultVariantId
-      ? []
-      : await context.db
-          .select({ id: GameVariant.id, weight: GameVariant.weight })
-          .from(GameVariant)
-          .where(eq(GameVariant.isActive, true));
-    const variantId =
-      settings.defaultVariantId ??
-      selectWeightedVariant(weightedVariants) ??
-      engine.defaultVariantId;
+    const variantId = settings.defaultVariantId ?? engine.defaultVariantId;
     engine.pipeline(variantId);
 
     return context.db.transaction(async (tx) => {
+      const liveVariantId = await resolveLiveVariantId(
+        tx,
+        variantId,
+        engine.defaultVariantId,
+      );
       const [session] = await tx
         .insert(GameSession)
         .values({
           title: scenario.title,
           round: 2,
-          variantId,
+          variantId: liveVariantId,
           createdBy: context.session.user.id,
           orgId,
           roleplayScenarioId: scenario.id,
@@ -288,7 +286,7 @@ export const start = protectedProcedure
           employeeId: scenario.baseEmployeeId,
           taskId: scenario.baseTaskId,
           round: 2,
-          variantId,
+          variantId: liveVariantId,
           activeOrders: 1,
           soloOnShift: false,
         })

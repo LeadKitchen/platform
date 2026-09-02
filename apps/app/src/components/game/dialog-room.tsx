@@ -75,6 +75,7 @@ export interface DialogRoomProps {
   initialEvaluation: EvaluationView | null;
   initialFinished: boolean;
   variantId: string;
+  variantName: string;
   userAvatarSeed?: string;
   uploadedAvatarUrl?: string;
 }
@@ -353,6 +354,7 @@ export function DialogRoom(props: DialogRoomProps) {
                   В роли · ИИ
                 </Badge>
                 <Badge variant="outline">Раунд {props.shift.round}</Badge>
+                <Badge variant="outline">ИИ: {props.variantName}</Badge>
                 {props.shift.soloOnShift ? (
                   <Badge variant="accent">Один в смене</Badge>
                 ) : null}
