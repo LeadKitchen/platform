@@ -4,6 +4,7 @@ import {
   createEmbeddingProvider,
 } from "@acme/ai";
 import {
+  and,
   eq,
   type GameKnowledgeAudience,
   GameKnowledgeChunk,
@@ -13,12 +14,19 @@ import { db } from "@acme/db/client";
 import { downloadBufferFromS3 } from "@acme/storage";
 import mammoth from "mammoth";
 import { extractText } from "unpdf";
+import { z } from "zod";
 
 import { hatchet } from "../client";
 
 export interface IngestKnowledgeDocumentInput {
   documentId: string;
+  version: number;
 }
+
+const ingestKnowledgeDocumentInputSchema = z.object({
+  documentId: z.uuid(),
+  version: z.number().int().positive(),
+});
 
 /**
  * Turns an admin-uploaded file into searchable, org-scoped knowledge chunks
@@ -42,11 +50,16 @@ const extractContent = ingestKnowledgeDocumentWorkflow.task({
   retries: 3,
   executionTimeout: "2m",
   fn: async (rawInput) => {
-    const input = rawInput as unknown as IngestKnowledgeDocumentInput;
+    const input = ingestKnowledgeDocumentInputSchema.parse(rawInput);
     const [document] = await db
       .select()
       .from(GameKnowledgeDocument)
-      .where(eq(GameKnowledgeDocument.id, input.documentId))
+      .where(
+        and(
+          eq(GameKnowledgeDocument.id, input.documentId),
+          eq(GameKnowledgeDocument.version, input.version),
+        ),
+      )
       .limit(1);
     if (!document) {
       throw new Error(`Knowledge document ${input.documentId} not found`);
@@ -71,7 +84,12 @@ const extractContent = ingestKnowledgeDocumentWorkflow.task({
       throw new Error("Документ не содержит текста для индексации");
     }
 
-    return { text, orgId: document.orgId, defaultAudience: document.audience };
+    return {
+      text,
+      orgId: document.orgId,
+      defaultAudience: document.audience,
+      expectedVersion: document.version,
+    };
   },
 });
 
@@ -113,19 +131,44 @@ ingestKnowledgeDocumentWorkflow.task({
   retries: 3,
   executionTimeout: "3m",
   fn: async (rawInput, ctx) => {
-    const input = rawInput as unknown as IngestKnowledgeDocumentInput;
-    const { orgId } = await ctx.parentOutput(extractContent);
+    const input = ingestKnowledgeDocumentInputSchema.parse(rawInput);
+    const { orgId, expectedVersion } = await ctx.parentOutput(extractContent);
     const { chunks } = await ctx.parentOutput(chunkAndClassify);
+
+    if (input.version !== expectedVersion) {
+      throw new Error("Knowledge document version changed during ingestion");
+    }
 
     const embeddingProvider = createEmbeddingProvider();
     const vectors = await embeddingProvider.embed(
       chunks.map((chunk) => chunk.text),
     );
+    if (vectors.length !== chunks.length) {
+      throw new Error("Embedding provider returned an unexpected vector count");
+    }
 
-    await db.transaction(async (tx) => {
+    const persisted = await db.transaction(async (tx) => {
+      const [claimedDocument] = await tx
+        .update(GameKnowledgeDocument)
+        .set({ status: "needs_review", statusMessage: null })
+        .where(
+          and(
+            eq(GameKnowledgeDocument.id, input.documentId),
+            eq(GameKnowledgeDocument.version, expectedVersion),
+            eq(GameKnowledgeDocument.status, "processing"),
+          ),
+        )
+        .returning({ id: GameKnowledgeDocument.id });
+      if (!claimedDocument) return false;
+
       await tx
         .delete(GameKnowledgeChunk)
-        .where(eq(GameKnowledgeChunk.documentId, input.documentId));
+        .where(
+          and(
+            eq(GameKnowledgeChunk.documentId, input.documentId),
+            eq(GameKnowledgeChunk.orgId, orgId),
+          ),
+        );
 
       if (chunks.length > 0) {
         await tx.insert(GameKnowledgeChunk).values(
@@ -140,13 +183,10 @@ ingestKnowledgeDocumentWorkflow.task({
         );
       }
 
-      await tx
-        .update(GameKnowledgeDocument)
-        .set({ status: "needs_review", statusMessage: null })
-        .where(eq(GameKnowledgeDocument.id, input.documentId));
+      return true;
     });
 
-    return { chunkCount: chunks.length };
+    return { chunkCount: persisted ? chunks.length : 0, stale: !persisted };
   },
 });
 
@@ -157,13 +197,19 @@ ingestKnowledgeDocumentWorkflow.onFailure({
   name: "mark-failed",
   executionTimeout: "30s",
   fn: async (rawInput, ctx) => {
-    const input = rawInput as unknown as IngestKnowledgeDocumentInput;
+    const input = ingestKnowledgeDocumentInputSchema.parse(rawInput);
     const errors = Object.values(ctx.errors());
     const message = errors.join("; ") || "Ошибка обработки документа";
     await db
       .update(GameKnowledgeDocument)
       .set({ status: "failed", statusMessage: message.slice(0, 2000) })
-      .where(eq(GameKnowledgeDocument.id, input.documentId));
+      .where(
+        and(
+          eq(GameKnowledgeDocument.id, input.documentId),
+          eq(GameKnowledgeDocument.version, input.version),
+          eq(GameKnowledgeDocument.status, "processing"),
+        ),
+      );
     return { handled: true };
   },
 });

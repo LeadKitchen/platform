@@ -6,6 +6,7 @@ import {
   eq,
   GameKnowledgeChunk,
   GameKnowledgeDocument,
+  GameKnowledgePendingUpload,
   isNotNull,
   ne,
   sql,
@@ -15,6 +16,7 @@ import {
   createPresignedUrl,
   deleteObjectFromS3,
   generateS3Key,
+  MAX_UPLOAD_SIZE_BYTES,
 } from "@acme/storage";
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
@@ -85,13 +87,28 @@ export const get = protectedProcedure
     return { document, chunks };
   });
 
-/** Step 1 of upload: mint a presigned PUT URL. No DB row yet — nothing to clean up if the browser never uploads. */
+/** Step 1 of upload: mint a presigned PUT URL and its one-time confirmation authorization. */
 export const requestUpload = protectedProcedure
-  .input(z.object({ sourceType: sourceTypeSchema }))
+  .input(
+    z.object({
+      sourceType: sourceTypeSchema,
+      size: z.number().int().positive().max(MAX_UPLOAD_SIZE_BYTES),
+    }),
+  )
   .handler(async ({ context, input }) => {
-    await requireFacilitatorOrgId(context.db, context.session.user.id);
+    const orgId = await requireFacilitatorOrgId(
+      context.db,
+      context.session.user.id,
+    );
     const key = generateS3Key(`knowledge.${input.sourceType}`);
-    const uploadUrl = await createPresignedUrl(key);
+    const uploadUrl = await createPresignedUrl(key, input.size);
+    await context.db.insert(GameKnowledgePendingUpload).values({
+      key,
+      orgId,
+      userId: context.session.user.id,
+      sourceType: input.sourceType,
+      size: input.size,
+    });
     return { key, uploadUrl };
   });
 
@@ -110,21 +127,42 @@ export const confirmUpload = protectedProcedure
       context.db,
       context.session.user.id,
     );
-    const [document] = await context.db
-      .insert(GameKnowledgeDocument)
-      .values({
-        orgId,
-        title: input.title,
-        sourceType: input.sourceType,
-        s3Key: input.key,
-        audience: input.audience,
-        uploadedBy: context.session.user.id,
-      })
-      .returning();
+    const document = await context.db.transaction(async (tx) => {
+      const [pendingUpload] = await tx
+        .delete(GameKnowledgePendingUpload)
+        .where(
+          and(
+            eq(GameKnowledgePendingUpload.key, input.key),
+            eq(GameKnowledgePendingUpload.orgId, orgId),
+            eq(GameKnowledgePendingUpload.userId, context.session.user.id),
+            eq(GameKnowledgePendingUpload.sourceType, input.sourceType),
+          ),
+        )
+        .returning();
+      if (!pendingUpload) {
+        throw new ORPCError("BAD_REQUEST", {
+          message: "Загрузка не найдена, уже подтверждена или недоступна",
+        });
+      }
+
+      const [createdDocument] = await tx
+        .insert(GameKnowledgeDocument)
+        .values({
+          orgId,
+          title: input.title,
+          sourceType: input.sourceType,
+          s3Key: input.key,
+          audience: input.audience,
+          uploadedBy: context.session.user.id,
+        })
+        .returning();
+      return createdDocument;
+    });
     if (!document) throw new Error("Не удалось создать документ");
 
     await ingestKnowledgeDocumentWorkflow.runNoWait({
       documentId: document.id,
+      version: document.version,
     });
 
     return document;
@@ -138,12 +176,36 @@ export const retry = protectedProcedure
       context.db,
       context.session.user.id,
     );
-    await assertOwnedDocument(context.db, orgId, input.id);
-    await context.db
+    const document = await assertOwnedDocument(context.db, orgId, input.id);
+    if (document.status !== "failed") {
+      throw new ORPCError("BAD_REQUEST", {
+        message: "Повторная обработка доступна только после ошибки",
+      });
+    }
+    const [updatedDocument] = await context.db
       .update(GameKnowledgeDocument)
-      .set({ status: "processing", statusMessage: null })
-      .where(eq(GameKnowledgeDocument.id, input.id));
-    await ingestKnowledgeDocumentWorkflow.runNoWait({ documentId: input.id });
+      .set({
+        status: "processing",
+        statusMessage: null,
+        version: sql`${GameKnowledgeDocument.version} + 1`,
+      })
+      .where(
+        and(
+          eq(GameKnowledgeDocument.id, input.id),
+          eq(GameKnowledgeDocument.version, document.version),
+          eq(GameKnowledgeDocument.status, "failed"),
+        ),
+      )
+      .returning();
+    if (!updatedDocument) {
+      throw new ORPCError("BAD_REQUEST", {
+        message: "Статус документа уже изменился",
+      });
+    }
+    await ingestKnowledgeDocumentWorkflow.runNoWait({
+      documentId: input.id,
+      version: updatedDocument.version,
+    });
     return { id: input.id };
   });
 

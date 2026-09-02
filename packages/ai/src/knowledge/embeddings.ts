@@ -21,13 +21,22 @@ export interface EmbeddingOptions {
   model?: string;
 }
 
+export const KNOWLEDGE_EMBEDDING_DIMENSIONS = 1536;
+const KNOWLEDGE_EMBEDDING_MODEL = "text-embedding-3-small";
+
 export function createEmbeddingProvider(
   options: EmbeddingOptions = {},
 ): EmbeddingProvider {
   const apiKey = options.apiKey ?? process.env.OPENAI_API_KEY;
   const baseUrl = options.baseUrl ?? process.env.OPENAI_BASE_URL;
   const modelId =
-    options.model ?? process.env.EMBEDDING_MODEL ?? "text-embedding-3-small";
+    options.model ?? process.env.EMBEDDING_MODEL ?? KNOWLEDGE_EMBEDDING_MODEL;
+
+  if (modelId !== KNOWLEDGE_EMBEDDING_MODEL) {
+    throw new Error(
+      `Embedding model '${modelId}' is incompatible: knowledge vectors require ${KNOWLEDGE_EMBEDDING_DIMENSIONS} dimensions from ${KNOWLEDGE_EMBEDDING_MODEL}`,
+    );
+  }
 
   const isGateway =
     Boolean(baseUrl) && !baseUrl?.startsWith("https://api.openai.com");
@@ -45,6 +54,13 @@ export function createEmbeddingProvider(
     async embed(texts) {
       if (texts.length === 0) return [];
       const { embeddings } = await embedMany({ model, values: texts });
+      for (const embedding of embeddings) {
+        if (embedding.length !== KNOWLEDGE_EMBEDDING_DIMENSIONS) {
+          throw new Error(
+            `Embedding provider returned ${embedding.length} dimensions; expected ${KNOWLEDGE_EMBEDDING_DIMENSIONS}`,
+          );
+        }
+      }
       return embeddings;
     },
   };

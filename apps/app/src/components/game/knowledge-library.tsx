@@ -100,6 +100,13 @@ const STATUS_LABEL: Record<DocumentStatus, string> = {
   failed: "Ошибка",
 };
 
+function sourceTypeForFile(file: File): SourceType | null {
+  const extension = file.name.split(".").pop()?.toLowerCase();
+  return extension === "pdf" || extension === "docx" || extension === "txt"
+    ? extension
+    : null;
+}
+
 function statusVariant(
   status: DocumentStatus,
 ): "outline" | "accent" | "secondary" | "destructive" {
@@ -147,10 +154,16 @@ function UploadDialog({
 
   async function upload() {
     if (!file || title.trim().length === 0 || pending) return;
+    const selectedSourceType = sourceTypeForFile(file);
+    if (!selectedSourceType || selectedSourceType !== sourceType) {
+      toast.error("Формат файла не совпадает с выбранным форматом");
+      return;
+    }
     setPending(true);
     try {
       const { key, uploadUrl } = await client.org.knowledge.requestUpload({
-        sourceType,
+        sourceType: selectedSourceType,
+        size: file.size,
       });
       const putResponse = await fetch(uploadUrl, {
         method: "PUT",
@@ -163,7 +176,7 @@ function UploadDialog({
       const document = await client.org.knowledge.confirmUpload({
         key,
         title: title.trim(),
-        sourceType,
+        sourceType: selectedSourceType,
         audience,
       });
       onUploaded(document as KnowledgeDocumentView);
@@ -253,7 +266,21 @@ function UploadDialog({
               type="file"
               accept=".pdf,.docx,.txt"
               className="text-sm file:mr-3 file:rounded-md file:border file:bg-muted file:px-3 file:py-1.5 file:text-sm"
-              onChange={(event) => setFile(event.target.files?.[0] ?? null)}
+              onChange={(event) => {
+                const selectedFile = event.target.files?.[0] ?? null;
+                if (!selectedFile) {
+                  setFile(null);
+                  return;
+                }
+                const selectedSourceType = sourceTypeForFile(selectedFile);
+                if (!selectedSourceType) {
+                  setFile(null);
+                  toast.error("Поддерживаются только PDF, DOCX и TXT");
+                  return;
+                }
+                setFile(selectedFile);
+                setSourceType(selectedSourceType);
+              }}
             />
           </Field>
         </FieldGroup>
@@ -293,18 +320,18 @@ function ReviewDialog({
   }, [document.id]);
 
   async function setChunkAudience(chunkId: string, audience: Audience) {
-    setChunks(
-      (current) =>
-        current?.map((chunk) =>
-          chunk.id === chunkId ? { ...chunk, audience } : chunk,
-        ) ?? null,
-    );
     try {
       await client.org.knowledge.updateChunkAudience({
         documentId: document.id,
         chunkId,
         audience,
       });
+      setChunks(
+        (current) =>
+          current?.map((chunk) =>
+            chunk.id === chunkId ? { ...chunk, audience } : chunk,
+          ) ?? null,
+      );
     } catch {
       toast.error("Не удалось сохранить разметку фрагмента");
     }

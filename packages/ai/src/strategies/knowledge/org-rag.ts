@@ -76,8 +76,8 @@ export const orgRagKnowledge: KnowledgeStrategy = {
       eq,
       GameKnowledgeChunk,
       GameKnowledgeDocument,
+      inArray,
       isNotNull,
-      ne,
       sql,
     } = await import("@acme/db");
 
@@ -97,7 +97,7 @@ export const orgRagKnowledge: KnowledgeStrategy = {
       .where(
         and(
           eq(GameKnowledgeChunk.orgId, orgId),
-          ne(GameKnowledgeChunk.audience, "judge"),
+          inArray(GameKnowledgeChunk.audience, ["character", "both"]),
           isNotNull(GameKnowledgeChunk.embedding),
           // Chunks only go live once an admin confirms the audience labels
           // suggested during ingestion — see `needs_review` in the schema.

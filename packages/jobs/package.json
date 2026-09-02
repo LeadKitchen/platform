@@ -24,7 +24,8 @@
     "@acme/storage": "workspace:*",
     "@hatchet-dev/typescript-sdk": "1.29.2",
     "mammoth": "^1.12.2",
-    "unpdf": "^1.8.1"
+    "unpdf": "^1.8.1",
+    "zod": "4.5.4"
   },
   "devDependencies": {
     "@acme/tsconfig": "workspace:*",

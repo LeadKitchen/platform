@@ -77,6 +77,26 @@ export async function classifyChunkAudience(
         },
       ],
     });
+    const expectedIndexes = new Set(batch.map((item) => item.index));
+    const responseIndexes = new Set<number>();
+    if (
+      expectedIndexes.size !== batch.length ||
+      value.chunks.length !== batch.length
+    ) {
+      throw new Error("Invalid audience classification indexes");
+    }
+    for (const chunk of value.chunks) {
+      if (
+        !expectedIndexes.has(chunk.index) ||
+        responseIndexes.has(chunk.index)
+      ) {
+        throw new Error("Invalid audience classification indexes");
+      }
+      responseIndexes.add(chunk.index);
+    }
+    if (responseIndexes.size !== expectedIndexes.size) {
+      throw new Error("Invalid audience classification indexes");
+    }
     results.push(...value.chunks);
   }
 

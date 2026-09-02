@@ -32,7 +32,13 @@ export function chunkText(
   options: ChunkOptions = {},
 ): TextChunk[] {
   const targetChars = options.targetChars ?? 2400;
-  const overlapChars = options.overlapChars ?? 200;
+  if (!Number.isFinite(targetChars) || targetChars <= 0) {
+    throw new RangeError("targetChars must be greater than zero");
+  }
+  const requestedOverlapChars = options.overlapChars ?? 200;
+  const overlapChars = Number.isFinite(requestedOverlapChars)
+    ? Math.min(targetChars, Math.max(0, requestedOverlapChars))
+    : 0;
 
   const paragraphs = text
     .split(/\n{2,}/)
@@ -55,7 +61,8 @@ export function chunkText(
       continue;
     }
     chunks.push(current);
-    const overlap = current.slice(-overlapChars).trimStart();
+    const overlap =
+      overlapChars > 0 ? current.slice(-overlapChars).trimStart() : "";
     current = overlap.length > 0 ? `${overlap}\n\n${paragraph}` : paragraph;
   }
   if (current.length > 0) chunks.push(current);

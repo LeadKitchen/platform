@@ -1,5 +1,13 @@
 import { sql } from "drizzle-orm";
-import { index, pgTable, primaryKey, uniqueIndex } from "drizzle-orm/pg-core";
+import {
+  check,
+  foreignKey,
+  index,
+  pgTable,
+  primaryKey,
+  unique,
+  uniqueIndex,
+} from "drizzle-orm/pg-core";
 
 import { user } from "../auth/user";
 
@@ -736,6 +744,34 @@ export const GameReviewReport = pgTable(
  */
 export type GameKnowledgeAudience = "character" | "judge" | "both";
 
+/** One-time authorization for completing a direct-to-S3 knowledge upload. */
+export const GameKnowledgePendingUpload = pgTable(
+  "game_knowledge_pending_uploads",
+  (t) => ({
+    key: t.text().primaryKey(),
+    orgId: t
+      .text()
+      .notNull()
+      .references(() => GameOrganization.id, { onDelete: "cascade" }),
+    userId: t
+      .text()
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    sourceType: t
+      .varchar({ length: 16 })
+      .$type<"pdf" | "docx" | "txt">()
+      .notNull(),
+    size: t.integer().notNull(),
+    createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+  }),
+  (table) => [
+    check(
+      "game_knowledge_pending_uploads_source_type_check",
+      sql`${table.sourceType} in ('pdf', 'docx', 'txt')`,
+    ),
+  ],
+);
+
 /**
  * An admin-uploaded knowledge source (PDF/DOCX/plain text) for one
  * organization's RAG-fed "virtual employee". The file itself lives in S3
@@ -786,6 +822,14 @@ export const GameKnowledgeDocument = pgTable(
   }),
   (table) => [
     index("game_knowledge_documents_org_idx").on(table.orgId, table.createdAt),
+    unique("game_knowledge_documents_id_org_id_unique").on(
+      table.id,
+      table.orgId,
+    ),
+    check(
+      "game_knowledge_documents_audience_check",
+      sql`${table.audience} in ('character', 'judge', 'both')`,
+    ),
   ],
 );
 
@@ -799,10 +843,7 @@ export const GameKnowledgeChunk = pgTable(
   "game_knowledge_chunks",
   (t) => ({
     id: t.uuid().primaryKey().defaultRandom(),
-    documentId: t
-      .uuid()
-      .notNull()
-      .references(() => GameKnowledgeDocument.id, { onDelete: "cascade" }),
+    documentId: t.uuid().notNull(),
     orgId: t
       .text()
       .notNull()
@@ -824,6 +865,15 @@ export const GameKnowledgeChunk = pgTable(
     index("game_knowledge_chunks_org_audience_idx").on(
       table.orgId,
       table.audience,
+    ),
+    foreignKey({
+      columns: [table.documentId, table.orgId],
+      foreignColumns: [GameKnowledgeDocument.id, GameKnowledgeDocument.orgId],
+      name: "game_knowledge_chunks_document_org_fk",
+    }).onDelete("cascade"),
+    check(
+      "game_knowledge_chunks_audience_check",
+      sql`${table.audience} in ('character', 'judge', 'both')`,
     ),
   ],
 );
