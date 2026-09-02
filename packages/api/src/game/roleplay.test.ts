@@ -41,7 +41,7 @@ describe("roleplay scenarios", () => {
     expect(applied.employee.name).toBe(scenario.employeeName);
     expect(applied.task.title).toBe(scenario.title);
     expect(applied.employee.competences[task.type]).toBe("novice");
-    expect(employee.name).toBe("Тимур Асланов");
+    expect(employee.name).toBe("Денис Волков");
   });
 
   it("includes objectives, resistance and mode in the live prompt notes", () => {

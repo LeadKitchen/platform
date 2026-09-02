@@ -5,15 +5,15 @@ import * as notionists from "@dicebear/notionists";
 const EMPLOYEE_PHOTO_AVATARS: Record<string, string> = {
   "Анна Соколова": "/images/roleplay/anna-sokolova.webp",
   "Игорь Петров": "/images/roleplay/igor-petrov.webp",
-  "Марина Ким": "/images/roleplay/marina-kim.webp",
   "Ольга Веретенникова": "/images/roleplay/olga-veretennikova.webp",
-  "Тимур Асланов": "/images/roleplay/timur-aslanov.webp",
 };
 
 /**
  * Основные персонажи используют локальные сгенерированные фотопортреты, чтобы
  * выглядеть одинаково в каталоге, комнате диалога и демо-туре. Для новых
- * пользовательских персонажей остаётся детерминированный DiceBear fallback.
+ * пользовательских персонажей остаётся детерминированный DiceBear fallback —
+ * им же временно пользуются Марина Лебедева и Денис Волков, пока для них не
+ * готовы новые фотопортреты славянской внешности.
  */
 export function employeeAvatarUri(seed: string): string {
   const photoAvatar = EMPLOYEE_PHOTO_AVATARS[seed.trim()];

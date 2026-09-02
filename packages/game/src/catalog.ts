@@ -64,7 +64,7 @@ export const EMPLOYEES: Employee[] = [
   },
   {
     id: "marina",
-    name: "Марина Ким",
+    name: "Марина Лебедева",
     role: "Помощник повара",
     level: "L2",
     gender: "female",
@@ -86,7 +86,7 @@ export const EMPLOYEES: Employee[] = [
   },
   {
     id: "timur",
-    name: "Тимур Асланов",
+    name: "Денис Волков",
     role: "Стажёр",
     level: "L1",
     gender: "male",
