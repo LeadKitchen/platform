@@ -1,57 +1,57 @@
 {
-  "startedAt": "2026-08-26T10:57:09.367Z",
-  "finishedAt": "2026-08-26T11:18:40.518Z",
+  "startedAt": "2026-09-02T08:24:03.542Z",
+  "finishedAt": "2026-09-02T08:36:32.125Z",
   "providerId": "ai-sdk:openai-compatible",
-  "model": "gpt-5.5",
+  "model": "gpt-5.6-sol",
   "epochs": 1,
-  "runsPerFixture": 3,
-  "fixtures": 12,
+  "runsPerFixture": 2,
+  "fixtures": 4,
   "expertLabelledFixtures": 0,
-  "aiAssistedFixtures": 12,
+  "aiAssistedFixtures": 4,
   "referenceVariantId": "baseline",
   "variants": [
     {
       "variantId": "baseline",
-      "items": 36,
-      "scoreMae": 11.25,
+      "items": 8,
+      "scoreMae": 11.75,
       "scoreStdDev": 0,
       "expectedStyleAccuracy": 1,
-      "actualStyleAccuracy": 0.833,
-      "styleKappa": 0.765,
-      "criteriaF1": 0.831,
+      "actualStyleAccuracy": 0.75,
+      "styleKappa": 0.636,
+      "criteriaF1": 0.792,
       "personaAdherence": 1,
       "personaDriftRate": 0,
       "personaDriftSlope": 0,
       "silenceAccuracy": 1,
-      "avgLatencyMs": 46527,
-      "totalInputTokens": 902723,
-      "totalOutputTokens": 26318,
-      "totalCostUsd": 5.6733,
-      "avgCostUsd": 0.15759,
+      "avgLatencyMs": 77611,
+      "totalInputTokens": 36890,
+      "totalOutputTokens": 4406,
+      "totalCostUsd": 0,
+      "avgCostUsd": 0,
       "modelMix": {
-        "gpt-5.5": 36
+        "gpt-5.6-sol": 8
       }
     },
     {
       "variantId": "self-consistency",
-      "items": 36,
-      "scoreMae": 11.25,
+      "items": 8,
+      "scoreMae": 11.75,
       "scoreStdDev": 0,
       "expectedStyleAccuracy": 1,
-      "actualStyleAccuracy": 0.833,
-      "styleKappa": 0.765,
-      "criteriaF1": 0.831,
+      "actualStyleAccuracy": 0.75,
+      "styleKappa": 0.636,
+      "criteriaF1": 0.792,
       "personaAdherence": 1,
       "personaDriftRate": 0,
       "personaDriftSlope": 0,
       "silenceAccuracy": 1,
-      "avgLatencyMs": 58054,
-      "totalInputTokens": 2735452,
-      "totalOutputTokens": 80163,
-      "totalCostUsd": 17.2412,
-      "avgCostUsd": 0.47892,
+      "avgLatencyMs": 160709,
+      "totalInputTokens": 108648,
+      "totalOutputTokens": 13664,
+      "totalCostUsd": 0,
+      "avgCostUsd": 0,
       "modelMix": {
-        "gpt-5.5": 36
+        "gpt-5.6-sol": 8
       }
     }
   ],
@@ -67,7 +67,7 @@
           "ciLow": 0,
           "ciHigh": 0,
           "pValue": 1,
-          "pairs": 12,
+          "pairs": 4,
           "significant": false
         },
         {
@@ -78,7 +78,7 @@
           "ciLow": 0,
           "ciHigh": 0,
           "pValue": 1,
-          "pairs": 12,
+          "pairs": 4,
           "significant": false
         },
         {
@@ -89,7 +89,7 @@
           "ciLow": 0,
           "ciHigh": 0,
           "pValue": 1,
-          "pairs": 12,
+          "pairs": 4,
           "significant": false
         },
         {
@@ -100,7 +100,7 @@
           "ciLow": 0,
           "ciHigh": 0,
           "pValue": 1,
-          "pairs": 12,
+          "pairs": 4,
           "significant": false
         },
         {
@@ -111,19 +111,19 @@
           "ciLow": 0,
           "ciHigh": 0,
           "pValue": 1,
-          "pairs": 12,
+          "pairs": 4,
           "significant": false
         },
         {
           "metric": "costUsd",
           "label": "Стоимость диалога",
           "direction": "lower",
-          "delta": -0.321,
-          "ciLow": -0.375,
-          "ciHigh": -0.274,
-          "pValue": 0.0002,
-          "pairs": 12,
-          "significant": true
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 4,
+          "significant": false
         }
       ]
     }
@@ -135,46 +135,46 @@
       "variants": [
         {
           "variantId": "baseline",
-          "items": 36,
-          "scoreMae": 11.25,
+          "items": 8,
+          "scoreMae": 11.75,
           "scoreStdDev": 0,
           "expectedStyleAccuracy": 1,
-          "actualStyleAccuracy": 0.833,
-          "styleKappa": 0.765,
-          "criteriaF1": 0.831,
+          "actualStyleAccuracy": 0.75,
+          "styleKappa": 0.636,
+          "criteriaF1": 0.792,
           "personaAdherence": 1,
           "personaDriftRate": 0,
           "personaDriftSlope": 0,
           "silenceAccuracy": 1,
-          "avgLatencyMs": 46527,
-          "totalInputTokens": 902723,
-          "totalOutputTokens": 26318,
-          "totalCostUsd": 5.6733,
-          "avgCostUsd": 0.15759,
+          "avgLatencyMs": 77611,
+          "totalInputTokens": 36890,
+          "totalOutputTokens": 4406,
+          "totalCostUsd": 0,
+          "avgCostUsd": 0,
           "modelMix": {
-            "gpt-5.5": 36
+            "gpt-5.6-sol": 8
           }
         },
         {
           "variantId": "self-consistency",
-          "items": 36,
-          "scoreMae": 11.25,
+          "items": 8,
+          "scoreMae": 11.75,
           "scoreStdDev": 0,
           "expectedStyleAccuracy": 1,
-          "actualStyleAccuracy": 0.833,
-          "styleKappa": 0.765,
-          "criteriaF1": 0.831,
+          "actualStyleAccuracy": 0.75,
+          "styleKappa": 0.636,
+          "criteriaF1": 0.792,
           "personaAdherence": 1,
           "personaDriftRate": 0,
           "personaDriftSlope": 0,
           "silenceAccuracy": 1,
-          "avgLatencyMs": 58054,
-          "totalInputTokens": 2735452,
-          "totalOutputTokens": 80163,
-          "totalCostUsd": 17.2412,
-          "avgCostUsd": 0.47892,
+          "avgLatencyMs": 160709,
+          "totalInputTokens": 108648,
+          "totalOutputTokens": 13664,
+          "totalCostUsd": 0,
+          "avgCostUsd": 0,
           "modelMix": {
-            "gpt-5.5": 36
+            "gpt-5.6-sol": 8
           }
         }
       ]
@@ -206,13 +206,198 @@
       },
       "silenceRespected": true,
       "employeeReplies": 3,
-      "latencyMs": 44462,
-      "inputTokens": 17770,
-      "outputTokens": 401,
-      "costUsd": 0.108342,
-      "run": 3,
+      "latencyMs": 36333,
+      "inputTokens": 3870,
+      "outputTokens": 301,
+      "costUsd": 0,
+      "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 20674
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 5229
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 10427
+        }
+      ],
       "models": [
-        "gpt-5.5"
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "baseline",
+      "epoch": 1,
+      "score": 31,
+      "expertScore": 22,
+      "absError": 9,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.4,
+        "f1": 0.5
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 30248,
+      "inputTokens": 5273,
+      "outputTokens": 512,
+      "costUsd": 0,
+      "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 4406
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 5196
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 15420
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 5224
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "baseline",
+      "epoch": 1,
+      "score": 31,
+      "expertScore": 22,
+      "absError": 9,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.4,
+        "f1": 0.5
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 72712,
+      "inputTokens": 5276,
+      "outputTokens": 530,
+      "costUsd": 0,
+      "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 49520
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 5277
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 10069
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 7841
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-coaching",
+      "variantId": "baseline",
+      "epoch": 1,
+      "score": 67,
+      "expertScore": 85,
+      "absError": 18,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "supporting",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 34857,
+      "inputTokens": 5382,
+      "outputTokens": 637,
+      "costUsd": 0,
+      "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 7183
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 6329
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 17765
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 3579
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
       ]
     },
     {
@@ -240,251 +425,30 @@
       },
       "silenceRespected": true,
       "employeeReplies": 3,
-      "latencyMs": 44900,
-      "inputTokens": 17770,
-      "outputTokens": 319,
-      "costUsd": 0.105319,
+      "latencyMs": 110835,
+      "inputTokens": 3872,
+      "outputTokens": 365,
+      "costUsd": 0,
       "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 21580
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 80920
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 8333
+        }
+      ],
       "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-apple_pies-r2-delegating",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 100,
-      "expertScore": 88,
-      "absError": 12,
-      "expectedStyle": "delegating",
-      "labelExpectedStyle": "delegating",
-      "actualStyle": "delegating",
-      "labelActualStyle": "delegating",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 3,
-      "latencyMs": 44949,
-      "inputTokens": 17766,
-      "outputTokens": 340,
-      "costUsd": 0.106492,
-      "run": 2,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-apple_pies-r2-directive",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 31,
-      "expertScore": 22,
-      "absError": 9,
-      "expectedStyle": "delegating",
-      "labelExpectedStyle": "delegating",
-      "actualStyle": "directive",
-      "labelActualStyle": "directive",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 0.6666666666666666,
-        "recall": 0.4,
-        "f1": 0.5
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 33462,
-      "inputTokens": 22688,
-      "outputTokens": 419,
-      "costUsd": 0.135712,
-      "run": 3,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-apple_pies-r2-directive",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 31,
-      "expertScore": 22,
-      "absError": 9,
-      "expectedStyle": "delegating",
-      "labelExpectedStyle": "delegating",
-      "actualStyle": "directive",
-      "labelActualStyle": "directive",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 0.6666666666666666,
-        "recall": 0.4,
-        "f1": 0.5
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 34382,
-      "inputTokens": 22713,
-      "outputTokens": 509,
-      "costUsd": 0.13853700000000002,
-      "run": 2,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-apple_pies-r2-directive",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 31,
-      "expertScore": 22,
-      "absError": 9,
-      "expectedStyle": "delegating",
-      "labelExpectedStyle": "delegating",
-      "actualStyle": "directive",
-      "labelActualStyle": "directive",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 0.6666666666666666,
-        "recall": 0.4,
-        "f1": 0.5
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 39016,
-      "inputTokens": 22708,
-      "outputTokens": 482,
-      "costUsd": 0.138214,
-      "run": 1,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-salads-r2-coaching",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 67,
-      "expertScore": 85,
-      "absError": 18,
-      "expectedStyle": "coaching",
-      "labelExpectedStyle": "coaching",
-      "actualStyle": "supporting",
-      "labelActualStyle": "coaching",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": false,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 74693,
-      "inputTokens": 23873,
-      "outputTokens": 833,
-      "costUsd": 0.155055,
-      "run": 2,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-salads-r2-coaching",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 67,
-      "expertScore": 85,
-      "absError": 18,
-      "expectedStyle": "coaching",
-      "labelExpectedStyle": "coaching",
-      "actualStyle": "supporting",
-      "labelActualStyle": "coaching",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": false,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 81430,
-      "inputTokens": 23856,
-      "outputTokens": 733,
-      "costUsd": 0.150844,
-      "run": 1,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-salads-r2-coaching",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 67,
-      "expertScore": 85,
-      "absError": 18,
-      "expectedStyle": "coaching",
-      "labelExpectedStyle": "coaching",
-      "actualStyle": "supporting",
-      "labelActualStyle": "coaching",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": false,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 84665,
-      "inputTokens": 23900,
-      "outputTokens": 831,
-      "costUsd": 0.15513,
-      "run": 3,
-      "models": [
-        "gpt-5.5"
+        "gpt-5.6-sol"
       ]
     },
     {
@@ -512,13 +476,30 @@
       },
       "silenceRespected": true,
       "employeeReplies": 3,
-      "latencyMs": 53797,
-      "inputTokens": 17244,
-      "outputTokens": 699,
-      "costUsd": 0.113897,
+      "latencyMs": 24356,
+      "inputTokens": 3912,
+      "outputTokens": 611,
+      "costUsd": 0,
       "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 6312
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 8225
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 9819
+        }
+      ],
       "models": [
-        "gpt-5.5"
+        "gpt-5.6-sol"
       ]
     },
     {
@@ -546,671 +527,42 @@
       },
       "silenceRespected": true,
       "employeeReplies": 3,
-      "latencyMs": 51129,
-      "inputTokens": 17253,
-      "outputTokens": 773,
-      "costUsd": 0.117237,
+      "latencyMs": 112665,
+      "inputTokens": 3905,
+      "outputTokens": 739,
+      "costUsd": 0,
       "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 7616
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 94764
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 10283
+        }
+      ],
       "models": [
-        "gpt-5.5"
+        "gpt-5.6-sol"
       ]
     },
     {
-      "fixtureId": "anna-salads-r2-delegating",
+      "fixtureId": "anna-salads-r2-coaching",
       "variantId": "baseline",
       "epoch": 1,
-      "score": 18,
-      "expertScore": 10,
-      "absError": 8,
-      "expectedStyle": "coaching",
-      "labelExpectedStyle": "coaching",
-      "actualStyle": "delegating",
-      "labelActualStyle": "delegating",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 0.5,
-        "f1": 0.6666666666666666
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 3,
-      "latencyMs": 53019,
-      "inputTokens": 17244,
-      "outputTokens": 553,
-      "costUsd": 0.11008000000000001,
-      "run": 3,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r2-directive",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 93,
-      "expertScore": 90,
-      "absError": 3,
-      "expectedStyle": "directive",
-      "labelExpectedStyle": "directive",
-      "actualStyle": "directive",
-      "labelActualStyle": "directive",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 40475,
-      "inputTokens": 22749,
-      "outputTokens": 742,
-      "costUsd": 0.145144,
-      "run": 2,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r2-directive",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 93,
-      "expertScore": 90,
-      "absError": 3,
-      "expectedStyle": "directive",
-      "labelExpectedStyle": "directive",
-      "actualStyle": "directive",
-      "labelActualStyle": "directive",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 44985,
-      "inputTokens": 22706,
-      "outputTokens": 642,
-      "costUsd": 0.14244099999999998,
-      "run": 1,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r2-directive",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 93,
-      "expertScore": 90,
-      "absError": 3,
-      "expectedStyle": "directive",
-      "labelExpectedStyle": "directive",
-      "actualStyle": "directive",
-      "labelActualStyle": "directive",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 61341,
-      "inputTokens": 23895,
-      "outputTokens": 821,
-      "costUsd": 0.154805,
-      "run": 3,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r2-delegating",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 7,
-      "expertScore": 3,
-      "absError": 4,
-      "expectedStyle": "directive",
-      "labelExpectedStyle": "directive",
-      "actualStyle": "delegating",
-      "labelActualStyle": "delegating",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 0.6666666666666666,
-        "recall": 0.5,
-        "f1": 0.5714285714285715
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 50334,
-      "inputTokens": 23279,
-      "outputTokens": 793,
-      "costUsd": 0.15012999999999999,
-      "run": 1,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r2-delegating",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 7,
-      "expertScore": 3,
-      "absError": 4,
-      "expectedStyle": "directive",
-      "labelExpectedStyle": "directive",
-      "actualStyle": "delegating",
-      "labelActualStyle": "delegating",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 0.6666666666666666,
-        "recall": 0.5,
-        "f1": 0.5714285714285715
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 59480,
-      "inputTokens": 23822,
-      "outputTokens": 813,
-      "costUsd": 0.1542,
-      "run": 2,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-prep_veggies-r2-supporting",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 100,
-      "expertScore": 87,
-      "absError": 13,
-      "expectedStyle": "supporting",
-      "labelExpectedStyle": "supporting",
-      "actualStyle": "supporting",
-      "labelActualStyle": "supporting",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 24589,
-      "inputTokens": 21637,
-      "outputTokens": 559,
-      "costUsd": 0.132635,
-      "run": 1,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r2-delegating",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 7,
-      "expertScore": 3,
-      "absError": 4,
-      "expectedStyle": "directive",
-      "labelExpectedStyle": "directive",
-      "actualStyle": "delegating",
-      "labelActualStyle": "delegating",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 0.6666666666666666,
-        "recall": 0.5,
-        "f1": 0.5714285714285715
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 49033,
-      "inputTokens": 23809,
-      "outputTokens": 779,
-      "costUsd": 0.153115,
-      "run": 3,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-prep_veggies-r2-supporting",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 100,
-      "expertScore": 87,
-      "absError": 13,
-      "expectedStyle": "supporting",
-      "labelExpectedStyle": "supporting",
-      "actualStyle": "supporting",
-      "labelActualStyle": "supporting",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 23245,
-      "inputTokens": 21672,
-      "outputTokens": 576,
-      "costUsd": 0.135368,
-      "run": 2,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-prep_veggies-r2-supporting",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 100,
-      "expertScore": 87,
-      "absError": 13,
-      "expectedStyle": "supporting",
-      "labelExpectedStyle": "supporting",
-      "actualStyle": "supporting",
-      "labelActualStyle": "supporting",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 22305,
-      "inputTokens": 21737,
-      "outputTokens": 557,
-      "costUsd": 0.134099,
-      "run": 3,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-prep_veggies-r2-directive",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 45,
-      "expertScore": 18,
-      "absError": 27,
-      "expectedStyle": "supporting",
-      "labelExpectedStyle": "supporting",
-      "actualStyle": "directive",
-      "labelActualStyle": "directive",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 0.4,
-        "f1": 0.5714285714285715
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 30927,
-      "inputTokens": 22707,
-      "outputTokens": 472,
-      "costUsd": 0.137346,
-      "run": 1,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-prep_veggies-r2-directive",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 45,
-      "expertScore": 18,
-      "absError": 27,
-      "expectedStyle": "supporting",
-      "labelExpectedStyle": "supporting",
-      "actualStyle": "directive",
-      "labelActualStyle": "directive",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 0.4,
-        "f1": 0.5714285714285715
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 31506,
-      "inputTokens": 22692,
-      "outputTokens": 543,
-      "costUsd": 0.139964,
-      "run": 2,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-apple_pies-r3-supporting",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 97,
-      "expertScore": 90,
-      "absError": 7,
-      "expectedStyle": "supporting",
-      "labelExpectedStyle": "supporting",
-      "actualStyle": "supporting",
-      "labelActualStyle": "supporting",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 6,
-      "latencyMs": 27028,
-      "inputTokens": 34094,
-      "outputTokens": 828,
-      "costUsd": 0.20785400000000004,
-      "run": 1,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-prep_veggies-r2-directive",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 45,
-      "expertScore": 18,
-      "absError": 27,
-      "expectedStyle": "supporting",
-      "labelExpectedStyle": "supporting",
-      "actualStyle": "directive",
-      "labelActualStyle": "directive",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 0.4,
-        "f1": 0.5714285714285715
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 46180,
-      "inputTokens": 22667,
-      "outputTokens": 501,
-      "costUsd": 0.137504,
-      "run": 3,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-apple_pies-r3-supporting",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 97,
-      "expertScore": 90,
-      "absError": 7,
-      "expectedStyle": "supporting",
-      "labelExpectedStyle": "supporting",
-      "actualStyle": "supporting",
-      "labelActualStyle": "supporting",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 6,
-      "latencyMs": 36511,
-      "inputTokens": 35219,
-      "outputTokens": 928,
-      "costUsd": 0.21742599999999998,
-      "run": 2,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-apple_pies-r3-supporting",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 97,
-      "expertScore": 90,
-      "absError": 7,
-      "expectedStyle": "supporting",
-      "labelExpectedStyle": "supporting",
-      "actualStyle": "supporting",
-      "labelActualStyle": "supporting",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 6,
-      "latencyMs": 30895,
-      "inputTokens": 34010,
-      "outputTokens": 834,
-      "costUsd": 0.20915,
-      "run": 3,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-apple_pies-r3-delegating",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 14,
-      "expertScore": 3,
-      "absError": 11,
-      "expectedStyle": "supporting",
-      "labelExpectedStyle": "supporting",
-      "actualStyle": "delegating",
-      "labelActualStyle": "delegating",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 0.5,
-        "f1": 0.6666666666666666
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 33058,
-      "inputTokens": 22868,
-      "outputTokens": 614,
-      "costUsd": 0.141656,
-      "run": 1,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-apple_pies-r3-delegating",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 14,
-      "expertScore": 3,
-      "absError": 11,
-      "expectedStyle": "supporting",
-      "labelExpectedStyle": "supporting",
-      "actualStyle": "delegating",
-      "labelActualStyle": "delegating",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 0.5,
-        "f1": 0.6666666666666666
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 25638,
-      "inputTokens": 22837,
-      "outputTokens": 596,
-      "costUsd": 0.141524,
-      "run": 2,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-apple_pies-r3-delegating",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 14,
-      "expertScore": 3,
-      "absError": 11,
-      "expectedStyle": "supporting",
-      "labelExpectedStyle": "supporting",
-      "actualStyle": "delegating",
-      "labelActualStyle": "delegating",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 0.5,
-        "f1": 0.6666666666666666
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 28302,
-      "inputTokens": 22890,
-      "outputTokens": 732,
-      "costUsd": 0.145818,
-      "run": 3,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-salads-r3-coaching",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 66,
+      "score": 67,
       "expertScore": 85,
-      "absError": 19,
+      "absError": 18,
       "expectedStyle": "coaching",
       "labelExpectedStyle": "coaching",
-      "actualStyle": "directive",
+      "actualStyle": "supporting",
       "labelActualStyle": "coaching",
       "expectedStyleCorrect": true,
       "actualStyleCorrect": false,
@@ -1225,184 +577,36 @@
         "slope": 0
       },
       "silenceRespected": true,
-      "employeeReplies": 6,
-      "latencyMs": 66751,
-      "inputTokens": 35995,
-      "outputTokens": 1110,
-      "costUsd": 0.227815,
+      "employeeReplies": 4,
+      "latencyMs": 198885,
+      "inputTokens": 5400,
+      "outputTokens": 711,
+      "costUsd": 0,
       "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 69708
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 5772
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 118435
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 4967
+        }
+      ],
       "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-salads-r3-coaching",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 66,
-      "expertScore": 85,
-      "absError": 19,
-      "expectedStyle": "coaching",
-      "labelExpectedStyle": "coaching",
-      "actualStyle": "directive",
-      "labelActualStyle": "coaching",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": false,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 6,
-      "latencyMs": 84015,
-      "inputTokens": 35598,
-      "outputTokens": 1106,
-      "costUsd": 0.223829,
-      "run": 1,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-salads-r3-coaching",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 66,
-      "expertScore": 85,
-      "absError": 19,
-      "expectedStyle": "coaching",
-      "labelExpectedStyle": "coaching",
-      "actualStyle": "directive",
-      "labelActualStyle": "coaching",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": false,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 6,
-      "latencyMs": 79800,
-      "inputTokens": 36087,
-      "outputTokens": 1260,
-      "costUsd": 0.232673,
-      "run": 3,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r3-directive",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 91,
-      "expertScore": 87,
-      "absError": 4,
-      "expectedStyle": "directive",
-      "labelExpectedStyle": "directive",
-      "actualStyle": "directive",
-      "labelActualStyle": "directive",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 6,
-      "latencyMs": 50561,
-      "inputTokens": 35074,
-      "outputTokens": 1345,
-      "costUsd": 0.228136,
-      "run": 1,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r3-directive",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 91,
-      "expertScore": 87,
-      "absError": 4,
-      "expectedStyle": "directive",
-      "labelExpectedStyle": "directive",
-      "actualStyle": "directive",
-      "labelActualStyle": "directive",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 6,
-      "latencyMs": 40184,
-      "inputTokens": 34844,
-      "outputTokens": 1104,
-      "costUsd": 0.221343,
-      "run": 2,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r3-directive",
-      "variantId": "baseline",
-      "epoch": 1,
-      "score": 91,
-      "expertScore": 87,
-      "absError": 4,
-      "expectedStyle": "directive",
-      "labelExpectedStyle": "directive",
-      "actualStyle": "directive",
-      "labelActualStyle": "directive",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 6,
-      "latencyMs": 47913,
-      "inputTokens": 35050,
-      "outputTokens": 1171,
-      "costUsd": 0.224434,
-      "run": 3,
-      "models": [
-        "gpt-5.5"
+        "gpt-5.6-sol"
       ]
     },
     {
@@ -1430,13 +634,263 @@
       },
       "silenceRespected": true,
       "employeeReplies": 3,
-      "latencyMs": 43007,
-      "inputTokens": 53286,
-      "outputTokens": 1133,
-      "costUsd": 0.322806,
+      "latencyMs": 103180,
+      "inputTokens": 11610,
+      "outputTokens": 959,
+      "costUsd": 0,
       "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 38352,
+          "consensus": {
+            "readiness": "confident",
+            "confirmsCheckpoints": false,
+            "emotionDelta": 0
+          }
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 53393,
+          "consensus": {
+            "readiness": "confident",
+            "confirmsCheckpoints": false,
+            "emotionDelta": 1
+          }
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 11434,
+          "consensus": {
+            "readiness": "confident",
+            "confirmsCheckpoints": false,
+            "emotionDelta": 1
+          }
+        }
+      ],
       "models": [
-        "gpt-5.5"
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "self-consistency",
+      "epoch": 1,
+      "score": 31,
+      "expertScore": 22,
+      "absError": 9,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.4,
+        "f1": 0.5
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 157214,
+      "inputTokens": 15774,
+      "outputTokens": 1589,
+      "costUsd": 0,
+      "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 50309,
+          "consensus": {
+            "readiness": "confident",
+            "confirmsCheckpoints": false,
+            "emotionDelta": 0
+          }
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 15312,
+          "consensus": {
+            "readiness": "resistant",
+            "confirmsCheckpoints": false,
+            "emotionDelta": -1
+          }
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 64573,
+          "consensus": {
+            "readiness": "confident",
+            "confirmsCheckpoints": true,
+            "emotionDelta": 0
+          }
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 27014,
+          "consensus": {
+            "readiness": "confident",
+            "confirmsCheckpoints": true,
+            "emotionDelta": 0
+          }
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "self-consistency",
+      "epoch": 1,
+      "score": 31,
+      "expertScore": 22,
+      "absError": 9,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.4,
+        "f1": 0.5
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 84233,
+      "inputTokens": 15771,
+      "outputTokens": 1620,
+      "costUsd": 0,
+      "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 9314,
+          "consensus": {
+            "readiness": "confident",
+            "confirmsCheckpoints": false,
+            "emotionDelta": 0
+          }
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 26102,
+          "consensus": {
+            "readiness": "resistant",
+            "confirmsCheckpoints": false,
+            "emotionDelta": -1
+          }
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 25728,
+          "consensus": {
+            "readiness": "confident",
+            "confirmsCheckpoints": true,
+            "emotionDelta": 0
+          }
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 23084,
+          "consensus": {
+            "readiness": "confident",
+            "confirmsCheckpoints": true,
+            "emotionDelta": 0
+          }
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
       ]
     },
     {
@@ -1464,149 +918,63 @@
       },
       "silenceRespected": true,
       "employeeReplies": 3,
-      "latencyMs": 43800,
-      "inputTokens": 53277,
-      "outputTokens": 1165,
-      "costUsd": 0.324847,
-      "run": 3,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-apple_pies-r2-delegating",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 100,
-      "expertScore": 88,
-      "absError": 12,
-      "expectedStyle": "delegating",
-      "labelExpectedStyle": "delegating",
-      "actualStyle": "delegating",
-      "labelActualStyle": "delegating",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 3,
-      "latencyMs": 56593,
-      "inputTokens": 53280,
-      "outputTokens": 1062,
-      "costUsd": 0.321772,
+      "latencyMs": 220353,
+      "inputTokens": 10306,
+      "outputTokens": 911,
+      "costUsd": 0,
       "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 29054,
+          "consensus": {
+            "readiness": "confident",
+            "confirmsCheckpoints": false,
+            "emotionDelta": 0
+          }
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 2,
+          "failedSamples": 1,
+          "providerLatencyMs": 36692,
+          "consensus": {
+            "readiness": "confident",
+            "confirmsCheckpoints": false,
+            "emotionDelta": 1
+          }
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 25767,
+          "consensus": {
+            "readiness": "confident",
+            "confirmsCheckpoints": false,
+            "emotionDelta": 1
+          }
+        }
+      ],
       "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-apple_pies-r2-directive",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 31,
-      "expertScore": 22,
-      "absError": 9,
-      "expectedStyle": "delegating",
-      "labelExpectedStyle": "delegating",
-      "actualStyle": "directive",
-      "labelActualStyle": "directive",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 0.6666666666666666,
-        "recall": 0.4,
-        "f1": 0.5
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 63882,
-      "inputTokens": 69714,
-      "outputTokens": 1647,
-      "costUsd": 0.428225,
-      "run": 1,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-apple_pies-r2-directive",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 31,
-      "expertScore": 22,
-      "absError": 9,
-      "expectedStyle": "delegating",
-      "labelExpectedStyle": "delegating",
-      "actualStyle": "directive",
-      "labelActualStyle": "directive",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 0.6666666666666666,
-        "recall": 0.4,
-        "f1": 0.5
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 78832,
-      "inputTokens": 69741,
-      "outputTokens": 1687,
-      "costUsd": 0.429099,
-      "run": 2,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-apple_pies-r2-directive",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 31,
-      "expertScore": 22,
-      "absError": 9,
-      "expectedStyle": "delegating",
-      "labelExpectedStyle": "delegating",
-      "actualStyle": "directive",
-      "labelActualStyle": "directive",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 0.6666666666666666,
-        "recall": 0.4,
-        "f1": 0.5
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 78318,
-      "inputTokens": 68103,
-      "outputTokens": 1441,
-      "costUsd": 0.413875,
-      "run": 3,
-      "models": [
-        "gpt-5.5"
+        "gpt-5.6-sol"
       ]
     },
     {
@@ -1634,13 +1002,163 @@
       },
       "silenceRespected": true,
       "employeeReplies": 4,
-      "latencyMs": 50713,
-      "inputTokens": 68268,
-      "outputTokens": 1930,
-      "costUsd": 0.426708,
+      "latencyMs": 98434,
+      "inputTokens": 16020,
+      "outputTokens": 2079,
+      "costUsd": 0,
       "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 32317,
+          "consensus": {
+            "readiness": "unsure",
+            "confirmsCheckpoints": false,
+            "emotionDelta": 0
+          }
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 36079,
+          "consensus": {
+            "readiness": "unsure",
+            "confirmsCheckpoints": false,
+            "emotionDelta": -1
+          }
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 18156,
+          "consensus": {
+            "readiness": "unsure",
+            "confirmsCheckpoints": false,
+            "emotionDelta": 0
+          }
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 11876,
+          "consensus": {
+            "readiness": "confident",
+            "confirmsCheckpoints": false,
+            "emotionDelta": 1
+          }
+        }
+      ],
       "models": [
-        "gpt-5.5"
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-delegating",
+      "variantId": "self-consistency",
+      "epoch": 1,
+      "score": 18,
+      "expertScore": 10,
+      "absError": 8,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.5,
+        "f1": 0.6666666666666666
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 132772,
+      "inputTokens": 11363,
+      "outputTokens": 2106,
+      "costUsd": 0,
+      "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 27736,
+          "consensus": {
+            "readiness": "unsure",
+            "confirmsCheckpoints": false,
+            "emotionDelta": 0
+          }
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 76920,
+          "consensus": {
+            "readiness": "unsure",
+            "confirmsCheckpoints": false,
+            "emotionDelta": 1
+          }
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 28110,
+          "consensus": {
+            "readiness": "unsure",
+            "confirmsCheckpoints": false,
+            "emotionDelta": 1
+          }
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
       ]
     },
     {
@@ -1668,47 +1186,79 @@
       },
       "silenceRespected": true,
       "employeeReplies": 4,
-      "latencyMs": 43753,
-      "inputTokens": 68358,
-      "outputTokens": 2085,
-      "costUsd": 0.43498200000000004,
-      "run": 3,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-salads-r2-coaching",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 67,
-      "expertScore": 85,
-      "absError": 18,
-      "expectedStyle": "coaching",
-      "labelExpectedStyle": "coaching",
-      "actualStyle": "supporting",
-      "labelActualStyle": "coaching",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": false,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 57655,
-      "inputTokens": 71484,
-      "outputTokens": 1872,
-      "costUsd": 0.44567999999999997,
+      "latencyMs": 232888,
+      "inputTokens": 16080,
+      "outputTokens": 2281,
+      "costUsd": 0,
       "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 17194,
+          "consensus": {
+            "readiness": "unsure",
+            "confirmsCheckpoints": false,
+            "emotionDelta": 0
+          }
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 59799,
+          "consensus": {
+            "readiness": "unsure",
+            "confirmsCheckpoints": false,
+            "emotionDelta": 0
+          }
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 22724,
+          "consensus": {
+            "readiness": "unsure",
+            "confirmsCheckpoints": false,
+            "emotionDelta": 0
+          }
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 133166,
+          "consensus": {
+            "readiness": "confident",
+            "confirmsCheckpoints": false,
+            "emotionDelta": 1
+          }
+        }
+      ],
       "models": [
-        "gpt-5.5"
+        "gpt-5.6-sol"
       ]
     },
     {
@@ -1736,900 +1286,68 @@
       },
       "silenceRespected": true,
       "employeeReplies": 3,
-      "latencyMs": 49057,
-      "inputTokens": 51732,
-      "outputTokens": 1907,
-      "costUsd": 0.338704,
+      "latencyMs": 256600,
+      "inputTokens": 11724,
+      "outputTokens": 2119,
+      "costUsd": 0,
       "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 76841,
+          "consensus": {
+            "readiness": "unsure",
+            "confirmsCheckpoints": false,
+            "emotionDelta": 0
+          }
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 64897,
+          "consensus": {
+            "readiness": "unsure",
+            "confirmsCheckpoints": false,
+            "emotionDelta": 1
+          }
+        },
+        {
+          "engagement": "heuristic",
+          "model": "gpt-5.6-sol",
+          "models": [
+            "gpt-5.6-sol"
+          ],
+          "requestedSamples": 3,
+          "successfulSamples": 3,
+          "failedSamples": 0,
+          "providerLatencyMs": 114857,
+          "consensus": {
+            "readiness": "unsure",
+            "confirmsCheckpoints": false,
+            "emotionDelta": 0
+          }
+        }
+      ],
       "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-salads-r2-delegating",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 18,
-      "expertScore": 10,
-      "absError": 8,
-      "expectedStyle": "coaching",
-      "labelExpectedStyle": "coaching",
-      "actualStyle": "delegating",
-      "labelActualStyle": "delegating",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 0.5,
-        "f1": 0.6666666666666666
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 3,
-      "latencyMs": 37334,
-      "inputTokens": 51576,
-      "outputTokens": 1329,
-      "costUsd": 0.31956,
-      "run": 2,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-salads-r2-delegating",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 18,
-      "expertScore": 10,
-      "absError": 8,
-      "expectedStyle": "coaching",
-      "labelExpectedStyle": "coaching",
-      "actualStyle": "delegating",
-      "labelActualStyle": "delegating",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 0.5,
-        "f1": 0.6666666666666666
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 3,
-      "latencyMs": 45202,
-      "inputTokens": 51741,
-      "outputTokens": 1727,
-      "costUsd": 0.332325,
-      "run": 3,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r2-directive",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 93,
-      "expertScore": 90,
-      "absError": 3,
-      "expectedStyle": "directive",
-      "labelExpectedStyle": "directive",
-      "actualStyle": "directive",
-      "labelActualStyle": "directive",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 59812,
-      "inputTokens": 71685,
-      "outputTokens": 2521,
-      "costUsd": 0.465029,
-      "run": 1,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r2-directive",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 93,
-      "expertScore": 90,
-      "absError": 3,
-      "expectedStyle": "directive",
-      "labelExpectedStyle": "directive",
-      "actualStyle": "directive",
-      "labelActualStyle": "directive",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 50568,
-      "inputTokens": 71493,
-      "outputTokens": 2532,
-      "costUsd": 0.464962,
-      "run": 2,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r2-directive",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 93,
-      "expertScore": 90,
-      "absError": 3,
-      "expectedStyle": "directive",
-      "labelExpectedStyle": "directive",
-      "actualStyle": "directive",
-      "labelActualStyle": "directive",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 65231,
-      "inputTokens": 71322,
-      "outputTokens": 2314,
-      "costUsd": 0.45813,
-      "run": 3,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r2-delegating",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 7,
-      "expertScore": 3,
-      "absError": 4,
-      "expectedStyle": "directive",
-      "labelExpectedStyle": "directive",
-      "actualStyle": "delegating",
-      "labelActualStyle": "delegating",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 0.6666666666666666,
-        "recall": 0.5,
-        "f1": 0.5714285714285715
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 86343,
-      "inputTokens": 69792,
-      "outputTokens": 2801,
-      "costUsd": 0.462211,
-      "run": 1,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r2-delegating",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 7,
-      "expertScore": 3,
-      "absError": 4,
-      "expectedStyle": "directive",
-      "labelExpectedStyle": "directive",
-      "actualStyle": "delegating",
-      "labelActualStyle": "delegating",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 0.6666666666666666,
-        "recall": 0.5,
-        "f1": 0.5714285714285715
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 86580,
-      "inputTokens": 69924,
-      "outputTokens": 2821,
-      "costUsd": 0.465058,
-      "run": 2,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r2-delegating",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 7,
-      "expertScore": 3,
-      "absError": 4,
-      "expectedStyle": "directive",
-      "labelExpectedStyle": "directive",
-      "actualStyle": "delegating",
-      "labelActualStyle": "delegating",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 0.6666666666666666,
-        "recall": 0.5,
-        "f1": 0.5714285714285715
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 86101,
-      "inputTokens": 69906,
-      "outputTokens": 2651,
-      "costUsd": 0.460431,
-      "run": 3,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-prep_veggies-r2-supporting",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 100,
-      "expertScore": 87,
-      "absError": 13,
-      "expectedStyle": "supporting",
-      "labelExpectedStyle": "supporting",
-      "actualStyle": "supporting",
-      "labelActualStyle": "supporting",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 26435,
-      "inputTokens": 64950,
-      "outputTokens": 1386,
-      "costUsd": 0.392954,
-      "run": 2,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-prep_veggies-r2-supporting",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 100,
-      "expertScore": 87,
-      "absError": 13,
-      "expectedStyle": "supporting",
-      "labelExpectedStyle": "supporting",
-      "actualStyle": "supporting",
-      "labelActualStyle": "supporting",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 29183,
-      "inputTokens": 64914,
-      "outputTokens": 1320,
-      "costUsd": 0.39232999999999996,
-      "run": 3,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-prep_veggies-r2-supporting",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 100,
-      "expertScore": 87,
-      "absError": 13,
-      "expectedStyle": "supporting",
-      "labelExpectedStyle": "supporting",
-      "actualStyle": "supporting",
-      "labelActualStyle": "supporting",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 71492,
-      "inputTokens": 64929,
-      "outputTokens": 1492,
-      "costUsd": 0.397565,
-      "run": 1,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-prep_veggies-r2-directive",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 45,
-      "expertScore": 18,
-      "absError": 27,
-      "expectedStyle": "supporting",
-      "labelExpectedStyle": "supporting",
-      "actualStyle": "directive",
-      "labelActualStyle": "directive",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 0.4,
-        "f1": 0.5714285714285715
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 62938,
-      "inputTokens": 66408,
-      "outputTokens": 1471,
-      "costUsd": 0.404496,
-      "run": 1,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-prep_veggies-r2-directive",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 45,
-      "expertScore": 18,
-      "absError": 27,
-      "expectedStyle": "supporting",
-      "labelExpectedStyle": "supporting",
-      "actualStyle": "directive",
-      "labelActualStyle": "directive",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 0.4,
-        "f1": 0.5714285714285715
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 36721,
-      "inputTokens": 67974,
-      "outputTokens": 1781,
-      "costUsd": 0.423942,
-      "run": 2,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-prep_veggies-r2-directive",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 45,
-      "expertScore": 18,
-      "absError": 27,
-      "expectedStyle": "supporting",
-      "labelExpectedStyle": "supporting",
-      "actualStyle": "directive",
-      "labelActualStyle": "directive",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 0.4,
-        "f1": 0.5714285714285715
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 44902,
-      "inputTokens": 68076,
-      "outputTokens": 1789,
-      "costUsd": 0.42412900000000003,
-      "run": 3,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-apple_pies-r3-supporting",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 97,
-      "expertScore": 90,
-      "absError": 7,
-      "expectedStyle": "supporting",
-      "labelExpectedStyle": "supporting",
-      "actualStyle": "supporting",
-      "labelActualStyle": "supporting",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 6,
-      "latencyMs": 44266,
-      "inputTokens": 103449,
-      "outputTokens": 2527,
-      "costUsd": 0.6360239999999999,
-      "run": 1,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-apple_pies-r3-supporting",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 97,
-      "expertScore": 90,
-      "absError": 7,
-      "expectedStyle": "supporting",
-      "labelExpectedStyle": "supporting",
-      "actualStyle": "supporting",
-      "labelActualStyle": "supporting",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 6,
-      "latencyMs": 62614,
-      "inputTokens": 108330,
-      "outputTokens": 2939,
-      "costUsd": 0.6715469999999999,
-      "run": 2,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-apple_pies-r3-delegating",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 14,
-      "expertScore": 3,
-      "absError": 11,
-      "expectedStyle": "supporting",
-      "labelExpectedStyle": "supporting",
-      "actualStyle": "delegating",
-      "labelActualStyle": "delegating",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 0.5,
-        "f1": 0.6666666666666666
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 40256,
-      "inputTokens": 70020,
-      "outputTokens": 2093,
-      "costUsd": 0.44353200000000004,
-      "run": 1,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-apple_pies-r3-supporting",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 97,
-      "expertScore": 90,
-      "absError": 7,
-      "expectedStyle": "supporting",
-      "labelExpectedStyle": "supporting",
-      "actualStyle": "supporting",
-      "labelActualStyle": "supporting",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 6,
-      "latencyMs": 68249,
-      "inputTokens": 107301,
-      "outputTokens": 3057,
-      "costUsd": 0.6736150000000001,
-      "run": 3,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-apple_pies-r3-delegating",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 14,
-      "expertScore": 3,
-      "absError": 11,
-      "expectedStyle": "supporting",
-      "labelExpectedStyle": "supporting",
-      "actualStyle": "delegating",
-      "labelActualStyle": "delegating",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 0.5,
-        "f1": 0.6666666666666666
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 39598,
-      "inputTokens": 68439,
-      "outputTokens": 1955,
-      "costUsd": 0.430246,
-      "run": 2,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-apple_pies-r3-delegating",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 14,
-      "expertScore": 3,
-      "absError": 11,
-      "expectedStyle": "supporting",
-      "labelExpectedStyle": "supporting",
-      "actualStyle": "delegating",
-      "labelActualStyle": "delegating",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 0.5,
-        "f1": 0.6666666666666666
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 4,
-      "latencyMs": 40190,
-      "inputTokens": 68493,
-      "outputTokens": 1969,
-      "costUsd": 0.431448,
-      "run": 3,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-salads-r3-coaching",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 66,
-      "expertScore": 85,
-      "absError": 19,
-      "expectedStyle": "coaching",
-      "labelExpectedStyle": "coaching",
-      "actualStyle": "directive",
-      "labelActualStyle": "coaching",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": false,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 6,
-      "latencyMs": 91440,
-      "inputTokens": 108252,
-      "outputTokens": 3693,
-      "costUsd": 0.6944929999999999,
-      "run": 1,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-salads-r3-coaching",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 66,
-      "expertScore": 85,
-      "absError": 19,
-      "expectedStyle": "coaching",
-      "labelExpectedStyle": "coaching",
-      "actualStyle": "directive",
-      "labelActualStyle": "coaching",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": false,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 6,
-      "latencyMs": 94027,
-      "inputTokens": 107826,
-      "outputTokens": 3334,
-      "costUsd": 0.6821050000000001,
-      "run": 2,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-salads-r3-coaching",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 66,
-      "expertScore": 85,
-      "absError": 19,
-      "expectedStyle": "coaching",
-      "labelExpectedStyle": "coaching",
-      "actualStyle": "directive",
-      "labelActualStyle": "coaching",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": false,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 6,
-      "latencyMs": 81791,
-      "inputTokens": 112863,
-      "outputTokens": 3590,
-      "costUsd": 0.717069,
-      "run": 3,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r3-directive",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 91,
-      "expertScore": 87,
-      "absError": 4,
-      "expectedStyle": "directive",
-      "labelExpectedStyle": "directive",
-      "actualStyle": "directive",
-      "labelActualStyle": "directive",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 6,
-      "latencyMs": 55978,
-      "inputTokens": 108303,
-      "outputTokens": 3478,
-      "costUsd": 0.687582,
-      "run": 1,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r3-directive",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 91,
-      "expertScore": 87,
-      "absError": 4,
-      "expectedStyle": "directive",
-      "labelExpectedStyle": "directive",
-      "actualStyle": "directive",
-      "labelActualStyle": "directive",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 6,
-      "latencyMs": 51426,
-      "inputTokens": 109057,
-      "outputTokens": 3691,
-      "costUsd": 0.7015549999999999,
-      "run": 2,
-      "models": [
-        "gpt-5.5"
-      ]
-    },
-    {
-      "fixtureId": "anna-banquet_hot-r3-directive",
-      "variantId": "self-consistency",
-      "epoch": 1,
-      "score": 91,
-      "expertScore": 87,
-      "absError": 4,
-      "expectedStyle": "directive",
-      "labelExpectedStyle": "directive",
-      "actualStyle": "directive",
-      "labelActualStyle": "directive",
-      "expectedStyleCorrect": true,
-      "actualStyleCorrect": true,
-      "criteria": {
-        "precision": 1,
-        "recall": 1,
-        "f1": 1
-      },
-      "personaViolations": [],
-      "personaDrift": {
-        "rate": 0,
-        "slope": 0
-      },
-      "silenceRespected": true,
-      "employeeReplies": 6,
-      "latencyMs": 65664,
-      "inputTokens": 111186,
-      "outputTokens": 3973,
-      "costUsd": 0.722144,
-      "run": 3,
-      "models": [
-        "gpt-5.5"
+        "gpt-5.6-sol"
       ]
     }
   ],
-  "unpricedModels": [],
+  "unpricedModels": [
+    "gpt-5.6-sol"
+  ],
   "evaluationStrategyMismatch": []
 }

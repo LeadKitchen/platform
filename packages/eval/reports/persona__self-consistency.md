@@ -1,19 +1,24 @@
 # Сравнение подходов ИИ-модуля
 
-- Провайдер: `ai-sdk:openai-compatible` (модель `gpt-5.5`)
-- Сценариев: 12, прогонов на сценарий: 3, эпох: 1
+- Провайдер: `ai-sdk:openai-compatible` (модель `gpt-5.6-sol`)
+- Сценариев: 4, прогонов на сценарий: 2, эпох: 1
 - Контрольный вариант: `baseline`
-- Запуск: 2026-08-26T10:57:09.367Z → 2026-08-26T11:18:40.518Z
+- Запуск: 2026-09-02T08:24:03.542Z → 2026-09-02T08:36:32.125Z
 
-> ⚠️ Экспертными метками подписано 0 из 12 сценариев,
-> остальные 12 — предварительные (из них 12 — черновая разметка модели, ещё не проверена методологом).
+> ⚠️ Экспертными метками подписано 0 из 4 сценариев,
+> остальные 4 — предварительные (из них 4 — черновая разметка модели, ещё не проверена методологом).
 > Колонка «MAE к эксперту» показывает расхождение с временной калибровкой,
 > а не с методологом: она годится, чтобы ловить регрессии, и не годится как
 > основание внедрять подход.
 
-> ⚠️ Всего 12 парных наблюдений. Этого мало: доверительные интервалы
+> ⚠️ Всего 4 парных наблюдений. Этого мало: доверительные интервалы
 > будут широкими, и почти любой результат окажется статистически недоказанным.
 > Для решения о внедрении нужно 60+ размеченных сценариев.
+
+> ⚠️ Цена неизвестна для: gpt-5.6-sol.
+> Колонка «$/диалог» показывает 0 для этих моделей — это отсутствующая
+> цена в MODEL_PRICING, а не подтверждённо бесплатный вызов. Добавьте
+> модель в packages/ai/src/provider/pricing.ts, если тариф известен.
 
 ## Значимость против контрольного варианта
 
@@ -29,7 +34,7 @@
 | F1 по критериям | +0.00 | [0.00; 0.00] | 1.000 | не доказано |
 | Удержание роли | +0.00 | [0.00; 0.00] | 1.000 | не доказано |
 | Дрейф персоны | +0.00 | [0.00; 0.00] | 1.000 | не доказано |
-| Стоимость диалога | -0.3210 | [-0.3750; -0.2740] | 0.000 | **хуже** |
+| Стоимость диалога | +0.0000 | [0.0000; 0.0000] | 1.000 | не доказано |
 
 **Ни один вариант не показал доказанного улучшения точности оценки против `baseline`.**
 
@@ -37,22 +42,22 @@
 
 | Вариант | MAE | σ внутри сценария | κ по стилю | F1 критериев | Роль | Дрейф | Молчание | Задержка | $/диалог |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| `baseline` | 11.3 | 0.0 | 0.77 | 0.83 | 100% | 0% | 100% | 46527 мс | $0.1576 |
-| `self-consistency` | 11.3 | 0.0 | 0.77 | 0.83 | 100% | 0% | 100% | 58054 мс | $0.4789 |
+| `baseline` | 11.8 | 0.0 | 0.64 | 0.79 | 100% | 0% | 100% | 77611 мс | $0.0000 |
+| `self-consistency` | 11.8 | 0.0 | 0.64 | 0.79 | 100% | 0% | 100% | 160709 мс | $0.0000 |
 
-Согласие со стилем эксперта у контрольного варианта: κ = 0.77 (существенное).
+Согласие со стилем эксперта у контрольного варианта: κ = 0.64 (существенное).
 
 ## Худшие расхождения
 
 | Сценарий | Вариант | Авто | Эксперт | Δ | Стиль (авто → метка) |
 | --- | --- | ---: | ---: | ---: | --- |
-| anna-prep_veggies-r2-directive | `baseline` | 45 | 18 | 27 | directive → directive |
-| anna-prep_veggies-r2-directive | `baseline` | 45 | 18 | 27 | directive → directive |
-| anna-prep_veggies-r2-directive | `baseline` | 45 | 18 | 27 | directive → directive |
-| anna-prep_veggies-r2-directive | `self-consistency` | 45 | 18 | 27 | directive → directive |
-| anna-prep_veggies-r2-directive | `self-consistency` | 45 | 18 | 27 | directive → directive |
-| anna-prep_veggies-r2-directive | `self-consistency` | 45 | 18 | 27 | directive → directive |
-| anna-salads-r3-coaching | `baseline` | 66 | 85 | 19 | directive → coaching |
-| anna-salads-r3-coaching | `baseline` | 66 | 85 | 19 | directive → coaching |
-| anna-salads-r3-coaching | `baseline` | 66 | 85 | 19 | directive → coaching |
-| anna-salads-r3-coaching | `self-consistency` | 66 | 85 | 19 | directive → coaching |
+| anna-salads-r2-coaching | `baseline` | 67 | 85 | 18 | supporting → coaching |
+| anna-salads-r2-coaching | `baseline` | 67 | 85 | 18 | supporting → coaching |
+| anna-salads-r2-coaching | `self-consistency` | 67 | 85 | 18 | supporting → coaching |
+| anna-salads-r2-coaching | `self-consistency` | 67 | 85 | 18 | supporting → coaching |
+| anna-apple_pies-r2-delegating | `baseline` | 100 | 88 | 12 | delegating → delegating |
+| anna-apple_pies-r2-delegating | `baseline` | 100 | 88 | 12 | delegating → delegating |
+| anna-apple_pies-r2-delegating | `self-consistency` | 100 | 88 | 12 | delegating → delegating |
+| anna-apple_pies-r2-delegating | `self-consistency` | 100 | 88 | 12 | delegating → delegating |
+| anna-apple_pies-r2-directive | `baseline` | 31 | 22 | 9 | directive → directive |
+| anna-apple_pies-r2-directive | `baseline` | 31 | 22 | 9 | directive → directive |
