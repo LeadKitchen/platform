@@ -207,6 +207,7 @@ export const selfConsistencyPersona: PersonaStrategy = {
           confirmsCheckpoints: reply.confirmsCheckpoints,
           emotionDelta: reply.emotionDelta,
         },
+        prompt: { system, messages },
       },
     };
   },

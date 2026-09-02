@@ -1,3 +1,4 @@
+import { AppAdmin, db, eq } from "@acme/db";
 import { getSession } from "~/auth/server";
 import {
   DialogRoom,
@@ -24,6 +25,25 @@ export default async function DialogPage({
     api.game.dialog.byId({ dialogId }),
     getSession(),
   ]);
+
+  // Mirrors the check in `(dashboard)/layout.tsx` — there is no shared
+  // helper across server components, only the oRPC `adminProcedure`
+  // middleware, so the "am I admin" question is answered the same way here.
+  const isBootstrapAdmin = (process.env.ADMIN_EMAILS ?? "")
+    .split(",")
+    .some(
+      (email) =>
+        session?.user &&
+        email.trim().toLowerCase() === session.user.email.toLowerCase(),
+    );
+  const persistedAdmin =
+    isBootstrapAdmin || !session?.user
+      ? undefined
+      : await db.query.AppAdmin.findFirst({
+          where: eq(AppAdmin.userId, session.user.id),
+          columns: { userId: true },
+        });
+  const isAdmin = isBootstrapAdmin || persistedAdmin !== undefined;
 
   const evaluation: EvaluationView | null = data.evaluation
     ? {
@@ -56,11 +76,13 @@ export default async function DialogPage({
     initialTurns: data.turns.map((turn) => ({
       role: turn.role,
       text: turn.text,
+      promptEventId: "promptEventId" in turn ? turn.promptEventId : undefined,
     })),
     initialFinished: data.dialog.status !== "active",
     variantName: data.variantName,
     userAvatarSeed: session?.user.email,
     uploadedAvatarUrl: session?.user.image ?? undefined,
+    isAdmin,
   };
 
   if (voiceParam === "1") {

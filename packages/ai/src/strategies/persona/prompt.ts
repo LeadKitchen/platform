@@ -14,21 +14,24 @@ export const promptPersona: PersonaStrategy = {
   async respond(request, deps): Promise<PersonaResult> {
     const startedAt = Date.now();
 
+    const system = buildPersonaSystemPrompt({
+      dialog: request.dialog,
+      knowledge: request.knowledge,
+      roleRules:
+        typeof deps.params.roleRules === "string"
+          ? deps.params.roleRules
+          : undefined,
+    });
+    const messages = buildTranscript(request.dialog.turns, request.utterance);
+
     const result = await deps.provider.generate({
       purpose: "persona.reply",
       schemaName: "persona_reply",
       schema: personaReplySchema,
       effort: deps.effort,
       signal: deps.signal,
-      system: buildPersonaSystemPrompt({
-        dialog: request.dialog,
-        knowledge: request.knowledge,
-        roleRules:
-          typeof deps.params.roleRules === "string"
-            ? deps.params.roleRules
-            : undefined,
-      }),
-      messages: buildTranscript(request.dialog.turns, request.utterance),
+      system,
+      messages,
     });
 
     return {
@@ -43,7 +46,11 @@ export const promptPersona: PersonaStrategy = {
       },
       usage: result.usage,
       latencyMs: Date.now() - startedAt,
-      meta: { model: result.model, providerLatencyMs: result.latencyMs },
+      meta: {
+        model: result.model,
+        providerLatencyMs: result.latencyMs,
+        prompt: { system, messages },
+      },
     };
   },
 };
