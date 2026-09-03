@@ -7,34 +7,41 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-const s3Endpoint = env.AWS_S3_ENDPOINT;
-const s3ForcePathStyle = env.AWS_S3_FORCE_PATH_STYLE !== "false";
+// Built lazily (on first actual use) rather than at module load — importing
+// this module happens during the app's build (bundling, route analysis),
+// where storage credentials aren't necessarily set yet.
+let s3Client: S3Client | undefined;
 
-// Validate AWS credentials before creating the client
-const accessKeyId = env.AWS_ACCESS_KEY_ID;
-const secretAccessKey = env.AWS_SECRET_ACCESS_KEY;
-if (!accessKeyId || !secretAccessKey) {
-  throw new Error(
-    "AWS credentials (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) are required",
-  );
+function getS3Client(): S3Client {
+  if (s3Client) return s3Client;
+
+  const accessKeyId = env.AWS_ACCESS_KEY_ID;
+  const secretAccessKey = env.AWS_SECRET_ACCESS_KEY;
+  if (!accessKeyId || !secretAccessKey) {
+    throw new Error(
+      "AWS credentials (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) are required",
+    );
+  }
+
+  const s3Endpoint = env.AWS_S3_ENDPOINT;
+  s3Client = new S3Client({
+    region: env.AWS_REGION,
+    credentials: {
+      accessKeyId,
+      secretAccessKey,
+    },
+    ...(s3Endpoint
+      ? {
+          endpoint: s3Endpoint,
+          // Path-style by default when a custom endpoint is set — required by
+          // MinIO locally; Yandex Cloud Object Storage supports virtual-hosted
+          // style, so set AWS_S3_FORCE_PATH_STYLE=false in production.
+          forcePathStyle: env.AWS_S3_FORCE_PATH_STYLE !== "false",
+        }
+      : {}),
+  });
+  return s3Client;
 }
-
-const s3Client = new S3Client({
-  region: env.AWS_REGION,
-  credentials: {
-    accessKeyId,
-    secretAccessKey,
-  },
-  ...(s3Endpoint
-    ? {
-        endpoint: s3Endpoint,
-        // Path-style by default when a custom endpoint is set — required by
-        // MinIO locally; Yandex Cloud Object Storage supports virtual-hosted
-        // style, so set AWS_S3_FORCE_PATH_STYLE=false in production.
-        forcePathStyle: s3ForcePathStyle,
-      }
-    : {}),
-});
 
 const BUCKET_NAME = env.AWS_S3_BUCKET;
 export const MAX_UPLOAD_SIZE_BYTES = 20 * 1024 * 1024;
@@ -59,7 +66,7 @@ export async function createPresignedUrl(
     ContentLength: contentLength,
   });
 
-  return getSignedUrl(s3Client, command, { expiresIn: 3600 }); // 1 hour
+  return getSignedUrl(getS3Client(), command, { expiresIn: 3600 }); // 1 hour
 }
 
 export function generateS3Key(originalKey: string, temporary = false): string {
@@ -82,7 +89,7 @@ export async function uploadBufferToS3(
     ContentType: contentType ?? "application/octet-stream",
   });
   try {
-    const res = await s3Client.send(command);
+    const res = await getS3Client().send(command);
     return { key, bucket: BUCKET_NAME, etag: res.ETag };
   } catch (err) {
     const e = err as Error;
@@ -104,11 +111,11 @@ export async function getDownloadUrl(key: string): Promise<string> {
     Key: key,
   });
 
-  return getSignedUrl(s3Client, command, { expiresIn: 3600 }); // 1 hour
+  return getSignedUrl(getS3Client(), command, { expiresIn: 3600 }); // 1 hour
 }
 
 export async function deleteObjectFromS3(key: string): Promise<void> {
-  await s3Client.send(
+  await getS3Client().send(
     new DeleteObjectCommand({ Bucket: BUCKET_NAME, Key: key }),
   );
 }
@@ -116,7 +123,7 @@ export async function deleteObjectFromS3(key: string): Promise<void> {
 /** Fetches an object's bytes directly — for server-side processing (parsing, ingestion) rather than a browser download. */
 export async function downloadBufferFromS3(key: string): Promise<Buffer> {
   const command = new GetObjectCommand({ Bucket: BUCKET_NAME, Key: key });
-  const res = await s3Client.send(command);
+  const res = await getS3Client().send(command);
   if (!res.Body) {
     throw new Error(`S3 object '${key}' has no body`);
   }
