@@ -49,6 +49,51 @@ function extractPersonaPrompt(
   return prompt;
 }
 
+/**
+ * Single-consumer async channel: `push`ed values are buffered until an
+ * iterator is ready for them.
+ *
+ * `sayStream` needs this because the LLM call must run inside `observe`'s
+ * traced callback (a plain async function — tracing context only propagates
+ * correctly through that, not through an async generator's later `.next()`
+ * calls) while the *procedure* handler that yields chunks to the client is
+ * itself the outer generator. The channel is what lets the traced callback
+ * push chunks out to the generator as they arrive instead of buffering the
+ * whole reply before yielding anything.
+ */
+function createChunkChannel<T>(): {
+  push: (value: T) => void;
+  close: () => void;
+  [Symbol.asyncIterator]: () => AsyncGenerator<T>;
+} {
+  const queue: T[] = [];
+  let done = false;
+  let wake: (() => void) | undefined;
+
+  function push(value: T) {
+    queue.push(value);
+    wake?.();
+  }
+  function close() {
+    done = true;
+    wake?.();
+  }
+  async function* iterate(): AsyncGenerator<T> {
+    while (true) {
+      if (queue.length > 0) {
+        yield queue.shift() as T;
+        continue;
+      }
+      if (done) return;
+      await new Promise<void>((resolve) => {
+        wake = resolve;
+      });
+      wake = undefined;
+    }
+  }
+  return { push, close, [Symbol.asyncIterator]: iterate };
+}
+
 function fallbackEmployeeReply(loaded: Awaited<ReturnType<typeof loadDialog>>) {
   const employee = loaded.context.employee;
   const task = loaded.context.task;
@@ -280,6 +325,174 @@ export const say = protectedProcedure
       managerToxic: turn.managerToxic,
       // Lets an admin/QA caller fetch the exact prompt behind this reply
       // via `promptDebug` — the id alone reveals nothing on its own.
+      promptEventId: replyEvent?.id,
+    };
+  });
+
+/**
+ * Same call as `say`, but the character's reply streams in as the model
+ * produces it instead of arriving as one JSON payload — for a live chat
+ * surface that wants to show a "typing" reply rather than a blank wait.
+ *
+ * Yields `{ type: "chunk", reply }` events with the reply so far, then
+ * exactly one `{ type: "done", ... }` event carrying the same fields `say`
+ * returns. Every side effect (event log, dialog state, the fallback reply on
+ * a model failure) matches `say` exactly — this is the same turn, just
+ * delivered incrementally.
+ *
+ * @example
+ * const stream = await client.game.dialog.sayStream({ dialogId, text });
+ * for await (const event of stream) { ... }
+ */
+export const sayStream = protectedProcedure
+  .input(
+    z.object({
+      dialogId: z.uuid(),
+      text: z.string().min(1).max(2000),
+    }),
+  )
+  .handler(async function* ({ context, input, signal }) {
+    await requireOwnedDialog(
+      context.db,
+      input.dialogId,
+      context.session.user.id,
+    );
+    const loaded = await requireOpenDialog(context.db, input.dialogId);
+    const engine = await loadEngine(context.db);
+    const pipeline = engine.pipeline(loaded.record.variantId);
+
+    const managerToxic = detectToxicity(input.text);
+    await appendEvent(context.db, input.dialogId, "manager_utterance", {
+      text: input.text,
+      toxic: managerToxic,
+    });
+
+    const channel = createChunkChannel<{ reply: string }>();
+
+    // The LLM call has to run inside `observe`'s plain-async callback for
+    // tracing context to attach correctly (see `createChunkChannel`) — this
+    // promise settles once that callback returns, independently of how much
+    // of `channel` the code below has consumed by then.
+    const tracedTurn: Promise<Awaited<ReturnType<typeof pipeline.respond>>> =
+      observe(
+        {
+          name: "game.dialog.say",
+          userId: context.session.user.id,
+          sessionId: input.dialogId,
+          metadata: { variantId: loaded.record.variantId },
+        },
+        async () => {
+          Laminar.setTraceUserId(context.session.user.id);
+          Laminar.setTraceSessionId(input.dialogId);
+          const { stream, result } = pipeline.respondStream({
+            dialog: loaded.context,
+            utterance: input.text,
+            signal,
+          });
+          try {
+            for await (const chunk of stream) {
+              channel.push(chunk);
+            }
+          } finally {
+            channel.close();
+          }
+          return result;
+        },
+      );
+
+    let lastReply = "";
+    for await (const chunk of channel) {
+      if (chunk.reply.length <= lastReply.length) continue;
+      lastReply = chunk.reply;
+      yield { type: "chunk" as const, reply: lastReply };
+    }
+
+    let turn: Awaited<ReturnType<typeof pipeline.respond>>;
+    try {
+      turn = await tracedTurn;
+    } catch (cause) {
+      if (signal?.aborted) {
+        await appendEvent(context.db, input.dialogId, "error", {
+          stage: "persona",
+          message: "Ответ остановлен игроком",
+          recovered: false,
+          aborted: true,
+        });
+        throw cause;
+      }
+      const fallbackReply = fallbackEmployeeReply(loaded);
+      await appendEvent(context.db, input.dialogId, "error", {
+        stage: "persona",
+        message: cause instanceof Error ? cause.message : String(cause),
+        recovered: true,
+      });
+      await appendEvent(context.db, input.dialogId, "employee_reply", {
+        text: fallbackReply,
+        understood: loaded.context.task.title,
+        readiness: "unsure",
+        requests: ["Уточнить срок и контрольную точку"],
+        confirmsCheckpoints: false,
+        fallback: true,
+      });
+
+      await context.db
+        .update(GameDialog)
+        .set({ engaged: true })
+        .where(eq(GameDialog.id, input.dialogId));
+
+      yield {
+        type: "done" as const,
+        silent: false,
+        reply: fallbackReply,
+        understood: loaded.context.task.title,
+        readiness: "unsure" as const,
+        requests: ["Уточнить срок и контрольную точку"],
+        confirmsCheckpoints: false,
+        engaged: true,
+        emotion: loaded.context.emotion,
+        managerToxic,
+        degraded: true,
+      };
+      return;
+    }
+
+    let replyEvent: { id: string } | undefined;
+    if (turn.reply.silent) {
+      await appendEvent(context.db, input.dialogId, "employee_silent", {
+        reason: "не включён в диалог",
+      });
+    } else {
+      replyEvent = await appendEvent(
+        context.db,
+        input.dialogId,
+        "employee_reply",
+        {
+          text: turn.reply.reply,
+          understood: turn.reply.understood,
+          readiness: turn.reply.readiness,
+          requests: turn.reply.requests,
+          confirmsCheckpoints: turn.reply.confirmsCheckpoints,
+          telemetry: turn.telemetry,
+        },
+      );
+    }
+
+    await context.db
+      .update(GameDialog)
+      .set({ engaged: turn.dialog.engaged, emotion: turn.dialog.emotion })
+      .where(eq(GameDialog.id, input.dialogId));
+
+    yield {
+      type: "done" as const,
+      silent: turn.reply.silent,
+      reply: turn.reply.reply,
+      understood: turn.reply.understood,
+      readiness: turn.reply.readiness,
+      requests: turn.reply.requests,
+      confirmsCheckpoints: turn.reply.confirmsCheckpoints,
+      engaged: turn.dialog.engaged,
+      emotion: turn.dialog.emotion,
+      managerToxic: turn.managerToxic,
       promptEventId: replyEvent?.id,
     };
   });
@@ -732,6 +945,7 @@ export const screen = protectedProcedure
 export const gameDialogRouter = {
   start,
   say,
+  sayStream,
   finish,
   preflight,
   replay,

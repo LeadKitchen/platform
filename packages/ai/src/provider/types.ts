@@ -37,6 +37,25 @@ export interface LlmResult<T> {
 }
 
 /**
+ * A model call whose structured answer is delivered incrementally.
+ *
+ * `stream` yields the schema's fields as they fill in — shallow partials, safe
+ * to render as-is (a growing `reply` string is the case every caller so far
+ * cares about). `result` resolves to the same validated value `generate`
+ * would have produced, once the model finishes.
+ *
+ * The two are driven by the same underlying call: `result` only settles once
+ * `stream` has been fully consumed (mirrors the Vercel AI SDK's own
+ * `streamText`/`streamObject`, which this is built on). A caller that wants
+ * the final value must iterate `stream` to completion, even if it has no use
+ * for the partial chunks themselves.
+ */
+export interface LlmStreamResult<T> {
+  stream: AsyncIterable<Partial<T>>;
+  result: Promise<LlmResult<T>>;
+}
+
+/**
  * The single seam between the game engine and any LLM.
  *
  * Strategies never import an SDK directly — they take a provider. That is what
@@ -47,6 +66,12 @@ export interface LlmProvider {
   readonly id: string;
   readonly model: string;
   generate<T>(request: LlmRequest<T>): Promise<LlmResult<T>>;
+  /**
+   * Same call as `generate`, but the answer streams in instead of arriving
+   * all at once — for a caller with a live surface to show partial output on
+   * (a chat reply "typing" in), not for background/batch work.
+   */
+  generateStream<T>(request: LlmRequest<T>): LlmStreamResult<T>;
 }
 
 export function emptyUsage(): LlmUsage {

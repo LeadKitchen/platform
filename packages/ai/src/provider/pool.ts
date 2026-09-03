@@ -1,5 +1,10 @@
 import { type AiSdkVendor, createAiSdkProvider } from "./ai-sdk";
-import type { LlmProvider, LlmRequest, LlmResult } from "./types";
+import type {
+  LlmProvider,
+  LlmRequest,
+  LlmResult,
+  LlmStreamResult,
+} from "./types";
 
 /**
  * A pool of interchangeable endpoints with automatic failover.
@@ -140,6 +145,50 @@ export function createPoolProvider(options: PoolProviderOptions): PoolProvider {
     return until === undefined || until <= now;
   }
 
+  function orderedCandidates() {
+    const now = Date.now();
+    // Prefer candidates that are not cooling down, but keep the cooling ones
+    // as a last resort: a stale cooldown must not fail a run outright.
+    return [
+      ...providers.filter((entry) => isAvailable(entry.candidate.id, now)),
+      ...providers.filter((entry) => !isAvailable(entry.candidate.id, now)),
+    ];
+  }
+
+  /** Cooldown/failure bookkeeping shared by `generate` and `generateStream`. */
+  function recordFailure(candidate: PoolCandidate, cause: unknown): string {
+    const kind = classify(cause);
+    const message = cause instanceof Error ? cause.message : String(cause);
+
+    if (kind === "availability") {
+      availabilityFailures[candidate.id] =
+        (availabilityFailures[candidate.id] ?? 0) + 1;
+      const until = Date.now() + cooldownMs;
+      coolingDown[candidate.id] = until;
+
+      if (ACCOUNT_LEVEL_PATTERN.test(message)) {
+        // The whole key is spent — every sibling shares the counter.
+        for (const sibling of options.candidates) {
+          if (groupOf(sibling) === groupOf(candidate)) {
+            coolingDown[sibling.id] = until;
+          }
+        }
+      }
+    } else {
+      capabilityFailures[candidate.id] =
+        (capabilityFailures[candidate.id] ?? 0) + 1;
+    }
+
+    options.onEvent?.({
+      candidateId: candidate.id,
+      kind,
+      message,
+      cooldownUntil: coolingDown[candidate.id],
+    });
+
+    return `${candidate.id}: ${message.split("\n")[0]}`;
+  }
+
   return {
     id: "pool",
     // The nominal model is the first candidate; `stats()` reports what actually
@@ -154,17 +203,9 @@ export function createPoolProvider(options: PoolProviderOptions): PoolProvider {
     }),
 
     async generate<T>(request: LlmRequest<T>): Promise<LlmResult<T>> {
-      const now = Date.now();
       const errors: string[] = [];
 
-      // Prefer candidates that are not cooling down, but keep the cooling ones
-      // as a last resort: a stale cooldown must not fail a run outright.
-      const ordered = [
-        ...providers.filter((entry) => isAvailable(entry.candidate.id, now)),
-        ...providers.filter((entry) => !isAvailable(entry.candidate.id, now)),
-      ];
-
-      for (const { candidate, provider } of ordered) {
+      for (const { candidate, provider } of orderedCandidates()) {
         request.signal?.throwIfAborted();
         try {
           const result = await provider.generate(request);
@@ -173,42 +214,71 @@ export function createPoolProvider(options: PoolProviderOptions): PoolProvider {
           return result;
         } catch (cause) {
           if (request.signal?.aborted) throw cause;
-          const kind = classify(cause);
-          const message =
-            cause instanceof Error ? cause.message : String(cause);
-          errors.push(`${candidate.id}: ${message.split("\n")[0]}`);
-
-          if (kind === "availability") {
-            availabilityFailures[candidate.id] =
-              (availabilityFailures[candidate.id] ?? 0) + 1;
-            const until = Date.now() + cooldownMs;
-            coolingDown[candidate.id] = until;
-
-            if (ACCOUNT_LEVEL_PATTERN.test(message)) {
-              // The whole key is spent — every sibling shares the counter.
-              for (const sibling of options.candidates) {
-                if (groupOf(sibling) === groupOf(candidate)) {
-                  coolingDown[sibling.id] = until;
-                }
-              }
-            }
-          } else {
-            capabilityFailures[candidate.id] =
-              (capabilityFailures[candidate.id] ?? 0) + 1;
-          }
-
-          options.onEvent?.({
-            candidateId: candidate.id,
-            kind,
-            message,
-            cooldownUntil: coolingDown[candidate.id],
-          });
+          errors.push(recordFailure(candidate, cause));
         }
       }
 
       throw new Error(
         `Все кандидаты пула отказали для ${request.purpose}:\n${errors.join("\n")}`,
       );
+    },
+
+    generateStream<T>(request: LlmRequest<T>): LlmStreamResult<T> {
+      // `result` settles from inside `chunks()`, so — same contract as every
+      // `generateStream` implementation — the caller must fully consume
+      // `stream` for it to resolve.
+      let resolveResult!: (value: LlmResult<T>) => void;
+      let rejectResult!: (reason: unknown) => void;
+      const result = new Promise<LlmResult<T>>((resolve, reject) => {
+        resolveResult = resolve;
+        rejectResult = reject;
+      });
+      void result.catch(() => undefined);
+
+      async function* chunks(): AsyncGenerator<Partial<T>> {
+        const errors: string[] = [];
+
+        for (const { candidate, provider } of orderedCandidates()) {
+          request.signal?.throwIfAborted();
+          const attempt = provider.generateStream<T>(request);
+          let yieldedAny = false;
+
+          try {
+            for await (const partial of attempt.stream) {
+              yieldedAny = true;
+              yield partial;
+            }
+            const finalResult = await attempt.result;
+            servedBy[candidate.id] = (servedBy[candidate.id] ?? 0) + 1;
+            delete coolingDown[candidate.id];
+            resolveResult(finalResult);
+            return;
+          } catch (cause) {
+            if (request.signal?.aborted) {
+              rejectResult(cause);
+              throw cause;
+            }
+
+            if (yieldedAny) {
+              // Partial output already reached the caller — switching
+              // candidates now would mean silently rewriting what the user
+              // has already seen, which is worse than surfacing the failure.
+              rejectResult(cause);
+              throw cause;
+            }
+
+            errors.push(recordFailure(candidate, cause));
+          }
+        }
+
+        const err = new Error(
+          `Все кандидаты пула отказали для ${request.purpose}:\n${errors.join("\n")}`,
+        );
+        rejectResult(err);
+        throw err;
+      }
+
+      return { stream: chunks(), result };
     },
   };
 }

@@ -42,6 +42,8 @@ export {
   type EvaluateResult,
   type Pipeline,
   type PipelineDeps,
+  type PipelineStreamChunk,
+  type PipelineStreamResult,
   type TurnResult,
   type TurnTelemetry,
 } from "./pipeline";
@@ -87,6 +89,7 @@ export {
   type LlmProvider,
   type LlmRequest,
   type LlmResult,
+  type LlmStreamResult,
   type LlmUsage,
 } from "./provider/types";
 export {

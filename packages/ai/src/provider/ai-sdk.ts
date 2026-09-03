@@ -2,10 +2,15 @@ import { createAnthropic } from "@ai-sdk/anthropic";
 import { createOpenAI } from "@ai-sdk/openai";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import type { LanguageModel } from "ai";
-import { generateText, Output } from "ai";
+import { generateText, Output, streamText } from "ai";
 import { z } from "zod";
 
-import type { LlmProvider, LlmRequest, LlmResult } from "./types";
+import type {
+  LlmProvider,
+  LlmRequest,
+  LlmResult,
+  LlmStreamResult,
+} from "./types";
 
 /**
  * Failure of a single provider call, with the transport status preserved.
@@ -348,6 +353,87 @@ export function createAiSdkProvider(
           responseText: raw,
         },
       );
+    },
+
+    generateStream<T>(request: LlmRequest<T>): LlmStreamResult<T> {
+      const startedAt = Date.now();
+      request.signal?.throwIfAborted();
+
+      // Streaming gets one attempt, not the retry loop `generate` runs: a
+      // mid-stream retry would mean silently discarding output already shown
+      // to the player and starting the reply over, which is worse than
+      // surfacing the failure and letting the caller fall back to `generate`.
+      const system =
+        options.supportsStructuredOutputs !== false
+          ? request.system
+          : request.system + schemaHint(request.schema);
+
+      const streamed = streamText({
+        model,
+        system,
+        messages: request.messages.map((message) => ({
+          role: message.role,
+          content: message.content,
+        })),
+        output: Output.object({ schema: request.schema }),
+        maxOutputTokens,
+        maxRetries: 0,
+        abortSignal: request.signal,
+      });
+
+      const wrap = (cause: unknown): unknown => {
+        if (request.signal?.aborted) return cause;
+        const text = (cause as { text?: string })?.text;
+        const detail = (cause as { cause?: { message?: string } })?.cause
+          ?.message;
+        return new LlmCallError(
+          [
+            `${options.model} не вернула валидный объект для ${request.purpose} (стрим):`,
+            cause instanceof Error ? cause.message : String(cause),
+            detail ? `Причина: ${detail}` : "",
+            text ? `Ответ модели: ${text.slice(0, 800)}` : "",
+          ]
+            .filter(Boolean)
+            .join("\n"),
+          { cause, statusCode: findStatusCode(cause), responseText: text },
+        );
+      };
+
+      async function* chunks(): AsyncGenerator<Partial<T>> {
+        try {
+          for await (const partial of streamed.partialOutputStream) {
+            yield partial as Partial<T>;
+          }
+        } catch (cause) {
+          throw wrap(cause);
+        }
+      }
+
+      const result: Promise<LlmResult<T>> = (async () => {
+        try {
+          const [value, usage] = await Promise.all([
+            streamed.output,
+            streamed.usage,
+          ]);
+          return {
+            value,
+            usage: {
+              inputTokens: usage.inputTokens ?? 0,
+              outputTokens: usage.outputTokens ?? 0,
+              cacheReadInputTokens: usage.inputTokenDetails?.cacheReadTokens,
+              cacheCreationInputTokens:
+                usage.inputTokenDetails?.cacheWriteTokens,
+            },
+            latencyMs: Date.now() - startedAt,
+            model: options.model,
+          };
+        } catch (cause) {
+          throw wrap(cause);
+        }
+      })();
+      void result.catch(() => undefined);
+
+      return { stream: chunks(), result };
     },
   };
 }

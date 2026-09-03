@@ -1,4 +1,9 @@
-import type { LlmProvider, LlmRequest, LlmResult } from "./types";
+import type {
+  LlmProvider,
+  LlmRequest,
+  LlmResult,
+  LlmStreamResult,
+} from "./types";
 
 export type MockResponder = (request: LlmRequest<unknown>) => unknown;
 
@@ -53,6 +58,48 @@ export function createMockProvider(
         latencyMs: options.latencyMs ?? 0,
         model: options.model ?? "mock-model",
       };
+    },
+
+    generateStream<T>(request: LlmRequest<T>): LlmStreamResult<T> {
+      request.signal?.throwIfAborted();
+      const raw = responder(request as LlmRequest<unknown>);
+      const value = request.schema.parse(raw) as T;
+
+      const promptChars =
+        request.system.length +
+        request.messages.reduce(
+          (sum, message) => sum + message.content.length,
+          0,
+        );
+      const finalResult: LlmResult<T> = {
+        value,
+        usage: {
+          inputTokens: Math.round(promptChars * tokensPerChar),
+          outputTokens: Math.round(
+            JSON.stringify(value).length * tokensPerChar,
+          ),
+        },
+        latencyMs: options.latencyMs ?? 0,
+        model: options.model ?? "mock-model",
+      };
+
+      // Deterministic stand-in for a real token stream: drip the `reply`
+      // field out in a handful of growing slices, then the whole value.
+      // Fixtures don't need to model any other field arriving progressively —
+      // nothing downstream reads a partial `requests`/`readiness`.
+      async function* chunks(): AsyncGenerator<Partial<T>> {
+        const reply = (value as { reply?: unknown }).reply;
+        if (typeof reply === "string" && reply.length > 0) {
+          const step = Math.max(1, Math.ceil(reply.length / 5));
+          for (let end = step; end < reply.length; end += step) {
+            request.signal?.throwIfAborted();
+            yield { reply: reply.slice(0, end) } as unknown as Partial<T>;
+          }
+        }
+        yield value as Partial<T>;
+      }
+
+      return { stream: chunks(), result: Promise.resolve(finalResult) };
     },
   };
 }
