@@ -29,12 +29,18 @@ function pinSnippet(
   snippets: KnowledgeSnippet[],
   candidates: KnowledgeSnippet[],
   pinId: string | undefined,
+  topK: number,
 ): KnowledgeSnippet[] {
-  if (!pinId || snippets.some((snippet) => snippet.id === pinId)) {
-    return snippets;
+  const selected = snippets.slice(0, topK);
+  if (
+    topK === 0 ||
+    !pinId ||
+    selected.some((snippet) => snippet.id === pinId)
+  ) {
+    return selected;
   }
   const pinned = candidates.find((snippet) => snippet.id === pinId);
-  return pinned ? [pinned, ...snippets] : snippets;
+  return pinned ? [pinned, ...selected.slice(0, topK - 1)] : selected;
 }
 
 export interface RerankSnippetsOptions {
@@ -76,7 +82,7 @@ export async function rerankSnippets(
 
   if (candidates.length <= topK) {
     return {
-      snippets: pinSnippet(candidates, candidates, pinId),
+      snippets: pinSnippet(candidates, candidates, pinId, topK),
       usage,
       reranked: false,
       rerankReason: "кандидатов не больше topK",
@@ -126,7 +132,7 @@ export async function rerankSnippets(
         : candidates.slice(0, topK);
 
     return {
-      snippets: pinSnippet(selected, candidates, pinId),
+      snippets: pinSnippet(selected, candidates, pinId, topK),
       usage: addUsage(usage, result.usage),
       reranked: order.length > 0,
       rerankOrder: order.slice(0, topK),
@@ -135,7 +141,7 @@ export async function rerankSnippets(
   } catch (cause) {
     if (signal?.aborted) throw cause;
     return {
-      snippets: pinSnippet(candidates.slice(0, topK), candidates, pinId),
+      snippets: pinSnippet(candidates.slice(0, topK), candidates, pinId, topK),
       usage,
       reranked: false,
       rerankFailed: true,

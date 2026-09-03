@@ -58,21 +58,41 @@ export interface GraphTraversalResult {
 }
 
 let driverPromise: Promise<Driver | undefined> | undefined;
+let schemaPromise: Promise<void> | undefined;
 
 async function getDriver(): Promise<Driver | undefined> {
   const url = env.NEO4J_URL;
   if (!url) return undefined;
   driverPromise ??= (async () => {
-    const neo4j = await import("neo4j-driver");
-    return neo4j.default.driver(
-      url,
-      neo4j.default.auth.basic(
-        env.NEO4J_USER ?? "neo4j",
-        env.NEO4J_PASSWORD ?? "",
-      ),
-    );
+    try {
+      const neo4j = await import("neo4j-driver");
+      return neo4j.default.driver(
+        url,
+        neo4j.default.auth.basic(
+          env.NEO4J_USER ?? "neo4j",
+          env.NEO4J_PASSWORD ?? "",
+        ),
+      );
+    } catch (error) {
+      driverPromise = undefined;
+      throw error;
+    }
   })();
   return driverPromise;
+}
+
+function ensureSchema(session: Session): Promise<void> {
+  schemaPromise ??= session
+    .run(
+      `CREATE CONSTRAINT entity_org_id_unique IF NOT EXISTS
+       FOR (n:Entity) REQUIRE (n.orgId, n.id) IS UNIQUE`,
+    )
+    .then(() => undefined)
+    .catch((error: unknown) => {
+      schemaPromise = undefined;
+      throw error;
+    });
+  return schemaPromise;
 }
 
 async function withSession<T>(
@@ -108,9 +128,21 @@ export async function upsertEntities(
   entities: GraphEntityInput[],
   relations: GraphRelationInput[],
 ): Promise<void> {
-  if (entities.length === 0 && relations.length === 0) return;
-
   await withSession(async (session) => {
+    await ensureSchema(session);
+
+    await session.run(
+      `MATCH (a:Entity {orgId: $orgId})-[r:RELATES_TO {documentId: $documentId}]-(b:Entity {orgId: $orgId})
+       WITH DISTINCT r
+       DELETE r`,
+      { orgId, documentId },
+    );
+    await session.run(
+      `MATCH (n:Entity {orgId: $orgId, documentId: $documentId})
+       DETACH DELETE n`,
+      { orgId, documentId },
+    );
+
     if (entities.length > 0) {
       await session.run(
         `UNWIND $entities AS entity

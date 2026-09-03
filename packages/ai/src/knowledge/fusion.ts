@@ -1,5 +1,5 @@
-import { fuseRankings } from "./bm25";
 import type { KnowledgeSnippet } from "../types";
+import { fuseRankings } from "./bm25";
 
 export interface ChannelHit {
   id: string;
@@ -31,6 +31,9 @@ export interface FuseChannelsOptions {
  */
 export function fuseChannels(options: FuseChannelsOptions): KnowledgeSnippet[] {
   const { channels, pool } = options;
+  if (!Number.isFinite(pool) || !Number.isInteger(pool) || pool < 0) {
+    throw new RangeError("pool must be a finite non-negative integer");
+  }
 
   const rankings = channels
     .map((hits) => hits.map((hit, rank) => ({ id: hit.id, rank })))

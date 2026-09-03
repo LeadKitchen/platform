@@ -866,6 +866,10 @@ export const GameKnowledgeChunk = pgTable(
       table.orgId,
       table.audience,
     ),
+    unique("game_knowledge_chunks_id_document_id_unique").on(
+      table.id,
+      table.documentId,
+    ),
     foreignKey({
       columns: [table.documentId, table.orgId],
       foreignColumns: [GameKnowledgeDocument.id, GameKnowledgeDocument.orgId],
@@ -896,10 +900,7 @@ export const GameKnowledgeFact = pgTable(
   (t) => ({
     id: t.uuid().primaryKey().defaultRandom(),
     documentId: t.uuid().notNull(),
-    chunkId: t
-      .uuid()
-      .notNull()
-      .references(() => GameKnowledgeChunk.id, { onDelete: "cascade" }),
+    chunkId: t.uuid().notNull(),
     orgId: t
       .text()
       .notNull()
@@ -925,6 +926,11 @@ export const GameKnowledgeFact = pgTable(
       columns: [table.documentId, table.orgId],
       foreignColumns: [GameKnowledgeDocument.id, GameKnowledgeDocument.orgId],
       name: "game_knowledge_facts_document_org_fk",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.chunkId, table.documentId],
+      foreignColumns: [GameKnowledgeChunk.id, GameKnowledgeChunk.documentId],
+      name: "game_knowledge_facts_chunk_document_fk",
     }).onDelete("cascade"),
     check(
       "game_knowledge_facts_audience_check",

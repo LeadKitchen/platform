@@ -14,6 +14,7 @@ import {
   GameKnowledgeChunk,
   GameKnowledgeDocument,
   GameKnowledgeFact,
+  inArray,
 } from "@acme/db";
 import { db } from "@acme/db/client";
 import { downloadBufferFromS3 } from "@acme/storage";
@@ -181,8 +182,9 @@ interface PersistedChunk {
   index: number;
   text: string;
   audience: GameKnowledgeAudience;
-  vector: number[];
 }
+
+const FACT_INSERT_BATCH_SIZE = 500;
 
 const embedAndPersistTask = task({
   id: "ingest-embed-and-persist",
@@ -210,12 +212,11 @@ const embedAndPersistTask = task({
     // array position with the RETURNING rows below — INSERT...RETURNING
     // row order isn't a guarantee worth relying on for correctness.
     const chunkByIndex = new Map(
-      input.chunks.map((chunk, position) => [
+      input.chunks.map((chunk) => [
         chunk.index,
         {
           text: chunk.text,
           audience: chunk.audience,
-          vector: vectors[position] ?? [],
         },
       ]),
     );
@@ -274,7 +275,6 @@ const embedAndPersistTask = task({
                 index: row.chunkIndex,
                 text: source.text,
                 audience: source.audience,
-                vector: source.vector,
               },
             ]
           : [];
@@ -296,18 +296,41 @@ const embedAndIndexQdrantTask = task({
   run: async (input: {
     orgId: string;
     documentId: string;
-    chunks: Pick<PersistedChunk, "id" | "audience" | "vector">[];
+    chunkIds: string[];
   }) => {
+    if (input.chunkIds.length === 0) return { indexed: 0 };
+
+    const chunks = await db
+      .select({
+        id: GameKnowledgeChunk.id,
+        audience: GameKnowledgeChunk.audience,
+        vector: GameKnowledgeChunk.embedding,
+      })
+      .from(GameKnowledgeChunk)
+      .where(
+        and(
+          eq(GameKnowledgeChunk.orgId, input.orgId),
+          eq(GameKnowledgeChunk.documentId, input.documentId),
+          inArray(GameKnowledgeChunk.id, input.chunkIds),
+        ),
+      );
+    if (
+      chunks.length !== input.chunkIds.length ||
+      chunks.some((chunk) => chunk.vector === null)
+    ) {
+      throw new Error("Could not load every persisted chunk embedding");
+    }
+
     await upsertChunks(
-      input.chunks.map((chunk) => ({
+      chunks.map((chunk) => ({
         id: chunk.id,
-        vector: chunk.vector,
+        vector: chunk.vector ?? [],
         orgId: input.orgId,
         documentId: input.documentId,
         audience: chunk.audience,
       })),
     );
-    return { indexed: input.chunks.length };
+    return { indexed: chunks.length };
   },
 });
 
@@ -386,7 +409,15 @@ const extractFactsTask = task({
     });
 
     if (rows.length > 0) {
-      await db.insert(GameKnowledgeFact).values(rows);
+      for (
+        let offset = 0;
+        offset < rows.length;
+        offset += FACT_INSERT_BATCH_SIZE
+      ) {
+        await db
+          .insert(GameKnowledgeFact)
+          .values(rows.slice(offset, offset + FACT_INSERT_BATCH_SIZE));
+      }
     }
     return { factCount: rows.length };
   },
@@ -463,11 +494,7 @@ export const ingestKnowledgeDocumentTask = schemaTask({
       await embedAndIndexQdrantTask.trigger({
         orgId,
         documentId,
-        chunks: insertedChunks.map((chunk) => ({
-          id: chunk.id,
-          audience: chunk.audience,
-          vector: chunk.vector,
-        })),
+        chunkIds: insertedChunks.map((chunk) => chunk.id),
       });
 
       // Neo4j and game_knowledge_facts have no per-item audience filter on
@@ -480,15 +507,17 @@ export const ingestKnowledgeDocumentTask = schemaTask({
       const visibleChunks = insertedChunks.filter(
         (chunk) => chunk.audience !== "judge",
       );
+      // Trigger even with no visible chunks so upsertEntities clears any
+      // graph data left by an older version of this document.
+      await extractGraphTask.trigger({
+        orgId,
+        documentId,
+        chunks: visibleChunks.map((chunk) => ({
+          index: chunk.index,
+          text: chunk.text,
+        })),
+      });
       if (visibleChunks.length > 0) {
-        await extractGraphTask.trigger({
-          orgId,
-          documentId,
-          chunks: visibleChunks.map((chunk) => ({
-            index: chunk.index,
-            text: chunk.text,
-          })),
-        });
         await extractFactsTask.trigger({
           orgId,
           documentId,

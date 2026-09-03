@@ -4,8 +4,19 @@ import type {
   Evaluation,
   Expectation,
 } from "@acme/game";
+import { z } from "zod";
 
 import type { LlmEffort, LlmProvider, LlmUsage } from "./provider/types";
+
+const nonNegativeIntegerParam = z.number().finite().int().nonnegative();
+
+/** Runtime-validated strategy parameters shared by stored variants and stage calls. */
+export const stageParamsSchema = z.looseObject({
+  topK: nonNegativeIntegerParam.optional(),
+  pool: nonNegativeIntegerParam.optional(),
+});
+
+export type StageParams = z.infer<typeof stageParamsSchema>;
 
 /**
  * Four pluggable stages make up one "approach":
@@ -26,7 +37,7 @@ export interface StageDeps {
   provider: LlmProvider;
   catalog: Catalog;
   /** Extra parameters from the variant, e.g. `{ topK: 6 }`. */
-  params: Record<string, unknown>;
+  params: StageParams;
   effort?: LlmEffort;
   signal?: AbortSignal;
 }

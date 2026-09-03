@@ -13,7 +13,8 @@ CREATE TABLE "game_knowledge_facts" (
 	CONSTRAINT "game_knowledge_facts_confidence_check" CHECK ("game_knowledge_facts"."confidence" >= 0 and "game_knowledge_facts"."confidence" <= 1)
 );
 --> statement-breakpoint
-ALTER TABLE "game_knowledge_facts" ADD CONSTRAINT "game_knowledge_facts_chunk_id_game_knowledge_chunks_id_fk" FOREIGN KEY ("chunk_id") REFERENCES "public"."game_knowledge_chunks"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "game_knowledge_chunks" ADD CONSTRAINT "game_knowledge_chunks_id_document_id_unique" UNIQUE("id","document_id");--> statement-breakpoint
+ALTER TABLE "game_knowledge_facts" ADD CONSTRAINT "game_knowledge_facts_chunk_document_fk" FOREIGN KEY ("chunk_id","document_id") REFERENCES "public"."game_knowledge_chunks"("id","document_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "game_knowledge_facts" ADD CONSTRAINT "game_knowledge_facts_org_id_game_organizations_id_fk" FOREIGN KEY ("org_id") REFERENCES "public"."game_organizations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "game_knowledge_facts" ADD CONSTRAINT "game_knowledge_facts_document_org_fk" FOREIGN KEY ("document_id","org_id") REFERENCES "public"."game_knowledge_documents"("id","org_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX "game_knowledge_facts_org_audience_idx" ON "game_knowledge_facts" USING btree ("org_id","audience");--> statement-breakpoint

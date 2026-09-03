@@ -24,6 +24,7 @@ fallback if this service is also unreachable or low-quality.
 import asyncio
 import json
 import logging
+import os
 import tempfile
 from pathlib import Path
 
@@ -43,6 +44,7 @@ MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024  # matches MAX_UPLOAD_SIZE_BYTES in @acme
 # rejected here despite _read_upload below being willing to accept it.
 MAX_MULTIPART_REQUEST_SIZE_BYTES = MAX_FILE_SIZE_BYTES + 1024 * 1024
 _READ_CHUNK_SIZE = 1024 * 1024
+MINERU_TIMEOUT_MS = int(os.getenv("MINERU_TIMEOUT_MS", "180000"))
 
 # MinerU's pipeline backend is CPU-only and resource-heavy (16GB+ RAM
 # recommended per document) — one parse at a time, same reasoning as
@@ -140,10 +142,21 @@ async def _run_mineru(pdf_path: Path, output_dir: Path) -> None:
         str(output_dir),
         "-b",
         "pipeline",
-        stdout=asyncio.subprocess.PIPE,
+        stdout=asyncio.subprocess.DEVNULL,
         stderr=asyncio.subprocess.PIPE,
     )
-    _, stderr = await process.communicate()
+    try:
+        _, stderr = await asyncio.wait_for(
+            process.communicate(), timeout=MINERU_TIMEOUT_MS / 1000
+        )
+    except asyncio.TimeoutError as exc:
+        if process.returncode is None:
+            try:
+                process.kill()
+            except ProcessLookupError:
+                pass
+        await process.communicate()
+        raise RuntimeError(f"mineru timed out after {MINERU_TIMEOUT_MS} ms") from exc
     if process.returncode != 0:
         raise RuntimeError(
             f"mineru exited {process.returncode}: "

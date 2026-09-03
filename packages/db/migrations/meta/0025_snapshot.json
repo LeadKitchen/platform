@@ -1715,7 +1715,16 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "game_knowledge_chunks_id_document_id_unique": {
+          "name": "game_knowledge_chunks_id_document_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id",
+            "document_id"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {
         "game_knowledge_chunks_audience_check": {
@@ -1985,15 +1994,17 @@
         }
       },
       "foreignKeys": {
-        "game_knowledge_facts_chunk_id_game_knowledge_chunks_id_fk": {
-          "name": "game_knowledge_facts_chunk_id_game_knowledge_chunks_id_fk",
+        "game_knowledge_facts_chunk_document_fk": {
+          "name": "game_knowledge_facts_chunk_document_fk",
           "tableFrom": "game_knowledge_facts",
           "tableTo": "game_knowledge_chunks",
           "columnsFrom": [
-            "chunk_id"
+            "chunk_id",
+            "document_id"
           ],
           "columnsTo": [
-            "id"
+            "id",
+            "document_id"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"

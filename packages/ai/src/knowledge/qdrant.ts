@@ -41,11 +41,16 @@ let ensureCollectionPromise: Promise<void> | undefined;
 async function getClient(): Promise<QdrantClientType | undefined> {
   if (!env.QDRANT_URL) return undefined;
   clientPromise ??= (async () => {
-    const { QdrantClient } = await import("@qdrant/js-client-rest");
-    return new QdrantClient({
-      url: env.QDRANT_URL,
-      apiKey: env.QDRANT_API_KEY,
-    });
+    try {
+      const { QdrantClient } = await import("@qdrant/js-client-rest");
+      return new QdrantClient({
+        url: env.QDRANT_URL,
+        apiKey: env.QDRANT_API_KEY,
+      });
+    } catch (error) {
+      clientPromise = undefined;
+      throw error;
+    }
   })();
   const instance = await clientPromise;
   await ensureCollection(instance);
@@ -54,21 +59,26 @@ async function getClient(): Promise<QdrantClientType | undefined> {
 
 function ensureCollection(instance: QdrantClientType): Promise<void> {
   ensureCollectionPromise ??= (async () => {
-    const { exists } = await instance.collectionExists(COLLECTION_NAME);
-    if (exists) return;
-    await instance.createCollection(COLLECTION_NAME, {
-      vectors: { size: VECTOR_SIZE, distance: "Cosine" },
-    });
-    // Payload indexes for the two fields every query filters on — without
-    // them Qdrant still filters correctly, just by a full payload scan.
-    await instance.createPayloadIndex(COLLECTION_NAME, {
-      field_name: "orgId",
-      field_schema: "keyword",
-    });
-    await instance.createPayloadIndex(COLLECTION_NAME, {
-      field_name: "audience",
-      field_schema: "keyword",
-    });
+    try {
+      const { exists } = await instance.collectionExists(COLLECTION_NAME);
+      if (exists) return;
+      await instance.createCollection(COLLECTION_NAME, {
+        vectors: { size: VECTOR_SIZE, distance: "Cosine" },
+      });
+      // Payload indexes for the two fields every query filters on — without
+      // them Qdrant still filters correctly, just by a full payload scan.
+      await instance.createPayloadIndex(COLLECTION_NAME, {
+        field_name: "orgId",
+        field_schema: "keyword",
+      });
+      await instance.createPayloadIndex(COLLECTION_NAME, {
+        field_name: "audience",
+        field_schema: "keyword",
+      });
+    } catch (error) {
+      ensureCollectionPromise = undefined;
+      throw error;
+    }
   })();
   return ensureCollectionPromise;
 }

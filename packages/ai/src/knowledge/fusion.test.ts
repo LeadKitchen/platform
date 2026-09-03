@@ -43,6 +43,14 @@ describe("fuseChannels", () => {
     );
 
     expect(fuseChannels({ channels: [channel], pool: 3 })).toHaveLength(3);
+    expect(fuseChannels({ channels: [channel], pool: 0 })).toEqual([]);
+  });
+
+  test("rejects invalid pool sizes before slicing", () => {
+    const channels = [[hit("a", 1)]];
+    for (const pool of [-1, Number.NaN, Number.POSITIVE_INFINITY, 1.5]) {
+      expect(() => fuseChannels({ channels, pool })).toThrow(RangeError);
+    }
   });
 
   test("channels that never overlap still all contribute (graph/facts alongside lexical/vector)", () => {

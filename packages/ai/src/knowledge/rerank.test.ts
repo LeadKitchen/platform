@@ -55,6 +55,22 @@ describe("rerankSnippets", () => {
     });
 
     expect(result.snippets.map((s) => s.id)).toContain("profile:anna");
+    expect(result.snippets).toHaveLength(1);
+  });
+
+  test("replaces the last selected snippet with a missing pin", async () => {
+    const provider = createMockProvider(() => ({ order: [1, 2] }));
+    const candidates = [snippet("profile:anna"), snippet("b"), snippet("c")];
+
+    const result = await rerankSnippets({
+      provider,
+      query: "q",
+      candidates,
+      topK: 2,
+      pinId: "profile:anna",
+    });
+
+    expect(result.snippets.map((s) => s.id)).toEqual(["profile:anna", "b"]);
   });
 
   test("falls back to the deterministic order when the model returns no usable indexes", async () => {

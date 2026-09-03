@@ -39,7 +39,7 @@ uvicorn main:app --reload --port 8089
 
 Then in `.env`:
 
-```
+```dotenv
 MINERU_SERVICE_URL=http://localhost:8089
 ```
 
