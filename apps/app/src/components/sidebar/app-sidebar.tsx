@@ -88,7 +88,12 @@ const data = {
       adminOnly: false,
       facilitatorOnly: true,
       items: [
-        { title: "Моя группа", url: "/group", icon: IconUsersGroup },
+        {
+          title: "Моя группа",
+          url: "/group",
+          icon: IconUsersGroup,
+          exact: true,
+        },
         { title: "Участники", url: "/group/members", icon: IconUsers },
         {
           title: "Настроить команды",
