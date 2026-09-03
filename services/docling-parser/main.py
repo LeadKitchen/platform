@@ -48,6 +48,11 @@ _convert_lock = asyncio.Lock()
 
 ALLOWED_SUFFIXES = {".pdf", ".docx"}
 MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024  # matches MAX_UPLOAD_SIZE_BYTES in @acme/storage
+# Content-Length covers the whole multipart body — boundaries and the file
+# field's own headers, not just file bytes — so the early check needs slack
+# over MAX_FILE_SIZE_BYTES or a file at exactly the advertised limit would be
+# rejected here despite _read_upload below being willing to accept it.
+MAX_MULTIPART_REQUEST_SIZE_BYTES = MAX_FILE_SIZE_BYTES + 1024 * 1024
 _READ_CHUNK_SIZE = 1024 * 1024
 
 
@@ -62,7 +67,7 @@ class ContentLengthLimitMiddleware(BaseHTTPMiddleware):
                 return Response(
                     "Content-Length header is required", status_code=411
                 )
-            if int(content_length) > MAX_FILE_SIZE_BYTES:
+            if int(content_length) > MAX_MULTIPART_REQUEST_SIZE_BYTES:
                 return Response("File exceeds maximum size", status_code=413)
         return await call_next(request)
 
