@@ -17,10 +17,12 @@
     "format": "biome format .",
     "lint": "biome lint .",
     "check": "biome check .",
+    "test": "bun test",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
     "@acme/ai": "workspace:*",
+    "@acme/config": "workspace:*",
     "@acme/db": "workspace:*",
     "@acme/storage": "workspace:*",
     "@trigger.dev/sdk": "4.5.16",
