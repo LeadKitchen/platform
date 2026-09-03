@@ -393,6 +393,19 @@ const REACTION_SUPPORT_LABELS: Record<string, string> = {
   dislikes: "не любит",
 };
 
+const competencesPreviewSchema = z.record(z.string(), z.string());
+
+const personalityPreviewSchema = z
+  .object({
+    tone: z.string().optional(),
+    reactionToDirective: z.string().optional(),
+    reactionToSupport: z.string().optional(),
+    stressBehavior: z.string().optional(),
+    motivators: z.array(z.string()).optional(),
+    demotivators: z.array(z.string()).optional(),
+  })
+  .loose();
+
 function safeParseRecord(value: string): Record<string, unknown> | null {
   try {
     const parsed = JSON.parse(value) as unknown;
@@ -488,17 +501,18 @@ export function AdminGameDashboard({
   );
   const liveVariantId =
     settings.defaultVariantId ?? initialData.system.runtime.defaultVariant;
-  const employeeCompetencesPreview = useMemo(
-    () => safeParseRecord(employeeCompetences) as Record<string, string> | null,
-    [employeeCompetences],
-  );
-  const employeePersonalityPreview = useMemo(
-    () =>
-      safeParseRecord(
-        employeePersonality,
-      ) as Partial<EmployeePersonality> | null,
-    [employeePersonality],
-  );
+  const employeeCompetencesPreview = useMemo(() => {
+    const parsed = safeParseRecord(employeeCompetences);
+    if (!parsed) return null;
+    const result = competencesPreviewSchema.safeParse(parsed);
+    return result.success ? result.data : null;
+  }, [employeeCompetences]);
+  const employeePersonalityPreview = useMemo(() => {
+    const parsed = safeParseRecord(employeePersonality);
+    if (!parsed) return null;
+    const result = personalityPreviewSchema.safeParse(parsed);
+    return result.success ? result.data : null;
+  }, [employeePersonality]);
   const employeeIdValid = employeeIdSchema.safeParse(employee.id).success;
   const visibleUsers = useMemo(() => {
     const query = userQuery.trim().toLocaleLowerCase("ru");
@@ -592,6 +606,7 @@ export function AdminGameDashboard({
         employeePersonality,
         "Профиль личности",
       ) as unknown as EmployeePersonality;
+      const requestedId = employee.id;
       const refined = await client.admin.game.characters.refineEmployee({
         profile: {
           id: employee.id,
@@ -604,17 +619,28 @@ export function AdminGameDashboard({
         },
         instruction: employeeInstruction.trim(),
       });
-      setEmployeeRefinement(refined);
       const profile = refined.draft.profile;
-      setEmployee({
-        ...employee,
-        name: profile.name,
-        role: profile.role,
-        level: profile.level,
-        gender: profile.gender,
-        competences: profile.competences,
-        personality: profile.personality,
+      let applied = false;
+      setEmployee((current) => {
+        if (current.id !== requestedId) return current;
+        applied = true;
+        return {
+          ...current,
+          name: profile.name,
+          role: profile.role,
+          level: profile.level,
+          gender: profile.gender,
+          competences: profile.competences,
+          personality: profile.personality,
+        };
       });
+      if (!applied) {
+        toast.warning(
+          "Выбран другой сотрудник, результат ИИ отменён для предыдущего.",
+        );
+        return;
+      }
+      setEmployeeRefinement(refined);
       setEmployeeCompetences(JSON.stringify(profile.competences, null, 2));
       setEmployeePersonality(JSON.stringify(profile.personality, null, 2));
       toast.success("ИИ обновил персонажа. Проверьте изменения и сохраните.");
