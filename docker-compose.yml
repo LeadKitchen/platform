@@ -65,7 +65,9 @@ services:
       context: ./services/docling-parser
     container_name: docling
     ports:
-      - 8088:8088
+      # Host-only: /parse takes an arbitrary file and runs OCR unauthenticated —
+      # fine for the TS job on localhost, not for exposing to the network.
+      - 127.0.0.1:8088:8088
     healthcheck:
       test:
         [

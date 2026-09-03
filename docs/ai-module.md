@@ -141,7 +141,7 @@ PDF/DOCX/TXT через `admin.game.knowledge.*` — они попадают в 
 (`packages/ai/src/strategies/knowledge/org-rag.ts`), поиск по pgvector в
 рамках своей организации.
 
-```
+```text
 upload PDF/DOCX/TXT → S3
      │
      ▼

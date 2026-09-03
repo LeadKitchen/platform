@@ -10,6 +10,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
+# Non-root user the service ends up running as. HOME=/app so every cache
+# written during the build (pip, huggingface, Docling's own model cache)
+# lands under a directory this user can read at runtime instead of /root.
+RUN groupadd --system docling \
+    && useradd --system --gid docling --home-dir /app --no-create-home docling
+ENV HOME=/app
 WORKDIR /app
 
 COPY requirements.txt .
@@ -20,6 +26,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN python -c "from docling.document_converter import DocumentConverter; DocumentConverter()"
 
 COPY main.py .
+
+RUN chown -R docling:docling /app
+USER docling
 
 EXPOSE 8088
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8088"]

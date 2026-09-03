@@ -1,4 +1,5 @@
 import { env } from "@acme/config";
+import { z } from "zod";
 
 /**
  * Thin client for the standalone Docling microservice
@@ -18,12 +19,15 @@ export type DoclingParseOutcome =
   | { ok: true; text: string; pageCount: number; tableCount: number }
   | { ok: false; reason: string };
 
-interface DoclingParseResponse {
-  text: string;
-  page_count: number;
-  table_count: number;
-  avg_chars_per_page: number;
-}
+// Validated in full — not just the two fields the quality gate reads — so a
+// malformed `page_count`/`table_count` can't silently become `NaN`/`undefined`
+// metadata on a chunk the ingestion job otherwise treats as a success.
+const doclingParseResponseSchema = z.object({
+  text: z.string(),
+  page_count: z.number(),
+  table_count: z.number(),
+  avg_chars_per_page: z.number(),
+});
 
 // Below this, treat the extraction as failed rather than indexing near-empty
 // chunks — e.g. a scanned page OCR came back blank, or the file was mostly
@@ -61,13 +65,11 @@ export async function parseWithDocling(
       return { ok: false, reason: `http-${response.status}` };
     }
 
-    const body = (await response.json()) as DoclingParseResponse;
-    if (
-      typeof body.text !== "string" ||
-      typeof body.avg_chars_per_page !== "number"
-    ) {
+    const parsed = doclingParseResponseSchema.safeParse(await response.json());
+    if (!parsed.success) {
       return { ok: false, reason: "malformed-response" };
     }
+    const body = parsed.data;
     if (body.avg_chars_per_page < MIN_AVG_CHARS_PER_PAGE) {
       return { ok: false, reason: "low-quality" };
     }

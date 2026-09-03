@@ -56,6 +56,31 @@ describe("parseWithDocling", () => {
     ).resolves.toEqual({ ok: false, reason: "low-quality" });
   });
 
+  test.each([
+    ["text", { page_count: 2, table_count: 1, avg_chars_per_page: 100 }],
+    [
+      "page_count",
+      { text: "a".repeat(200), table_count: 1, avg_chars_per_page: 100 },
+    ],
+    [
+      "table_count",
+      { text: "a".repeat(200), page_count: 2, avg_chars_per_page: 100 },
+    ],
+    [
+      "avg_chars_per_page",
+      { text: "a".repeat(200), page_count: 2, table_count: 1 },
+    ],
+  ])(
+    "falls back when %s is missing from the response",
+    async (_field, body) => {
+      mockFetch(async () => Response.json(body));
+
+      await expect(
+        parseWithDocling(Buffer.from("x"), "doc.pdf", { baseUrl }),
+      ).resolves.toEqual({ ok: false, reason: "malformed-response" });
+    },
+  );
+
   test("falls back on a non-2xx response", async () => {
     mockFetch(async () => new Response("bad", { status: 422 }));
 
