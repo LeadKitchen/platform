@@ -7,6 +7,9 @@ import type {
 } from "@acme/game";
 import { STYLE_LABELS } from "@acme/game/styles";
 import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
   Badge,
   Button,
   Card,
@@ -14,6 +17,9 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
   Field,
   FieldDescription,
   FieldGroup,
@@ -36,11 +42,14 @@ import {
   Textarea,
 } from "@acme/ui";
 import {
+  IconAlertTriangle,
+  IconChevronDown,
   IconDatabase,
   IconDeviceFloppy,
   IconMessageCircle,
   IconRefresh,
   IconSearch,
+  IconSparkles,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -293,6 +302,10 @@ export interface AdminGameData {
   comparisons: ReviewReport[];
 }
 
+type EmployeeRefinementResult = Awaited<
+  ReturnType<typeof client.admin.game.characters.refineEmployee>
+>;
+
 const emptyEmployee: Employee = {
   id: "",
   name: "",
@@ -353,6 +366,56 @@ function statusLabel(status: string): string {
     { active: "Идёт", completed: "Завершена", archived: "В архиве" }[status] ??
     status
   );
+}
+
+const COMPETENCE_LABELS: Record<string, string> = {
+  novice: "новичок",
+  learning: "учится",
+  capable: "самостоятелен",
+  expert: "эксперт",
+};
+
+const TONE_LABELS: Record<string, string> = {
+  confident: "уверенный",
+  anxious: "тревожный",
+  independent: "независимый",
+};
+
+const REACTION_DIRECTIVE_LABELS: Record<string, string> = {
+  accepts: "принимает",
+  neutral: "нейтрально",
+  resents: "сопротивляется",
+};
+
+const REACTION_SUPPORT_LABELS: Record<string, string> = {
+  needs: "нуждается",
+  neutral: "нейтрально",
+  dislikes: "не любит",
+};
+
+const competencesPreviewSchema = z.record(z.string(), z.string());
+
+const personalityPreviewSchema = z
+  .object({
+    tone: z.string().optional(),
+    reactionToDirective: z.string().optional(),
+    reactionToSupport: z.string().optional(),
+    stressBehavior: z.string().optional(),
+    motivators: z.array(z.string()).optional(),
+    demotivators: z.array(z.string()).optional(),
+  })
+  .loose();
+
+function safeParseRecord(value: string): Record<string, unknown> | null {
+  try {
+    const parsed = JSON.parse(value) as unknown;
+    if (!parsed || Array.isArray(parsed) || typeof parsed !== "object") {
+      return null;
+    }
+    return parsed as Record<string, unknown>;
+  } catch {
+    return null;
+  }
 }
 
 function parseObject(value: string, field: string): Record<string, unknown> {
@@ -422,6 +485,10 @@ export function AdminGameDashboard({
   const [employee, setEmployee] = useState<Employee>(emptyEmployee);
   const [employeeCompetences, setEmployeeCompetences] = useState("{}");
   const [employeePersonality, setEmployeePersonality] = useState("{}");
+  const [employeeInstruction, setEmployeeInstruction] = useState("");
+  const [employeeRefinePending, setEmployeeRefinePending] = useState(false);
+  const [employeeRefinement, setEmployeeRefinement] =
+    useState<EmployeeRefinementResult | null>(null);
   const [task, setTask] = useState<GameTask>(emptyTask);
   const [taskFailureModes, setTaskFailureModes] = useState("");
   const [variant, setVariant] = useState<Variant>(emptyVariant);
@@ -434,6 +501,19 @@ export function AdminGameDashboard({
   );
   const liveVariantId =
     settings.defaultVariantId ?? initialData.system.runtime.defaultVariant;
+  const employeeCompetencesPreview = useMemo(() => {
+    const parsed = safeParseRecord(employeeCompetences);
+    if (!parsed) return null;
+    const result = competencesPreviewSchema.safeParse(parsed);
+    return result.success ? result.data : null;
+  }, [employeeCompetences]);
+  const employeePersonalityPreview = useMemo(() => {
+    const parsed = safeParseRecord(employeePersonality);
+    if (!parsed) return null;
+    const result = personalityPreviewSchema.safeParse(parsed);
+    return result.success ? result.data : null;
+  }, [employeePersonality]);
+  const employeeIdValid = employeeIdSchema.safeParse(employee.id).success;
   const visibleUsers = useMemo(() => {
     const query = userQuery.trim().toLocaleLowerCase("ru");
     if (!query) return users;
@@ -504,6 +584,75 @@ export function AdminGameDashboard({
     setEmployee({ ...selected });
     setEmployeeCompetences(JSON.stringify(selected.competences, null, 2));
     setEmployeePersonality(JSON.stringify(selected.personality, null, 2));
+    setEmployeeInstruction("");
+    setEmployeeRefinement(null);
+  }
+
+  async function refineEmployeeWithAI() {
+    if (
+      employeeRefinePending ||
+      employeeInstruction.trim().length < 5 ||
+      !employeeIdValid
+    ) {
+      return;
+    }
+    setEmployeeRefinePending(true);
+    try {
+      const competences = parseObject(
+        employeeCompetences,
+        "Компетенции",
+      ) as Record<string, CompetenceState>;
+      const personality = parseObject(
+        employeePersonality,
+        "Профиль личности",
+      ) as unknown as EmployeePersonality;
+      const requestedId = employee.id;
+      const refined = await client.admin.game.characters.refineEmployee({
+        profile: {
+          id: employee.id,
+          name: employee.name,
+          role: employee.role,
+          level: employee.level as "L1" | "L2" | "L3" | "L4",
+          gender: employee.gender,
+          competences,
+          personality,
+        },
+        instruction: employeeInstruction.trim(),
+      });
+      const profile = refined.draft.profile;
+      let applied = false;
+      setEmployee((current) => {
+        if (current.id !== requestedId) return current;
+        applied = true;
+        return {
+          ...current,
+          name: profile.name,
+          role: profile.role,
+          level: profile.level,
+          gender: profile.gender,
+          competences: profile.competences,
+          personality: profile.personality,
+        };
+      });
+      if (!applied) {
+        toast.warning(
+          "Выбран другой сотрудник, результат ИИ отменён для предыдущего.",
+        );
+        return;
+      }
+      setEmployeeRefinement(refined);
+      setEmployeeCompetences(JSON.stringify(profile.competences, null, 2));
+      setEmployeePersonality(JSON.stringify(profile.personality, null, 2));
+      toast.success("ИИ обновил персонажа. Проверьте изменения и сохраните.");
+    } catch (cause) {
+      toast.error(
+        cause instanceof Error
+          ? cause.message
+          : "Не удалось обновить персонажа",
+      );
+    } finally {
+      setEmployeeRefinePending(false);
+    }
   }
 
   function chooseTask(id: string | null) {
@@ -1078,7 +1227,8 @@ export function AdminGameDashboard({
                 {employee.id ? "Редактирование сотрудника" : "Новый сотрудник"}
               </CardTitle>
               <CardDescription>
-                Компетенции и профиль личности задаются JSON-объектами.
+                Опишите словами, что изменить в персонаже — ИИ обновит
+                компетенции и профиль личности.
               </CardDescription>
             </CardHeader>
             <CardContent className="py-5">
@@ -1168,32 +1318,214 @@ export function AdminGameDashboard({
                       required
                     />
                   </Field>
+                  <Separator />
+                  <div className="flex flex-col gap-3 rounded-lg border p-4">
+                    <p className="text-sm font-medium">Профиль поведения</p>
+                    <div className="flex flex-wrap gap-2">
+                      {employeeCompetencesPreview &&
+                      Object.keys(employeeCompetencesPreview).length > 0 ? (
+                        Object.entries(employeeCompetencesPreview).map(
+                          ([type, level]) => (
+                            <Badge key={type} variant="outline">
+                              {type}: {COMPETENCE_LABELS[level] ?? level}
+                            </Badge>
+                          ),
+                        )
+                      ) : (
+                        <span className="text-muted-foreground text-sm">
+                          Компетенции пока не заданы.
+                        </span>
+                      )}
+                    </div>
+                    {employeePersonalityPreview ? (
+                      <div className="grid gap-2 text-sm sm:grid-cols-2">
+                        <p>
+                          <span className="text-muted-foreground">Тон: </span>
+                          {(employeePersonalityPreview.tone &&
+                            TONE_LABELS[employeePersonalityPreview.tone]) ??
+                            employeePersonalityPreview.tone ??
+                            "—"}
+                        </p>
+                        <p>
+                          <span className="text-muted-foreground">
+                            Под нагрузкой:{" "}
+                          </span>
+                          {employeePersonalityPreview.stressBehavior ?? "—"}
+                        </p>
+                        <p>
+                          <span className="text-muted-foreground">
+                            На директиву:{" "}
+                          </span>
+                          {(employeePersonalityPreview.reactionToDirective &&
+                            REACTION_DIRECTIVE_LABELS[
+                              employeePersonalityPreview.reactionToDirective
+                            ]) ??
+                            employeePersonalityPreview.reactionToDirective ??
+                            "—"}
+                        </p>
+                        <p>
+                          <span className="text-muted-foreground">
+                            На поддержку:{" "}
+                          </span>
+                          {(employeePersonalityPreview.reactionToSupport &&
+                            REACTION_SUPPORT_LABELS[
+                              employeePersonalityPreview.reactionToSupport
+                            ]) ??
+                            employeePersonalityPreview.reactionToSupport ??
+                            "—"}
+                        </p>
+                        <p className="sm:col-span-2">
+                          <span className="text-muted-foreground">
+                            Мотивирует:{" "}
+                          </span>
+                          {employeePersonalityPreview.motivators?.join(", ") ||
+                            "—"}
+                        </p>
+                        <p className="sm:col-span-2">
+                          <span className="text-muted-foreground">
+                            Демотивирует:{" "}
+                          </span>
+                          {employeePersonalityPreview.demotivators?.join(
+                            ", ",
+                          ) || "—"}
+                        </p>
+                      </div>
+                    ) : (
+                      <p className="text-muted-foreground text-sm">
+                        Профиль личности пока не задан или содержит некорректный
+                        JSON.
+                      </p>
+                    )}
+                  </div>
+
                   <Field>
-                    <FieldLabel htmlFor="employee-competences">
-                      Компетенции
+                    <FieldLabel htmlFor="employee-instruction">
+                      Что изменить в персонаже?
                     </FieldLabel>
                     <Textarea
-                      id="employee-competences"
-                      rows={6}
-                      value={employeeCompetences}
+                      id="employee-instruction"
+                      rows={3}
+                      value={employeeInstruction}
+                      disabled={employeeRefinePending}
                       onChange={(event) =>
-                        setEmployeeCompetences(event.target.value)
+                        setEmployeeInstruction(event.target.value)
                       }
+                      placeholder="Например: сделай более уверенным в себе, добавь неприязнь к критике при свидетелях, повысь готовность к горячему цеху"
                     />
+                    <FieldDescription>
+                      {employeeIdValid
+                        ? "ИИ обновит компетенции и профиль личности, сохранив остальное. Изменения применятся только после нажатия «Сохранить»."
+                        : "Сначала укажите корректный ID (латиница, цифры, дефис или подчёркивание, минимум 2 символа)."}
+                    </FieldDescription>
                   </Field>
-                  <Field>
-                    <FieldLabel htmlFor="employee-personality">
-                      Профиль личности
-                    </FieldLabel>
-                    <Textarea
-                      id="employee-personality"
-                      rows={6}
-                      value={employeePersonality}
-                      onChange={(event) =>
-                        setEmployeePersonality(event.target.value)
+                  <div>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      disabled={
+                        employeeRefinePending ||
+                        employeeInstruction.trim().length < 5 ||
+                        !employeeIdValid
                       }
-                    />
-                  </Field>
+                      onClick={refineEmployeeWithAI}
+                    >
+                      <IconSparkles data-icon="inline-start" />
+                      {employeeRefinePending
+                        ? "ИИ обновляет персонажа…"
+                        : "Обновить с помощью ИИ"}
+                    </Button>
+                  </div>
+
+                  {employeeRefinement ? (
+                    <Alert
+                      variant={
+                        employeeRefinement.quality.ready
+                          ? "default"
+                          : "destructive"
+                      }
+                    >
+                      <IconSparkles />
+                      <AlertTitle>
+                        Результат ИИ-редактирования ·{" "}
+                        {employeeRefinement.quality.score}%
+                      </AlertTitle>
+                      <AlertDescription>
+                        <p>{employeeRefinement.draft.designIntent}</p>
+                        <div className="mt-2 grid gap-2 sm:grid-cols-3">
+                          <div className="bg-muted/40 rounded-md p-2 text-sm">
+                            «{employeeRefinement.draft.preview.normal}»
+                          </div>
+                          <div className="bg-muted/40 rounded-md p-2 text-sm">
+                            «{employeeRefinement.draft.preview.underPressure}»
+                          </div>
+                          <div className="bg-muted/40 rounded-md p-2 text-sm">
+                            «{employeeRefinement.draft.preview.afterSupport}»
+                          </div>
+                        </div>
+                        {employeeRefinement.quality.checks.some(
+                          (check) => !check.passed,
+                        ) ? (
+                          <ul className="mt-2 flex list-disc flex-col gap-1 pl-4">
+                            {employeeRefinement.quality.checks
+                              .filter((check) => !check.passed)
+                              .map((check) => (
+                                <li key={check.id}>
+                                  <IconAlertTriangle
+                                    className="mr-1 inline size-3.5 align-text-bottom"
+                                    aria-hidden
+                                  />
+                                  {check.detail}
+                                </li>
+                              ))}
+                          </ul>
+                        ) : null}
+                      </AlertDescription>
+                    </Alert>
+                  ) : null}
+
+                  <Collapsible>
+                    <CollapsibleTrigger
+                      render={
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="justify-self-start"
+                        />
+                      }
+                    >
+                      <IconChevronDown data-icon="inline-start" />
+                      Дополнительно: редактировать JSON вручную
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="flex flex-col gap-4 pt-4">
+                      <Field>
+                        <FieldLabel htmlFor="employee-competences">
+                          Компетенции
+                        </FieldLabel>
+                        <Textarea
+                          id="employee-competences"
+                          rows={6}
+                          value={employeeCompetences}
+                          onChange={(event) =>
+                            setEmployeeCompetences(event.target.value)
+                          }
+                        />
+                      </Field>
+                      <Field>
+                        <FieldLabel htmlFor="employee-personality">
+                          Профиль личности
+                        </FieldLabel>
+                        <Textarea
+                          id="employee-personality"
+                          rows={6}
+                          value={employeePersonality}
+                          onChange={(event) =>
+                            setEmployeePersonality(event.target.value)
+                          }
+                        />
+                      </Field>
+                    </CollapsibleContent>
+                  </Collapsible>
                   <Field orientation="horizontal">
                     <FieldLabel htmlFor="employee-active">
                       Доступен в игре
