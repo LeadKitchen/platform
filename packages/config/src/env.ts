@@ -45,12 +45,15 @@ export const env = createEnv({
     /** ID премадж-голоса ElevenLabs для персонажей-женщин (по умолчанию — Rachel). */
     ELEVENLABS_VOICE_ID_FEMALE: z.string().default("21m00Tcm4TlvDq8ikWAM"),
 
-    // AWS S3
+    // Object storage (S3-compatible — Yandex Cloud Object Storage in
+    // production, local MinIO in development). Names kept as AWS_* since
+    // that's what the AWS SDK client (used against any S3-compatible
+    // endpoint) reads.
     AWS_S3_ENDPOINT: z.string().optional(),
     AWS_S3_FORCE_PATH_STYLE: z.string().optional(),
     AWS_ACCESS_KEY_ID: z.string().optional(),
     AWS_SECRET_ACCESS_KEY: z.string().optional(),
-    AWS_REGION: z.string().default("us-east-1"),
+    AWS_REGION: z.string().default("ru-central1"),
     AWS_S3_BUCKET: z.string().default("acme-bucket"),
   },
   client: {
