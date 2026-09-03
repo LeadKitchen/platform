@@ -217,6 +217,7 @@
       "name": "@acme/jobs",
       "dependencies": {
         "@acme/ai": "workspace:*",
+        "@acme/config": "workspace:*",
         "@acme/db": "workspace:*",
         "@acme/storage": "workspace:*",
         "@trigger.dev/sdk": "4.5.16",

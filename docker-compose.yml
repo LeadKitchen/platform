@@ -59,3 +59,25 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
+  docling:
+    restart: always
+    build:
+      context: ./services/docling-parser
+    container_name: docling
+    ports:
+      - 8088:8088
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8088/health')",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      # Model download at image build time makes startup itself fast; the
+      # long window here is for `docker compose up` on a machine building
+      # the image for the first time.
+      start_period: 60s

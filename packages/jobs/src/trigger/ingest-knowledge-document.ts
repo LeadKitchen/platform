@@ -16,6 +16,7 @@ import { schemaTask, task } from "@trigger.dev/sdk";
 import mammoth from "mammoth";
 import { extractText } from "unpdf";
 import { z } from "zod";
+import { parseWithDocling } from "../docling-client";
 
 export interface IngestKnowledgeDocumentInput {
   documentId: string;
@@ -31,6 +32,21 @@ interface KnowledgeChunk {
   index: number;
   text: string;
   audience: GameKnowledgeAudience;
+}
+
+/** unpdf/mammoth extraction — used directly when Docling is unconfigured, and as its fallback otherwise. */
+async function extractWithFallback(
+  sourceType: "pdf" | "docx",
+  buffer: Buffer,
+): Promise<string> {
+  if (sourceType === "pdf") {
+    const result = await extractText(new Uint8Array(buffer), {
+      mergePages: true,
+    });
+    return result.text;
+  }
+  const result = await mammoth.extractRawText({ buffer });
+  return result.value;
 }
 
 /**
@@ -52,7 +68,10 @@ interface KnowledgeChunk {
 const extractContentTask = task({
   id: "ingest-extract-content",
   retry: { maxAttempts: 3 },
-  maxDuration: 120,
+  // Headroom over DOCLING_TIMEOUT_MS (default 90s) — an OCR-heavy scanned
+  // PDF through the Docling service is the slow path here, not the S3
+  // download or the unpdf/mammoth fallback.
+  maxDuration: 180,
   run: async (input: IngestKnowledgeDocumentInput) => {
     const [document] = await db
       .select()
@@ -70,14 +89,22 @@ const extractContentTask = task({
 
     const buffer = await downloadBufferFromS3(document.s3Key);
     let text: string;
-    if (document.sourceType === "pdf") {
-      const result = await extractText(new Uint8Array(buffer), {
-        mergePages: true,
-      });
-      text = result.text;
-    } else if (document.sourceType === "docx") {
-      const result = await mammoth.extractRawText({ buffer });
-      text = result.value;
+    if (document.sourceType === "pdf" || document.sourceType === "docx") {
+      const docling = await parseWithDocling(
+        buffer,
+        `document.${document.sourceType}`,
+      );
+      if (docling.ok) {
+        text = docling.text;
+      } else {
+        // Docling not configured, unreachable, or the extraction it
+        // returned was too sparse to trust (see docling-client.ts) — a
+        // parser problem costs table structure, not the whole ingestion.
+        console.warn(
+          `Docling parse skipped for document ${input.documentId} (${docling.reason}), falling back to ${document.sourceType === "pdf" ? "unpdf" : "mammoth"}`,
+        );
+        text = await extractWithFallback(document.sourceType, buffer);
+      }
     } else {
       text = buffer.toString("utf-8");
     }

@@ -55,6 +55,12 @@ export const env = createEnv({
     AWS_SECRET_ACCESS_KEY: z.string().optional(),
     AWS_REGION: z.string().default("ru-central1"),
     AWS_S3_BUCKET: z.string().default("acme-bucket"),
+
+    // Docling microservice (services/docling-parser) — structure-aware
+    // PDF/DOCX extraction for the knowledge-base ingestion job. Unset means
+    // the job uses unpdf/mammoth only, same as before this existed.
+    DOCLING_SERVICE_URL: z.url().optional(),
+    DOCLING_TIMEOUT_MS: z.coerce.number().int().positive().default(90_000),
   },
   client: {
     NEXT_PUBLIC_APP_NAME: z.string().default("Ситрук"),
@@ -90,6 +96,8 @@ export const env = createEnv({
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
     AWS_REGION: process.env.AWS_REGION,
     AWS_S3_BUCKET: process.env.AWS_S3_BUCKET,
+    DOCLING_SERVICE_URL: process.env.DOCLING_SERVICE_URL,
+    DOCLING_TIMEOUT_MS: process.env.DOCLING_TIMEOUT_MS,
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
     NEXT_PUBLIC_APP_SHORT_NAME: process.env.NEXT_PUBLIC_APP_SHORT_NAME,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
