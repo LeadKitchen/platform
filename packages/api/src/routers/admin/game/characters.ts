@@ -4,10 +4,12 @@ import { ORPCError } from "@orpc/server";
 import { z } from "zod";
 
 import {
+  characterDraftSchema,
   characterRosterDraftSchema,
   characterSimulationJudgeSchema,
   characterSimulationModeSchema,
   characterSimulationResponseSetSchema,
+  employeeProfileSchema,
   evaluateCharacterRoster,
   evaluateCharacterSimulation,
 } from "../../../game/character-studio";
@@ -121,6 +123,103 @@ export const draftRoster = adminProcedure
           cause instanceof Error
             ? `Не удалось спроектировать персонажей: ${cause.message}`
             : "Лаборатория персонажей временно недоступна",
+      });
+    }
+  });
+
+export const refineEmployee = adminProcedure
+  .input(
+    z.object({
+      profile: employeeProfileSchema,
+      instruction: z.string().trim().min(5).max(1000),
+    }),
+  )
+  .handler(async ({ context, input, signal }) => {
+    const snapshot = await loadConfigSnapshot(context.db);
+    const provider = createProviderFromEnv();
+    const activeTasks = snapshot.tasks
+      .filter((task) => task.isActive)
+      .map((task) => ({
+        title: task.title,
+        type: task.type,
+        complexity: task.complexity,
+      }));
+    const others = snapshot.employees.filter(
+      (item) => item.id !== input.profile.id,
+    );
+    const isNewEmployee = others.length === snapshot.employees.length;
+
+    try {
+      const result = await provider.generate({
+        purpose: "admin.characters.refine",
+        schemaName: "CharacterRefinement",
+        schema: characterDraftSchema,
+        effort: "high",
+        signal,
+        system: [
+          "Ты редактор персонажей деловой игры по ситуационному руководству в ресторане.",
+          "Тебе передан текущий профиль персонажа и инструкция администратора о том, что изменить.",
+          "Сохрани всё, что инструкция не просит менять, включая имя, роль и уже заданные черты — вноси только запрошенные изменения и заполняй недостающие поля профиля.",
+          "Никогда не меняй id персонажа.",
+          "Используй только переданные типы задач как ключи competences и только значения novice, learning, capable, expert.",
+          "Поле gender (male/female) обязано грамматически совпадать с именем персонажа — оно определяет, каким голосом озвучивается персонаж.",
+          "Не упоминай методологию, стили управления и уровни готовности в репликах персонажей.",
+          "Пробные реплики должны звучать как живой сотрудник и показывать характер без карикатуры.",
+          "Весь результат — на русском языке, кроме технических ID и enum-значений.",
+        ].join("\n"),
+        messages: [
+          {
+            role: "user",
+            content: JSON.stringify({
+              currentProfile: input.profile,
+              instruction: input.instruction,
+              activeTasks,
+            }),
+          },
+        ],
+      });
+      const profile = { ...result.value.profile, id: input.profile.id };
+      const draft = { ...result.value, profile };
+      const quality = evaluateCharacterRoster(
+        {
+          teamName: profile.name,
+          summary: draft.designIntent,
+          characters: [draft],
+          warnings: [],
+        },
+        {
+          taskTypes: [...new Set(activeTasks.map((task) => task.type))],
+          existingIds: others.map((item) => item.id),
+          existingNames: others.map((item) => item.name),
+        },
+      );
+      await context.db.insert(GameProductEvent).values({
+        userId: context.session.user.id,
+        name: "llm_character_refined",
+        properties: {
+          employeeId: profile.id,
+          isNew: isNewEmployee,
+          qualityScore: quality.score,
+          model: result.model,
+        },
+      });
+      return {
+        draft,
+        quality: quality.characters[0] ?? {
+          characterId: profile.id,
+          score: 0,
+          ready: false,
+          checks: [],
+        },
+        meta: { model: result.model, latencyMs: result.latencyMs },
+      };
+    } catch (cause) {
+      if (signal?.aborted) throw cause;
+      throw new ORPCError("INTERNAL_SERVER_ERROR", {
+        message:
+          cause instanceof Error
+            ? `Не удалось обновить персонажа: ${cause.message}`
+            : "Редактор персонажей временно недоступен",
       });
     }
   });
@@ -313,6 +412,7 @@ export const simulateRoster = adminProcedure
 
 export const adminGameCharactersRouter = {
   draftRoster,
+  refineEmployee,
   publishRoster,
   simulateRoster,
 };
