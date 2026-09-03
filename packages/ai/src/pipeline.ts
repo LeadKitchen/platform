@@ -19,6 +19,10 @@ import type {
   KnowledgeResult,
   PersonaFeedback,
   PersonaReply,
+  PersonaRequest,
+  PersonaResult,
+  PersonaStreamChunk,
+  PersonaStreamResult,
   StageDeps,
 } from "./types";
 import type { VariantConfig } from "./variants";
@@ -58,6 +62,17 @@ export interface EvaluateResult extends EvaluationResult {
   variantId: string;
 }
 
+export interface PipelineStreamChunk {
+  /** Cumulative reply text as the character "types" it. */
+  reply: string;
+}
+
+export interface PipelineStreamResult {
+  stream: AsyncIterable<PipelineStreamChunk>;
+  /** Settles once `stream` is fully consumed — same contract as `LlmStreamResult`. */
+  result: Promise<TurnResult>;
+}
+
 export interface Pipeline {
   readonly variant: VariantConfig;
   respond(input: {
@@ -65,6 +80,23 @@ export interface Pipeline {
     utterance: string;
     signal?: AbortSignal;
   }): Promise<TurnResult>;
+  /**
+   * Same turn as `respond`, but the employee's reply streams in as the model
+   * produces it — for a live chat surface that wants to show the character
+   * "typing" instead of a blank wait. The engagement gate and knowledge
+   * retrieval still run to completion first: neither streams on its own, and
+   * both normally finish well before the persona call even starts.
+   *
+   * A silent turn (the gate didn't engage) yields nothing — there is no reply
+   * to type out. A persona strategy without its own `respondStream` (the
+   * multi-call approaches: self-consistency, skill-RL) also yields nothing
+   * until the single, buffered reply is ready.
+   */
+  respondStream(input: {
+    dialog: DialogContext;
+    utterance: string;
+    signal?: AbortSignal;
+  }): PipelineStreamResult;
   evaluate(dialog: DialogContext): Promise<EvaluateResult>;
   learn(feedback: PersonaFeedback): Promise<void>;
 }
@@ -95,6 +127,34 @@ function silentReply(): PersonaReply {
   };
 }
 
+/** A strategy without `respondStream` gets buffered into the same shape: one chunk once `respond()` resolves. */
+function bufferedPersonaStream(
+  pending: Promise<PersonaResult>,
+): PersonaStreamResult {
+  async function* chunks(): AsyncGenerator<PersonaStreamChunk> {
+    const resolved = await pending;
+    if (resolved.reply.reply.length > 0) {
+      yield { reply: resolved.reply.reply };
+    }
+  }
+  return { stream: chunks(), result: pending };
+}
+
+type TurnSetup =
+  | { silent: true; result: TurnResult }
+  | {
+      silent: false;
+      startedAt: number;
+      dialog: DialogContext;
+      withManagerTurn: DialogContext;
+      expectation: Expectation;
+      managerToxic: boolean;
+      gate: { usage?: LlmUsage };
+      knowledgeResult: KnowledgeResult;
+      personaRequest: PersonaRequest;
+      requestDeps: StageDeps;
+    };
+
 /**
  * Compose the stages of a variant into a runnable dialog engine.
  *
@@ -119,33 +179,48 @@ export function createPipeline(
     effort: variant.effort,
   };
 
-  return {
-    variant,
+  /**
+   * Everything a turn needs before the persona speaks: the engagement gate
+   * and (when engaged) knowledge retrieval. Shared by `respond` and
+   * `respondStream` so the two can never drift on how a turn is set up.
+   */
+  async function resolveTurnSetup(input: {
+    dialog: DialogContext;
+    utterance: string;
+    signal?: AbortSignal;
+  }): Promise<TurnSetup> {
+    const requestDeps: StageDeps = { ...stageDeps, signal: input.signal };
+    const startedAt = Date.now();
+    const expectation = resolveDialogExpectation(input.dialog);
+    const managerToxic = detectToxicity(input.utterance);
 
-    async respond({ dialog, utterance, signal }) {
-      const requestDeps: StageDeps = { ...stageDeps, signal };
-      const startedAt = Date.now();
-      const expectation = resolveDialogExpectation(dialog);
-      const managerToxic = detectToxicity(utterance);
+    const withManagerTurn: DialogContext = {
+      ...input.dialog,
+      turns: [
+        ...input.dialog.turns,
+        {
+          role: "manager",
+          text: input.utterance,
+          at: new Date().toISOString(),
+        },
+      ],
+    };
 
-      const withManagerTurn: DialogContext = {
-        ...dialog,
-        turns: [
-          ...dialog.turns,
-          { role: "manager", text: utterance, at: new Date().toISOString() },
-        ],
-      };
+    // The spec is explicit: the AI employee keeps quiet until the manager
+    // actually brings them into the conversation. Once engaged, the gate is
+    // not consulted again — the character does not fall back asleep.
+    const gate = input.dialog.engaged
+      ? { engaged: true, reason: "диалог уже идёт", latencyMs: 0 }
+      : await engagement.check(
+          { dialog: input.dialog, utterance: input.utterance },
+          requestDeps,
+        );
 
-      // The spec is explicit: the AI employee keeps quiet until the manager
-      // actually brings them into the conversation. Once engaged, the gate is
-      // not consulted again — the character does not fall back asleep.
-      const gate = dialog.engaged
-        ? { engaged: true, reason: "диалог уже идёт", latencyMs: 0 }
-        : await engagement.check({ dialog, utterance }, requestDeps);
-
-      if (!gate.engaged) {
-        const gateUsage = addUsage(gate.usage);
-        return {
+    if (!gate.engaged) {
+      const gateUsage = addUsage(gate.usage);
+      return {
+        silent: true,
+        result: {
           reply: silentReply(),
           dialog: { ...withManagerTurn, engaged: false },
           expectation,
@@ -166,92 +241,158 @@ export function createPipeline(
               reason: gate.reason,
             },
           },
-        };
-      }
-
-      const knowledgeResult = await knowledge.retrieve(
-        { dialog, expectation, query: utterance },
-        requestDeps,
-      );
-      if (
-        dialog.order.notes &&
-        !knowledgeResult.snippets.some((snippet) =>
-          snippet.text.includes(dialog.order.notes ?? ""),
-        )
-      ) {
-        knowledgeResult.snippets.push({
-          id: `order-notes:${dialog.order.id}`,
-          source: "task",
-          score: 1,
-          text: dialog.order.notes,
-        });
-      }
-
-      const personaResult = await persona.respond(
-        {
-          dialog: { ...dialog, engaged: true },
-          expectation,
-          knowledge: knowledgeResult,
-          utterance,
-        },
-        requestDeps,
-      );
-
-      const usage = addUsage(
-        gate.usage,
-        knowledgeResult.usage,
-        personaResult.usage,
-      );
-
-      // With a failover pool `provider.model` is only the nominal first
-      // candidate — the call may well have been served by another one. The
-      // stage reports what actually answered, and that is what the benchmark
-      // must attribute the dialog to.
-      const servedModel =
-        typeof personaResult.meta?.model === "string"
-          ? personaResult.meta.model
-          : deps.provider.model;
-      const emotion = Math.max(
-        -2,
-        Math.min(2, dialog.emotion + personaResult.reply.emotionDelta),
-      );
-
-      const nextTurns = [...withManagerTurn.turns];
-      if (personaResult.reply.reply.trim().length > 0) {
-        nextTurns.push({
-          role: "employee",
-          text: personaResult.reply.reply,
-          at: new Date().toISOString(),
-        });
-      }
-
-      return {
-        reply: personaResult.reply,
-        dialog: {
-          ...withManagerTurn,
-          turns: nextTurns,
-          engaged: true,
-          emotion,
-        },
-        expectation,
-        knowledge: knowledgeResult,
-        managerToxic,
-        telemetry: {
-          variantId: variant.id,
-          model: servedModel,
-          usage,
-          costUsd: estimateCostUsd(servedModel, usage),
-          totalMs: Date.now() - startedAt,
-          knowledgeMs: knowledgeResult.latencyMs,
-          personaMs: personaResult.latencyMs,
-          knowledgeSnippets: knowledgeResult.snippets.length,
-          meta: {
-            engagement: engagement.id,
-            ...knowledgeResult.meta,
-            ...personaResult.meta,
-          },
         },
       };
+    }
+
+    const knowledgeResult = await knowledge.retrieve(
+      { dialog: input.dialog, expectation, query: input.utterance },
+      requestDeps,
+    );
+    if (
+      input.dialog.order.notes &&
+      !knowledgeResult.snippets.some((snippet) =>
+        snippet.text.includes(input.dialog.order.notes ?? ""),
+      )
+    ) {
+      knowledgeResult.snippets.push({
+        id: `order-notes:${input.dialog.order.id}`,
+        source: "task",
+        score: 1,
+        text: input.dialog.order.notes,
+      });
+    }
+
+    return {
+      silent: false,
+      startedAt,
+      dialog: input.dialog,
+      withManagerTurn,
+      expectation,
+      managerToxic,
+      gate,
+      knowledgeResult,
+      personaRequest: {
+        dialog: { ...input.dialog, engaged: true },
+        expectation,
+        knowledge: knowledgeResult,
+        utterance: input.utterance,
+      },
+      requestDeps,
+    };
+  }
+
+  /** The epilogue shared by `respond` and `respondStream`: telemetry, emotion, transcript. */
+  function finishTurn(
+    setup: Extract<TurnSetup, { silent: false }>,
+    personaResult: PersonaResult,
+  ): TurnResult {
+    const usage = addUsage(
+      setup.gate.usage,
+      setup.knowledgeResult.usage,
+      personaResult.usage,
+    );
+
+    // With a failover pool `provider.model` is only the nominal first
+    // candidate — the call may well have been served by another one. The
+    // stage reports what actually answered, and that is what the benchmark
+    // must attribute the dialog to.
+    const servedModel =
+      typeof personaResult.meta?.model === "string"
+        ? personaResult.meta.model
+        : deps.provider.model;
+    const emotion = Math.max(
+      -2,
+      Math.min(2, setup.dialog.emotion + personaResult.reply.emotionDelta),
+    );
+
+    const nextTurns = [...setup.withManagerTurn.turns];
+    if (personaResult.reply.reply.trim().length > 0) {
+      nextTurns.push({
+        role: "employee",
+        text: personaResult.reply.reply,
+        at: new Date().toISOString(),
+      });
+    }
+
+    return {
+      reply: personaResult.reply,
+      dialog: {
+        ...setup.withManagerTurn,
+        turns: nextTurns,
+        engaged: true,
+        emotion,
+      },
+      expectation: setup.expectation,
+      knowledge: setup.knowledgeResult,
+      managerToxic: setup.managerToxic,
+      telemetry: {
+        variantId: variant.id,
+        model: servedModel,
+        usage,
+        costUsd: estimateCostUsd(servedModel, usage),
+        totalMs: Date.now() - setup.startedAt,
+        knowledgeMs: setup.knowledgeResult.latencyMs,
+        personaMs: personaResult.latencyMs,
+        knowledgeSnippets: setup.knowledgeResult.snippets.length,
+        meta: {
+          engagement: engagement.id,
+          ...setup.knowledgeResult.meta,
+          ...personaResult.meta,
+        },
+      },
+    };
+  }
+
+  return {
+    variant,
+
+    async respond(input) {
+      const setup = await resolveTurnSetup(input);
+      if (setup.silent) return setup.result;
+
+      const personaResult = await persona.respond(
+        setup.personaRequest,
+        setup.requestDeps,
+      );
+      return finishTurn(setup, personaResult);
+    },
+
+    respondStream(input): PipelineStreamResult {
+      let resolveResult!: (value: TurnResult) => void;
+      let rejectResult!: (reason: unknown) => void;
+      const result = new Promise<TurnResult>((resolve, reject) => {
+        resolveResult = resolve;
+        rejectResult = reject;
+      });
+
+      async function* chunks(): AsyncGenerator<PipelineStreamChunk> {
+        try {
+          const setup = await resolveTurnSetup(input);
+          if (setup.silent) {
+            resolveResult(setup.result);
+            return;
+          }
+
+          const personaStream = persona.respondStream
+            ? persona.respondStream(setup.personaRequest, setup.requestDeps)
+            : bufferedPersonaStream(
+                persona.respond(setup.personaRequest, setup.requestDeps),
+              );
+
+          for await (const chunk of personaStream.stream) {
+            yield { reply: chunk.reply };
+          }
+
+          const personaResult = await personaStream.result;
+          resolveResult(finishTurn(setup, personaResult));
+        } catch (cause) {
+          rejectResult(cause);
+          throw cause;
+        }
+      }
+
+      return { stream: chunks(), result };
     },
 
     async evaluate(dialog) {

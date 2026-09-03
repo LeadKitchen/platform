@@ -218,7 +218,7 @@ export function DialogRoom(props: DialogRoomProps) {
     setDraft("");
 
     try {
-      const result = await client.game.dialog.say(
+      const stream = await client.game.dialog.sayStream(
         {
           dialogId: props.dialogId,
           text,
@@ -226,29 +226,50 @@ export function DialogRoom(props: DialogRoomProps) {
         { signal: controller.signal },
       );
 
-      setTurns((current) => [
-        ...current,
-        { role: "manager", text },
-        ...(result.silent
-          ? []
-          : [
-              {
-                role: "employee" as const,
-                text: result.reply,
-                promptEventId: result.promptEventId,
-              },
-            ]),
-      ]);
+      setTurns((current) => [...current, { role: "manager", text }]);
 
-      if (result.silent) {
-        setNotice(
-          `${props.employee.name} не реагирует: сотрудник включается в диалог, только когда руководитель обращается к нему напрямую.`,
-        );
-      }
-      if (result.managerToxic) {
-        setNotice(
-          "Реплика распознана как грубая — это снизит итоговую оценку и мотивацию сотрудника.",
-        );
+      // Tracks whether an employee turn has already been appended for this
+      // reply, so later chunks (and the final "done" event) replace it in
+      // place instead of appending duplicates — the character "types" into
+      // one growing turn rather than a new one per chunk.
+      let employeeTurnStarted = false;
+
+      for await (const event of stream) {
+        if (event.type === "chunk") {
+          employeeTurnStarted = true;
+          setTurns((current) => {
+            const last = current.at(-1);
+            if (last?.role === "employee") {
+              return [...current.slice(0, -1), { ...last, text: event.reply }];
+            }
+            return [...current, { role: "employee", text: event.reply }];
+          });
+          continue;
+        }
+
+        if (event.silent) {
+          setNotice(
+            `${props.employee.name} не реагирует: сотрудник включается в диалог, только когда руководитель обращается к нему напрямую.`,
+          );
+        } else {
+          const finalTurn: Turn = {
+            role: "employee",
+            text: event.reply,
+            promptEventId: event.promptEventId,
+          };
+          setTurns((current) => {
+            const last = current.at(-1);
+            if (employeeTurnStarted && last?.role === "employee") {
+              return [...current.slice(0, -1), finalTurn];
+            }
+            return [...current, finalTurn];
+          });
+        }
+        if (event.managerToxic) {
+          setNotice(
+            "Реплика распознана как грубая — это снизит итоговую оценку и мотивацию сотрудника.",
+          );
+        }
       }
     } catch (cause) {
       if (controller.signal.aborted) {

@@ -121,10 +121,29 @@ export interface PersonaResult {
   meta?: Record<string, unknown>;
 }
 
+export interface PersonaStreamChunk {
+  /** Cumulative reply text so far — safe to render as-is. */
+  reply: string;
+}
+
+export interface PersonaStreamResult {
+  stream: AsyncIterable<PersonaStreamChunk>;
+  /** Settles once `stream` is fully consumed — same contract as `LlmStreamResult`. */
+  result: Promise<PersonaResult>;
+}
+
 export interface PersonaStrategy {
   readonly id: string;
   readonly description: string;
   respond(request: PersonaRequest, deps: StageDeps): Promise<PersonaResult>;
+  /**
+   * Streaming variant of `respond`, for a strategy backed by one model call
+   * that can usefully show partial output — a "typing" reply in a live chat.
+   * Strategies that sample several candidates or run more than one call
+   * (self-consistency, skill-RL) do not implement this; the pipeline falls
+   * back to buffering `respond()` for them.
+   */
+  respondStream?(request: PersonaRequest, deps: StageDeps): PersonaStreamResult;
   /**
    * Optional feedback hook: called with the final score once a dialog ends.
    * Learning approaches (bandits, skill-RL) use it to update their policy;

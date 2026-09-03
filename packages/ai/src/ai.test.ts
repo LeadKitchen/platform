@@ -405,6 +405,91 @@ describe("variants", () => {
   });
 });
 
+describe("streaming replies", () => {
+  async function collect<T>(stream: AsyncIterable<T>): Promise<T[]> {
+    const out: T[] = [];
+    for await (const chunk of stream) out.push(chunk);
+    return out;
+  }
+
+  test("respondStream grows the reply incrementally and settles on the same turn as respond()", async () => {
+    const { provider } = testProvider("Поняла вас, приступаю к заказу.");
+    const pipeline = createEngine({ provider }).pipeline("baseline");
+
+    const { stream, result } = pipeline.respondStream({
+      dialog: dialog({ employeeId: "anna", taskId: "apple_pies" }),
+      utterance: "Анна, нужно 20 пирогов к 18:00.",
+    });
+
+    const chunks = await collect(stream);
+    const turn = await result;
+
+    expect(chunks.length).toBeGreaterThan(1);
+    // Each chunk is at least as long as the one before — it's the same reply
+    // growing, not unrelated fragments.
+    for (let i = 1; i < chunks.length; i += 1) {
+      expect(chunks[i]?.reply.length).toBeGreaterThanOrEqual(
+        chunks[i - 1]?.reply.length ?? 0,
+      );
+    }
+    expect(chunks.at(-1)?.reply).toBe(turn.reply.reply);
+    expect(turn.reply.silent).toBe(false);
+    expect(turn.dialog.engaged).toBe(true);
+  });
+
+  test("a silent turn (gate not engaged) streams nothing", async () => {
+    const { provider, calls } = testProvider();
+    const pipeline = createEngine({ provider }).pipeline("baseline");
+
+    const { stream, result } = pipeline.respondStream({
+      dialog: dialog({ employeeId: "anna", taskId: "apple_pies" }),
+      utterance: "Так, посмотрим, что там по заказам на вечер",
+    });
+
+    const chunks = await collect(stream);
+    const turn = await result;
+
+    expect(chunks).toHaveLength(0);
+    expect(turn.reply.silent).toBe(true);
+    expect(calls).toHaveLength(0);
+  });
+
+  test("a persona strategy without respondStream falls back to one buffered chunk", async () => {
+    const { provider } = testProvider("Готово, беру заказ в работу.");
+    const pipeline = createEngine({ provider }).pipeline("self-consistency");
+
+    const { stream, result } = pipeline.respondStream({
+      dialog: dialog({ employeeId: "anna", taskId: "apple_pies" }),
+      utterance: "Анна, нужно 20 пирогов к 18:00.",
+    });
+
+    const chunks = await collect(stream);
+    const turn = await result;
+
+    expect(chunks).toHaveLength(1);
+    expect(chunks[0]?.reply).toBe(turn.reply.reply);
+  });
+
+  test("the streamed provider result matches what generate() would have returned", async () => {
+    const { provider } = testProvider("Короткий ответ.");
+    const request = {
+      purpose: "persona.reply",
+      schemaName: "persona_reply",
+      schema: personaReplySchema,
+      system: "s",
+      messages: [{ role: "user" as const, content: "u" }],
+    };
+
+    const { stream, result } = provider.generateStream(request);
+    const chunks = await collect(stream);
+    const streamed = await result;
+    const generated = await provider.generate(request);
+
+    expect(chunks.length).toBeGreaterThan(0);
+    expect(streamed.value).toEqual(generated.value);
+  });
+});
+
 describe("structured-output contracts", () => {
   test("every schema can be rendered into JSON Schema", () => {
     // Gateways without native structured outputs get the schema stated in the
