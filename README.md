@@ -60,7 +60,7 @@ packages
   ├─ emails
   │   └─ Email templates with React Email + Resend / nodemailer
   ├─ storage
-  │   └─ S3-compatible storage (AWS SDK v3, works with MinIO locally)
+  │   └─ S3-compatible storage (AWS SDK v3; Yandex Cloud Object Storage in production, MinIO locally)
   ├─ ui
   │   └─ UI package for the webapp using shadcn-ui
   └─ validators
