@@ -29,6 +29,17 @@ export {
   type EmbeddingProvider,
 } from "./knowledge/embeddings";
 export {
+  type ChunkGraph,
+  extractGraph,
+  type ExtractedEntity,
+  type ExtractedRelation,
+} from "./knowledge/entity-extractor";
+export {
+  type ChunkFacts,
+  extractFacts,
+  type ExtractedFact,
+} from "./knowledge/facts-extractor";
+export {
   buildGraph,
   type GraphEdge,
   type GraphNode,
@@ -37,6 +48,21 @@ export {
   type TraversalResult,
   traverse,
 } from "./knowledge/graph";
+export {
+  findSeedEntities,
+  type GraphEntityInput,
+  type GraphFact,
+  type GraphRelationInput,
+  type GraphTraversalResult,
+  traverseOrgGraph,
+  upsertEntities,
+} from "./knowledge/neo4j-graph";
+export {
+  type QdrantChunkInput,
+  type QdrantHit,
+  searchQdrant,
+  upsertChunks,
+} from "./knowledge/qdrant";
 export {
   createPipeline,
   type EvaluateResult,

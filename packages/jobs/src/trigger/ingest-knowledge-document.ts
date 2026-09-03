@@ -2,6 +2,10 @@ import {
   chunkText,
   classifyChunkAudience,
   createEmbeddingProvider,
+  extractFacts,
+  extractGraph,
+  upsertChunks,
+  upsertEntities,
 } from "@acme/ai";
 import {
   and,
@@ -9,6 +13,7 @@ import {
   type GameKnowledgeAudience,
   GameKnowledgeChunk,
   GameKnowledgeDocument,
+  GameKnowledgeFact,
 } from "@acme/db";
 import { db } from "@acme/db/client";
 import { downloadBufferFromS3 } from "@acme/storage";
@@ -17,6 +22,7 @@ import mammoth from "mammoth";
 import { extractText } from "unpdf";
 import { z } from "zod";
 import { parseWithDocling } from "../docling-client";
+import { parseWithMinerU } from "../mineru-client";
 
 export interface IngestKnowledgeDocumentInput {
   documentId: string;
@@ -68,10 +74,11 @@ async function extractWithFallback(
 const extractContentTask = task({
   id: "ingest-extract-content",
   retry: { maxAttempts: 3 },
-  // Headroom over DOCLING_TIMEOUT_MS (default 90s) — an OCR-heavy scanned
-  // PDF through the Docling service is the slow path here, not the S3
-  // download or the unpdf/mammoth fallback.
-  maxDuration: 180,
+  // Headroom for the full parser cascade: Docling (DOCLING_TIMEOUT_MS,
+  // default 90s) → MinerU on PDFs only (MINERU_TIMEOUT_MS, default 180s,
+  // heavier CPU-bound OCR) → unpdf/mammoth. The S3 download and the final
+  // fallback itself are comparatively instant.
+  maxDuration: 350,
   run: async (input: IngestKnowledgeDocumentInput) => {
     const [document] = await db
       .select()
@@ -90,10 +97,8 @@ const extractContentTask = task({
     const buffer = await downloadBufferFromS3(document.s3Key);
     let text: string;
     if (document.sourceType === "pdf" || document.sourceType === "docx") {
-      const docling = await parseWithDocling(
-        buffer,
-        `document.${document.sourceType}`,
-      );
+      const filename = `document.${document.sourceType}`;
+      const docling = await parseWithDocling(buffer, filename);
       if (docling.ok) {
         text = docling.text;
       } else {
@@ -101,9 +106,23 @@ const extractContentTask = task({
         // returned was too sparse to trust (see docling-client.ts) — a
         // parser problem costs table structure, not the whole ingestion.
         console.warn(
-          `Docling parse skipped for document ${input.documentId} (${docling.reason}), falling back to ${document.sourceType === "pdf" ? "unpdf" : "mammoth"}`,
+          `Docling parse skipped for document ${input.documentId} (${docling.reason})`,
         );
-        text = await extractWithFallback(document.sourceType, buffer);
+        // MinerU only handles PDFs (services/mineru-parser) — it exists
+        // for the scans/layout-heavy pages Docling struggles with, not as
+        // a general DOCX path, so DOCX goes straight to mammoth.
+        const mineru =
+          document.sourceType === "pdf"
+            ? await parseWithMinerU(buffer, filename)
+            : { ok: false as const, reason: "not-applicable-to-docx" };
+        if (mineru.ok) {
+          text = mineru.text;
+        } else {
+          console.warn(
+            `MinerU parse skipped for document ${input.documentId} (${mineru.reason}), falling back to ${document.sourceType === "pdf" ? "unpdf" : "mammoth"}`,
+          );
+          text = await extractWithFallback(document.sourceType, buffer);
+        }
       }
     } else {
       text = buffer.toString("utf-8");
@@ -156,6 +175,15 @@ const chunkAndClassifyTask = task({
   },
 });
 
+/** A chunk once it has a real database id — what the enrichment fan-out below needs. */
+interface PersistedChunk {
+  id: string;
+  index: number;
+  text: string;
+  audience: GameKnowledgeAudience;
+  vector: number[];
+}
+
 const embedAndPersistTask = task({
   id: "ingest-embed-and-persist",
   retry: { maxAttempts: 3 },
@@ -178,8 +206,21 @@ const embedAndPersistTask = task({
     if (vectors.length !== input.chunks.length) {
       throw new Error("Embedding provider returned an unexpected vector count");
     }
+    // Keyed by chunkIndex (unique per document) rather than paired by
+    // array position with the RETURNING rows below — INSERT...RETURNING
+    // row order isn't a guarantee worth relying on for correctness.
+    const chunkByIndex = new Map(
+      input.chunks.map((chunk, position) => [
+        chunk.index,
+        {
+          text: chunk.text,
+          audience: chunk.audience,
+          vector: vectors[position] ?? [],
+        },
+      ]),
+    );
 
-    const persisted = await db.transaction(async (tx) => {
+    const insertedRows = await db.transaction(async (tx) => {
       const [claimedDocument] = await tx
         .update(GameKnowledgeDocument)
         .set({ status: "needs_review", statusMessage: null })
@@ -191,7 +232,7 @@ const embedAndPersistTask = task({
           ),
         )
         .returning({ id: GameKnowledgeDocument.id });
-      if (!claimedDocument) return false;
+      if (!claimedDocument) return undefined;
 
       await tx
         .delete(GameKnowledgeChunk)
@@ -202,8 +243,11 @@ const embedAndPersistTask = task({
           ),
         );
 
-      if (input.chunks.length > 0) {
-        await tx.insert(GameKnowledgeChunk).values(
+      if (input.chunks.length === 0) return [];
+
+      return tx
+        .insert(GameKnowledgeChunk)
+        .values(
           input.chunks.map((chunk, position) => ({
             documentId: input.documentId,
             orgId: input.orgId,
@@ -212,16 +256,139 @@ const embedAndPersistTask = task({
             audience: chunk.audience,
             embedding: vectors[position],
           })),
-        );
-      }
-
-      return true;
+        )
+        .returning({
+          id: GameKnowledgeChunk.id,
+          chunkIndex: GameKnowledgeChunk.chunkIndex,
+        });
     });
 
+    const stale = insertedRows === undefined;
+    const insertedChunks: PersistedChunk[] = (insertedRows ?? []).flatMap(
+      (row) => {
+        const source = chunkByIndex.get(row.chunkIndex);
+        return source
+          ? [
+              {
+                id: row.id,
+                index: row.chunkIndex,
+                text: source.text,
+                audience: source.audience,
+                vector: source.vector,
+              },
+            ]
+          : [];
+      },
+    );
+
     return {
-      chunkCount: persisted ? input.chunks.length : 0,
-      stale: !persisted,
+      chunkCount: insertedChunks.length,
+      stale,
+      insertedChunks,
     };
+  },
+});
+
+const embedAndIndexQdrantTask = task({
+  id: "ingest-index-qdrant",
+  retry: { maxAttempts: 3 },
+  maxDuration: 120,
+  run: async (input: {
+    orgId: string;
+    documentId: string;
+    chunks: Pick<PersistedChunk, "id" | "audience" | "vector">[];
+  }) => {
+    await upsertChunks(
+      input.chunks.map((chunk) => ({
+        id: chunk.id,
+        vector: chunk.vector,
+        orgId: input.orgId,
+        documentId: input.documentId,
+        audience: chunk.audience,
+      })),
+    );
+    return { indexed: input.chunks.length };
+  },
+});
+
+const extractGraphTask = task({
+  id: "ingest-extract-graph",
+  retry: { maxAttempts: 3 },
+  // LLM entity/relation extraction runs one batched call per ~15 chunks
+  // (packages/ai/src/knowledge/entity-extractor.ts) — slower than a single
+  // embedding call, hence the wider budget.
+  maxDuration: 300,
+  run: async (input: {
+    orgId: string;
+    documentId: string;
+    chunks: { index: number; text: string }[];
+  }) => {
+    const perChunk = await extractGraph(input.chunks);
+
+    // One graph per document, not per chunk: a relation extracted from one
+    // chunk routinely points at an entity introduced in another.
+    const entities = new Map<
+      string,
+      { id: string; type: string; label: string }
+    >();
+    const relations: {
+      from: string;
+      to: string;
+      type: string;
+      label: string;
+    }[] = [];
+    for (const chunk of perChunk) {
+      for (const entity of chunk.entities) entities.set(entity.id, entity);
+      relations.push(...chunk.relations);
+    }
+
+    await upsertEntities(
+      input.orgId,
+      input.documentId,
+      [...entities.values()],
+      relations,
+    );
+    return { entityCount: entities.size, relationCount: relations.length };
+  },
+});
+
+const extractFactsTask = task({
+  id: "ingest-extract-facts",
+  retry: { maxAttempts: 3 },
+  maxDuration: 300,
+  run: async (input: {
+    orgId: string;
+    documentId: string;
+    chunks: Pick<PersistedChunk, "id" | "index" | "text" | "audience">[];
+  }) => {
+    const perChunk = await extractFacts(
+      input.chunks.map((chunk) => ({ index: chunk.index, text: chunk.text })),
+    );
+    const chunkByIndex = new Map(
+      input.chunks.map((chunk) => [chunk.index, chunk]),
+    );
+
+    const rows = perChunk.flatMap((chunk) => {
+      const source = chunkByIndex.get(chunk.index);
+      if (!source) return [];
+      return chunk.facts.map((fact) => ({
+        documentId: input.documentId,
+        chunkId: source.id,
+        orgId: input.orgId,
+        subject: fact.subject,
+        predicate: fact.predicate,
+        object: fact.object,
+        confidence: fact.confidence,
+        // Inherited from the chunk it was extracted from — no second
+        // classification pass, same as the graph/vector channels.
+        audience: source.audience,
+      }));
+    });
+
+    if (rows.length > 0) {
+      await db.insert(GameKnowledgeFact).values(rows);
+    }
+    return { factCount: rows.length };
   },
 });
 
@@ -252,7 +419,10 @@ export const ingestKnowledgeDocumentTask = schemaTask({
   // Sub-tasks already retry their own step; retrying the orchestration
   // itself would just repeat whichever step already exhausted its retries.
   retry: { maxAttempts: 1 },
-  maxDuration: 600,
+  // Headroom for the worst case across every step: the three-tier parser
+  // cascade (up to 350s) plus chunk/classify and the Postgres/Qdrant/Neo4j/
+  // facts fan-out afterward.
+  maxDuration: 900,
   onFailure: async ({ payload, error }) => {
     await markDocumentFailed(payload, error);
   },
@@ -266,7 +436,7 @@ export const ingestKnowledgeDocumentTask = schemaTask({
       })
       .unwrap();
 
-    return embedAndPersistTask
+    const persisted = await embedAndPersistTask
       .triggerAndWait({
         documentId: payload.documentId,
         version: payload.version,
@@ -275,5 +445,66 @@ export const ingestKnowledgeDocumentTask = schemaTask({
         chunks: classified.chunks,
       })
       .unwrap();
+
+    // Qdrant/Neo4j/atomic-facts are org-fusion-rag's supplementary
+    // retrieval channels, not gates on the document reaching
+    // `needs_review` — fired without waiting so a slow LLM extraction pass
+    // never holds up admin review. Each has its own retry policy; a
+    // failure here costs that channel's recall for this document, never
+    // the whole ingestion (same contract as the parser cascade above).
+    if (!persisted.stale && persisted.insertedChunks.length > 0) {
+      const { orgId } = extracted;
+      const { documentId } = payload;
+      const { insertedChunks } = persisted;
+
+      // Qdrant stores every chunk regardless of audience and filters at
+      // query time (searchQdrant), matching how org-rag reads
+      // GameKnowledgeChunk itself — one row, filtered live.
+      await embedAndIndexQdrantTask.trigger({
+        orgId,
+        documentId,
+        chunks: insertedChunks.map((chunk) => ({
+          id: chunk.id,
+          audience: chunk.audience,
+          vector: chunk.vector,
+        })),
+      });
+
+      // Neo4j and game_knowledge_facts have no per-item audience filter on
+      // the read side, so `judge`-labeled chunks never reach extraction in
+      // the first place — nothing judge-derived is ever written, rather
+      // than written-then-filtered. One consequence: correcting a chunk's
+      // audience afterward via `updateChunkAudience` does not retroactively
+      // change what's already in these two stores for that document —
+      // re-running ingestion does.
+      const visibleChunks = insertedChunks.filter(
+        (chunk) => chunk.audience !== "judge",
+      );
+      if (visibleChunks.length > 0) {
+        await extractGraphTask.trigger({
+          orgId,
+          documentId,
+          chunks: visibleChunks.map((chunk) => ({
+            index: chunk.index,
+            text: chunk.text,
+          })),
+        });
+        await extractFactsTask.trigger({
+          orgId,
+          documentId,
+          chunks: visibleChunks.map((chunk) => ({
+            id: chunk.id,
+            index: chunk.index,
+            text: chunk.text,
+            audience: chunk.audience,
+          })),
+        });
+      }
+    }
+
+    return {
+      chunkCount: persisted.chunkCount,
+      stale: persisted.stale,
+    };
   },
 });

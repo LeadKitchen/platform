@@ -137,44 +137,73 @@
 ## Загрузка документов администратором
 
 Отдельно от вшитого корпуса (`@acme/game`) организация может загрузить свои
-PDF/DOCX/TXT через `admin.game.knowledge.*` — они попадают в `org-rag`
-(`packages/ai/src/strategies/knowledge/org-rag.ts`), поиск по pgvector в
-рамках своей организации.
+PDF/DOCX/TXT через `admin.game.knowledge.*`. Ingestion строит одну
+canonical-document текстовую форму и параллельно раскладывает её по трём
+хранилищам; retrieval — два сравнимых варианта над этими org-документами,
+`org-rag` (дешёвый) и `org-fusion-rag` (широкий), а не один сменивший
+другой.
 
 ```text
 upload PDF/DOCX/TXT → S3
      │
      ▼
-extract (Docling-сервис → при отказе/низком качестве: unpdf/mammoth)
+extract: Docling → (при отказе/низком качестве) MinerU (PDF) →
+         (при отказе) unpdf/mammoth
      │
      ▼
 chunk → LLM: audience (character/judge/both) → embed → pgvector
-     │
+     │                                              (needs_review → admin
+     │                                               подтверждает → ready)
      ▼
-needs_review  ──(админ подтверждает разметку)──▶  ready → доступен org-rag
+fan-out (не блокирует needs_review, свой retry на канал):
+     ├─ Qdrant           (векторный канал, доп. к pgvector)
+     ├─ Neo4j            (граф сущностей/связей, только non-judge чанки)
+     └─ game_knowledge_facts (LLM-триплеты subject/predicate/object,
+                               только non-judge чанки)
 ```
 
-- **Парсинг.** `packages/jobs/src/docling-client.ts` вызывает отдельный
-  Python-сервис `services/docling-parser` (Docling: reading order, таблицы
-  как markdown, OCR для сканов). Сервис нужно явно поднять
-  (`docker compose up docling`) и указать `DOCLING_SERVICE_URL` — без него
-  или при любом сбое (недоступен, таймаут, страница дала слишком мало
-  текста — `avg_chars_per_page` ниже порога) job молча откатывается на
-  `unpdf`/`mammoth`, как и раньше. Поэтому Docling — это качество
-  извлечения таблиц/сканов, а не точка отказа всей загрузки.
+- **Парсинг — трёхуровневый каскад.** `packages/jobs/src/docling-client.ts`
+  и `packages/jobs/src/mineru-client.ts` (общий HTTP-контракт —
+  `packages/jobs/src/parser-client.ts`) вызывают `services/docling-parser` и
+  `services/mineru-parser`. MinerU — второй уровень, только для PDF, только
+  когда Docling недоступен или дал `avg_chars_per_page` ниже порога — это
+  тяжёлый CPU-пайплайн (минуты, не секунды), не путь по умолчанию. Любой
+  отказ каскада откатывается на `unpdf`/`mammoth`, как и раньше. Сервисы
+  нужно явно поднять (`docker compose up docling mineru`) и указать
+  `DOCLING_SERVICE_URL`/`MINERU_SERVICE_URL` — без них парсинг работает как
+  до появления обоих сервисов.
 - **audience — обязательный барьер**, а не техника ранжирования: чанк с
   меткой `judge` (методология, критерии оценки) в промпт персонажа не
-  попадает никогда — фильтр стоит в SQL-запросе `org-rag`, а не постфактум.
-- **needs_review — гейт публикации.** LLM только предлагает разметку
-  audience; в поиск документ не попадает, пока админ её не подтвердит
-  (`admin.game.knowledge.publish`).
-- **Retrieval здесь не меняли.** `org-rag` — плотный поиск по эмбеддингам,
-  без BM25/reranker/RRF: те техники уже реализованы для встроенного корпуса
-  (`hybrid-rag`, `rerank-rag`, `contextual-rag`, `corrective-rag`) и
-  измерены в `packages/eval` — результат см. ниже в разделе «Что показали
-  замеры передовых техник». Заводить их для org-документов стоит только по
-  результатам такого же прогона на реальных документах организации, не по
-  умолчанию.
+  попадает никогда. Для Postgres/Qdrant-каналов фильтр стоит в самом
+  запросе (`org-rag`, `org-fusion-rag`, `searchQdrant`), а не постфактум;
+  для Neo4j и `game_knowledge_facts` — сильнее: `judge`-чанки вообще не
+  передаются в LLM-экстракцию графа/фактов
+  (`packages/jobs/src/trigger/ingest-knowledge-document.ts`), поэтому там
+  нет самого запроса, который мог бы забыть фильтр.
+  **Известное ограничение**: audience в Qdrant/Neo4j/фактах — снимок на
+  момент ingestion. Если админ позже правит audience чанка через
+  `updateChunkAudience`, эти три хранилища не обновляются автоматически —
+  нужен повторный запуск ingestion (`retry`).
+- **needs_review — гейт публикации** для pgvector/org-rag, как и раньше;
+  Qdrant/Neo4j/факты индексируются fire-and-forget сразу после него, не
+  дожидаясь подтверждения — они дополняют `org-fusion-rag`, не решают,
+  виден ли документ вообще.
+- **Retrieval — два сравнимых варианта, не один сменивший другой.**
+  `org-rag` — плотный поиск по pgvector, дешёвый контроль. `org-fusion-rag`
+  (`packages/ai/src/strategies/knowledge/org-fusion-rag.ts`) — Retrieval
+  Gateway: BM25 (org-корпус) + Qdrant + Neo4j (обход от сущностей,
+  найденных по совпадению в label — у org-документов нет фиксированной id-
+  схемы built-in графа) + атомарные факты, слияние RRF
+  (`packages/ai/src/knowledge/fusion.ts`, чистая функция, юнит-тесты без
+  живых Postgres/Qdrant/Neo4j) и LLM-реранкер
+  (`packages/ai/src/knowledge/rerank.ts`, общий с `rerank-rag`). Ровно те
+  же техники (`hybrid-rag`, `rerank-rag`, `contextual-rag`,
+  `corrective-rag`) уже измерены на встроенном корпусе в `packages/eval` —
+  см. «Что показали замеры передовых техник» ниже — и результат там
+  сдержанный: ни одна не дала доказанного улучшения точности, три из шести
+  доказанно дороже. `org-fusion-rag` стоит сравнивать с `org-rag` на
+  реальных документах организации тем же образом, прежде чем делать его
+  вариантом по умолчанию.
 
 ---
 

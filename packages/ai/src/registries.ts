@@ -11,6 +11,7 @@ import { correctiveRagKnowledge } from "./strategies/knowledge/crag";
 import { graphRagKnowledge } from "./strategies/knowledge/graph-rag";
 import { hybridRagKnowledge } from "./strategies/knowledge/hybrid-rag";
 import { hydeKnowledge } from "./strategies/knowledge/hyde-rag";
+import { orgFusionRagKnowledge } from "./strategies/knowledge/org-fusion-rag";
 import { orgRagKnowledge } from "./strategies/knowledge/org-rag";
 import { ragKnowledge } from "./strategies/knowledge/rag";
 import { rerankRagKnowledge } from "./strategies/knowledge/rerank-rag";
@@ -43,6 +44,7 @@ knowledgeRegistry.register(contextualKnowledge);
 knowledgeRegistry.register(rerankRagKnowledge);
 knowledgeRegistry.register(correctiveRagKnowledge);
 knowledgeRegistry.register(orgRagKnowledge);
+knowledgeRegistry.register(orgFusionRagKnowledge);
 
 personaRegistry.register(promptPersona);
 personaRegistry.register(skillRlPersona);

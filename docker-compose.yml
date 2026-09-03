@@ -1,6 +1,8 @@
 volumes:
   minio:
   postgres:
+  qdrant:
+  neo4j:
 services:
   inbucket:
     restart: always
@@ -83,3 +85,50 @@ services:
       # long window here is for `docker compose up` on a machine building
       # the image for the first time.
       start_period: 60s
+  mineru:
+    restart: always
+    build:
+      context: ./services/mineru-parser
+    container_name: mineru
+    ports:
+      - 127.0.0.1:8089:8089
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8089/health')",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      # Heavier model set than Docling's and CPU-only inference — more
+      # startup headroom on a machine building the image for the first time.
+      start_period: 120s
+  qdrant:
+    restart: always
+    image: qdrant/qdrant:latest
+    container_name: qdrant
+    ports:
+      # org-fusion-rag's vector channel — additive to pgvector, see
+      # docs/ai-module.md.
+      - 127.0.0.1:6333:6333
+    volumes:
+      - qdrant:/qdrant/storage
+    # No compose healthcheck: the official image is a minimal static
+    # binary with no shell utilities (curl/wget) confirmed present to
+    # probe with.
+  neo4j:
+    restart: always
+    image: neo4j:5
+    container_name: neo4j
+    ports:
+      # org-fusion-rag's graph channel — separate from the built-in
+      # in-memory graph-rag strategy, which needs no database.
+      - 127.0.0.1:7474:7474
+      - 127.0.0.1:7687:7687
+    volumes:
+      - neo4j:/data
+    environment:
+      NEO4J_AUTH: neo4j/password
