@@ -431,6 +431,7 @@ export function createAiSdkProvider(
           throw wrap(cause);
         }
       })();
+      void result.catch(() => undefined);
 
       return { stream: chunks(), result };
     },

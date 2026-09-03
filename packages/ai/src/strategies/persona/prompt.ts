@@ -90,26 +90,29 @@ export const promptPersona: PersonaStrategy = {
       }
     }
 
+    const personaResult = result.then((value) => ({
+      reply: {
+        silent: false,
+        reply: value.value.reply,
+        understood: value.value.understood ?? null,
+        readiness: value.value.readiness,
+        requests: value.value.requests,
+        confirmsCheckpoints: value.value.confirmsCheckpoints,
+        emotionDelta: clamp(value.value.emotionDelta, -2, 2),
+      },
+      usage: value.usage,
+      latencyMs: Date.now() - startedAt,
+      meta: {
+        model: value.model,
+        providerLatencyMs: value.latencyMs,
+        prompt: { system, messages },
+      },
+    }));
+    void personaResult.catch(() => undefined);
+
     return {
       stream: chunks(),
-      result: result.then((value) => ({
-        reply: {
-          silent: false,
-          reply: value.value.reply,
-          understood: value.value.understood ?? null,
-          readiness: value.value.readiness,
-          requests: value.value.requests,
-          confirmsCheckpoints: value.value.confirmsCheckpoints,
-          emotionDelta: clamp(value.value.emotionDelta, -2, 2),
-        },
-        usage: value.usage,
-        latencyMs: Date.now() - startedAt,
-        meta: {
-          model: value.model,
-          providerLatencyMs: value.latencyMs,
-          prompt: { system, messages },
-        },
-      })),
+      result: personaResult,
     };
   },
 };

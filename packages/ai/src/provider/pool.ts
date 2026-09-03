@@ -233,6 +233,7 @@ export function createPoolProvider(options: PoolProviderOptions): PoolProvider {
         resolveResult = resolve;
         rejectResult = reject;
       });
+      void result.catch(() => undefined);
 
       async function* chunks(): AsyncGenerator<Partial<T>> {
         const errors: string[] = [];

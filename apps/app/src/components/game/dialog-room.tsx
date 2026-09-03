@@ -216,6 +216,7 @@ export function DialogRoom(props: DialogRoomProps) {
     setNotice(null);
     setFailedDraft(null);
     setDraft("");
+    let employeeTurnStarted = false;
 
     try {
       const stream = await client.game.dialog.sayStream(
@@ -232,8 +233,6 @@ export function DialogRoom(props: DialogRoomProps) {
       // reply, so later chunks (and the final "done" event) replace it in
       // place instead of appending duplicates — the character "types" into
       // one growing turn rather than a new one per chunk.
-      let employeeTurnStarted = false;
-
       for await (const event of stream) {
         if (event.type === "chunk") {
           employeeTurnStarted = true;
@@ -279,12 +278,26 @@ export function DialogRoom(props: DialogRoomProps) {
           });
           setTurns(current.turns);
         } catch {
-          setTurns((current) => [...current, { role: "manager", text }]);
+          // Keep the manager turn already appended before stream consumption.
         }
         setNotice(
           "Ответ сотрудника остановлен. Ваша отправленная реплика осталась в разговоре.",
         );
       } else {
+        try {
+          const current = await client.game.dialog.byId({
+            dialogId: props.dialogId,
+          });
+          setTurns(current.turns);
+        } catch {
+          if (employeeTurnStarted) {
+            setTurns((current) =>
+              current.at(-1)?.role === "employee"
+                ? current.slice(0, -1)
+                : current,
+            );
+          }
+        }
         setDraft(text);
         setError(
           cause instanceof Error ? cause.message : "Не удалось отправить",
