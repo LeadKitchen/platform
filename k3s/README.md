@@ -9,37 +9,42 @@ engine to run ourselves.
 ## Layout
 
 - `namespace.yaml` — the `orixon` namespace
-- `secret.example.yaml` — template for the `orixon-secrets` Secret (DB, auth,
-  AI keys, S3, `HATCHET_CLIENT_TOKEN`, etc.). Copy it, fill in real values,
-  apply it, and keep the filled-in copy out of git.
-- `app/` — Deployment, Service, and a ConfigMap for the Next.js app
-- `worker/` — Deployment for the Hatchet worker (no Service — it only
+- `secret.yaml` — template for the `orixon-secrets` Secret (DB, auth, AI
+  keys, S3 credentials, `HATCHET_CLIENT_TOKEN`, etc.). Fill in real values
+  and apply your own copy — never commit it.
+- `app.yaml` — ConfigMap, Deployment, Service, and the `IngressRoute` that
+  routes to it on our own Traefik (its CRD, not k3s's bundled Traefik/its
+  IngressClass)
+- `worker.yaml` — Deployment for the Hatchet worker (no Service — it only
   long-polls the Hatchet engine, nothing connects to it)
 
 ## Building images
 
-Both Dockerfiles build from the repo root (they need the full workspace for
-`bun install`):
+`app`'s image is built and pushed automatically by
+`.github/workflows/deploy-k3s.yml` on every push to `main` (from
+`apps/app/Dockerfile`, to `ghcr.io/leadkitchen/platform/app`); that workflow
+also runs `kubectl set image` against the `app` Deployment created here, so
+`app.yaml` only needs applying once to bootstrap it.
+
+`worker` has no such pipeline yet — build and push it by hand:
 
 ```sh
-docker build -f docker/app.Dockerfile -t <registry>/orixon-app:<tag> .
 docker build -f docker/worker.Dockerfile -t <registry>/orixon-worker:<tag> .
-docker push <registry>/orixon-app:<tag>
 docker push <registry>/orixon-worker:<tag>
 ```
 
-Set `<registry>/orixon-app:<tag>` / `<registry>/orixon-worker:<tag>` in
-`app/deployment.yaml` and `worker/deployment.yaml` before applying.
+Set `<registry>/orixon-worker:<tag>` in `worker.yaml` before applying.
 
 ## Deploying
 
 ```sh
 kubectl apply -f namespace.yaml
-kubectl apply -n orixon -f secret.yaml   # your filled-in copy of secret.example.yaml
-kubectl apply -n orixon -f app/
-kubectl apply -n orixon -f worker/
+kubectl apply -n orixon -f secret.yaml   # your filled-in copy
+kubectl apply -n orixon -f app.yaml
+kubectl apply -n orixon -f worker.yaml
 ```
 
-`app/service.yaml` is `ClusterIP` — put an Ingress or your existing
-LoadBalancer/reverse proxy in front of it and update `APP_URL` /
-`NEXT_PUBLIC_APP_URL` in `app/configmap.yaml` to match the public domain.
+`app.yaml`'s `IngressRoute` assumes `web`/`websecure` entryPoints on your
+Traefik and that it already terminates TLS (or fronts something that does).
+Update the `Host()` match and, if needed, add a `tls:` block to fit how your
+Traefik is actually configured.

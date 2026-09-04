@@ -1,0 +1,120 @@
+# Next.js app (`apps/app`) — ConfigMap, Deployment, Service, and the route
+# on our own Traefik. Secrets come from the shared `orixon-secrets` Secret
+# (see secret.yaml), not from anything in this file.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: orixon
+data:
+  NODE_ENV: "production"
+  PORT: "3000"
+
+  # Must match the Host() rule in the IngressRoute below.
+  APP_URL: "https://sitruk.orixon.ru"
+  NEXT_PUBLIC_APP_URL: "https://sitruk.orixon.ru"
+  NEXT_PUBLIC_APP_NAME: "Ситрук"
+  NEXT_PUBLIC_APP_SHORT_NAME: "Ситрук"
+
+  # Production sends real email — no local sandbox catcher in this cluster.
+  EMAIL_SANDBOX_ENABLED: "false"
+
+  # S3-compatible storage (Yandex Cloud Object Storage). Only non-secret
+  # settings live here — AWS_ACCESS_KEY_ID/AWS_SECRET_ACCESS_KEY are in
+  # secret.yaml.
+  AWS_S3_ENDPOINT: "https://storage.yandexcloud.net"
+  AWS_S3_FORCE_PATH_STYLE: "false"
+  AWS_REGION: "ru-central1"
+  AWS_S3_BUCKET: "sitruk.orixon.ru"
+
+  # AI_PROVIDER: "anthropic"
+  # AI_MODEL: "claude-opus-5"
+  # AI_EFFORT: "medium"
+  # AI_DEFAULT_VARIANT: "baseline"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  namespace: orixon
+  labels:
+    app: app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers:
+        - name: app
+          # `latest` here is only the bootstrap image — the deploy-k3s.yml
+          # workflow immediately pins this Deployment to the exact commit
+          # SHA on the next push to main via `kubectl set image`.
+          image: ghcr.io/leadkitchen/platform/app:latest
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: orixon-secrets
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app
+  namespace: orixon
+spec:
+  selector:
+    app: app
+  ports:
+    - port: 80
+      targetPort: 3000
+---
+# Routes through our own Traefik (not k3s's bundled one) via its CRD, so
+# there's no ingressClassName/IngressClass to wire up. Add a `tls:` block
+# here (or handle TLS on the router your Traefik front-ends with, e.g. its
+# own cert resolver) if this Traefik doesn't already terminate TLS upstream.
+# `traefik.io/v1alpha1` is the Traefik v3 CRD group — use
+# `traefik.containo.us/v1alpha1` instead if this cluster still runs v2 CRDs.
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: app
+  namespace: orixon
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`sitruk.orixon.ru`)
+      services:
+        - name: app
+          port: 80
