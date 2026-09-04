@@ -9,6 +9,7 @@ on:
       - "tooling/**"
       - "bun.lock"
       - ".env.example"
+      - "docker/worker.Dockerfile"
       - ".github/workflows/deploy-k3s.yml"
 
 concurrency:
@@ -16,7 +17,8 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  IMAGE: ghcr.io/leadkitchen/platform/app
+  APP_IMAGE: ghcr.io/leadkitchen/platform/app
+  WORKER_IMAGE: ghcr.io/leadkitchen/platform/worker
 
 jobs:
   build-and-push:
@@ -25,7 +27,8 @@ jobs:
       contents: read
       packages: write
     outputs:
-      image: ${{ steps.meta.outputs.image }}
+      app_image: ${{ steps.meta.outputs.app_image }}
+      worker_image: ${{ steps.meta.outputs.worker_image }}
     steps:
       - uses: actions/checkout@v5
 
@@ -39,21 +42,35 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Resolve image tag
+      - name: Resolve image tags
         id: meta
-        run: echo "image=${IMAGE}:${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "app_image=${APP_IMAGE}:${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+          echo "worker_image=${WORKER_IMAGE}:${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
 
-      - name: Build and push
+      - name: Build and push app
         uses: docker/build-push-action@v6
         with:
           context: .
           file: apps/app/Dockerfile
           push: true
           tags: |
-            ${{ steps.meta.outputs.image }}
-            ${{ env.IMAGE }}:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+            ${{ steps.meta.outputs.app_image }}
+            ${{ env.APP_IMAGE }}:latest
+          cache-from: type=gha,scope=app
+          cache-to: type=gha,mode=max,scope=app
+
+      - name: Build and push worker
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/worker.Dockerfile
+          push: true
+          tags: |
+            ${{ steps.meta.outputs.worker_image }}
+            ${{ env.WORKER_IMAGE }}:latest
+          cache-from: type=gha,scope=worker
+          cache-to: type=gha,mode=max,scope=worker
 
   deploy:
     needs: build-and-push
@@ -76,17 +93,17 @@ jobs:
       - name: Verify cluster connection
         run: kubectl cluster-info
 
-      # Defaults match k3s/app.yaml (namespace: orixon, Deployment/container:
-      # app). Override via repository variables under Settings > Secrets and
-      # variables > Actions > Variables if your cluster differs:
-      #   K3S_NAMESPACE, K3S_DEPLOYMENT, K3S_CONTAINER
-      - name: Deploy new image
+      # Defaults match k3s/app.yaml and k3s/worker.yaml (namespace: orixon,
+      # Deployment/container names: app / worker). Override via repository
+      # variables under Settings > Secrets and variables > Actions >
+      # Variables if your cluster differs: K3S_NAMESPACE.
+      - name: Deploy new images
         env:
           NAMESPACE: ${{ vars.K3S_NAMESPACE || 'orixon' }}
-          DEPLOYMENT: ${{ vars.K3S_DEPLOYMENT || 'app' }}
-          CONTAINER: ${{ vars.K3S_CONTAINER || vars.K3S_DEPLOYMENT || 'app' }}
-          IMAGE_TAG: ${{ needs.build-and-push.outputs.image }}
+          APP_IMAGE_TAG: ${{ needs.build-and-push.outputs.app_image }}
+          WORKER_IMAGE_TAG: ${{ needs.build-and-push.outputs.worker_image }}
         run: |
-          kubectl set image "deployment/${DEPLOYMENT}" "${CONTAINER}=${IMAGE_TAG}" \
-            -n "$NAMESPACE"
-          kubectl rollout status "deployment/${DEPLOYMENT}" -n "$NAMESPACE" --timeout=180s
+          kubectl set image deployment/app app="${APP_IMAGE_TAG}" -n "$NAMESPACE"
+          kubectl set image deployment/worker worker="${WORKER_IMAGE_TAG}" -n "$NAMESPACE"
+          kubectl rollout status deployment/app -n "$NAMESPACE" --timeout=180s
+          kubectl rollout status deployment/worker -n "$NAMESPACE" --timeout=180s

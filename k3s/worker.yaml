@@ -18,7 +18,7 @@ spec:
         app: worker
     spec:
       imagePullSecrets:
-        - name: ghcr-pull-secret
+        - name: ghcr-creds
       containers:
         - name: worker
           # Built from docker/worker.Dockerfile at the repo root — see

@@ -20,32 +20,32 @@ engine to run ourselves.
 
 ## Building images
 
-`app`'s image is built and pushed automatically by
-`.github/workflows/deploy-k3s.yml` on every push to `main` (from
-`apps/app/Dockerfile`, to `ghcr.io/leadkitchen/platform/app`); that workflow
-also runs `kubectl set image` against the `app` Deployment created here, so
-`app.yaml` only needs applying once to bootstrap it.
+Both images are built and pushed automatically by
+`.github/workflows/deploy-k3s.yml` on every push to `main`: `app` from
+`apps/app/Dockerfile` to `ghcr.io/leadkitchen/platform/app`, `worker` from
+`docker/worker.Dockerfile` to `ghcr.io/leadkitchen/platform/worker`. That
+workflow also runs `kubectl set image` against both Deployments, so
+`app.yaml`/`worker.yaml` only need applying once each to bootstrap them.
 
-`worker` has no such pipeline yet — build and push it by hand:
+`worker.yaml` ships pointing at `:latest` as a bootstrap image — the first
+push to `main` after adding this pipeline populates it; until then the
+Deployment can't pull anything. To build and push a one-off image by hand
+instead:
 
 ```sh
 docker build -f docker/worker.Dockerfile -t ghcr.io/leadkitchen/platform/worker:<tag> .
 docker push ghcr.io/leadkitchen/platform/worker:<tag>
 ```
 
-`worker.yaml` ships pointing at `:latest` as a bootstrap image — push at
-least one `:latest` (or update the tag in `worker.yaml`/`kubectl set image`)
-before applying, otherwise the Deployment can't pull anything.
-
 ## Deploying
 
 `ghcr.io/leadkitchen/platform/app` (and `orixon-worker`, once you push it)
 are private GHCR packages, so the cluster needs a pull secret — both
-Deployments reference `ghcr-pull-secret` via `imagePullSecrets`. Create it
+Deployments reference `ghcr-creds` via `imagePullSecrets`. Create it
 once with a GitHub PAT that has `read:packages` scope:
 
 ```sh
-kubectl create secret docker-registry ghcr-pull-secret \
+kubectl create secret docker-registry ghcr-creds \
   -n orixon \
   --docker-server=ghcr.io \
   --docker-username=<your-github-username> \
@@ -56,7 +56,7 @@ kubectl create secret docker-registry ghcr-pull-secret \
 ```sh
 kubectl apply -f namespace.yaml
 kubectl apply -n orixon -f secret.yaml   # your filled-in copy
-# (ghcr-pull-secret — see above)
+# (ghcr-creds — see above)
 kubectl apply -n orixon -f app.yaml
 kubectl apply -n orixon -f worker.yaml
 ```

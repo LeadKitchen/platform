@@ -29,8 +29,8 @@ RUN bunx turbo run build --filter=@acme/app
 FROM oven/bun:1.4.1-slim AS runner
 WORKDIR /app
 
-RUN groupadd --system nodejs \
-    && useradd --system --gid nodejs --home-dir /app --no-create-home nextjs
+RUN groupadd --system --gid 1001 nodejs \
+    && useradd --system --uid 1001 --gid nodejs --home-dir /app --no-create-home nextjs
 
 # Next.js standalone output mirrors the monorepo layout, so server.js
 # ends up nested under apps/app/ rather than at the image root.

@@ -50,7 +50,7 @@ spec:
         app: app
     spec:
       imagePullSecrets:
-        - name: ghcr-pull-secret
+        - name: ghcr-creds
       containers:
         - name: app
           # `latest` here is only the bootstrap image — the deploy-k3s.yml
@@ -59,6 +59,11 @@ spec:
           image: ghcr.io/leadkitchen/platform/app:latest
           securityContext:
             runAsNonRoot: true
+            # Matches the `nextjs` user's fixed uid/gid in apps/app/Dockerfile —
+            # k8s can't resolve a non-numeric image USER to verify runAsNonRoot
+            # on its own.
+            runAsUser: 1001
+            runAsGroup: 1001
             allowPrivilegeEscalation: false
           ports:
             - containerPort: 3000
