@@ -181,7 +181,7 @@ export const confirmUpload = protectedProcedure
     if (!document) throw new Error("Не удалось создать документ");
 
     try {
-      await ingestKnowledgeDocumentTask.trigger({
+      await ingestKnowledgeDocumentTask.runNoWait({
         documentId: document.id,
         version: document.version,
       });
@@ -232,7 +232,7 @@ export const retry = protectedProcedure
       });
     }
     try {
-      await ingestKnowledgeDocumentTask.trigger({
+      await ingestKnowledgeDocumentTask.runNoWait({
         documentId: input.id,
         version: updatedDocument.version,
       });
