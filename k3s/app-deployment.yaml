@@ -17,7 +17,13 @@ spec:
     spec:
       containers:
         - name: app
+          # `latest` here is only the bootstrap image — the deploy-k3s.yml
+          # workflow immediately pins this Deployment to the exact commit
+          # SHA on the next push to main via `kubectl set image`.
           image: ghcr.io/leadkitchen/platform/app:latest
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
           ports:
             - containerPort: 3000
           envFrom:
