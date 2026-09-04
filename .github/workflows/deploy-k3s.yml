@@ -8,6 +8,7 @@ on:
       - "packages/**"
       - "tooling/**"
       - "bun.lock"
+      - ".env.example"
       - ".github/workflows/deploy-k3s.yml"
 
 concurrency:
@@ -58,6 +59,7 @@ jobs:
     needs: build-and-push
     runs-on: ubuntu-latest
     environment: production
+    permissions: {}
     steps:
       - name: Set up kubeconfig
         env:
