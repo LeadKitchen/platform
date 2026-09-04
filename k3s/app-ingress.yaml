@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: sitruk.example.com
+    - host: sitruk.orixon.ru
       http:
         paths:
           - path: /

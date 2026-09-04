@@ -9,8 +9,8 @@ data:
 
   # TODO: replace with the real public URL — must match `host` in
   # app-ingress.yaml (same domain, with the https:// scheme).
-  APP_URL: "https://sitruk.example.com"
-  NEXT_PUBLIC_APP_URL: "https://sitruk.example.com"
+  APP_URL: "https://sitruk.orixon.ru"
+  NEXT_PUBLIC_APP_URL: "https://sitruk.orixon.ru"
   NEXT_PUBLIC_APP_NAME: "Ситрук"
   NEXT_PUBLIC_APP_SHORT_NAME: "Ситрук"
 
@@ -23,7 +23,9 @@ data:
   AWS_S3_FORCE_PATH_STYLE: "false"
   AWS_REGION: "ru-central1"
   # TODO: required — uploads fail with an empty bucket name.
-  AWS_S3_BUCKET: ""
+  AWS_S3_BUCKET: "sitruk.orixon.ru"
+  AWS_SECRET_ACCESS_KEY: YCOCnA1KVBtu0c_jAm1XUxAMYyyzQkeyDZSiWLgP
+  AWS_ACCESS_KEY_ID: YCAJEFoAvyK6NwLyTm2KcI9ZQ
 
   # TODO: required — comma-separated emails allowed to access /admin and
   # admin API procedures. Anyone not listed here gets FORBIDDEN.
