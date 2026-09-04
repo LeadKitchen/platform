@@ -23,8 +23,6 @@ export const auth = initAuth({
   baseUrl,
   productionUrl,
   secret: env.AUTH_SECRET,
-  googleClientId: env.AUTH_GOOGLE_ID,
-  googleClientSecret: env.AUTH_GOOGLE_SECRET,
   extraPlugins: [nextCookies()],
   // sendEmail is used by the internal emailOTP plugin and password reset
   sendEmail: async ({
