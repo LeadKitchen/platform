@@ -1,1 +1,0 @@
-ALTER TABLE "game_sessions" ADD COLUMN "roleplay_scenario_snapshot" jsonb;

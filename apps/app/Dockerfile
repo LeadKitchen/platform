@@ -20,7 +20,7 @@ COPY --from=pruner /app/out/json/ .
 RUN bun install --frozen-lockfile
 
 COPY --from=pruner /app/out/full/ .
-RUN cp .env.example .env
+COPY --from=pruner /app/.env.example .env
 
 ENV CI=true
 RUN bunx turbo run build --filter=@acme/app

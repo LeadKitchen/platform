@@ -1,2 +1,0 @@
-ALTER TABLE "game_review_reports" ADD COLUMN "kind" varchar(32) DEFAULT 'legacy-review' NOT NULL;--> statement-breakpoint
-CREATE INDEX "game_review_reports_kind_idx" ON "game_review_reports" USING btree ("kind");

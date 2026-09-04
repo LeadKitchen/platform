@@ -1,1 +1,0 @@
-ALTER TABLE "users" ADD COLUMN "notification_preferences" jsonb DEFAULT '{}'::jsonb NOT NULL;

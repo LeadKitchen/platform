@@ -1,1 +1,0 @@
-ALTER TABLE "app_admins" DROP COLUMN "role";
