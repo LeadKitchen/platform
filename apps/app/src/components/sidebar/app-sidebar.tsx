@@ -85,7 +85,9 @@ const data = {
       title: "Управление командой",
       url: "/group",
       icon: IconUsersGroup,
-      adminOnly: true,
+      adminOnly: false,
+      facilitatorOnly: false,
+      adminOrFacilitatorOnly: true,
       items: [
         {
           title: "Моя группа",
@@ -363,7 +365,10 @@ export function AppSidebar({
   const navMain = data.navMain.filter(
     (section) =>
       (!section.adminOnly || isAdmin) &&
-      (!section.facilitatorOnly || isFacilitator),
+      (!section.facilitatorOnly || isFacilitator) &&
+      (!("adminOrFacilitatorOnly" in section && section.adminOrFacilitatorOnly) ||
+        isAdmin ||
+        isFacilitator),
   );
 
   return (
