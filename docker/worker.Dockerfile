@@ -14,4 +14,8 @@ RUN bun install --frozen-lockfile
 FROM install AS runtime
 ENV NODE_ENV=production
 COPY . .
+# @acme/config and @acme/storage publish from dist/ (unlike @acme/jobs,
+# @acme/ai, @acme/db, which the worker imports straight from src/) — build
+# them or the worker fails at runtime with "Cannot find module".
+RUN bunx turbo run build --filter=@acme/config --filter=@acme/storage
 CMD ["bun", "run", "--filter", "@acme/jobs", "worker"]
