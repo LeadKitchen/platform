@@ -76,7 +76,7 @@ cp .env.example .env
 
 Edit `.env` and add required values:
 - `POSTGRES_URL` — Neon database URL
-- `BETTER_AUTH_SECRET` — authentication secret
+- `AUTH_SECRET` — authentication secret
 - `RESEND_API_KEY` — API key for email sending
 
 5. Push database schema:
