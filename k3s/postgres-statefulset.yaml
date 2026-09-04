@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:17
+          image: postgres:18
           securityContext:
             runAsNonRoot: true
             runAsUser: 999
@@ -29,7 +29,7 @@ spec:
             - name: POSTGRES_USER
               value: "postgres"
             - name: POSTGRES_DB
-              value: "acme"
+              value: "sitruk"
             - name: PGDATA
               value: "/var/lib/postgresql/data/pgdata"
             - name: POSTGRES_PASSWORD
@@ -64,5 +64,4 @@ spec:
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            # TODO: size for your data volume.
             storage: 10Gi
