@@ -31,6 +31,10 @@ function createBuildStub(): Hatchet {
   };
   return {
     task: () => ({ run: unavailable, runNoWait: unavailable }),
+    workflow: () => ({
+      onFailure: () => undefined,
+      task: () => undefined,
+    }),
     worker: unavailable,
   } as unknown as Hatchet;
 }
