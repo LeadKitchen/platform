@@ -866,6 +866,10 @@ export const GameKnowledgeChunk = pgTable(
       table.orgId,
       table.audience,
     ),
+    unique("game_knowledge_chunks_id_document_id_unique").on(
+      table.id,
+      table.documentId,
+    ),
     foreignKey({
       columns: [table.documentId, table.orgId],
       foreignColumns: [GameKnowledgeDocument.id, GameKnowledgeDocument.orgId],
@@ -874,6 +878,67 @@ export const GameKnowledgeChunk = pgTable(
     check(
       "game_knowledge_chunks_audience_check",
       sql`${table.audience} in ('character', 'judge', 'both')`,
+    ),
+  ],
+);
+
+/**
+ * One LLM-extracted `(subject, predicate, object)` triple from a chunk —
+ * the atomic-facts channel `org-fusion-rag`
+ * (`packages/ai/src/strategies/knowledge/org-fusion-rag.ts`) queries
+ * alongside its BM25/vector/graph channels. Exists for the lookups those
+ * three are worst at: an exact policy answer to "что делать при X",
+ * where a paraphrase-tolerant vector search is imprecise and a whole
+ * chunk of prose is more context than the character needs.
+ *
+ * Same `orgId` denormalization and `audience` safety invariant as
+ * `GameKnowledgeChunk` — a fact inherits its `audience` from the chunk it
+ * was extracted from, no second classification pass.
+ */
+export const GameKnowledgeFact = pgTable(
+  "game_knowledge_facts",
+  (t) => ({
+    id: t.uuid().primaryKey().defaultRandom(),
+    documentId: t.uuid().notNull(),
+    chunkId: t.uuid().notNull(),
+    orgId: t
+      .text()
+      .notNull()
+      .references(() => GameOrganization.id, { onDelete: "cascade" }),
+    subject: t.text().notNull(),
+    predicate: t.text().notNull(),
+    object: t.text().notNull(),
+    /** LLM-reported extraction confidence, 0–1. */
+    confidence: t.real().notNull(),
+    audience: t
+      .varchar({ length: 16 })
+      .$type<GameKnowledgeAudience>()
+      .notNull(),
+    createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+  }),
+  (table) => [
+    index("game_knowledge_facts_org_audience_idx").on(
+      table.orgId,
+      table.audience,
+    ),
+    index("game_knowledge_facts_chunk_idx").on(table.chunkId),
+    foreignKey({
+      columns: [table.documentId, table.orgId],
+      foreignColumns: [GameKnowledgeDocument.id, GameKnowledgeDocument.orgId],
+      name: "game_knowledge_facts_document_org_fk",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.chunkId, table.documentId],
+      foreignColumns: [GameKnowledgeChunk.id, GameKnowledgeChunk.documentId],
+      name: "game_knowledge_facts_chunk_document_fk",
+    }).onDelete("cascade"),
+    check(
+      "game_knowledge_facts_audience_check",
+      sql`${table.audience} in ('character', 'judge', 'both')`,
+    ),
+    check(
+      "game_knowledge_facts_confidence_check",
+      sql`${table.confidence} >= 0 and ${table.confidence} <= 1`,
     ),
   ],
 );

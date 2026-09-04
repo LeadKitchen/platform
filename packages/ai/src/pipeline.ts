@@ -14,16 +14,17 @@ import {
   knowledgeRegistry,
   personaRegistry,
 } from "./registries";
-import type {
-  EvaluationResult,
-  KnowledgeResult,
-  PersonaFeedback,
-  PersonaReply,
-  PersonaRequest,
-  PersonaResult,
-  PersonaStreamChunk,
-  PersonaStreamResult,
-  StageDeps,
+import {
+  type EvaluationResult,
+  type KnowledgeResult,
+  type PersonaFeedback,
+  type PersonaReply,
+  type PersonaRequest,
+  type PersonaResult,
+  type PersonaStreamChunk,
+  type PersonaStreamResult,
+  type StageDeps,
+  stageParamsSchema,
 } from "./types";
 import type { VariantConfig } from "./variants";
 
@@ -175,7 +176,7 @@ export function createPipeline(
   const stageDeps: StageDeps = {
     provider: deps.provider,
     catalog: deps.catalog,
-    params: variant.params,
+    params: stageParamsSchema.parse(variant.params),
     effort: variant.effort,
   };
 

@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, test } from "bun:test";
 
-import { parseWithDocling } from "./docling-client";
+import { parseWithMinerU } from "./mineru-client";
 
 const originalFetch = globalThis.fetch;
-const baseUrl = "http://docling.local";
+const baseUrl = "http://mineru.local";
 
 function mockFetch(handler: typeof fetch) {
   globalThis.fetch = handler;
@@ -13,16 +13,15 @@ afterEach(() => {
   globalThis.fetch = originalFetch;
 });
 
-// Exhaustive response-handling cases (malformed fields, low quality, HTTP
-// and network errors) live in parser-client.test.ts against the shared
-// `parseWithService` both this and mineru-client.ts wrap — these just
-// confirm the wrapper plumbs its own options/env through correctly.
-describe("parseWithDocling", () => {
+// Exhaustive response-handling cases live in parser-client.test.ts against
+// the shared `parseWithService` this wraps — these just confirm the
+// wrapper plumbs its own options/env through correctly.
+describe("parseWithMinerU", () => {
   test("reports not-configured when no base URL is available", async () => {
-    // No `baseUrl` option and DOCLING_SERVICE_URL is unset in this env.
-    await expect(
-      parseWithDocling(Buffer.from("x"), "doc.pdf"),
-    ).resolves.toEqual({ ok: false, reason: "not-configured" });
+    // No `baseUrl` option and MINERU_SERVICE_URL is unset in this env.
+    await expect(parseWithMinerU(Buffer.from("x"), "doc.pdf")).resolves.toEqual(
+      { ok: false, reason: "not-configured" },
+    );
   });
 
   test("returns the parsed text on a healthy response", async () => {
@@ -36,7 +35,7 @@ describe("parseWithDocling", () => {
     );
 
     await expect(
-      parseWithDocling(Buffer.from("x"), "doc.pdf", { baseUrl }),
+      parseWithMinerU(Buffer.from("x"), "doc.pdf", { baseUrl }),
     ).resolves.toEqual({
       ok: true,
       text: "a".repeat(200),

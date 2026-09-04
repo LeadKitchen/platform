@@ -61,6 +61,26 @@ export const env = createEnv({
     // the job uses unpdf/mammoth only, same as before this existed.
     DOCLING_SERVICE_URL: z.url().optional(),
     DOCLING_TIMEOUT_MS: z.coerce.number().int().positive().default(90_000),
+
+    // MinerU microservice (services/mineru-parser) — second-tier parser,
+    // tried only after Docling fails or reports low quality. Unset means
+    // the ingestion job skips straight to the unpdf/mammoth fallback.
+    MINERU_SERVICE_URL: z.url().optional(),
+    MINERU_TIMEOUT_MS: z.coerce.number().int().positive().default(180_000),
+
+    // Qdrant (org-fusion-rag's vector channel, additive to pgvector —
+    // org-rag and the built-in corpus strategies are untouched). Unset
+    // means that channel contributes nothing to the fusion strategy.
+    QDRANT_URL: z.url().optional(),
+    QDRANT_API_KEY: z.string().optional(),
+
+    // Neo4j (org-fusion-rag's graph channel). Unset means that channel
+    // contributes nothing to the fusion strategy — the built-in in-memory
+    // `graph-rag` strategy (packages/ai/src/knowledge/graph.ts) is separate
+    // and unaffected.
+    NEO4J_URL: z.string().optional(),
+    NEO4J_USER: z.string().optional(),
+    NEO4J_PASSWORD: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_APP_NAME: z.string().default("Ситрук"),
@@ -98,6 +118,13 @@ export const env = createEnv({
     AWS_S3_BUCKET: process.env.AWS_S3_BUCKET,
     DOCLING_SERVICE_URL: process.env.DOCLING_SERVICE_URL,
     DOCLING_TIMEOUT_MS: process.env.DOCLING_TIMEOUT_MS,
+    MINERU_SERVICE_URL: process.env.MINERU_SERVICE_URL,
+    MINERU_TIMEOUT_MS: process.env.MINERU_TIMEOUT_MS,
+    QDRANT_URL: process.env.QDRANT_URL,
+    QDRANT_API_KEY: process.env.QDRANT_API_KEY,
+    NEO4J_URL: process.env.NEO4J_URL,
+    NEO4J_USER: process.env.NEO4J_USER,
+    NEO4J_PASSWORD: process.env.NEO4J_PASSWORD,
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
     NEXT_PUBLIC_APP_SHORT_NAME: process.env.NEXT_PUBLIC_APP_SHORT_NAME,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,

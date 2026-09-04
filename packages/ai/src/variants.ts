@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { stageParamsSchema } from "./types";
+
 /**
  * A variant is one *approach* under test: a concrete choice of implementation
  * for each pipeline stage. Every dialog stores the variant it ran under, which
@@ -19,7 +21,7 @@ export const variantConfigSchema = z.object({
   model: z.string().optional(),
   effort: z.enum(["low", "medium", "high", "xhigh", "max"]).optional(),
   /** Strategy-specific knobs: `{ topK: 8 }`, `{ hops: 3 }`, … */
-  params: z.record(z.string(), z.unknown()).default({}),
+  params: stageParamsSchema.default({}),
 });
 
 export type VariantConfig = z.infer<typeof variantConfigSchema>;
