@@ -16,14 +16,14 @@
     "ui-add": "bunx shadcn@latest add && biome format --write src"
   },
   "dependencies": {
-    "@base-ui/react": "^1.7.0",
+    "@base-ui/react": "^1.8.0",
     "@hookform/resolvers": "^5.9.1",
     "class-variance-authority": "^0.7.1",
     "date-fns": "4.4.0",
     "input-otp": "^1.5.0",
-    "lucide-react": "^1.35.0",
+    "lucide-react": "^1.41.0",
     "react-day-picker": "^10.0.1",
-    "react-hook-form": "^7.86.0",
+    "react-hook-form": "^7.87.0",
     "recharts": "^3.10.1",
     "sonner": "^2.0.8",
     "tailwind-merge": "^3.6.0"
