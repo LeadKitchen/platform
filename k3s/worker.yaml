@@ -17,10 +17,14 @@ spec:
       labels:
         app: worker
     spec:
+      imagePullSecrets:
+        - name: ghcr-pull-secret
       containers:
         - name: worker
-          # Built from docker/worker.Dockerfile at the repo root — see k3s/README.md.
-          image: <registry>/orixon-worker:<tag>
+          # Built from docker/worker.Dockerfile at the repo root — see
+          # k3s/README.md. `latest` here is only the bootstrap image; push a
+          # real tag and update this (or `kubectl set image`) after building.
+          image: ghcr.io/leadkitchen/platform/worker:latest
           envFrom:
             - configMapRef:
                 name: app-config

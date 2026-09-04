@@ -49,6 +49,8 @@ spec:
       labels:
         app: app
     spec:
+      imagePullSecrets:
+        - name: ghcr-pull-secret
       containers:
         - name: app
           # `latest` here is only the bootstrap image — the deploy-k3s.yml

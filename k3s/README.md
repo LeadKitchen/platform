@@ -29,17 +29,34 @@ also runs `kubectl set image` against the `app` Deployment created here, so
 `worker` has no such pipeline yet — build and push it by hand:
 
 ```sh
-docker build -f docker/worker.Dockerfile -t <registry>/orixon-worker:<tag> .
-docker push <registry>/orixon-worker:<tag>
+docker build -f docker/worker.Dockerfile -t ghcr.io/leadkitchen/platform/worker:<tag> .
+docker push ghcr.io/leadkitchen/platform/worker:<tag>
 ```
 
-Set `<registry>/orixon-worker:<tag>` in `worker.yaml` before applying.
+`worker.yaml` ships pointing at `:latest` as a bootstrap image — push at
+least one `:latest` (or update the tag in `worker.yaml`/`kubectl set image`)
+before applying, otherwise the Deployment can't pull anything.
 
 ## Deploying
+
+`ghcr.io/leadkitchen/platform/app` (and `orixon-worker`, once you push it)
+are private GHCR packages, so the cluster needs a pull secret — both
+Deployments reference `ghcr-pull-secret` via `imagePullSecrets`. Create it
+once with a GitHub PAT that has `read:packages` scope:
+
+```sh
+kubectl create secret docker-registry ghcr-pull-secret \
+  -n orixon \
+  --docker-server=ghcr.io \
+  --docker-username=<your-github-username> \
+  --docker-password=<PAT with read:packages> \
+  --docker-email=<your-email>
+```
 
 ```sh
 kubectl apply -f namespace.yaml
 kubectl apply -n orixon -f secret.yaml   # your filled-in copy
+# (ghcr-pull-secret — see above)
 kubectl apply -n orixon -f app.yaml
 kubectl apply -n orixon -f worker.yaml
 ```
