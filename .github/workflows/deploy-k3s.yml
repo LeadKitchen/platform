@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  IMAGE: ghcr.io/leadkitchen/app
+  IMAGE: ghcr.io/leadkitchen/platform/app
 
 jobs:
   build-and-push:
@@ -76,24 +76,17 @@ jobs:
       - name: Verify cluster connection
         run: kubectl cluster-info
 
-      # Existing Deployment/container names and namespace live in your own
-      # k8s manifests, not in this repo. Set them as repository variables
-      # under Settings > Secrets and variables > Actions > Variables:
-      #   K3S_NAMESPACE  (defaults to "default")
-      #   K3S_DEPLOYMENT (required, e.g. "app")
-      #   K3S_CONTAINER  (defaults to K3S_DEPLOYMENT)
+      # Defaults match k3s/app.yaml (namespace: orixon, Deployment/container:
+      # app). Override via repository variables under Settings > Secrets and
+      # variables > Actions > Variables if your cluster differs:
+      #   K3S_NAMESPACE, K3S_DEPLOYMENT, K3S_CONTAINER
       - name: Deploy new image
         env:
-          NAMESPACE: ${{ vars.K3S_NAMESPACE || 'default' }}
-          DEPLOYMENT: ${{ vars.K3S_DEPLOYMENT }}
-          CONTAINER: ${{ vars.K3S_CONTAINER || vars.K3S_DEPLOYMENT }}
+          NAMESPACE: ${{ vars.K3S_NAMESPACE || 'orixon' }}
+          DEPLOYMENT: ${{ vars.K3S_DEPLOYMENT || 'app' }}
+          CONTAINER: ${{ vars.K3S_CONTAINER || vars.K3S_DEPLOYMENT || 'app' }}
           IMAGE_TAG: ${{ needs.build-and-push.outputs.image }}
         run: |
-          if [ -z "$DEPLOYMENT" ]; then
-            echo "::error::Set the K3S_DEPLOYMENT repository variable to your Deployment's name."
-            exit 1
-          fi
-
           kubectl set image "deployment/${DEPLOYMENT}" "${CONTAINER}=${IMAGE_TAG}" \
             -n "$NAMESPACE"
           kubectl rollout status "deployment/${DEPLOYMENT}" -n "$NAMESPACE" --timeout=180s
