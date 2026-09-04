@@ -5,7 +5,7 @@ export type DbDriver = "node";
  * triggering any database connection side effects.
  *
  * The main database client must support interactive transactions, so it
- * always uses `node-postgres` (including with Neon pooled connection URLs).
+ * always uses `node-postgres` against a self-hosted Postgres instance.
  * Edge-only consumers use the explicit `dbEdge` export instead.
  */
 export function selectDbDriver(

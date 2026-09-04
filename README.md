@@ -56,7 +56,7 @@ packages
   ├─ config
   │   └─ Type-safe env (@t3-oss/env-core) + structured logger
   ├─ db
-  │   └─ Drizzle ORM with an env-aware driver (node-postgres / Neon HTTP)
+  │   └─ Drizzle ORM with the node-postgres driver (self-hosted Postgres)
   ├─ emails
   │   └─ Email templates with React Email + Resend / nodemailer
   ├─ storage
@@ -107,7 +107,7 @@ tooling
 
 ### 💾 Database
 - **Drizzle ORM** — Type-safe SQL queries
-- **Env-aware driver** — `node-postgres` locally, Neon HTTP auto-detected in the cloud
+- **`node-postgres` driver** — the same transaction-capable driver locally and in production, against a self-hosted Postgres instance
 - **Migrations** — Version-controlled schema changes (`db:generate` / `db:migrate`)
 
 ### 📧 Communication & Observability
@@ -157,7 +157,7 @@ bun install
 ### Setup
 
 > [!NOTE]
-> The main application uses the transaction-capable `node-postgres` driver for every PostgreSQL host, including Neon (prefer its pooled URL). Edge-only readers can use the separate `dbEdge` export. A local Postgres, MinIO (S3) and inbucket (email) are provided via `docker-compose.yml`.
+> The main application uses the transaction-capable `node-postgres` driver against a self-hosted Postgres instance. Edge-only readers can use the separate `dbEdge` export. A local Postgres, MinIO (S3) and inbucket (email) are provided via `docker-compose.yml`.
 
 **Step 1: Install dependencies & configure environment**
 
@@ -169,7 +169,7 @@ bun install
 cp .env.example .env
 
 # Edit .env with your credentials
-# - POSTGRES_URL (local docker-compose Postgres, or get one from neon.tech)
+# - POSTGRES_URL (local docker-compose Postgres, or your self-hosted k3s Postgres)
 # - AUTH_SECRET (generate with: openssl rand -base64 32)
 # - RESEND_API_KEY (optional, get from resend.com)
 ```
@@ -264,7 +264,7 @@ bun turbo gen init
 **Backend**
 - [oRPC](https://orpc.unnoq.com) — Type-safe APIs (RPC + OpenAPI)
 - [Drizzle ORM](https://orm.drizzle.team) — Database ORM
-- [Neon](https://neon.tech) / Postgres — Serverless or self-hosted
+- [PostgreSQL](https://www.postgresql.org) — self-hosted on k3s (or any Postgres-compatible host)
 - [Better Auth](https://better-auth.com) — Authentication
 - [Hono](https://hono.dev) — Optional standalone API server
 
