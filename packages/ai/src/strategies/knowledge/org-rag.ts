@@ -79,14 +79,8 @@ export const orgRagKnowledge: KnowledgeStrategy = {
       };
     }
 
-    const {
-      and,
-      db,
-      eq,
-      GameKnowledgeChunk,
-      GameKnowledgeDocument,
-      inArray,
-    } = await import("@acme/db");
+    const { and, db, eq, GameKnowledgeChunk, GameKnowledgeDocument, inArray } =
+      await import("@acme/db");
 
     // Qdrant returns ids/scores only — the chunk text lives in Postgres.
     // Filtered by status here (not in Qdrant, which doesn't know about
