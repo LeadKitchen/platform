@@ -18,28 +18,64 @@ import {
 } from "@acme/db";
 import { db } from "@acme/db/client";
 import { downloadBufferFromS3 } from "@acme/storage";
-import { schemaTask, task } from "@trigger.dev/sdk";
 import mammoth from "mammoth";
 import { extractText } from "unpdf";
 import { z } from "zod";
 import { parseWithDocling } from "../docling-client";
+import { hatchet } from "../hatchet-client";
 import { parseWithMinerU } from "../mineru-client";
 
-export interface IngestKnowledgeDocumentInput {
+export type IngestKnowledgeDocumentInput = {
   documentId: string;
   version: number;
-}
+};
 
 const ingestKnowledgeDocumentInputSchema = z.object({
   documentId: z.uuid(),
   version: z.number().int().positive(),
 });
 
-interface KnowledgeChunk {
+type KnowledgeChunk = {
   index: number;
   text: string;
   audience: GameKnowledgeAudience;
-}
+};
+
+type ExtractedContent = {
+  text: string;
+  orgId: string;
+  defaultAudience: GameKnowledgeAudience;
+  expectedVersion: number;
+};
+
+type ChunkAndClassifyInput = {
+  text: string;
+  defaultAudience: GameKnowledgeAudience;
+};
+
+type ChunkAndClassifyOutput = {
+  chunks: KnowledgeChunk[];
+};
+
+type EmbedAndPersistInput = {
+  documentId: string;
+  version: number;
+  orgId: string;
+  expectedVersion: number;
+  chunks: KnowledgeChunk[];
+};
+
+type IndexQdrantInput = {
+  orgId: string;
+  documentId: string;
+  chunkIds: string[];
+};
+
+type ExtractGraphInput = {
+  orgId: string;
+  documentId: string;
+  chunks: { index: number; text: string }[];
+};
 
 /** unpdf/mammoth extraction — used directly when Docling is unconfigured, and as its fallback otherwise. */
 async function extractWithFallback(
@@ -68,19 +104,22 @@ async function extractWithFallback(
  * prompt (see `packages/ai/src/knowledge/audience-classifier.ts`).
  *
  * Each step below runs as its own task (with its own retries/timeout) and
- * is chained with `triggerAndWait`, mirroring the previous DAG.
+ * is chained by `await`ing `.run()`, mirroring the previous DAG.
  *
- * @see https://trigger.dev/docs/triggering
+ * @see https://docs.hatchet.run/home/child-workflows
  */
-const extractContentTask = task({
-  id: "ingest-extract-content",
-  retry: { maxAttempts: 3 },
+export const extractContentTask = hatchet.task<
+  IngestKnowledgeDocumentInput,
+  ExtractedContent
+>({
+  name: "ingest-extract-content",
+  retries: 3,
   // Headroom for the full parser cascade: Docling (DOCLING_TIMEOUT_MS,
   // default 90s) → MinerU on PDFs only (MINERU_TIMEOUT_MS, default 180s,
   // heavier CPU-bound OCR) → unpdf/mammoth. The S3 download and the final
   // fallback itself are comparatively instant.
-  maxDuration: 350,
-  run: async (input: IngestKnowledgeDocumentInput) => {
+  executionTimeout: "350s",
+  fn: async (input) => {
     const [document] = await db
       .select()
       .from(GameKnowledgeDocument)
@@ -143,14 +182,14 @@ const extractContentTask = task({
   },
 });
 
-const chunkAndClassifyTask = task({
-  id: "ingest-chunk-and-classify",
-  retry: { maxAttempts: 3 },
-  maxDuration: 180,
-  run: async (input: {
-    text: string;
-    defaultAudience: GameKnowledgeAudience;
-  }) => {
+export const chunkAndClassifyTask = hatchet.task<
+  ChunkAndClassifyInput,
+  ChunkAndClassifyOutput
+>({
+  name: "ingest-chunk-and-classify",
+  retries: 3,
+  executionTimeout: "180s",
+  fn: async (input) => {
     const chunks = chunkText(input.text);
 
     let suggestions: Map<number, GameKnowledgeAudience>;
@@ -177,26 +216,29 @@ const chunkAndClassifyTask = task({
 });
 
 /** A chunk once it has a real database id — what the enrichment fan-out below needs. */
-interface PersistedChunk {
+type PersistedChunk = {
   id: string;
   index: number;
   text: string;
   audience: GameKnowledgeAudience;
-}
+};
 
 const FACT_INSERT_BATCH_SIZE = 500;
 
-const embedAndPersistTask = task({
-  id: "ingest-embed-and-persist",
-  retry: { maxAttempts: 3 },
-  maxDuration: 180,
-  run: async (input: {
-    documentId: string;
-    version: number;
-    orgId: string;
-    expectedVersion: number;
-    chunks: KnowledgeChunk[];
-  }) => {
+type EmbedAndPersistOutput = {
+  chunkCount: number;
+  stale: boolean;
+  insertedChunks: PersistedChunk[];
+};
+
+export const embedAndPersistTask = hatchet.task<
+  EmbedAndPersistInput,
+  EmbedAndPersistOutput
+>({
+  name: "ingest-embed-and-persist",
+  retries: 3,
+  executionTimeout: "180s",
+  fn: async (input) => {
     if (input.version !== input.expectedVersion) {
       throw new Error("Knowledge document version changed during ingestion");
     }
@@ -289,15 +331,14 @@ const embedAndPersistTask = task({
   },
 });
 
-const embedAndIndexQdrantTask = task({
-  id: "ingest-index-qdrant",
-  retry: { maxAttempts: 3 },
-  maxDuration: 120,
-  run: async (input: {
-    orgId: string;
-    documentId: string;
-    chunkIds: string[];
-  }) => {
+export const embedAndIndexQdrantTask = hatchet.task<
+  IndexQdrantInput,
+  { indexed: number }
+>({
+  name: "ingest-index-qdrant",
+  retries: 3,
+  executionTimeout: "120s",
+  fn: async (input) => {
     if (input.chunkIds.length === 0) return { indexed: 0 };
 
     const chunks = await db
@@ -334,18 +375,17 @@ const embedAndIndexQdrantTask = task({
   },
 });
 
-const extractGraphTask = task({
-  id: "ingest-extract-graph",
-  retry: { maxAttempts: 3 },
+export const extractGraphTask = hatchet.task<
+  ExtractGraphInput,
+  { entityCount: number; relationCount: number }
+>({
+  name: "ingest-extract-graph",
+  retries: 3,
   // LLM entity/relation extraction runs one batched call per ~15 chunks
   // (packages/ai/src/knowledge/entity-extractor.ts) — slower than a single
   // embedding call, hence the wider budget.
-  maxDuration: 300,
-  run: async (input: {
-    orgId: string;
-    documentId: string;
-    chunks: { index: number; text: string }[];
-  }) => {
+  executionTimeout: "300s",
+  fn: async (input) => {
     const perChunk = await extractGraph(input.chunks);
 
     // One graph per document, not per chunk: a relation extracted from one
@@ -375,15 +415,20 @@ const extractGraphTask = task({
   },
 });
 
-const extractFactsTask = task({
-  id: "ingest-extract-facts",
-  retry: { maxAttempts: 3 },
-  maxDuration: 300,
-  run: async (input: {
-    orgId: string;
-    documentId: string;
-    chunks: Pick<PersistedChunk, "id" | "index" | "text" | "audience">[];
-  }) => {
+type ExtractFactsInput = {
+  orgId: string;
+  documentId: string;
+  chunks: Pick<PersistedChunk, "id" | "index" | "text" | "audience">[];
+};
+
+export const extractFactsTask = hatchet.task<
+  ExtractFactsInput,
+  { factCount: number }
+>({
+  name: "ingest-extract-facts",
+  retries: 3,
+  executionTimeout: "300s",
+  fn: async (input) => {
     const perChunk = await extractFacts(
       input.chunks.map((chunk) => ({ index: chunk.index, text: chunk.text })),
     );
@@ -428,10 +473,9 @@ const extractFactsTask = task({
 // document stuck in `processing` forever with no admin-visible reason.
 async function markDocumentFailed(
   input: IngestKnowledgeDocumentInput,
-  error: unknown,
+  errors: Record<string, string>,
 ) {
-  const message =
-    error instanceof Error ? error.message : "Ошибка обработки документа";
+  const message = Object.values(errors)[0] ?? "Ошибка обработки документа";
   await db
     .update(GameKnowledgeDocument)
     .set({ status: "failed", statusMessage: message.slice(0, 2000) })
@@ -444,38 +488,45 @@ async function markDocumentFailed(
     );
 }
 
-export const ingestKnowledgeDocumentTask = schemaTask({
-  id: "ingest-knowledge-document",
-  schema: ingestKnowledgeDocumentInputSchema,
+const ingestKnowledgeDocumentWorkflow =
+  hatchet.workflow<IngestKnowledgeDocumentInput>({
+    name: "ingest-knowledge-document",
+    inputValidator: ingestKnowledgeDocumentInputSchema,
+  });
+
+// Runs when the workflow's task exhausts its retries — without this, a bad
+// upload (corrupt PDF, empty file, embedding-endpoint outage) leaves the
+// document stuck in `processing` forever with no admin-visible reason.
+ingestKnowledgeDocumentWorkflow.onFailure({
+  fn: async (payload, ctx) => {
+    await markDocumentFailed(payload, ctx.errors());
+  },
+});
+
+ingestKnowledgeDocumentWorkflow.task({
+  name: "run",
   // Sub-tasks already retry their own step; retrying the orchestration
   // itself would just repeat whichever step already exhausted its retries.
-  retry: { maxAttempts: 1 },
+  retries: 1,
   // Headroom for the worst case across every step: the three-tier parser
   // cascade (up to 350s) plus chunk/classify and the Postgres/Qdrant/Neo4j/
   // facts fan-out afterward.
-  maxDuration: 900,
-  onFailure: async ({ payload, error }) => {
-    await markDocumentFailed(payload, error);
-  },
-  run: async (payload) => {
-    const extracted = await extractContentTask.triggerAndWait(payload).unwrap();
+  executionTimeout: "900s",
+  fn: async (payload) => {
+    const extracted = await extractContentTask.run(payload);
 
-    const classified = await chunkAndClassifyTask
-      .triggerAndWait({
-        text: extracted.text,
-        defaultAudience: extracted.defaultAudience,
-      })
-      .unwrap();
+    const classified = await chunkAndClassifyTask.run({
+      text: extracted.text,
+      defaultAudience: extracted.defaultAudience,
+    });
 
-    const persisted = await embedAndPersistTask
-      .triggerAndWait({
-        documentId: payload.documentId,
-        version: payload.version,
-        orgId: extracted.orgId,
-        expectedVersion: extracted.expectedVersion,
-        chunks: classified.chunks,
-      })
-      .unwrap();
+    const persisted = await embedAndPersistTask.run({
+      documentId: payload.documentId,
+      version: payload.version,
+      orgId: extracted.orgId,
+      expectedVersion: extracted.expectedVersion,
+      chunks: classified.chunks,
+    });
 
     // Qdrant/Neo4j/atomic-facts are org-fusion-rag's supplementary
     // retrieval channels, not gates on the document reaching
@@ -491,7 +542,7 @@ export const ingestKnowledgeDocumentTask = schemaTask({
       // Qdrant stores every chunk regardless of audience and filters at
       // query time (searchQdrant), matching how org-rag reads
       // GameKnowledgeChunk itself — one row, filtered live.
-      await embedAndIndexQdrantTask.trigger({
+      await embedAndIndexQdrantTask.runNoWait({
         orgId,
         documentId,
         chunkIds: insertedChunks.map((chunk) => chunk.id),
@@ -509,7 +560,7 @@ export const ingestKnowledgeDocumentTask = schemaTask({
       );
       // Trigger even with no visible chunks so upsertEntities clears any
       // graph data left by an older version of this document.
-      await extractGraphTask.trigger({
+      await extractGraphTask.runNoWait({
         orgId,
         documentId,
         chunks: visibleChunks.map((chunk) => ({
@@ -518,7 +569,7 @@ export const ingestKnowledgeDocumentTask = schemaTask({
         })),
       });
       if (visibleChunks.length > 0) {
-        await extractFactsTask.trigger({
+        await extractFactsTask.runNoWait({
           orgId,
           documentId,
           chunks: visibleChunks.map((chunk) => ({
@@ -537,3 +588,5 @@ export const ingestKnowledgeDocumentTask = schemaTask({
     };
   },
 });
+
+export const ingestKnowledgeDocumentTask = ingestKnowledgeDocumentWorkflow;

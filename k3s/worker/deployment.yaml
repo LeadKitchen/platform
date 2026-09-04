@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  namespace: orixon
+  labels:
+    app: worker
+spec:
+  # Hatchet fans work out across however many workers are registered — scale
+  # this independently of `app` based on job throughput.
+  replicas: 2
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      containers:
+        - name: worker
+          # Built from docker/worker.Dockerfile at the repo root — see k3s/README.md.
+          image: <registry>/orixon-worker:<tag>
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: orixon-secrets
+          resources:
+            requests:
+              cpu: 250m
+              memory: 384Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
