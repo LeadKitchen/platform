@@ -1,4 +1,5 @@
-# Builds the @acme/jobs Hatchet worker for self-hosting on k3s.
+# Builds the @acme/jobs Hatchet worker, deployed on our own k3s cluster and
+# connecting outbound to Hatchet Cloud (the queue/engine itself is managed).
 # Build from the repo root: docker build -f docker/worker.Dockerfile -t <registry>/orixon-worker:<tag> .
 FROM oven/bun:1-slim AS base
 WORKDIR /repo

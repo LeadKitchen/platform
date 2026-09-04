@@ -13,10 +13,10 @@ import { scheduledTask } from "./trigger/scheduled";
 
 /**
  * Long-running worker process — replaces Trigger.dev Cloud's managed
- * execution. Deployed to our own k3s cluster alongside the self-hosted
- * Hatchet engine; it registers every task (including the sub-tasks the
- * `ingest-knowledge-document` orchestrator calls via `.run()`/`.runNoWait()`)
- * and long-polls the engine for work.
+ * execution. Deployed to our own k3s cluster (k3s/worker/), it registers
+ * every task (including the sub-tasks the `ingest-knowledge-document`
+ * orchestrator calls via `.run()`/`.runNoWait()`) and long-polls Hatchet
+ * Cloud for work.
  *
  * @see https://docs.hatchet.run/home/workers
  */

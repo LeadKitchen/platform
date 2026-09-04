@@ -2,9 +2,9 @@
 
 Deploys `app` (the Next.js server, `apps/app`) and `worker` (the Hatchet job
 worker, `packages/jobs`) into the `orixon` namespace on your k3s cluster.
-Assumes a self-hosted Hatchet engine already running somewhere reachable
-from the cluster (see https://docs.hatchet.run/self-hosting) — these
-manifests only cover our own app and worker, not the Hatchet engine itself.
+The job queue itself is **Hatchet Cloud** (cloud.onhatchet.run) — `worker`
+just needs outbound network access and a `HATCHET_CLIENT_TOKEN`, no Hatchet
+engine to run ourselves.
 
 ## Layout
 
