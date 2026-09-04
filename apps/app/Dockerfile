@@ -6,7 +6,7 @@
 # Uses `turbo prune` to trim the monorepo down to what @acme/app actually
 # needs, then builds it with Next.js standalone output.
 
-FROM oven/bun:1.4.0 AS base
+FROM oven/bun:1.4.1 AS base
 WORKDIR /app
 
 # ---- Prune the monorepo down to @acme/app's dependency graph ----
@@ -26,7 +26,7 @@ ENV CI=true
 RUN bunx turbo run build --filter=@acme/app
 
 # ---- Minimal runtime image ----
-FROM oven/bun:1.4.0-slim AS runner
+FROM oven/bun:1.4.1-slim AS runner
 WORKDIR /app
 
 RUN groupadd --system nodejs \
