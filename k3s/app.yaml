@@ -105,9 +105,9 @@ spec:
       targetPort: 3000
 ---
 # Routes through our own Traefik (not k3s's bundled one) via its CRD, so
-# there's no ingressClassName/IngressClass to wire up. Add a `tls:` block
-# here (or handle TLS on the router your Traefik front-ends with, e.g. its
-# own cert resolver) if this Traefik doesn't already terminate TLS upstream.
+# there's no ingressClassName/IngressClass to wire up. TLS is issued via
+# that Traefik's own ACME cert resolver (certificatesResolvers.letsencrypt
+# in its static config), not cert-manager.
 # `traefik.io/v1alpha1` is the Traefik v3 CRD group — use
 # `traefik.containo.us/v1alpha1` instead if this cluster still runs v2 CRDs.
 apiVersion: traefik.io/v1alpha1
@@ -125,3 +125,5 @@ spec:
       services:
         - name: app
           port: 80
+  tls:
+    certResolver: letsencrypt

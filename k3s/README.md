@@ -62,6 +62,6 @@ kubectl apply -n orixon -f worker.yaml
 ```
 
 `app.yaml`'s `IngressRoute` assumes `web`/`websecure` entryPoints on your
-Traefik and that it already terminates TLS (or fronts something that does).
-Update the `Host()` match and, if needed, add a `tls:` block to fit how your
-Traefik is actually configured.
+Traefik, and issues TLS via that Traefik's own `letsencrypt` ACME cert
+resolver (`tls.certResolver: letsencrypt`). Update the `Host()` match and
+the resolver name to fit how your Traefik is actually configured.
