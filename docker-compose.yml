@@ -111,7 +111,7 @@ services:
     image: qdrant/qdrant:latest
     container_name: qdrant
     ports:
-      # org-fusion-rag's vector channel — additive to pgvector, see
+      # org-rag's and org-fusion-rag's vector channel, see
       # docs/ai-module.md.
       - 127.0.0.1:6333:6333
     volumes:

@@ -1,4 +1,5 @@
 import { createEmbeddingProvider } from "../../knowledge/embeddings";
+import { searchQdrant } from "../../knowledge/qdrant";
 import type { KnowledgeStrategy } from "../../types";
 
 /**
@@ -13,14 +14,15 @@ import type { KnowledgeStrategy } from "../../types";
  *
  * Safety rule carried over from `packages/ai/src/knowledge/corpus.ts`:
  * `audience: "judge"` documents must never reach the character prompt. Here
- * that is enforced in the SQL `where` clause itself, not by filtering the
- * result afterwards — a bug in this file cannot leak the methodology by
- * forgetting a downstream filter.
+ * that is enforced inside the Qdrant query itself (`searchQdrant`'s default
+ * audience filter), not by filtering the result afterwards — a bug in this
+ * file cannot leak the methodology by forgetting a downstream filter. The
+ * Postgres lookup that follows only resolves ids Qdrant already cleared.
  */
 export const orgRagKnowledge: KnowledgeStrategy = {
   id: "org-rag",
   description:
-    "Поиск по документам, загруженным администратором организации (pgvector).",
+    "Поиск по документам, загруженным администратором организации (Qdrant).",
 
   async retrieve(request, deps) {
     const startedAt = Date.now();
@@ -68,26 +70,33 @@ export const orgRagKnowledge: KnowledgeStrategy = {
       };
     }
 
+    const hits = await searchQdrant(orgId, queryVector, topK);
+    if (hits.length === 0) {
+      return {
+        snippets: [],
+        latencyMs: Date.now() - startedAt,
+        meta: { topK, orgId, hits: 0 },
+      };
+    }
+
     const {
       and,
-      cosineDistance,
       db,
-      desc,
       eq,
       GameKnowledgeChunk,
       GameKnowledgeDocument,
       inArray,
-      isNotNull,
-      sql,
     } = await import("@acme/db");
 
-    const similarity = sql<number>`1 - (${cosineDistance(GameKnowledgeChunk.embedding, queryVector)})`;
+    // Qdrant returns ids/scores only — the chunk text lives in Postgres.
+    // Filtered by status here (not in Qdrant, which doesn't know about
+    // document lifecycle) so a chunk from a still-unpublished document
+    // never surfaces even if it was already indexed.
     const rows = await db
       .select({
         id: GameKnowledgeChunk.id,
         text: GameKnowledgeChunk.text,
         documentId: GameKnowledgeChunk.documentId,
-        score: similarity,
       })
       .from(GameKnowledgeChunk)
       .innerJoin(
@@ -97,22 +106,29 @@ export const orgRagKnowledge: KnowledgeStrategy = {
       .where(
         and(
           eq(GameKnowledgeChunk.orgId, orgId),
-          inArray(GameKnowledgeChunk.audience, ["character", "both"]),
-          isNotNull(GameKnowledgeChunk.embedding),
+          inArray(
+            GameKnowledgeChunk.id,
+            hits.map((hit) => hit.id),
+          ),
           // Chunks only go live once an admin confirms the audience labels
           // suggested during ingestion — see `needs_review` in the schema.
           eq(GameKnowledgeDocument.status, "ready"),
         ),
-      )
-      .orderBy(desc(similarity))
-      .limit(topK);
+      );
+    const rowById = new Map(rows.map((row) => [row.id, row]));
 
-    const snippets = rows.map((row) => ({
-      id: row.id,
-      text: row.text,
-      score: row.score,
-      source: "org-document",
-    }));
+    const snippets = hits.flatMap((hit) => {
+      const row = rowById.get(hit.id);
+      if (!row) return [];
+      return [
+        {
+          id: row.id,
+          text: row.text,
+          score: hit.score,
+          source: "org-document",
+        },
+      ];
+    });
 
     return {
       snippets,

@@ -151,12 +151,13 @@ extract: Docling → (при отказе/низком качестве) MinerU 
          (при отказе) unpdf/mammoth
      │
      ▼
-chunk → LLM: audience (character/judge/both) → embed → pgvector
+chunk → LLM: audience (character/judge/both) → persist chunk (Postgres)
      │                                              (needs_review → admin
      │                                               подтверждает → ready)
      ▼
 fan-out (не блокирует needs_review, свой retry на канал):
-     ├─ Qdrant           (векторный канал, доп. к pgvector)
+     ├─ Qdrant           (embed → векторный канал; читают org-rag и
+     │                     org-fusion-rag)
      ├─ Neo4j            (граф сущностей/связей, только non-judge чанки)
      └─ game_knowledge_facts (LLM-триплеты subject/predicate/object,
                                только non-judge чанки)
@@ -175,7 +176,8 @@ fan-out (не блокирует needs_review, свой retry на канал):
 - **audience — обязательный барьер**, а не техника ранжирования: чанк с
   меткой `judge` (методология, критерии оценки) в промпт персонажа не
   попадает никогда. Для Postgres/Qdrant-каналов фильтр стоит в самом
-  запросе (`org-rag`, `org-fusion-rag`, `searchQdrant`), а не постфактум;
+  запросе (`org-rag` и `org-fusion-rag` оба полагаются на
+  `searchQdrant`'s audience-фильтр по умолчанию), а не постфактум;
   для Neo4j и `game_knowledge_facts` — сильнее: `judge`-чанки вообще не
   передаются в LLM-экстракцию графа/фактов
   (`packages/jobs/src/trigger/ingest-knowledge-document.ts`), поэтому там
@@ -184,12 +186,12 @@ fan-out (не блокирует needs_review, свой retry на канал):
   момент ingestion. Если админ позже правит audience чанка через
   `updateChunkAudience`, эти три хранилища не обновляются автоматически —
   нужен повторный запуск ingestion (`retry`).
-- **needs_review — гейт публикации** для pgvector/org-rag, как и раньше;
+- **needs_review — гейт публикации** для `org-rag`, как и раньше;
   Qdrant/Neo4j/факты индексируются fire-and-forget сразу после него, не
   дожидаясь подтверждения — они дополняют `org-fusion-rag`, не решают,
   виден ли документ вообще.
 - **Retrieval — два сравнимых варианта, не один сменивший другой.**
-  `org-rag` — плотный поиск по pgvector, дешёвый контроль. `org-fusion-rag`
+  `org-rag` — плотный поиск по Qdrant, дешёвый контроль. `org-fusion-rag`
   (`packages/ai/src/strategies/knowledge/org-fusion-rag.ts`) — Retrieval
   Gateway: BM25 (org-корпус) + Qdrant + Neo4j (обход от сущностей,
   найденных по совпадению в label — у org-документов нет фиксированной id-

@@ -66,9 +66,10 @@ export const env = createEnv({
     MINERU_SERVICE_URL: z.url().optional(),
     MINERU_TIMEOUT_MS: z.coerce.number().int().positive().default(180_000),
 
-    // Qdrant (org-fusion-rag's vector channel, additive to pgvector —
-    // org-rag and the built-in corpus strategies are untouched). Unset
-    // means that channel contributes nothing to the fusion strategy.
+    // Qdrant backs org-rag's and org-fusion-rag's vector channels; the
+    // built-in corpus strategies are untouched. Unset means both arms'
+    // vector search contributes nothing (org-fusion-rag degrades that
+    // channel, org-rag returns no snippets).
     QDRANT_URL: z.url().optional(),
     QDRANT_API_KEY: z.string().optional(),
 

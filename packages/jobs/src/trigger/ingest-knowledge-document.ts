@@ -14,7 +14,6 @@ import {
   GameKnowledgeChunk,
   GameKnowledgeDocument,
   GameKnowledgeFact,
-  inArray,
 } from "@acme/db";
 import { db } from "@acme/db/client";
 import { downloadBufferFromS3 } from "@acme/storage";
@@ -68,7 +67,7 @@ type EmbedAndPersistInput = {
 type IndexQdrantInput = {
   orgId: string;
   documentId: string;
-  chunkIds: string[];
+  chunks: { id: string; vector: number[]; audience: GameKnowledgeAudience }[];
 };
 
 type ExtractGraphInput = {
@@ -221,6 +220,7 @@ type PersistedChunk = {
   index: number;
   text: string;
   audience: GameKnowledgeAudience;
+  vector: number[];
 };
 
 const FACT_INSERT_BATCH_SIZE = 500;
@@ -254,11 +254,12 @@ export const embedAndPersistTask = hatchet.task<
     // array position with the RETURNING rows below — INSERT...RETURNING
     // row order isn't a guarantee worth relying on for correctness.
     const chunkByIndex = new Map(
-      input.chunks.map((chunk) => [
+      input.chunks.map((chunk, position) => [
         chunk.index,
         {
           text: chunk.text,
           audience: chunk.audience,
+          vector: vectors[position] ?? [],
         },
       ]),
     );
@@ -291,13 +292,12 @@ export const embedAndPersistTask = hatchet.task<
       return tx
         .insert(GameKnowledgeChunk)
         .values(
-          input.chunks.map((chunk, position) => ({
+          input.chunks.map((chunk) => ({
             documentId: input.documentId,
             orgId: input.orgId,
             chunkIndex: chunk.index,
             text: chunk.text,
             audience: chunk.audience,
-            embedding: vectors[position],
           })),
         )
         .returning({
@@ -317,6 +317,7 @@ export const embedAndPersistTask = hatchet.task<
                 index: row.chunkIndex,
                 text: source.text,
                 audience: source.audience,
+                vector: source.vector,
               },
             ]
           : [];
@@ -339,39 +340,18 @@ export const embedAndIndexQdrantTask = hatchet.task<
   retries: 3,
   executionTimeout: "120s",
   fn: async (input) => {
-    if (input.chunkIds.length === 0) return { indexed: 0 };
-
-    const chunks = await db
-      .select({
-        id: GameKnowledgeChunk.id,
-        audience: GameKnowledgeChunk.audience,
-        vector: GameKnowledgeChunk.embedding,
-      })
-      .from(GameKnowledgeChunk)
-      .where(
-        and(
-          eq(GameKnowledgeChunk.orgId, input.orgId),
-          eq(GameKnowledgeChunk.documentId, input.documentId),
-          inArray(GameKnowledgeChunk.id, input.chunkIds),
-        ),
-      );
-    if (
-      chunks.length !== input.chunkIds.length ||
-      chunks.some((chunk) => chunk.vector === null)
-    ) {
-      throw new Error("Could not load every persisted chunk embedding");
-    }
+    if (input.chunks.length === 0) return { indexed: 0 };
 
     await upsertChunks(
-      chunks.map((chunk) => ({
+      input.chunks.map((chunk) => ({
         id: chunk.id,
-        vector: chunk.vector ?? [],
+        vector: chunk.vector,
         orgId: input.orgId,
         documentId: input.documentId,
         audience: chunk.audience,
       })),
     );
-    return { indexed: chunks.length };
+    return { indexed: input.chunks.length };
   },
 });
 
@@ -545,7 +525,11 @@ ingestKnowledgeDocumentWorkflow.task({
       await embedAndIndexQdrantTask.runNoWait({
         orgId,
         documentId,
-        chunkIds: insertedChunks.map((chunk) => chunk.id),
+        chunks: insertedChunks.map((chunk) => ({
+          id: chunk.id,
+          vector: chunk.vector,
+          audience: chunk.audience,
+        })),
       });
 
       // Neo4j and game_knowledge_facts have no per-item audience filter on

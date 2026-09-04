@@ -186,7 +186,6 @@ CREATE TABLE "game_knowledge_chunks" (
 	"text" text NOT NULL,
 	"audience" varchar(16) NOT NULL,
 	"tags" jsonb DEFAULT '[]'::jsonb NOT NULL,
-	"embedding" vector(1536),
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "game_knowledge_chunks_id_document_id_unique" UNIQUE("id","document_id"),
 	CONSTRAINT "game_knowledge_chunks_audience_check" CHECK ("game_knowledge_chunks"."audience" in ('character', 'judge', 'both'))

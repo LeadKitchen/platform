@@ -3,11 +3,13 @@ import type { GameKnowledgeAudience } from "@acme/db";
 import type { QdrantClient as QdrantClientType } from "@qdrant/js-client-rest";
 
 /**
- * Qdrant client for `org-fusion-rag`'s vector channel
- * (`packages/ai/src/strategies/knowledge/org-fusion-rag.ts`) — additive to
- * the pgvector column `embedAndPersistTask` already writes on every chunk;
- * `org-rag` and the built-in corpus strategies keep reading pgvector
- * unchanged.
+ * Qdrant client backing every org-document vector search:
+ * `org-fusion-rag`'s vector channel
+ * (`packages/ai/src/strategies/knowledge/org-fusion-rag.ts`) and `org-rag`'s
+ * dense retrieval (`../strategies/knowledge/org-rag.ts`) both query this
+ * collection — Postgres (`game_knowledge_chunks`) no longer stores
+ * embeddings, only the chunk text/metadata `embedAndIndexQdrantTask` looks
+ * up ids against.
  *
  * The client is created lazily on first use rather than at module import
  * (dynamic `import()`, mirroring `strategies/knowledge/org-rag.ts`'s
@@ -119,11 +121,17 @@ export async function upsertChunks(chunks: QdrantChunkInput[]): Promise<void> {
  * channel applies inside its own query, never as a post-hoc filter (see
  * docs/ai-module.md). Errors and an unconfigured client both degrade to an
  * empty result rather than failing the dialog.
+ *
+ * `audiences` defaults to `["character", "both"]` — the safe default every
+ * in-dialog caller relies on. Only the admin QA preview
+ * (`packages/api/src/routers/org/knowledge.ts`) passes the full set,
+ * since a facilitator reviewing labels is allowed to see `judge` chunks.
  */
 export async function searchQdrant(
   orgId: string,
   queryVector: number[],
   topK: number,
+  audiences: GameKnowledgeAudience[] = ["character", "both"],
 ): Promise<QdrantHit[]> {
   try {
     const instance = await getClient();
@@ -135,7 +143,7 @@ export async function searchQdrant(
       filter: {
         must: [
           { key: "orgId", match: { value: orgId } },
-          { key: "audience", match: { any: ["character", "both"] } },
+          { key: "audience", match: { any: audiences } },
         ],
       },
     });

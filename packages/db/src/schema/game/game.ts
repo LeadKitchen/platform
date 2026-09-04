@@ -856,8 +856,6 @@ export const GameKnowledgeChunk = pgTable(
       .$type<GameKnowledgeAudience>()
       .notNull(),
     tags: t.jsonb().$type<string[]>().default([]).notNull(),
-    /** text-embedding-3-small is 1536-dimensional. */
-    embedding: t.vector("embedding", { dimensions: 1536 }),
     createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
   }),
   (table) => [

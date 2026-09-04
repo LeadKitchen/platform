@@ -1,13 +1,12 @@
-import { createEmbeddingProvider } from "@acme/ai";
+import { createEmbeddingProvider, searchQdrant } from "@acme/ai";
 import {
   and,
-  cosineDistance,
   desc,
   eq,
   GameKnowledgeChunk,
   GameKnowledgeDocument,
   GameKnowledgePendingUpload,
-  isNotNull,
+  inArray,
   ne,
   sql,
 } from "@acme/db";
@@ -323,8 +322,17 @@ export const previewRetrieval = protectedProcedure
     const [queryVector] = await createEmbeddingProvider().embed([input.query]);
     if (!queryVector) return { hits: [] };
 
-    const similarity = sql<number>`1 - (${cosineDistance(GameKnowledgeChunk.embedding, queryVector)})`;
-    const hits = await context.db
+    // Unlike the in-dialog strategies, admin QA is allowed to see `judge`
+    // chunks (a facilitator reviewing labels), so pass the full audience
+    // set rather than relying on searchQdrant's character/both default.
+    const qdrantHits = await searchQdrant(orgId, queryVector, 10, [
+      "character",
+      "judge",
+      "both",
+    ]);
+    if (qdrantHits.length === 0) return { hits: [] };
+
+    const rows = await context.db
       .select({
         id: GameKnowledgeChunk.id,
         text: GameKnowledgeChunk.text,
@@ -332,7 +340,6 @@ export const previewRetrieval = protectedProcedure
         documentId: GameKnowledgeChunk.documentId,
         documentTitle: GameKnowledgeDocument.title,
         documentStatus: GameKnowledgeDocument.status,
-        score: similarity,
       })
       .from(GameKnowledgeChunk)
       .innerJoin(
@@ -342,12 +349,21 @@ export const previewRetrieval = protectedProcedure
       .where(
         and(
           eq(GameKnowledgeChunk.orgId, orgId),
-          isNotNull(GameKnowledgeChunk.embedding),
+          inArray(
+            GameKnowledgeChunk.id,
+            qdrantHits.map((hit) => hit.id),
+          ),
           ne(GameKnowledgeDocument.status, "failed"),
         ),
-      )
-      .orderBy(desc(similarity))
-      .limit(10);
+      );
+    const rowById = new Map(rows.map((row) => [row.id, row]));
+
+    const hits = qdrantHits
+      .flatMap((hit) => {
+        const row = rowById.get(hit.id);
+        return row ? [{ ...row, score: hit.score }] : [];
+      })
+      .sort((a, b) => b.score - a.score);
 
     return { hits };
   });

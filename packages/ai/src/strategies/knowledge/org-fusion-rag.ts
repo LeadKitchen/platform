@@ -13,11 +13,12 @@ import type { KnowledgeStrategy } from "../../types";
 /**
  * The "Retrieval Gateway" — four independent channels over an org's
  * uploaded documents, fused with RRF and LLM-reranked, alongside `org-rag`
- * (plain pgvector) as a comparable, cheaper arm rather than a replacement.
+ * (plain Qdrant search) as a comparable, cheaper arm rather than a
+ * replacement.
  *
  * - **lexical**: BM25 over the org's own chunks (`../../knowledge/bm25.ts`).
- * - **vector**: Qdrant (`../../knowledge/qdrant.ts`), additive to the
- *   pgvector column `org-rag` reads.
+ * - **vector**: Qdrant (`../../knowledge/qdrant.ts`), the same collection
+ *   `org-rag` queries.
  * - **graph**: Neo4j (`../../knowledge/neo4j-graph.ts`), seeded from a
  *   lexical match on entity labels — org documents have no fixed id scheme
  *   the way the built-in catalog does.
