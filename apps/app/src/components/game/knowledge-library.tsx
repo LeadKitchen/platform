@@ -164,29 +164,27 @@ function UploadDialog({
   onUploaded: (document: KnowledgeDocumentView) => void;
 }) {
   const [title, setTitle] = useState("");
-  const [sourceType, setSourceType] = useState<SourceType>("pdf");
   const [audience, setAudience] = useState<Audience>("character");
   const [file, setFile] = useState<File | null>(null);
   const [pending, setPending] = useState(false);
+  // Derived from the file itself, never chosen separately — asking someone
+  // to also pick a format only opened the door to picking the wrong one and
+  // hitting a confusing mismatch error at upload time.
+  const detectedSourceType = file ? sourceTypeForFile(file) : null;
 
   function reset() {
     setTitle("");
-    setSourceType("pdf");
     setAudience("character");
     setFile(null);
   }
 
   async function upload() {
-    if (!file || title.trim().length === 0 || pending) return;
-    const selectedSourceType = sourceTypeForFile(file);
-    if (!selectedSourceType || selectedSourceType !== sourceType) {
-      toast.error("Формат файла не совпадает с выбранным форматом");
+    if (!file || !detectedSourceType || title.trim().length === 0 || pending)
       return;
-    }
     setPending(true);
     try {
       const { key, uploadUrl } = await client.org.knowledge.requestUpload({
-        sourceType: selectedSourceType,
+        sourceType: detectedSourceType,
         size: file.size,
       });
       const putResponse = await fetch(uploadUrl, {
@@ -200,7 +198,7 @@ function UploadDialog({
       const document = await client.org.knowledge.confirmUpload({
         key,
         title: title.trim(),
-        sourceType: selectedSourceType,
+        sourceType: detectedSourceType,
         audience,
       });
       onUploaded(document as KnowledgeDocumentView);
@@ -245,59 +243,39 @@ function UploadDialog({
               onChange={(event) => setTitle(event.target.value)}
             />
           </Field>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field>
-              <FieldLabel htmlFor="knowledge-source-type">Формат</FieldLabel>
-              <Select
-                value={sourceType}
-                onValueChange={(value) => setSourceType(value as SourceType)}
-              >
-                <SelectTrigger id="knowledge-source-type" className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="pdf">PDF</SelectItem>
-                    <SelectItem value="docx">DOCX</SelectItem>
-                    <SelectItem value="txt">TXT</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="knowledge-audience">
-                Доступ по умолчанию
-                <InfoPopover>
-                  <p className="mb-1 font-medium">Зачем это нужно</p>
-                  <p>
-                    Это стартовое значение — оно применяется, только если ИИ не
-                    сможет сам определить доступ для фрагмента текста. Обычно ИИ
-                    справляется сам и предлагает свой вариант для каждого
-                    фрагмента отдельно, поэтому итоговая разметка может
-                    отличаться от того, что вы выберете здесь. Проверить и при
-                    необходимости изменить её можно на шаге «Проверить» после
-                    обработки документа.
-                  </p>
-                </InfoPopover>
-              </FieldLabel>
-              <Select
-                value={audience}
-                onValueChange={(value) => setAudience(value as Audience)}
-              >
-                <SelectTrigger id="knowledge-audience" className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="character">Персонаж</SelectItem>
-                    <SelectItem value="both">Персонаж и методология</SelectItem>
-                    <SelectItem value="judge">Только методология</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <FieldDescription>{AUDIENCE_HINT[audience]}</FieldDescription>
-            </Field>
-          </div>
+          <Field>
+            <FieldLabel htmlFor="knowledge-audience">
+              Доступ по умолчанию
+              <InfoPopover>
+                <p className="mb-1 font-medium">Зачем это нужно</p>
+                <p>
+                  Это стартовое значение — оно применяется, только если ИИ не
+                  сможет сам определить доступ для фрагмента текста. Обычно ИИ
+                  справляется сам и предлагает свой вариант для каждого
+                  фрагмента отдельно, поэтому итоговая разметка может отличаться
+                  от того, что вы выберете здесь. Проверить и при необходимости
+                  изменить её можно на шаге «Проверить» после обработки
+                  документа.
+                </p>
+              </InfoPopover>
+            </FieldLabel>
+            <Select
+              value={audience}
+              onValueChange={(value) => setAudience(value as Audience)}
+            >
+              <SelectTrigger id="knowledge-audience" className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="character">Персонаж</SelectItem>
+                  <SelectItem value="both">Персонаж и методология</SelectItem>
+                  <SelectItem value="judge">Только методология</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <FieldDescription>{AUDIENCE_HINT[audience]}</FieldDescription>
+          </Field>
           <Field>
             <FieldLabel htmlFor="knowledge-file">Файл</FieldLabel>
             <input
@@ -311,16 +289,20 @@ function UploadDialog({
                   setFile(null);
                   return;
                 }
-                const selectedSourceType = sourceTypeForFile(selectedFile);
-                if (!selectedSourceType) {
+                if (!sourceTypeForFile(selectedFile)) {
                   setFile(null);
                   toast.error("Поддерживаются только PDF, DOCX и TXT");
                   return;
                 }
                 setFile(selectedFile);
-                setSourceType(selectedSourceType);
               }}
             />
+            {detectedSourceType ? (
+              <FieldDescription>
+                Формат определён автоматически:{" "}
+                {detectedSourceType.toUpperCase()}
+              </FieldDescription>
+            ) : null}
           </Field>
         </FieldGroup>
         <DialogFooter className="justify-end gap-2">
