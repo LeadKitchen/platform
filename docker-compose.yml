@@ -4,6 +4,7 @@ volumes:
   qdrant:
   neo4j:
   redis:
+  embeddings:
 services:
   inbucket:
     restart: always
@@ -149,3 +150,22 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+  embeddings:
+    restart: always
+    # CPU build of Text Embeddings Inference — no GPU needed for a 560M-param
+    # model serving one short query per dialog turn plus one-off document
+    # ingestion. Swap for a GPU tag (see TEI's docs) if that ever changes.
+    image: ghcr.io/huggingface/text-embeddings-inference:cpu-1.8.1
+    container_name: embeddings
+    ports:
+      # OpenAI-compatible channel for org-rag/org-fusion-rag/hybrid-rag/
+      # hyde-rag/contextual-rag, see packages/ai/src/knowledge/embeddings.ts.
+      - 127.0.0.1:8090:80
+    volumes:
+      # Hugging Face cache — multilingual-e5-large (~1.1GB) downloads once on
+      # first start, not on every restart.
+      - embeddings:/data
+    command: --model-id intfloat/multilingual-e5-large
+    # No compose healthcheck: like Qdrant's image, this is a minimal Rust
+    # binary with no shell utilities (curl/wget) confirmed present to probe
+    # with.

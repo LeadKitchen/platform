@@ -22,7 +22,7 @@ import type { QdrantClient as QdrantClientType } from "@qdrant/js-client-rest";
 
 const COLLECTION_NAME = "org_knowledge_chunks";
 // Matches KNOWLEDGE_EMBEDDING_DIMENSIONS in ./embeddings.ts.
-const VECTOR_SIZE = 1536;
+const VECTOR_SIZE = 1024;
 
 export interface QdrantChunkInput {
   id: string;

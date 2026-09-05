@@ -21,14 +21,33 @@ export interface EmbeddingOptions {
   model?: string;
 }
 
-export const KNOWLEDGE_EMBEDDING_DIMENSIONS = 1536;
-const KNOWLEDGE_EMBEDDING_MODEL = "text-embedding-3-small";
+// intfloat/multilingual-e5-large (1024-dim dense output) served by a
+// self-hosted Text Embeddings Inference (TEI) instance — see the
+// `embeddings` service in docker-compose.yml. Trained on MIRACL (multilingual
+// retrieval), competitive with or ahead of OpenAI's English-leaning
+// text-embedding-3-small on Russian/multilingual retrieval, and CPU-friendly
+// at 560M params, so no GPU is required to run it. (BAAI/bge-m3 was tried
+// first — same size class, similarly strong on paper — but its HF repo has
+// no working ONNX export for TEI to load: every onnx/model.onnx* path 404s,
+// and the pytorch_model.bin fallback failed to download intact.)
+export const KNOWLEDGE_EMBEDDING_DIMENSIONS = 1024;
+const KNOWLEDGE_EMBEDDING_MODEL = "intfloat/multilingual-e5-large";
 
 export function createEmbeddingProvider(
   options: EmbeddingOptions = {},
 ): EmbeddingProvider {
-  const apiKey = options.apiKey ?? process.env.OPENAI_API_KEY;
-  const baseUrl = options.baseUrl ?? process.env.OPENAI_BASE_URL;
+  // EMBEDDINGS_* takes precedence over OPENAI_* so this channel doesn't
+  // silently follow wherever OPENAI_BASE_URL points the LLM pool (a paid
+  // gateway there almost never also proxies embeddings) — OPENAI_* stays as
+  // a fallback only for a bare deployment that never sets EMBEDDINGS_*.
+  const apiKey =
+    options.apiKey ??
+    process.env.EMBEDDINGS_API_KEY ??
+    process.env.OPENAI_API_KEY;
+  const baseUrl =
+    options.baseUrl ??
+    process.env.EMBEDDINGS_BASE_URL ??
+    process.env.OPENAI_BASE_URL;
   const modelId =
     options.model ?? process.env.EMBEDDING_MODEL ?? KNOWLEDGE_EMBEDDING_MODEL;
 

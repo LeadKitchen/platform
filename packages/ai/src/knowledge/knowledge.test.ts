@@ -63,7 +63,7 @@ describe("classifyChunkAudience", () => {
 describe("createEmbeddingProvider", () => {
   test("rejects models with an incompatible dimension contract", () => {
     expect(() =>
-      createEmbeddingProvider({ model: "text-embedding-3-large" }),
-    ).toThrow("knowledge vectors require 1536 dimensions");
+      createEmbeddingProvider({ model: "text-embedding-3-small" }),
+    ).toThrow("knowledge vectors require 1024 dimensions");
   });
 });
