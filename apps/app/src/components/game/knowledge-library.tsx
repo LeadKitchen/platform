@@ -45,6 +45,7 @@ import {
   IconTrash,
   IconUpload,
 } from "@tabler/icons-react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { client } from "~/orpc/react";
 
@@ -134,10 +135,12 @@ function UploadDialog({
   open,
   onOpenChange,
   onUploaded,
+  orgId,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onUploaded: (document: KnowledgeDocumentView) => void;
+  orgId: string | undefined;
 }) {
   const [title, setTitle] = useState("");
   const [sourceType, setSourceType] = useState<SourceType>("pdf");
@@ -164,6 +167,7 @@ function UploadDialog({
       const { key, uploadUrl } = await client.org.knowledge.requestUpload({
         sourceType: selectedSourceType,
         size: file.size,
+        orgId,
       });
       const putResponse = await fetch(uploadUrl, {
         method: "PUT",
@@ -178,6 +182,7 @@ function UploadDialog({
         title: title.trim(),
         sourceType: selectedSourceType,
         audience,
+        orgId,
       });
       onUploaded(document as KnowledgeDocumentView);
       toast.success("Документ загружен, начата обработка");
@@ -304,20 +309,22 @@ function ReviewDialog({
   document,
   onOpenChange,
   onPublished,
+  orgId,
 }: {
   document: KnowledgeDocumentView;
   onOpenChange: (open: boolean) => void;
   onPublished: () => void;
+  orgId: string | undefined;
 }) {
   const [chunks, setChunks] = useState<ChunkView[] | null>(null);
   const [pending, setPending] = useState(false);
 
   useEffect(() => {
     client.org.knowledge
-      .get({ id: document.id })
+      .get({ id: document.id, orgId })
       .then((result) => setChunks(result.chunks as ChunkView[]))
       .catch(() => toast.error("Не удалось загрузить фрагменты документа"));
-  }, [document.id]);
+  }, [document.id, orgId]);
 
   async function setChunkAudience(chunkId: string, audience: Audience) {
     try {
@@ -325,6 +332,7 @@ function ReviewDialog({
         documentId: document.id,
         chunkId,
         audience,
+        orgId,
       });
       setChunks(
         (current) =>
@@ -340,7 +348,7 @@ function ReviewDialog({
   async function publish() {
     setPending(true);
     try {
-      await client.org.knowledge.publish({ id: document.id });
+      await client.org.knowledge.publish({ id: document.id, orgId });
       toast.success("Документ опубликован и доступен персонажу");
       onPublished();
       onOpenChange(false);
@@ -428,7 +436,7 @@ function ReviewDialog({
   );
 }
 
-function PreviewPanel() {
+function PreviewPanel({ orgId }: { orgId: string | undefined }) {
   const [query, setQuery] = useState("");
   const [hits, setHits] = useState<RetrievalHit[] | null>(null);
   const [pending, setPending] = useState(false);
@@ -439,6 +447,7 @@ function PreviewPanel() {
     try {
       const result = await client.org.knowledge.previewRetrieval({
         query: query.trim(),
+        orgId,
       });
       setHits(result.hits as RetrievalHit[]);
     } catch (cause) {
@@ -514,9 +523,15 @@ function PreviewPanel() {
 
 export function KnowledgeLibrary({
   initialDocuments,
+  orgId,
+  orgOptions,
 }: {
   initialDocuments: KnowledgeDocumentView[];
+  orgId: string | undefined;
+  orgOptions: { id: string; name: string }[] | undefined;
 }) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [documents, setDocuments] = useState(initialDocuments);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [reviewing, setReviewing] = useState<KnowledgeDocumentView | null>(
@@ -526,14 +541,24 @@ export function KnowledgeLibrary({
   const [pendingId, setPendingId] = useState<string | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  useEffect(() => {
+    setDocuments(initialDocuments);
+  }, [initialDocuments]);
+
+  function switchOrg(nextOrgId: string) {
+    const params = new URLSearchParams(searchParams);
+    params.set("orgId", nextOrgId);
+    router.push(`/game/knowledge?${params.toString()}`);
+  }
+
   const refresh = useCallback(async () => {
     try {
-      const rows = await client.org.knowledge.list();
+      const rows = await client.org.knowledge.list({ orgId });
       setDocuments(rows as KnowledgeDocumentView[]);
     } catch {
       // A missed background refresh is not worth surfacing to the admin.
     }
-  }, []);
+  }, [orgId]);
 
   useEffect(() => {
     const hasProcessing = documents.some(
@@ -555,7 +580,7 @@ export function KnowledgeLibrary({
   async function retry(document: KnowledgeDocumentView) {
     setPendingId(document.id);
     try {
-      await client.org.knowledge.retry({ id: document.id });
+      await client.org.knowledge.retry({ id: document.id, orgId });
       toast.success("Обработка запущена заново");
       await refresh();
     } catch (cause) {
@@ -571,7 +596,7 @@ export function KnowledgeLibrary({
     if (!removing) return;
     setPendingId(removing.id);
     try {
-      await client.org.knowledge.remove({ id: removing.id });
+      await client.org.knowledge.remove({ id: removing.id, orgId });
       setDocuments((current) =>
         current.filter((document) => document.id !== removing.id),
       );
@@ -600,10 +625,29 @@ export function KnowledgeLibrary({
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={refresh}>
+          {orgOptions ? (
+            <Select
+              value={orgId}
+              onValueChange={(value) => value && switchOrg(value)}
+            >
+              <SelectTrigger className="w-56">
+                <SelectValue placeholder="Выберите команду" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {orgOptions.map((org) => (
+                    <SelectItem key={org.id} value={org.id}>
+                      {org.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          ) : null}
+          <Button variant="outline" onClick={refresh} disabled={!orgId}>
             <IconRefresh /> Обновить
           </Button>
-          <Button onClick={() => setUploadOpen(true)}>
+          <Button onClick={() => setUploadOpen(true)} disabled={!orgId}>
             <IconUpload /> Загрузить документ
           </Button>
         </div>
@@ -705,7 +749,7 @@ export function KnowledgeLibrary({
         </CardContent>
       </Card>
 
-      <PreviewPanel />
+      <PreviewPanel orgId={orgId} />
 
       <UploadDialog
         open={uploadOpen}
@@ -713,6 +757,7 @@ export function KnowledgeLibrary({
         onUploaded={(document) =>
           setDocuments((current) => [document, ...current])
         }
+        orgId={orgId}
       />
 
       {reviewing ? (
@@ -720,6 +765,7 @@ export function KnowledgeLibrary({
           document={reviewing}
           onOpenChange={(open) => !open && setReviewing(null)}
           onPublished={refresh}
+          orgId={orgId}
         />
       ) : null}
 

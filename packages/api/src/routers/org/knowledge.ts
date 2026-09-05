@@ -1,11 +1,13 @@
 import { createEmbeddingProvider, searchQdrant } from "@acme/ai";
 import {
   and,
+  type Database,
   desc,
   eq,
   GameKnowledgeChunk,
   GameKnowledgeDocument,
   GameKnowledgePendingUpload,
+  GameOrganization,
   inArray,
   ne,
   sql,
@@ -20,22 +22,50 @@ import {
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
 import { requireFacilitatorOrgId } from "../../game/organizations";
-import { protectedProcedure } from "../../orpc";
+import { protectedProcedure, resolveIsAdmin } from "../../orpc";
 
 const audienceSchema = z.enum(["character", "judge", "both"]);
 const sourceTypeSchema = z.enum(["pdf", "docx", "txt"]);
+const orgIdInputSchema = z.string().min(1).optional();
 
 /**
  * Admin-uploaded knowledge base for the org's role-play "virtual employee".
  *
- * Every mutation here is org-scoped through `requireFacilitatorOrgId`, same
- * as `scorecards.ts` — a facilitator only ever touches their own team's
- * documents. Nothing published here is retrievable by `org-rag`
+ * Every mutation here is org-scoped, same as `scorecards.ts` — a facilitator
+ * only ever touches their own team's documents. An admin may instead pass an
+ * explicit `orgId` to reach into *any* team's knowledge base (used by the
+ * admin panel to review/manage every team, not just one the admin happens to
+ * facilitate). Nothing published here is retrievable by `org-rag`
  * (`packages/ai/src/strategies/knowledge/org-rag.ts`) until `publish` moves
  * a document from `needs_review` to `ready`: the LLM-suggested audience
  * labels are a draft, and only a human confirming them puts the document in
  * front of the character.
  */
+
+async function resolveOrgId(
+  db: Database,
+  user: { id: string; email: string },
+  orgId: string | undefined,
+): Promise<string> {
+  if (!orgId) {
+    return requireFacilitatorOrgId(db, user.id);
+  }
+  const isAdmin = await resolveIsAdmin(db, user);
+  if (!isAdmin) {
+    throw new ORPCError("FORBIDDEN", {
+      message: "Выбор другой команды доступен только администраторам",
+    });
+  }
+  const [org] = await db
+    .select({ id: GameOrganization.id })
+    .from(GameOrganization)
+    .where(eq(GameOrganization.id, orgId))
+    .limit(1);
+  if (!org) {
+    throw new ORPCError("NOT_FOUND", { message: "Организация не найдена" });
+  }
+  return orgId;
+}
 
 async function assertOwnedDocument(
   context: Parameters<typeof requireFacilitatorOrgId>[0],
@@ -78,24 +108,28 @@ async function markDocumentEnqueueFailed(
     );
 }
 
-export const list = protectedProcedure.handler(async ({ context }) => {
-  const orgId = await requireFacilitatorOrgId(
-    context.db,
-    context.session.user.id,
-  );
-  return context.db
-    .select()
-    .from(GameKnowledgeDocument)
-    .where(eq(GameKnowledgeDocument.orgId, orgId))
-    .orderBy(desc(GameKnowledgeDocument.createdAt));
-});
+export const list = protectedProcedure
+  .input(z.object({ orgId: orgIdInputSchema }).default({}))
+  .handler(async ({ context, input }) => {
+    const orgId = await resolveOrgId(
+      context.db,
+      context.session.user,
+      input.orgId,
+    );
+    return context.db
+      .select()
+      .from(GameKnowledgeDocument)
+      .where(eq(GameKnowledgeDocument.orgId, orgId))
+      .orderBy(desc(GameKnowledgeDocument.createdAt));
+  });
 
 export const get = protectedProcedure
-  .input(z.object({ id: z.uuid() }))
+  .input(z.object({ id: z.uuid(), orgId: orgIdInputSchema }))
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
+    const orgId = await resolveOrgId(
       context.db,
-      context.session.user.id,
+      context.session.user,
+      input.orgId,
     );
     const document = await assertOwnedDocument(context.db, orgId, input.id);
     const chunks = await context.db
@@ -112,12 +146,14 @@ export const requestUpload = protectedProcedure
     z.object({
       sourceType: sourceTypeSchema,
       size: z.number().int().positive().max(MAX_UPLOAD_SIZE_BYTES),
+      orgId: orgIdInputSchema,
     }),
   )
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
+    const orgId = await resolveOrgId(
       context.db,
-      context.session.user.id,
+      context.session.user,
+      input.orgId,
     );
     const key = generateS3Key(`knowledge.${input.sourceType}`);
     const uploadUrl = await createPresignedUrl(key, input.size);
@@ -139,12 +175,14 @@ export const confirmUpload = protectedProcedure
       title: z.string().trim().min(1).max(200),
       sourceType: sourceTypeSchema,
       audience: audienceSchema.default("character"),
+      orgId: orgIdInputSchema,
     }),
   )
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
+    const orgId = await resolveOrgId(
       context.db,
-      context.session.user.id,
+      context.session.user,
+      input.orgId,
     );
     const document = await context.db.transaction(async (tx) => {
       const [pendingUpload] = await tx
@@ -198,11 +236,12 @@ export const confirmUpload = protectedProcedure
 
 /** Re-run ingestion for a document stuck in `failed` (e.g. after a transient embedding-endpoint outage). */
 export const retry = protectedProcedure
-  .input(z.object({ id: z.uuid() }))
+  .input(z.object({ id: z.uuid(), orgId: orgIdInputSchema }))
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
+    const orgId = await resolveOrgId(
       context.db,
-      context.session.user.id,
+      context.session.user,
+      input.orgId,
     );
     const document = await assertOwnedDocument(context.db, orgId, input.id);
     if (document.status !== "failed") {
@@ -252,12 +291,14 @@ export const updateChunkAudience = protectedProcedure
       documentId: z.uuid(),
       chunkId: z.uuid(),
       audience: audienceSchema,
+      orgId: orgIdInputSchema,
     }),
   )
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
+    const orgId = await resolveOrgId(
       context.db,
-      context.session.user.id,
+      context.session.user,
+      input.orgId,
     );
     await assertOwnedDocument(context.db, orgId, input.documentId);
     await context.db
@@ -274,11 +315,12 @@ export const updateChunkAudience = protectedProcedure
 
 /** Admin confirms the audience labels — this is the only path that makes a document visible to `org-rag`. */
 export const publish = protectedProcedure
-  .input(z.object({ id: z.uuid() }))
+  .input(z.object({ id: z.uuid(), orgId: orgIdInputSchema }))
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
+    const orgId = await resolveOrgId(
       context.db,
-      context.session.user.id,
+      context.session.user,
+      input.orgId,
     );
     const document = await assertOwnedDocument(context.db, orgId, input.id);
     if (document.status !== "needs_review") {
@@ -294,11 +336,12 @@ export const publish = protectedProcedure
   });
 
 export const remove = protectedProcedure
-  .input(z.object({ id: z.uuid() }))
+  .input(z.object({ id: z.uuid(), orgId: orgIdInputSchema }))
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
+    const orgId = await resolveOrgId(
       context.db,
-      context.session.user.id,
+      context.session.user,
+      input.orgId,
     );
     const document = await assertOwnedDocument(context.db, orgId, input.id);
     await context.db
@@ -313,11 +356,17 @@ export const remove = protectedProcedure
 
 /** QA panel: run the same retrieval a live dialog would, against *any* status, so an admin can check labels before publishing. */
 export const previewRetrieval = protectedProcedure
-  .input(z.object({ query: z.string().trim().min(1).max(2000) }))
+  .input(
+    z.object({
+      query: z.string().trim().min(1).max(2000),
+      orgId: orgIdInputSchema,
+    }),
+  )
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
+    const orgId = await resolveOrgId(
       context.db,
-      context.session.user.id,
+      context.session.user,
+      input.orgId,
     );
     const [queryVector] = await createEmbeddingProvider().embed([input.query]);
     if (!queryVector) return { hits: [] };
