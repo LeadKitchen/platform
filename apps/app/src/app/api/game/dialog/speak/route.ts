@@ -1,6 +1,7 @@
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
 import { getSession } from "~/auth/server";
+import { getRedisClient } from "~/lib/redis";
 import { api } from "~/orpc/server";
 
 export const runtime = "nodejs";
@@ -17,14 +18,15 @@ const bodySchema = z.object({
 });
 
 // ElevenLabs calls are billed per character, so a per-user cap protects
-// against a runaway client loop racking up cost. In-memory and per-process —
-// good enough for a single-instance deploy; move to a shared store (Redis/
-// Upstash) if this ever runs behind multiple instances.
+// against a runaway client loop racking up cost. Backed by Redis (shared
+// across instances/workers) when REDIS_URL is set; falls back to an
+// in-memory, per-process window otherwise — good enough for a
+// single-instance deploy, but a restart or a second instance resets it.
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX_REQUESTS = 20;
 const requestTimestamps = new Map<string, number[]>();
 
-function isRateLimited(key: string): boolean {
+function isRateLimitedInMemory(key: string): boolean {
   const now = Date.now();
   const recent = (requestTimestamps.get(key) ?? []).filter(
     (at) => now - at < RATE_LIMIT_WINDOW_MS,
@@ -32,6 +34,28 @@ function isRateLimited(key: string): boolean {
   recent.push(now);
   requestTimestamps.set(key, recent);
   return recent.length > RATE_LIMIT_MAX_REQUESTS;
+}
+
+async function isRateLimited(key: string): Promise<boolean> {
+  const client = await getRedisClient();
+  if (!client) return isRateLimitedInMemory(key);
+
+  try {
+    // Fixed window: simpler than the sliding log the in-memory fallback
+    // uses, and precise enough for an abuse guard rather than a billing
+    // meter. Window resets on the first request that (re)creates the key.
+    const redisKey = `ratelimit:speak:${key}`;
+    const count = await client.incr(redisKey);
+    if (count === 1) {
+      await client.pexpire(redisKey, RATE_LIMIT_WINDOW_MS);
+    }
+    return count > RATE_LIMIT_MAX_REQUESTS;
+  } catch (error) {
+    console.warn(
+      `Redis rate limit check failed, falling back to in-memory: ${error instanceof Error ? error.message : String(error)}`,
+    );
+    return isRateLimitedInMemory(key);
+  }
 }
 
 /**
@@ -60,7 +84,7 @@ export async function POST(request: Request) {
     throw cause;
   }
 
-  if (isRateLimited(userId ?? dialogId)) {
+  if (await isRateLimited(userId ?? dialogId)) {
     return Response.json(
       { error: "Слишком много запросов озвучивания — подождите немного" },
       { status: 429 },

@@ -3,6 +3,7 @@ volumes:
   postgres:
   qdrant:
   neo4j:
+  redis:
 services:
   inbucket:
     restart: always
@@ -132,3 +133,19 @@ services:
       - neo4j:/data
     environment:
       NEO4J_AUTH: neo4j/password
+  redis:
+    restart: always
+    image: redis:8-alpine
+    container_name: redis
+    ports:
+      # Rate limiter (apps/app/src/lib/redis.ts) — see docs/ai-module.md's
+      # audit notes on why this replaces the in-memory, per-process fallback.
+      - 127.0.0.1:6379:6379
+    volumes:
+      - redis:/data
+    command: redis-server --save 60 1
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
