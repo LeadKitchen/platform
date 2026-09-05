@@ -37,6 +37,11 @@ export interface QdrantHit {
   score: number;
 }
 
+export interface QdrantOrgMigrationResult {
+  configured: boolean;
+  migratedPoints: number;
+}
+
 let clientPromise: Promise<QdrantClientType> | undefined;
 let ensureCollectionPromise: Promise<void> | undefined;
 
@@ -113,6 +118,42 @@ export async function upsertChunks(chunks: QdrantChunkInput[]): Promise<void> {
       `Qdrant upsert failed: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
+}
+
+/**
+ * Moves every legacy per-team point to the platform-wide payload namespace.
+ * Unlike interactive retrieval, failures are allowed to propagate so the
+ * post-migration command can be retried instead of silently leaving a partial
+ * external index behind.
+ */
+export async function migrateQdrantChunksToOrg(
+  orgId: string,
+  documentIds: string[],
+): Promise<QdrantOrgMigrationResult> {
+  const instance = await getClient();
+  if (!instance) return { configured: false, migratedPoints: 0 };
+  let migratedPoints = 0;
+  const batchSize = 100;
+  for (let offset = 0; offset < documentIds.length; offset += batchSize) {
+    const batch = documentIds.slice(offset, offset + batchSize);
+    const filter = {
+      must: [{ key: "documentId", match: { any: batch } }],
+      must_not: [{ key: "orgId", match: { value: orgId } }],
+    };
+    const { count } = await instance.count(COLLECTION_NAME, {
+      exact: true,
+      filter,
+    });
+    if (count === 0) continue;
+
+    await instance.setPayload(COLLECTION_NAME, {
+      wait: true,
+      payload: { orgId },
+      filter,
+    });
+    migratedPoints += count;
+  }
+  return { configured: true, migratedPoints };
 }
 
 /**

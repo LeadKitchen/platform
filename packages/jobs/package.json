@@ -17,6 +17,7 @@
     "format": "biome format .",
     "lint": "biome lint .",
     "check": "biome check .",
+    "reindex:global-knowledge": "bun --env-file=../../.env run src/scripts/reindex-global-knowledge.ts",
     "test": "bun test",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },

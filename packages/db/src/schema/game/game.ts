@@ -749,11 +749,11 @@ export type GameKnowledgeAudience = "character" | "judge" | "both";
  * the knowledge base is shared platform-wide instead of split per team. Not
  * a real team — nobody plays under it — just a stable FK target for
  * `GameKnowledgeDocument.orgId`/`GameKnowledgeChunk.orgId` (both `notNull`
- * references to `GameOrganization.id`). The row is upserted lazily on first
- * write (`ensureGlobalKnowledgeOrg` in
- * `packages/api/src/routers/org/knowledge.ts`) rather than via a migration,
- * so it self-heals in any environment. Revisit once knowledge goes back to
- * being per-team.
+ * references to `GameOrganization.id`). Migration 0001 creates this row and
+ * moves existing knowledge to it; `ensureGlobalKnowledgeOrg` in
+ * `packages/api/src/routers/org/knowledge.ts` also upserts it on new writes
+ * so fresh or partially provisioned environments self-heal. Revisit once
+ * knowledge goes back to being per-team.
  */
 export const GLOBAL_KNOWLEDGE_ORG_ID = "global-knowledge-base";
 

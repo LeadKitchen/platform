@@ -57,6 +57,12 @@ export interface GraphTraversalResult {
   visited: string[];
 }
 
+export interface KnowledgeGraphDocumentInput {
+  documentId: string;
+  entities: GraphEntityInput[];
+  relations: GraphRelationInput[];
+}
+
 let driverPromise: Promise<Driver | undefined> | undefined;
 let schemaPromise: Promise<void> | undefined;
 
@@ -162,6 +168,89 @@ export async function upsertEntities(
       );
     }
   }, undefined);
+}
+
+/**
+ * Returns whether per-team graph data still needs the one-time global-org
+ * rebuild. `undefined` means Neo4j is intentionally not configured.
+ * Operational failures propagate so the migration command can be retried.
+ */
+export async function hasLegacyKnowledgeGraph(
+  orgId: string,
+  documentIds: string[],
+): Promise<boolean | undefined> {
+  const driver = await getDriver();
+  if (!driver) return undefined;
+  if (documentIds.length === 0) return false;
+  const session = driver.session();
+  try {
+    const result = await session.run(
+      `MATCH (n:Entity)
+       WHERE n.documentId IN $documentIds
+         AND (n.orgId IS NULL OR n.orgId <> $orgId)
+       RETURN count(n) > 0 AS found`,
+      { documentIds, orgId },
+    );
+    return Boolean(result.records[0]?.get("found"));
+  } finally {
+    await session.close();
+  }
+}
+
+/**
+ * Atomically rebuilds the uploaded-document graph under one organization.
+ * Rebuilding, instead of changing `orgId` in place, safely coalesces entity
+ * ids that were unique only within their former per-team namespaces.
+ */
+export async function replaceKnowledgeGraph(
+  orgId: string,
+  documents: KnowledgeGraphDocumentInput[],
+): Promise<boolean> {
+  const driver = await getDriver();
+  if (!driver) return false;
+  const session = driver.session();
+  try {
+    await ensureSchema(session);
+    await session.executeWrite(async (tx) => {
+      await tx.run(
+        `MATCH (n:Entity)
+         WHERE n.documentId IN $documentIds
+         DETACH DELETE n`,
+        { documentIds: documents.map((document) => document.documentId) },
+      );
+      for (const document of documents) {
+        if (document.entities.length > 0) {
+          await tx.run(
+            `UNWIND $entities AS entity
+             MERGE (n:Entity {orgId: $orgId, id: entity.id})
+             SET n.type = entity.type, n.label = entity.label, n.documentId = $documentId`,
+            {
+              orgId,
+              documentId: document.documentId,
+              entities: document.entities,
+            },
+          );
+        }
+        if (document.relations.length > 0) {
+          await tx.run(
+            `UNWIND $relations AS rel
+             MATCH (a:Entity {orgId: $orgId, id: rel.from})
+             MATCH (b:Entity {orgId: $orgId, id: rel.to})
+             MERGE (a)-[r:RELATES_TO {type: rel.type}]->(b)
+             SET r.label = rel.label, r.documentId = $documentId`,
+            {
+              orgId,
+              documentId: document.documentId,
+              relations: document.relations,
+            },
+          );
+        }
+      }
+    });
+    return true;
+  } finally {
+    await session.close();
+  }
 }
 
 /**
