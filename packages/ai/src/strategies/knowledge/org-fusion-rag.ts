@@ -89,21 +89,30 @@ export const orgFusionRagKnowledge: KnowledgeStrategy = {
     // Pulled once, reused for both the lexical channel (BM25 index) and as
     // the text lookup for vector-channel hits (Qdrant returns ids/scores
     // only — see ../../knowledge/qdrant.ts).
-    const chunkRows = await db
-      .select({ id: GameKnowledgeChunk.id, text: GameKnowledgeChunk.text })
-      .from(GameKnowledgeChunk)
-      .innerJoin(
-        GameKnowledgeDocument,
-        eq(GameKnowledgeDocument.id, GameKnowledgeChunk.documentId),
-      )
-      .where(
-        and(
-          eq(GameKnowledgeDocument.orgId, orgId),
-          inArray(GameKnowledgeChunk.audience, ["character", "both"]),
-          eq(GameKnowledgeDocument.status, "ready"),
-        ),
-      )
-      .limit(MAX_CHUNK_ROWS);
+    let chunkRows: { id: string; text: string }[] = [];
+    try {
+      chunkRows = await db
+        .select({ id: GameKnowledgeChunk.id, text: GameKnowledgeChunk.text })
+        .from(GameKnowledgeChunk)
+        .innerJoin(
+          GameKnowledgeDocument,
+          eq(GameKnowledgeDocument.id, GameKnowledgeChunk.documentId),
+        )
+        .where(
+          and(
+            eq(GameKnowledgeDocument.orgId, orgId),
+            inArray(GameKnowledgeChunk.audience, ["character", "both"]),
+            eq(GameKnowledgeDocument.status, "ready"),
+          ),
+        )
+        .limit(MAX_CHUNK_ROWS);
+    } catch (error) {
+      // Same degrade-gracefully contract as the Qdrant/Neo4j channels: a
+      // Postgres outage costs this channel its recall, not the dialog.
+      console.warn(
+        `org-fusion-rag chunk lookup failed: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
     const chunkById = new Map(chunkRows.map((row) => [row.id, row.text]));
 
     const bm25Docs: KnowledgeDoc[] = chunkRows.map((row) => ({
@@ -147,26 +156,38 @@ export const orgFusionRagKnowledge: KnowledgeStrategy = {
         ? await traverseOrgGraph(orgId, seeds, hops)
         : { facts: [], visited: [] };
 
-    const factRows = await db
-      .select({
-        id: GameKnowledgeFact.id,
-        subject: GameKnowledgeFact.subject,
-        predicate: GameKnowledgeFact.predicate,
-        object: GameKnowledgeFact.object,
-      })
-      .from(GameKnowledgeFact)
-      .innerJoin(
-        GameKnowledgeDocument,
-        eq(GameKnowledgeDocument.id, GameKnowledgeFact.documentId),
-      )
-      .where(
-        and(
-          eq(GameKnowledgeDocument.orgId, orgId),
-          inArray(GameKnowledgeFact.audience, ["character", "both"]),
-          eq(GameKnowledgeDocument.status, "ready"),
-        ),
-      )
-      .limit(MAX_FACT_ROWS);
+    let factRows: {
+      id: string;
+      subject: string;
+      predicate: string;
+      object: string;
+    }[] = [];
+    try {
+      factRows = await db
+        .select({
+          id: GameKnowledgeFact.id,
+          subject: GameKnowledgeFact.subject,
+          predicate: GameKnowledgeFact.predicate,
+          object: GameKnowledgeFact.object,
+        })
+        .from(GameKnowledgeFact)
+        .innerJoin(
+          GameKnowledgeDocument,
+          eq(GameKnowledgeDocument.id, GameKnowledgeFact.documentId),
+        )
+        .where(
+          and(
+            eq(GameKnowledgeDocument.orgId, orgId),
+            inArray(GameKnowledgeFact.audience, ["character", "both"]),
+            eq(GameKnowledgeDocument.status, "ready"),
+          ),
+        )
+        .limit(MAX_FACT_ROWS);
+    } catch (error) {
+      console.warn(
+        `org-fusion-rag fact lookup failed: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
 
     const queryTerms = new Set(tokenize(query));
     const factHits = factRows
