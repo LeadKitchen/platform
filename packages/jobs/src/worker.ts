@@ -9,7 +9,6 @@ import {
   extractGraphTask,
   ingestKnowledgeDocumentTask,
 } from "./trigger/ingest-knowledge-document";
-import { scheduledTask } from "./trigger/scheduled";
 
 /**
  * Long-running worker process — replaces Trigger.dev Cloud's managed
@@ -24,7 +23,6 @@ async function main() {
   const worker = await hatchet.worker("acme-jobs-worker", {
     workflows: [
       helloWorldTask,
-      scheduledTask,
       ingestKnowledgeDocumentTask,
       extractContentTask,
       chunkAndClassifyTask,
