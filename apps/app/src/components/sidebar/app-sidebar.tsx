@@ -366,7 +366,9 @@ export function AppSidebar({
     (section) =>
       (!section.adminOnly || isAdmin) &&
       (!section.facilitatorOnly || isFacilitator) &&
-      (!("adminOrFacilitatorOnly" in section && section.adminOrFacilitatorOnly) ||
+      (!(
+        "adminOrFacilitatorOnly" in section && section.adminOrFacilitatorOnly
+      ) ||
         isAdmin ||
         isFacilitator),
   );
