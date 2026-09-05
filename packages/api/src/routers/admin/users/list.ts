@@ -1,0 +1,82 @@
+import {
+  AppAdmin,
+  and,
+  desc,
+  eq,
+  GameActiveOrganization,
+  GameFacilitator,
+  GameOrganization,
+  GameOrgMember,
+  user,
+} from "@acme/db";
+import { z } from "zod";
+
+import { adminProcedure } from "../../../orpc";
+
+/**
+ * List all registered users with pagination.
+ *
+ * @example client.admin.users.list({ limit: 20, offset: 0 })
+ */
+export const list = adminProcedure
+  .input(
+    z.object({
+      limit: z.number().min(1).max(100).default(20),
+      offset: z.number().min(0).default(0),
+    }),
+  )
+  .handler(async ({ context, input }) => {
+    const bootstrapEmails = new Set(
+      (process.env.ADMIN_EMAILS ?? "")
+        .split(",")
+        .map((email) => email.trim().toLowerCase())
+        .filter(Boolean),
+    );
+    const rows = await context.db
+      .select({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        username: user.username,
+        emailVerified: user.emailVerified,
+        language: user.language,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        adminUserId: AppAdmin.userId,
+        orgId: GameOrgMember.orgId,
+        orgName: GameOrganization.name,
+        facilitatorUserId: GameFacilitator.userId,
+      })
+      .from(user)
+      .leftJoin(AppAdmin, eq(AppAdmin.userId, user.id))
+      .leftJoin(
+        GameActiveOrganization,
+        eq(GameActiveOrganization.userId, user.id),
+      )
+      .leftJoin(
+        GameOrgMember,
+        and(
+          eq(GameOrgMember.userId, user.id),
+          eq(GameOrgMember.orgId, GameActiveOrganization.orgId),
+        ),
+      )
+      .leftJoin(GameOrganization, eq(GameOrganization.id, GameOrgMember.orgId))
+      .leftJoin(
+        GameFacilitator,
+        and(
+          eq(GameFacilitator.userId, user.id),
+          eq(GameFacilitator.orgId, GameOrgMember.orgId),
+        ),
+      )
+      .orderBy(desc(user.createdAt))
+      .limit(input.limit)
+      .offset(input.offset);
+
+    return rows.map(({ adminUserId, facilitatorUserId, ...row }) => ({
+      ...row,
+      isBootstrapAdmin: bootstrapEmails.has(row.email.toLowerCase()),
+      isAdmin:
+        adminUserId !== null || bootstrapEmails.has(row.email.toLowerCase()),
+      isFacilitator: facilitatorUserId !== null,
+    }));
+  });

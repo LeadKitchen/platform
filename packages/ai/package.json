@@ -1,0 +1,41 @@
+{
+  "name": "@acme/ai",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "tsc",
+    "format": "biome format .",
+    "lint": "biome lint .",
+    "check": "biome check .",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "dependencies": {
+    "@acme/config": "workspace:*",
+    "@acme/db": "workspace:*",
+    "@acme/game": "workspace:*",
+    "@ai-sdk/anthropic": "4.0.44",
+    "@ai-sdk/openai": "4.0.50",
+    "@ai-sdk/openai-compatible": "3.0.39",
+    "@lmnr-ai/lmnr": "^0.8.45",
+    "@qdrant/js-client-rest": "1.19.0",
+    "ai": "7.0.83",
+    "neo4j-driver": "6.2.0",
+    "zod": "4.5.4"
+  },
+  "devDependencies": {
+    "@acme/tsconfig": "workspace:*",
+    "@types/bun": "1.4.1",
+    "@types/node": "26.4.1",
+    "typescript": "7.0.2"
+  }
+}

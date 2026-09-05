@@ -1,0 +1,48 @@
+{
+  "name": "@acme/root",
+  "private": true,
+  "engines": {
+    "node": ">=24.11.1 <25",
+    "bun": ">=1.4.1 <2"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "clean": "bun scripts/clean.mjs",
+    "clean:workspaces": "turbo run clean",
+    "auth:generate": "bun --filter @acme/auth generate",
+    "db:push": "turbo -F @acme/db push",
+    "db:generate": "turbo -F @acme/db generate",
+    "db:migrate": "turbo -F @acme/db migrate && bun --filter @acme/jobs reindex:global-knowledge",
+    "db:studio": "turbo -F @acme/db studio",
+    "db:seed": "bun --env-file=.env run scripts/seed-game.ts",
+    "db:seed-demo-users": "bun --env-file=.env run scripts/seed-demo-users.ts",
+    "eval": "turbo -F @acme/eval eval --",
+    "dev": "turbo watch dev -F @acme/app...",
+    "dev:all": "turbo watch dev --continue",
+    "dev:next": "turbo watch dev -F @acme/app...",
+    "format": "biome format . --skip-parse-errors",
+    "format:fix": "biome format --write . --skip-parse-errors",
+    "lint": "biome lint . --skip-parse-errors",
+    "lint:fix": "biome lint --write . --skip-parse-errors",
+    "check": "biome check . --skip-parse-errors",
+    "check:fix": "biome check --write . --skip-parse-errors",
+    "lint:ws": "sherif",
+    "postinstall": "bun lint:ws",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "ui-add": "turbo run ui-add"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.12",
+    "@turbo/gen": "2.10.12",
+    "sherif": "1.13.0",
+    "turbo": "2.10.12",
+    "typescript": "7.0.2"
+  },
+  "packageManager": "bun@1.4.1",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "tooling/*"
+  ]
+}

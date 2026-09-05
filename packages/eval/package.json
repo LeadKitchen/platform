@@ -1,0 +1,42 @@
+{
+  "name": "@acme/eval",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "clean": "git clean -xdf .cache .turbo dist node_modules reports",
+    "dev": "tsc",
+    "eval": "bun --env-file=../../.env run src/cli.ts",
+    "label:export": "bun run export-for-labeling.ts",
+    "label:import": "bun run import-labels.ts",
+    "publish": "bun --env-file=../../.env run publish-report.ts",
+    "format": "biome format .",
+    "lint": "biome lint .",
+    "check": "biome check .",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "optimize": "bun --env-file=../../.env run src/optimize/cli.ts",
+    "report-all": "bun --env-file=../../.env run src/report-all.ts",
+    "scale": "bun --env-file=../../.env run src/scale-cli.ts"
+  },
+  "dependencies": {
+    "@acme/ai": "workspace:*",
+    "@acme/db": "workspace:*",
+    "@acme/game": "workspace:*",
+    "@ax-llm/ax": "24.0.17",
+    "@lmnr-ai/lmnr": "^0.8.45",
+    "zod": "4.5.4"
+  },
+  "devDependencies": {
+    "@acme/tsconfig": "workspace:*",
+    "@types/bun": "1.4.1",
+    "typescript": "7.0.2"
+  }
+}

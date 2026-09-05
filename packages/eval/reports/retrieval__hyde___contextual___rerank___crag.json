@@ -1,0 +1,3775 @@
+{
+  "startedAt": "2026-09-02T07:44:10.635Z",
+  "finishedAt": "2026-09-02T08:24:01.520Z",
+  "providerId": "ai-sdk:openai-compatible",
+  "model": "gpt-5.6-sol",
+  "epochs": 1,
+  "runsPerFixture": 2,
+  "fixtures": 4,
+  "expertLabelledFixtures": 0,
+  "aiAssistedFixtures": 4,
+  "referenceVariantId": "hybrid-rag",
+  "variants": [
+    {
+      "variantId": "hybrid-rag",
+      "items": 8,
+      "scoreMae": 11.75,
+      "scoreStdDev": 0.71,
+      "expectedStyleAccuracy": 1,
+      "actualStyleAccuracy": 0.75,
+      "styleKappa": 0.6,
+      "criteriaF1": 0.768,
+      "personaAdherence": 1,
+      "personaDriftRate": 0,
+      "personaDriftSlope": 0,
+      "silenceAccuracy": 1,
+      "avgLatencyMs": 129621,
+      "totalInputTokens": 67623,
+      "totalOutputTokens": 9510,
+      "totalCostUsd": 0,
+      "avgCostUsd": 0,
+      "modelMix": {
+        "gpt-5.6-sol": 8
+      }
+    },
+    {
+      "variantId": "hyde-rag",
+      "items": 8,
+      "scoreMae": 11.75,
+      "scoreStdDev": 0.35,
+      "expectedStyleAccuracy": 1,
+      "actualStyleAccuracy": 1,
+      "styleKappa": 1,
+      "criteriaF1": 0.768,
+      "personaAdherence": 1,
+      "personaDriftRate": 0,
+      "personaDriftSlope": 0,
+      "silenceAccuracy": 1,
+      "avgLatencyMs": 54022,
+      "totalInputTokens": 78221,
+      "totalOutputTokens": 13611,
+      "totalCostUsd": 0,
+      "avgCostUsd": 0,
+      "modelMix": {
+        "gpt-5.6-sol": 8
+      }
+    },
+    {
+      "variantId": "contextual-rag",
+      "items": 8,
+      "scoreMae": 11.5,
+      "scoreStdDev": 0.71,
+      "expectedStyleAccuracy": 1,
+      "actualStyleAccuracy": 0.75,
+      "styleKappa": 0.6,
+      "criteriaF1": 0.768,
+      "personaAdherence": 1,
+      "personaDriftRate": 0,
+      "personaDriftSlope": 0,
+      "silenceAccuracy": 1,
+      "avgLatencyMs": 146738,
+      "totalInputTokens": 99755,
+      "totalOutputTokens": 15386,
+      "totalCostUsd": 0,
+      "avgCostUsd": 0,
+      "modelMix": {
+        "gpt-5.6-sol": 8
+      }
+    },
+    {
+      "variantId": "rerank-rag",
+      "items": 8,
+      "scoreMae": 11.875,
+      "scoreStdDev": 1.24,
+      "expectedStyleAccuracy": 1,
+      "actualStyleAccuracy": 0.75,
+      "styleKappa": 0.6,
+      "criteriaF1": 0.768,
+      "personaAdherence": 1,
+      "personaDriftRate": 0,
+      "personaDriftSlope": 0,
+      "silenceAccuracy": 1,
+      "avgLatencyMs": 186582,
+      "totalInputTokens": 98116,
+      "totalOutputTokens": 13835,
+      "totalCostUsd": 0,
+      "avgCostUsd": 0,
+      "modelMix": {
+        "gpt-5.6-sol": 8
+      }
+    },
+    {
+      "variantId": "corrective-rag",
+      "items": 8,
+      "scoreMae": 10.875,
+      "scoreStdDev": 1.59,
+      "expectedStyleAccuracy": 1,
+      "actualStyleAccuracy": 0.75,
+      "styleKappa": 0.6,
+      "criteriaF1": 0.777,
+      "personaAdherence": 1,
+      "personaDriftRate": 0,
+      "personaDriftSlope": 0,
+      "silenceAccuracy": 1,
+      "avgLatencyMs": 305680,
+      "totalInputTokens": 82784,
+      "totalOutputTokens": 13233,
+      "totalCostUsd": 0,
+      "avgCostUsd": 0,
+      "modelMix": {
+        "gpt-5.6-sol": 8
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "variantId": "hyde-rag",
+      "metrics": [
+        {
+          "metric": "scoreMae",
+          "label": "MAE к эксперту",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": -0.375,
+          "ciHigh": 0.375,
+          "pValue": 1,
+          "pairs": 4,
+          "significant": false
+        },
+        {
+          "metric": "actualStyleAccuracy",
+          "label": "Точность стиля",
+          "direction": "higher",
+          "delta": 0.25,
+          "ciLow": 0,
+          "ciHigh": 0.75,
+          "pValue": 1,
+          "pairs": 4,
+          "significant": false
+        },
+        {
+          "metric": "criteriaF1",
+          "label": "F1 по критериям",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 4,
+          "significant": false
+        },
+        {
+          "metric": "personaAdherence",
+          "label": "Удержание роли",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 4,
+          "significant": false
+        },
+        {
+          "metric": "personaDriftRate",
+          "label": "Дрейф персоны",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 4,
+          "significant": false
+        },
+        {
+          "metric": "costUsd",
+          "label": "Стоимость диалога",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 4,
+          "significant": false
+        }
+      ]
+    },
+    {
+      "variantId": "contextual-rag",
+      "metrics": [
+        {
+          "metric": "scoreMae",
+          "label": "MAE к эксперту",
+          "direction": "lower",
+          "delta": 0.25,
+          "ciLow": -0.25,
+          "ciHigh": 0.75,
+          "pValue": 0.7519,
+          "pairs": 4,
+          "significant": false
+        },
+        {
+          "metric": "actualStyleAccuracy",
+          "label": "Точность стиля",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 4,
+          "significant": false
+        },
+        {
+          "metric": "criteriaF1",
+          "label": "F1 по критериям",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 4,
+          "significant": false
+        },
+        {
+          "metric": "personaAdherence",
+          "label": "Удержание роли",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 4,
+          "significant": false
+        },
+        {
+          "metric": "personaDriftRate",
+          "label": "Дрейф персоны",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 4,
+          "significant": false
+        },
+        {
+          "metric": "costUsd",
+          "label": "Стоимость диалога",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 4,
+          "significant": false
+        }
+      ]
+    },
+    {
+      "variantId": "rerank-rag",
+      "metrics": [
+        {
+          "metric": "scoreMae",
+          "label": "MAE к эксперту",
+          "direction": "lower",
+          "delta": -0.125,
+          "ciLow": -0.5,
+          "ciHigh": 0.625,
+          "pValue": 1,
+          "pairs": 4,
+          "significant": false
+        },
+        {
+          "metric": "actualStyleAccuracy",
+          "label": "Точность стиля",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 4,
+          "significant": false
+        },
+        {
+          "metric": "criteriaF1",
+          "label": "F1 по критериям",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 4,
+          "significant": false
+        },
+        {
+          "metric": "personaAdherence",
+          "label": "Удержание роли",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 4,
+          "significant": false
+        },
+        {
+          "metric": "personaDriftRate",
+          "label": "Дрейф персоны",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 4,
+          "significant": false
+        },
+        {
+          "metric": "costUsd",
+          "label": "Стоимость диалога",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 4,
+          "significant": false
+        }
+      ]
+    },
+    {
+      "variantId": "corrective-rag",
+      "metrics": [
+        {
+          "metric": "scoreMae",
+          "label": "MAE к эксперту",
+          "direction": "lower",
+          "delta": 0.875,
+          "ciLow": -0.25,
+          "ciHigh": 2.625,
+          "pValue": 0.7526,
+          "pairs": 4,
+          "significant": false
+        },
+        {
+          "metric": "actualStyleAccuracy",
+          "label": "Точность стиля",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 4,
+          "significant": false
+        },
+        {
+          "metric": "criteriaF1",
+          "label": "F1 по критериям",
+          "direction": "higher",
+          "delta": 0.009,
+          "ciLow": 0,
+          "ciHigh": 0.027,
+          "pValue": 1,
+          "pairs": 4,
+          "significant": false
+        },
+        {
+          "metric": "personaAdherence",
+          "label": "Удержание роли",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 4,
+          "significant": false
+        },
+        {
+          "metric": "personaDriftRate",
+          "label": "Дрейф персоны",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 4,
+          "significant": false
+        },
+        {
+          "metric": "costUsd",
+          "label": "Стоимость диалога",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 4,
+          "significant": false
+        }
+      ]
+    }
+  ],
+  "failures": [],
+  "epochSummaries": [
+    {
+      "epoch": 1,
+      "variants": [
+        {
+          "variantId": "hybrid-rag",
+          "items": 8,
+          "scoreMae": 11.75,
+          "scoreStdDev": 0.71,
+          "expectedStyleAccuracy": 1,
+          "actualStyleAccuracy": 0.75,
+          "styleKappa": 0.6,
+          "criteriaF1": 0.768,
+          "personaAdherence": 1,
+          "personaDriftRate": 0,
+          "personaDriftSlope": 0,
+          "silenceAccuracy": 1,
+          "avgLatencyMs": 129621,
+          "totalInputTokens": 67623,
+          "totalOutputTokens": 9510,
+          "totalCostUsd": 0,
+          "avgCostUsd": 0,
+          "modelMix": {
+            "gpt-5.6-sol": 8
+          }
+        },
+        {
+          "variantId": "hyde-rag",
+          "items": 8,
+          "scoreMae": 11.75,
+          "scoreStdDev": 0.35,
+          "expectedStyleAccuracy": 1,
+          "actualStyleAccuracy": 1,
+          "styleKappa": 1,
+          "criteriaF1": 0.768,
+          "personaAdherence": 1,
+          "personaDriftRate": 0,
+          "personaDriftSlope": 0,
+          "silenceAccuracy": 1,
+          "avgLatencyMs": 54022,
+          "totalInputTokens": 78221,
+          "totalOutputTokens": 13611,
+          "totalCostUsd": 0,
+          "avgCostUsd": 0,
+          "modelMix": {
+            "gpt-5.6-sol": 8
+          }
+        },
+        {
+          "variantId": "contextual-rag",
+          "items": 8,
+          "scoreMae": 11.5,
+          "scoreStdDev": 0.71,
+          "expectedStyleAccuracy": 1,
+          "actualStyleAccuracy": 0.75,
+          "styleKappa": 0.6,
+          "criteriaF1": 0.768,
+          "personaAdherence": 1,
+          "personaDriftRate": 0,
+          "personaDriftSlope": 0,
+          "silenceAccuracy": 1,
+          "avgLatencyMs": 146738,
+          "totalInputTokens": 99755,
+          "totalOutputTokens": 15386,
+          "totalCostUsd": 0,
+          "avgCostUsd": 0,
+          "modelMix": {
+            "gpt-5.6-sol": 8
+          }
+        },
+        {
+          "variantId": "rerank-rag",
+          "items": 8,
+          "scoreMae": 11.875,
+          "scoreStdDev": 1.24,
+          "expectedStyleAccuracy": 1,
+          "actualStyleAccuracy": 0.75,
+          "styleKappa": 0.6,
+          "criteriaF1": 0.768,
+          "personaAdherence": 1,
+          "personaDriftRate": 0,
+          "personaDriftSlope": 0,
+          "silenceAccuracy": 1,
+          "avgLatencyMs": 186582,
+          "totalInputTokens": 98116,
+          "totalOutputTokens": 13835,
+          "totalCostUsd": 0,
+          "avgCostUsd": 0,
+          "modelMix": {
+            "gpt-5.6-sol": 8
+          }
+        },
+        {
+          "variantId": "corrective-rag",
+          "items": 8,
+          "scoreMae": 10.875,
+          "scoreStdDev": 1.59,
+          "expectedStyleAccuracy": 1,
+          "actualStyleAccuracy": 0.75,
+          "styleKappa": 0.6,
+          "criteriaF1": 0.777,
+          "personaAdherence": 1,
+          "personaDriftRate": 0,
+          "personaDriftSlope": 0,
+          "silenceAccuracy": 1,
+          "avgLatencyMs": 305680,
+          "totalInputTokens": 82784,
+          "totalOutputTokens": 13233,
+          "totalCostUsd": 0,
+          "avgCostUsd": 0,
+          "modelMix": {
+            "gpt-5.6-sol": 8
+          }
+        }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 94,
+      "expertScore": 88,
+      "absError": 6,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 139270,
+      "inputTokens": 5859,
+      "outputTokens": 880,
+      "costUsd": 0,
+      "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 71907
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 55577
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 4769
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 33,
+      "expertScore": 22,
+      "absError": 11,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.4,
+        "f1": 0.5
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 191720,
+      "inputTokens": 7984,
+      "outputTokens": 1011,
+      "costUsd": 0,
+      "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 73322
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 55404
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 4780
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 4696
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 31,
+      "expertScore": 22,
+      "absError": 9,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.4,
+        "f1": 0.5
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 63394,
+      "inputTokens": 15821,
+      "outputTokens": 1064,
+      "costUsd": 0,
+      "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 6305
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 4314
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 6737
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 32910
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-coaching",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 70,
+      "expertScore": 85,
+      "absError": 15,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 34201,
+      "inputTokens": 7987,
+      "outputTokens": 1450,
+      "costUsd": 0,
+      "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 7648
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 5232
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 8524
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 3673
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-coaching",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 71,
+      "expertScore": 85,
+      "absError": 14,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 67495,
+      "inputTokens": 7728,
+      "outputTokens": 1659,
+      "costUsd": 0,
+      "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 22523
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 23063
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 7966
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 5504
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-delegating",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 27,
+      "expertScore": 10,
+      "absError": 17,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.5,
+        "f1": 0.5714285714285715
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 94157,
+      "inputTokens": 6105,
+      "outputTokens": 1374,
+      "costUsd": 0,
+      "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 5624
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 73455
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 6820
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-delegating",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 27,
+      "expertScore": 10,
+      "absError": 17,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.5,
+        "f1": 0.5714285714285715
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 71675,
+      "inputTokens": 6010,
+      "outputTokens": 1322,
+      "costUsd": 0,
+      "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 4788
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 54866
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 4351
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "hybrid-rag",
+      "epoch": 1,
+      "score": 93,
+      "expertScore": 88,
+      "absError": 5,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 375053,
+      "inputTokens": 10129,
+      "outputTokens": 750,
+      "costUsd": 0,
+      "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 69185
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 294020
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 3651
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 94,
+      "expertScore": 88,
+      "absError": 6,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 28952,
+      "inputTokens": 11662,
+      "outputTokens": 990,
+      "costUsd": 0,
+      "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Повар десертов уровня L4 выполняет заказ «Пироги с яблоком» типа baking, сложность 2/5, в объёме 20 порций. Заказ должен быть готов к 18:00.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 2692
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Повару десертов уровня L4 при стандартном заказе сложности 2/5 предоставляется самостоятельность в выборе рабочего способа выполнения в пределах утверждённой рецептуры и стандартов качества. Отклонения от заказа, рецептуры или сроков подлежат согласованию с руководителем.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 3527
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Повар десертов уровня L4 самостоятельно выполняет стандартные заказы сложности 2/5 в пределах утверждённой технологии. Руководитель не вмешивается в текущую работу и подключается при отклонениях от рецептуры, сроков или требований безопасности.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 3088
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 93,
+      "expertScore": 88,
+      "absError": 5,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 31726,
+      "inputTokens": 11488,
+      "outputTokens": 1407,
+      "costUsd": 0,
+      "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Анна Соколова, повар десертов уровня L4, назначена на приготовление 20 порций яблочных пирогов типа «baking» со сложностью 2/5. Срок готовности заказа — 18:00.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 3380
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Для повара десертов уровня L4 при заказе стандартной сложности 2/5 применяется самостоятельное выполнение по утверждённой технологии. Рабочие решения в пределах рецептуры и производственного задания принимаются без дополнительного согласования; отклонения, влияющие на качество или сроки, подлежат эскалации руководителю.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 3657
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Для повара десертов уровня L4 при выполнении стандартного заказа сложности 2/5 применяется самостоятельная работа по утверждённой технологии без постоянного вмешательства руководителя. Контроль осуществляется по ключевым этапам и готовому результату, а отклонения или затруднения подлежат своевременному вынесению на согласование.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 3366
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 32,
+      "expertScore": 22,
+      "absError": 10,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.4,
+        "f1": 0.5
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 58157,
+      "inputTokens": 9930,
+      "outputTokens": 1976,
+      "costUsd": 0,
+      "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Анна Соколова, повар десертов уровня L4, назначается ответственной за заказ «Пироги с яблоком». Заказ: 20 порций, тип «baking», сложность 2/5, срок готовности — 20:00.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 3105
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Для заказа «Пироги с яблоком» применяется поэтапная организация работы: сначала выполняется заготовка, затем основная часть приготовления, после чего осуществляется подача. Каждый этап выполняется последовательно с контролем готовности перед переходом к следующему.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 4519
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Заказ: пироги с яблоком, 20 порций, тип «baking», сложность 2/5; ответственный сотрудник — Анна Соколова, повар десертов, уровень L4. Перед подачей готовые изделия предъявляются руководителю для проверки.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 4033
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Анна Соколова, повар десертов уровня L4, выполняет заказ на 20 порций яблочных пирогов типа «baking» со сложностью 2/5.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 4279
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-coaching",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 71,
+      "expertScore": 85,
+      "absError": 14,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "coaching",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 56871,
+      "inputTokens": 10058,
+      "outputTokens": 1719,
+      "costUsd": 0,
+      "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Карточка заказа: «Салаты дня», категория cold_starters, 15 порций, срок готовности — 20:00, сложность — 2/5. Профиль сотрудника: Анна Соколова, повар десертов, уровень L4; назначение на задачи кухни осуществляется с учётом специализации и текущей производственной необходимости.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 15029
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Для заказа типа «cold_starters» работа выполняется поэтапно: сначала подготавливаются заготовки, затем собираются основные компоненты, после чего осуществляется подача. Сотрудник уровня L4 выполняет операции в установленной последовательности с контролем готовности каждого этапа.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 3649
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Карточка заказа: «Салаты дня», 15 порций, тип заказа — cold_starters, сложность — 2/5. Исполнитель: Анна Соколова, повар десертов, уровень L4; перед началом работы сотрудник подтверждает понимание блюда, объёма и параметров заказа.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 3411
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Для заказа низкой сложности сотруднику предоставляется самостоятельное выполнение с доступностью руководителя для консультации. Руководитель подтверждает готовность поддержать сотрудника и отмечает принятие задачи.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 3134
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 33,
+      "expertScore": 22,
+      "absError": 11,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.4,
+        "f1": 0.5
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 72004,
+      "inputTokens": 9897,
+      "outputTokens": 1844,
+      "costUsd": 0,
+      "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Анна Соколова — повар десертов уровня L4. Заказ: пироги с яблоком, 20 порций, тип «baking», сложность 2/5, срок готовности — 20:00.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 3365
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Для приготовления заказа этапы выполняются последовательно: заготовка, основная часть приготовления, подача. Переход к следующему этапу осуществляется после завершения и проверки предыдущего.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 5747
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Для заказа «Пироги с яблоком» перед подачей выполняется контроль готового изделия руководителем смены. Повар десертов предъявляет партию на проверку внешнего вида и соответствия заказу.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 6342
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Заказ закреплён за Анной Соколовой, поваром десертов уровня L4: пироги с яблоком, 20 порций, тип «baking», сложность 2/5. Перед началом выполнения сотрудник подтверждает состав и параметры заказа.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 5261
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-coaching",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 71,
+      "expertScore": 85,
+      "absError": 14,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "coaching",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 52693,
+      "inputTokens": 10057,
+      "outputTokens": 1970,
+      "costUsd": 0,
+      "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Заказ «Салаты дня»: 15 порций, категория «cold_starters», сложность 2/5, срок готовности — 20:00. Исполнителем назначена Анна Соколова, повар десертов уровня L4.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 6657
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Для заказа типа «cold_starters» работа выполняется последовательно: сначала подготавливаются ингредиенты и заготовки, затем собирается основная часть блюда, после чего производится порционная подача. Этапы выполняются в установленном порядке с учетом объема заказа — 15 порций и сложности 2/5.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 6129
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Анна Соколова, повар десертов уровня L4, отвечает за выполнение заказа «Салаты дня»: 15 порций, тип cold_starters, сложность 2/5. Перед началом работы сотрудник подтверждает понимание задачи, повторяя наименование, количество порций и ключевые параметры заказа.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 5018
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Для сотрудника уровня L4 при выполнении стандартной задачи сложности 2/5 применяется поддерживающий стиль руководства: подтверждается готовность сотрудника и доступность руководителя для помощи. Инициатива сотрудника отмечается краткой благодарностью.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 3567
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-delegating",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 27,
+      "expertScore": 10,
+      "absError": 17,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.5,
+        "f1": 0.5714285714285715
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 56565,
+      "inputTokens": 7594,
+      "outputTokens": 1940,
+      "costUsd": 0,
+      "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Карточка заказа: «Салаты дня», категория cold_starters, 15 порций, сложность 2/5, срок готовности — 18:00. Исполнитель по поручению: Анна Соколова, повар десертов, уровень L4.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 5055
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Повару десертов уровня L4 предоставляется самостоятельность в выборе способов выполнения стандартной задачи в пределах действующих регламентов. Заказ «Салаты дня», 15 порций, относится к категории cold_starters и имеет низкую сложность 2/5; контроль осуществляется по итоговому соответствию стандартам качества и срокам.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 19862
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Для сотрудника уровня L4 при стандартном заказе низкой сложности применяется делегирующий стиль руководства: сотрудник самостоятельно выбирает способ выполнения в рамках регламента. Контроль осуществляется по готовому результату и соблюдению сроков.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 7338
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-delegating",
+      "variantId": "hyde-rag",
+      "epoch": 1,
+      "score": 27,
+      "expertScore": 10,
+      "absError": 17,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.5,
+        "f1": 0.5714285714285715
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 75209,
+      "inputTokens": 7535,
+      "outputTokens": 1765,
+      "costUsd": 0,
+      "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Карточка заказа: «Салаты дня», 15 порций, категория cold_starters, сложность 2/5, срок готовности — 18:00. Исполнитель — Анна Соколова, повар десертов, уровень L4.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 24609
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Сотруднику уровня L4 предоставляется самостоятельность в выборе способа выполнения стандартной задачи в пределах утверждённых регламентов. При отклонениях от рецептуры, сроков или качества сотрудник фиксирует проблему и передаёт её руководителю.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 8077
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "hypothetical": "Для сотрудника уровня L4 при заказе стандартной сложности применяется самостоятельное выполнение работы по утверждённой технологической карте. Руководитель не вмешивается в процесс без отклонений, контролируя соблюдение стандартов и итоговое качество заказа.",
+          "hydeFailed": false,
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 3618
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 94,
+      "expertScore": 88,
+      "absError": 6,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 249860,
+      "inputTokens": 36262,
+      "outputTokens": 7801,
+      "costUsd": 0,
+      "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": true,
+          "buildModels": [
+            "gpt-5.6-sol"
+          ],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 23482
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 7240
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 8559
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 91,
+      "expertScore": 88,
+      "absError": 3,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 288279,
+      "inputTokens": 11063,
+      "outputTokens": 783,
+      "costUsd": 0,
+      "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 37023
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 32642
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 9252
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 32,
+      "expertScore": 22,
+      "absError": 10,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.4,
+        "f1": 0.5
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 310614,
+      "inputTokens": 7651,
+      "outputTokens": 878,
+      "costUsd": 0,
+      "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 15417
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 28794
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 24648
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 29921
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 32,
+      "expertScore": 22,
+      "absError": 10,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.4,
+        "f1": 0.5
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 66611,
+      "inputTokens": 7553,
+      "outputTokens": 1179,
+      "costUsd": 0,
+      "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 18952
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 7109
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 18138
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 6459
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-delegating",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 28,
+      "expertScore": 10,
+      "absError": 18,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.5,
+        "f1": 0.5714285714285715
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 45585,
+      "inputTokens": 5975,
+      "outputTokens": 1129,
+      "costUsd": 0,
+      "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 15633
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 8911
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 7108
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-coaching",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 71,
+      "expertScore": 85,
+      "absError": 14,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 54730,
+      "inputTokens": 12579,
+      "outputTokens": 1367,
+      "costUsd": 0,
+      "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 12317
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 8685
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 8338
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 4711
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-coaching",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 71,
+      "expertScore": 85,
+      "absError": 14,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 78731,
+      "inputTokens": 7698,
+      "outputTokens": 1170,
+      "costUsd": 0,
+      "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 21978
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 7605
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 28793
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 2326
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-delegating",
+      "variantId": "contextual-rag",
+      "epoch": 1,
+      "score": 27,
+      "expertScore": 10,
+      "absError": 17,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.5,
+        "f1": 0.5714285714285715
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 79491,
+      "inputTokens": 10974,
+      "outputTokens": 1079,
+      "costUsd": 0,
+      "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 13275
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 32086
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "contextEnriched": 50,
+          "coldStart": false,
+          "buildModels": [],
+          "denseFailed": true,
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 6988
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 91,
+      "expertScore": 88,
+      "absError": 3,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 117348,
+      "inputTokens": 10504,
+      "outputTokens": 1116,
+      "costUsd": 0,
+      "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            0,
+            1,
+            5
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 14999
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            0,
+            1,
+            5
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 14756
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            2,
+            1,
+            0
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 36172
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 33,
+      "expertScore": 22,
+      "absError": 11,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.4,
+        "f1": 0.5
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 210911,
+      "inputTokens": 13578,
+      "outputTokens": 2242,
+      "costUsd": 0,
+      "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            0,
+            1,
+            5
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 17564
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 21,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            0,
+            1,
+            3,
+            5
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 10815
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            0,
+            2,
+            1,
+            6
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 6940
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 20,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            0,
+            1,
+            2
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 10479
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 94,
+      "expertScore": 88,
+      "absError": 6,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 213877,
+      "inputTokens": 10385,
+      "outputTokens": 1244,
+      "costUsd": 0,
+      "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            0,
+            1,
+            5
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 21594
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            0,
+            1,
+            5
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 17041
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            2,
+            1,
+            0
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 75764
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 32,
+      "expertScore": 22,
+      "absError": 10,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.4,
+        "f1": 0.5
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 186693,
+      "inputTokens": 13544,
+      "outputTokens": 2009,
+      "costUsd": 0,
+      "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            0,
+            1,
+            5
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 8609
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 21,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            0,
+            1,
+            3,
+            7,
+            5
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 31668
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            2,
+            0,
+            1,
+            6
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 16457
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 20,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            0,
+            1,
+            2
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 17475
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-delegating",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 28,
+      "expertScore": 10,
+      "absError": 18,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.5,
+        "f1": 0.5714285714285715
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 87560,
+      "inputTokens": 10853,
+      "outputTokens": 1640,
+      "costUsd": 0,
+      "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            0,
+            1,
+            5
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 19900
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            0,
+            1,
+            5
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 14163
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            0,
+            1,
+            2
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 6788
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-coaching",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 69,
+      "expertScore": 85,
+      "absError": 16,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 188160,
+      "inputTokens": 14236,
+      "outputTokens": 1918,
+      "costUsd": 0,
+      "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            0,
+            1,
+            5
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 9752
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 21,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            0,
+            1,
+            4,
+            10,
+            5
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 60154
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 20,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            0,
+            1,
+            2
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 55453
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            5,
+            1,
+            0
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 4487
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-coaching",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 71,
+      "expertScore": 85,
+      "absError": 14,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 326715,
+      "inputTokens": 14215,
+      "outputTokens": 1925,
+      "costUsd": 0,
+      "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            0,
+            1,
+            5
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 21026
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 21,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            0,
+            4,
+            1,
+            10,
+            5
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 44385
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 20,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            0,
+            1,
+            2
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 14831
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            1,
+            0,
+            5
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 34023
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-delegating",
+      "variantId": "rerank-rag",
+      "epoch": 1,
+      "score": 27,
+      "expertScore": 10,
+      "absError": 17,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.5,
+        "f1": 0.5714285714285715
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 161392,
+      "inputTokens": 10801,
+      "outputTokens": 1741,
+      "costUsd": 0,
+      "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            0,
+            1,
+            5
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 17167
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            0,
+            1,
+            5
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 11307
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 18,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "candidateK": 18,
+          "reranked": true,
+          "rerankOrder": [
+            1,
+            2,
+            0
+          ],
+          "rerankModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 91539
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "corrective-rag",
+      "epoch": 1,
+      "score": 93,
+      "expertScore": 88,
+      "absError": 5,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 127035,
+      "inputTokens": 8960,
+      "outputTokens": 1324,
+      "costUsd": 0,
+      "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "ambiguous",
+          "cragBestScore": 0.9,
+          "corrected": true,
+          "originalQuery": "Анна, нужно пироги с яблоком, 20 порций к 18:00.",
+          "rewrittenQuery": "срок выполнения заказа пироги с яблоком 20 порций дедлайн 18:00 регламент",
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 7330
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "ambiguous",
+          "cragBestScore": 0.55,
+          "corrected": true,
+          "originalQuery": "На твоё усмотрение, как обычно — доверяю.",
+          "rewrittenQuery": "Регламент делегирования и самостоятельного принятия решений при выпечке яблочных пирогов",
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 5710
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "correct",
+          "cragBestScore": 0.93,
+          "corrected": false,
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 12361
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "corrective-rag",
+      "epoch": 1,
+      "score": 32,
+      "expertScore": 22,
+      "absError": 10,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.4,
+        "f1": 0.5
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 212401,
+      "inputTokens": 11637,
+      "outputTokens": 1523,
+      "costUsd": 0,
+      "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "ambiguous",
+          "cragBestScore": 0.86,
+          "corrected": true,
+          "originalQuery": "Анна, нужно пироги с яблоком, 20 порций к 20:00.",
+          "rewrittenQuery": "регламент выполнения заказа пироги с яблоком 20 порций срок к 20:00",
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 5134
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "ambiguous",
+          "cragBestScore": 0.35,
+          "corrected": true,
+          "originalQuery": "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
+          "rewrittenQuery": "регламент этапов приготовления яблочных пирогов: заготовка, основная часть, подача",
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 5875
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "correct",
+          "cragBestScore": 0.97,
+          "corrected": false,
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 5481
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "correct",
+          "cragBestScore": 0.95,
+          "corrected": false,
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 7269
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "corrective-rag",
+      "epoch": 1,
+      "score": 93,
+      "expertScore": 88,
+      "absError": 5,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 458448,
+      "inputTokens": 8947,
+      "outputTokens": 1423,
+      "costUsd": 0,
+      "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "correct",
+          "cragBestScore": 0.95,
+          "corrected": false,
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 30989
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "correct",
+          "cragBestScore": 0.93,
+          "corrected": false,
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 83903
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "ambiguous",
+          "cragBestScore": 0.68,
+          "corrected": true,
+          "originalQuery": "Не буду вмешиваться, работай как привыкла.",
+          "rewrittenQuery": "регламент вмешательства руководителя и самостоятельной работы сотрудника на задаче выпечки",
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 80105
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "corrective-rag",
+      "epoch": 1,
+      "score": 25,
+      "expertScore": 22,
+      "absError": 3,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 0.4,
+        "f1": 0.5714285714285715
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 457307,
+      "inputTokens": 11690,
+      "outputTokens": 1773,
+      "costUsd": 0,
+      "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "correct",
+          "cragBestScore": 0.95,
+          "corrected": false,
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 4413
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "ambiguous",
+          "cragBestScore": 0.25,
+          "corrected": true,
+          "originalQuery": "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
+          "rewrittenQuery": "регламент этапов приготовления блюда: заготовка, основная часть, подача",
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 13755
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "correct",
+          "cragBestScore": 0.97,
+          "corrected": false,
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 25363
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "correct",
+          "cragBestScore": 0.96,
+          "corrected": false,
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 136497
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-coaching",
+      "variantId": "corrective-rag",
+      "epoch": 1,
+      "score": 71,
+      "expertScore": 85,
+      "absError": 14,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 495387,
+      "inputTokens": 11747,
+      "outputTokens": 2057,
+      "costUsd": 0,
+      "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "ambiguous",
+          "cragBestScore": 0.82,
+          "corrected": true,
+          "originalQuery": "Анна, нужно салаты дня, 15 порций к 20:00.",
+          "rewrittenQuery": "регламент постановки задачи: салаты дня, 15 порций, срок выполнения 20:00",
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 85544
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "ambiguous",
+          "cragBestScore": 0.35,
+          "corrected": true,
+          "originalQuery": "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
+          "rewrittenQuery": "Регламент приготовления салатов: последовательность этапов — заготовка, основная часть, подача",
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 23384
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "correct",
+          "cragBestScore": 0.98,
+          "corrected": false,
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 10912
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "correct",
+          "cragBestScore": 0.93,
+          "corrected": false,
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 8651
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-delegating",
+      "variantId": "corrective-rag",
+      "epoch": 1,
+      "score": 28,
+      "expertScore": 10,
+      "absError": 18,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.5,
+        "f1": 0.5714285714285715
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 201864,
+      "inputTokens": 9108,
+      "outputTokens": 1622,
+      "costUsd": 0,
+      "run": 1,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "correct",
+          "cragBestScore": 0.99,
+          "corrected": false,
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 23251
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "ambiguous",
+          "cragBestScore": 0.55,
+          "corrected": true,
+          "originalQuery": "На твоё усмотрение, как обычно — доверяю.",
+          "rewrittenQuery": "Регламент делегирования задач: трактовка «на твоё усмотрение», самостоятельность и необходимость уточнений при приготовлении салатов",
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 27990
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "correct",
+          "cragBestScore": 0.86,
+          "corrected": false,
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 9381
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-coaching",
+      "variantId": "corrective-rag",
+      "epoch": 1,
+      "score": 70,
+      "expertScore": 85,
+      "absError": 15,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "directive",
+      "labelActualStyle": "coaching",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 343423,
+      "inputTokens": 11713,
+      "outputTokens": 1914,
+      "costUsd": 0,
+      "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "ambiguous",
+          "cragBestScore": 0.8,
+          "corrected": true,
+          "originalQuery": "Анна, нужно салаты дня, 15 порций к 20:00.",
+          "rewrittenQuery": "регламент выполнения задачи салаты дня 15 порций срок подачи к 20:00",
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 47173
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "ambiguous",
+          "cragBestScore": 0.45,
+          "corrected": true,
+          "originalQuery": "Объясню по шагам: сначала заготовка, потом основная часть, потом подача.",
+          "rewrittenQuery": "Регламент последовательности этапов приготовления блюда: заготовка, основная часть, подача",
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 41966
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "correct",
+          "cragBestScore": 0.98,
+          "corrected": false,
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 6485
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "ambiguous",
+          "cragBestScore": 0.35,
+          "corrected": true,
+          "originalQuery": "Ты справишься, я рядом. Спасибо, что взялась.",
+          "rewrittenQuery": "регламент коммуникации руководителя: поддержка сотрудника, благодарность и уверенность",
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 8438
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    },
+    {
+      "fixtureId": "anna-salads-r2-delegating",
+      "variantId": "corrective-rag",
+      "epoch": 1,
+      "score": 27,
+      "expertScore": 10,
+      "absError": 17,
+      "expectedStyle": "coaching",
+      "labelExpectedStyle": "coaching",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 0.5,
+        "f1": 0.5714285714285715
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 149572,
+      "inputTokens": 8982,
+      "outputTokens": 1597,
+      "costUsd": 0,
+      "run": 2,
+      "turnMeta": [
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 16,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "correct",
+          "cragBestScore": 0.96,
+          "corrected": false,
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 13448
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "ambiguous",
+          "cragBestScore": 0.35,
+          "corrected": true,
+          "originalQuery": "На твоё усмотрение, как обычно — доверяю.",
+          "rewrittenQuery": "регламент поручения задачи «на усмотрение» самостоятельность полномочия ответственность сотрудника",
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 42030
+        },
+        {
+          "engagement": "heuristic",
+          "topK": 6,
+          "corpusSize": 50,
+          "lexicalHits": 18,
+          "denseHits": 0,
+          "denseFailed": true,
+          "cragVerdict": "correct",
+          "cragBestScore": 0.88,
+          "corrected": false,
+          "graderModel": "gpt-5.6-sol",
+          "model": "gpt-5.6-sol",
+          "providerLatencyMs": 26671
+        }
+      ],
+      "models": [
+        "gpt-5.6-sol"
+      ]
+    }
+  ],
+  "unpricedModels": [
+    "gpt-5.6-sol"
+  ],
+  "evaluationStrategyMismatch": []
+}

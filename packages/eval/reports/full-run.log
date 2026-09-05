@@ -1,0 +1,936 @@
+Запуск: варианты hyde-rag, contextual-rag, rerank-rag, corrective-rag, self-consistency, debate-judge; провайдер pool (gpt-5.5); сценариев 70; прогонов 1; эпох 1
+  эпоха 1/1 · 1/70 · hyde-rag · anna-apple_pies-r2-delegating  эпоха 1/1 · 2/70 · hyde-rag · anna-apple_pies-r2-directive  эпоха 1/1 · 3/70 · hyde-rag · anna-apple_pies-r2-supporting  эпоха 1/1 · 4/70 · hyde-rag · anna-apple_pies-r3-coaching  эпоха 1/1 · 5/70 · hyde-rag · anna-apple_pies-r3-delegating  эпоха 1/1 · 6/70 · hyde-rag · anna-apple_pies-r3-directive  эпоха 1/1 · 7/70 · hyde-rag · anna-apple_pies-r3-supporting  эпоха 1/1 · 8/70 · hyde-rag · anna-banquet_hot-r2-coaching  эпоха 1/1 · 9/70 · hyde-rag · anna-banquet_hot-r2-delegating  эпоха 1/1 · 10/70 · hyde-rag · anna-banquet_hot-r2-directive  эпоха 1/1 · 11/70 · hyde-rag · anna-banquet_hot-r3-coaching  эпоха 1/1 · 12/70 · hyde-rag · anna-banquet_hot-r3-delegating  эпоха 1/1 · 13/70 · hyde-rag · anna-banquet_hot-r3-directive  эпоха 1/1 · 14/70 · hyde-rag · anna-decorated_cake-r2-coaching  эпоха 1/1 · 15/70 · hyde-rag · anna-decorated_cake-r2-delegating  эпоха 1/1 · 16/70 · hyde-rag · anna-decorated_cake-r2-directive  эпоха 1/1 · 17/70 · hyde-rag · anna-decorated_cake-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-decorated_cake-r3-coaching — СБОЙ  эпоха 1/1 · 18/70 · hyde-rag · anna-decorated_cake-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-decorated_cake-r3-delegating — СБОЙ  эпоха 1/1 · 19/70 · hyde-rag · anna-decorated_cake-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-decorated_cake-r3-directive — СБОЙ  эпоха 1/1 · 20/70 · hyde-rag · anna-prep_veggies-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-prep_veggies-r2-coaching — СБОЙ  эпоха 1/1 · 21/70 · hyde-rag · anna-prep_veggies-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-prep_veggies-r2-delegating — СБОЙ  эпоха 1/1 · 22/70 · hyde-rag · anna-prep_veggies-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-prep_veggies-r2-directive — СБОЙ  эпоха 1/1 · 23/70 · hyde-rag · anna-prep_veggies-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-prep_veggies-r2-supporting — СБОЙ  эпоха 1/1 · 24/70 · hyde-rag · anna-salads-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-salads-r2-coaching — СБОЙ  эпоха 1/1 · 25/70 · hyde-rag · anna-salads-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-salads-r2-delegating — СБОЙ  эпоха 1/1 · 26/70 · hyde-rag · anna-salads-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-salads-r2-directive — СБОЙ  эпоха 1/1 · 27/70 · hyde-rag · anna-salads-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-salads-r2-supporting — СБОЙ  эпоха 1/1 · 28/70 · hyde-rag · anna-salads-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-salads-r3-coaching — СБОЙ  эпоха 1/1 · 29/70 · hyde-rag · anna-salads-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-salads-r3-delegating — СБОЙ  эпоха 1/1 · 30/70 · hyde-rag · anna-salads-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-salads-r3-directive — СБОЙ  эпоха 1/1 · 31/70 · hyde-rag · anna-salads-r3-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-salads-r3-supporting — СБОЙ  эпоха 1/1 · 32/70 · hyde-rag · anna-steak-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-steak-r2-coaching — СБОЙ  эпоха 1/1 · 33/70 · hyde-rag · anna-steak-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-steak-r2-delegating — СБОЙ  эпоха 1/1 · 34/70 · hyde-rag · anna-steak-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-steak-r2-directive — СБОЙ  эпоха 1/1 · 35/70 · hyde-rag · anna-tiramisu-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-tiramisu-r2-delegating — СБОЙ  эпоха 1/1 · 36/70 · hyde-rag · anna-tiramisu-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-tiramisu-r2-directive — СБОЙ  эпоха 1/1 · 37/70 · hyde-rag · anna-tiramisu-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-tiramisu-r2-supporting — СБОЙ  эпоха 1/1 · 38/70 · hyde-rag · anna-tiramisu-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-tiramisu-r3-coaching — СБОЙ  эпоха 1/1 · 39/70 · hyde-rag · anna-tiramisu-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-tiramisu-r3-delegating — СБОЙ  эпоха 1/1 · 40/70 · hyde-rag · anna-tiramisu-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-tiramisu-r3-directive — СБОЙ  эпоха 1/1 · 41/70 · hyde-rag · anna-tiramisu-r3-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · anna-tiramisu-r3-supporting — СБОЙ  эпоха 1/1 · 42/70 · hyde-rag · igor-banquet_hot-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · igor-banquet_hot-r2-coaching — СБОЙ  эпоха 1/1 · 43/70 · hyde-rag · igor-banquet_hot-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · igor-banquet_hot-r2-delegating — СБОЙ  эпоха 1/1 · 44/70 · hyde-rag · igor-banquet_hot-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · igor-banquet_hot-r2-directive — СБОЙ  эпоха 1/1 · 45/70 · hyde-rag · igor-banquet_hot-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · igor-banquet_hot-r2-supporting — СБОЙ  эпоха 1/1 · 46/70 · hyde-rag · igor-new_menu_dish-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · igor-new_menu_dish-r2-coaching — СБОЙ  эпоха 1/1 · 47/70 · hyde-rag · igor-new_menu_dish-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · igor-new_menu_dish-r2-delegating — СБОЙ  эпоха 1/1 · 48/70 · hyde-rag · igor-new_menu_dish-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · igor-new_menu_dish-r2-directive — СБОЙ  эпоха 1/1 · 49/70 · hyde-rag · igor-new_menu_dish-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · igor-new_menu_dish-r2-supporting — СБОЙ  эпоха 1/1 · 50/70 · hyde-rag · igor-new_menu_dish-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · igor-new_menu_dish-r3-coaching — СБОЙ  эпоха 1/1 · 51/70 · hyde-rag · igor-new_menu_dish-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · igor-new_menu_dish-r3-delegating — СБОЙ  эпоха 1/1 · 52/70 · hyde-rag · igor-new_menu_dish-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · igor-new_menu_dish-r3-directive — СБОЙ  эпоха 1/1 · 53/70 · hyde-rag · igor-new_menu_dish-r3-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · igor-new_menu_dish-r3-supporting — СБОЙ  эпоха 1/1 · 54/70 · hyde-rag · igor-steak-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · igor-steak-r2-coaching — СБОЙ  эпоха 1/1 · 55/70 · hyde-rag · igor-steak-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · igor-steak-r2-delegating — СБОЙ  эпоха 1/1 · 56/70 · hyde-rag · igor-steak-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · igor-steak-r2-directive — СБОЙ  эпоха 1/1 · 57/70 · hyde-rag · igor-steak-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · igor-steak-r2-supporting — СБОЙ  эпоха 1/1 · 58/70 · hyde-rag · marina-salads-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · marina-salads-r2-coaching — СБОЙ  эпоха 1/1 · 59/70 · hyde-rag · marina-salads-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · marina-salads-r2-delegating — СБОЙ  эпоха 1/1 · 60/70 · hyde-rag · marina-salads-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · marina-salads-r2-directive — СБОЙ  эпоха 1/1 · 61/70 · hyde-rag · marina-salads-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · marina-salads-r2-supporting — СБОЙ  эпоха 1/1 · 62/70 · hyde-rag · olga-banquet_hot-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · olga-banquet_hot-r2-delegating — СБОЙ  эпоха 1/1 · 63/70 · hyde-rag · olga-banquet_hot-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · olga-banquet_hot-r2-directive — СБОЙ  эпоха 1/1 · 64/70 · hyde-rag · olga-banquet_hot-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · olga-banquet_hot-r2-supporting — СБОЙ  эпоха 1/1 · 65/70 · hyde-rag · olga-salads-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · olga-salads-r2-delegating — СБОЙ  эпоха 1/1 · 66/70 · hyde-rag · olga-salads-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · olga-salads-r2-directive — СБОЙ  эпоха 1/1 · 67/70 · hyde-rag · olga-salads-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · olga-salads-r2-supporting — СБОЙ  эпоха 1/1 · 68/70 · hyde-rag · olga-steak-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · olga-steak-r2-delegating — СБОЙ  эпоха 1/1 · 69/70 · hyde-rag · olga-steak-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · olga-steak-r2-directive — СБОЙ  эпоха 1/1 · 70/70 · hyde-rag · olga-steak-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.hyde за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · hyde-rag · olga-steak-r2-supporting — СБОЙ  эпоха 1/1 · 1/70 · contextual-rag · anna-apple_pies-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.contextual за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-apple_pies-r2-delegating — СБОЙ  эпоха 1/1 · 2/70 · contextual-rag · anna-apple_pies-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-apple_pies-r2-directive — СБОЙ  эпоха 1/1 · 3/70 · contextual-rag · anna-apple_pies-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-apple_pies-r2-supporting — СБОЙ  эпоха 1/1 · 4/70 · contextual-rag · anna-apple_pies-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-apple_pies-r3-coaching — СБОЙ  эпоха 1/1 · 5/70 · contextual-rag · anna-apple_pies-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-apple_pies-r3-delegating — СБОЙ  эпоха 1/1 · 6/70 · contextual-rag · anna-apple_pies-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-apple_pies-r3-directive — СБОЙ  эпоха 1/1 · 7/70 · contextual-rag · anna-apple_pies-r3-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-apple_pies-r3-supporting — СБОЙ  эпоха 1/1 · 8/70 · contextual-rag · anna-banquet_hot-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-banquet_hot-r2-coaching — СБОЙ  эпоха 1/1 · 9/70 · contextual-rag · anna-banquet_hot-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-banquet_hot-r2-delegating — СБОЙ  эпоха 1/1 · 10/70 · contextual-rag · anna-banquet_hot-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-banquet_hot-r2-directive — СБОЙ  эпоха 1/1 · 11/70 · contextual-rag · anna-banquet_hot-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-banquet_hot-r3-coaching — СБОЙ  эпоха 1/1 · 12/70 · contextual-rag · anna-banquet_hot-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-banquet_hot-r3-delegating — СБОЙ  эпоха 1/1 · 13/70 · contextual-rag · anna-banquet_hot-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-banquet_hot-r3-directive — СБОЙ  эпоха 1/1 · 14/70 · contextual-rag · anna-decorated_cake-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-decorated_cake-r2-coaching — СБОЙ  эпоха 1/1 · 15/70 · contextual-rag · anna-decorated_cake-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-decorated_cake-r2-delegating — СБОЙ  эпоха 1/1 · 16/70 · contextual-rag · anna-decorated_cake-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-decorated_cake-r2-directive — СБОЙ  эпоха 1/1 · 17/70 · contextual-rag · anna-decorated_cake-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-decorated_cake-r3-coaching — СБОЙ  эпоха 1/1 · 18/70 · contextual-rag · anna-decorated_cake-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-decorated_cake-r3-delegating — СБОЙ  эпоха 1/1 · 19/70 · contextual-rag · anna-decorated_cake-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-decorated_cake-r3-directive — СБОЙ  эпоха 1/1 · 20/70 · contextual-rag · anna-prep_veggies-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-prep_veggies-r2-coaching — СБОЙ  эпоха 1/1 · 21/70 · contextual-rag · anna-prep_veggies-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-prep_veggies-r2-delegating — СБОЙ  эпоха 1/1 · 22/70 · contextual-rag · anna-prep_veggies-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-prep_veggies-r2-directive — СБОЙ  эпоха 1/1 · 23/70 · contextual-rag · anna-prep_veggies-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-prep_veggies-r2-supporting — СБОЙ  эпоха 1/1 · 24/70 · contextual-rag · anna-salads-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-salads-r2-coaching — СБОЙ  эпоха 1/1 · 25/70 · contextual-rag · anna-salads-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-salads-r2-delegating — СБОЙ  эпоха 1/1 · 26/70 · contextual-rag · anna-salads-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-salads-r2-directive — СБОЙ  эпоха 1/1 · 27/70 · contextual-rag · anna-salads-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-salads-r2-supporting — СБОЙ  эпоха 1/1 · 28/70 · contextual-rag · anna-salads-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-salads-r3-coaching — СБОЙ  эпоха 1/1 · 29/70 · contextual-rag · anna-salads-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-salads-r3-delegating — СБОЙ  эпоха 1/1 · 30/70 · contextual-rag · anna-salads-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-salads-r3-directive — СБОЙ  эпоха 1/1 · 31/70 · contextual-rag · anna-salads-r3-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-salads-r3-supporting — СБОЙ  эпоха 1/1 · 32/70 · contextual-rag · anna-steak-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-steak-r2-coaching — СБОЙ  эпоха 1/1 · 33/70 · contextual-rag · anna-steak-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-steak-r2-delegating — СБОЙ  эпоха 1/1 · 34/70 · contextual-rag · anna-steak-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-steak-r2-directive — СБОЙ  эпоха 1/1 · 35/70 · contextual-rag · anna-tiramisu-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-tiramisu-r2-delegating — СБОЙ  эпоха 1/1 · 36/70 · contextual-rag · anna-tiramisu-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-tiramisu-r2-directive — СБОЙ  эпоха 1/1 · 37/70 · contextual-rag · anna-tiramisu-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-tiramisu-r2-supporting — СБОЙ  эпоха 1/1 · 38/70 · contextual-rag · anna-tiramisu-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-tiramisu-r3-coaching — СБОЙ  эпоха 1/1 · 39/70 · contextual-rag · anna-tiramisu-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-tiramisu-r3-delegating — СБОЙ  эпоха 1/1 · 40/70 · contextual-rag · anna-tiramisu-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-tiramisu-r3-directive — СБОЙ  эпоха 1/1 · 41/70 · contextual-rag · anna-tiramisu-r3-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · anna-tiramisu-r3-supporting — СБОЙ  эпоха 1/1 · 42/70 · contextual-rag · igor-banquet_hot-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · igor-banquet_hot-r2-coaching — СБОЙ  эпоха 1/1 · 43/70 · contextual-rag · igor-banquet_hot-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · igor-banquet_hot-r2-delegating — СБОЙ  эпоха 1/1 · 44/70 · contextual-rag · igor-banquet_hot-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · igor-banquet_hot-r2-directive — СБОЙ  эпоха 1/1 · 45/70 · contextual-rag · igor-banquet_hot-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · igor-banquet_hot-r2-supporting — СБОЙ  эпоха 1/1 · 46/70 · contextual-rag · igor-new_menu_dish-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · igor-new_menu_dish-r2-coaching — СБОЙ  эпоха 1/1 · 47/70 · contextual-rag · igor-new_menu_dish-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · igor-new_menu_dish-r2-delegating — СБОЙ  эпоха 1/1 · 48/70 · contextual-rag · igor-new_menu_dish-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · igor-new_menu_dish-r2-directive — СБОЙ  эпоха 1/1 · 49/70 · contextual-rag · igor-new_menu_dish-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · igor-new_menu_dish-r2-supporting — СБОЙ  эпоха 1/1 · 50/70 · contextual-rag · igor-new_menu_dish-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · igor-new_menu_dish-r3-coaching — СБОЙ  эпоха 1/1 · 51/70 · contextual-rag · igor-new_menu_dish-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · igor-new_menu_dish-r3-delegating — СБОЙ  эпоха 1/1 · 52/70 · contextual-rag · igor-new_menu_dish-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · igor-new_menu_dish-r3-directive — СБОЙ  эпоха 1/1 · 53/70 · contextual-rag · igor-new_menu_dish-r3-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · igor-new_menu_dish-r3-supporting — СБОЙ  эпоха 1/1 · 54/70 · contextual-rag · igor-steak-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · igor-steak-r2-coaching — СБОЙ  эпоха 1/1 · 55/70 · contextual-rag · igor-steak-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · igor-steak-r2-delegating — СБОЙ  эпоха 1/1 · 56/70 · contextual-rag · igor-steak-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · igor-steak-r2-directive — СБОЙ  эпоха 1/1 · 57/70 · contextual-rag · igor-steak-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · igor-steak-r2-supporting — СБОЙ  эпоха 1/1 · 58/70 · contextual-rag · marina-salads-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · marina-salads-r2-coaching — СБОЙ  эпоха 1/1 · 59/70 · contextual-rag · marina-salads-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · marina-salads-r2-delegating — СБОЙ  эпоха 1/1 · 60/70 · contextual-rag · marina-salads-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · marina-salads-r2-directive — СБОЙ  эпоха 1/1 · 61/70 · contextual-rag · marina-salads-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · marina-salads-r2-supporting — СБОЙ  эпоха 1/1 · 62/70 · contextual-rag · olga-banquet_hot-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · olga-banquet_hot-r2-delegating — СБОЙ  эпоха 1/1 · 63/70 · contextual-rag · olga-banquet_hot-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · olga-banquet_hot-r2-directive — СБОЙ  эпоха 1/1 · 64/70 · contextual-rag · olga-banquet_hot-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · olga-banquet_hot-r2-supporting — СБОЙ  эпоха 1/1 · 65/70 · contextual-rag · olga-salads-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · olga-salads-r2-delegating — СБОЙ  эпоха 1/1 · 66/70 · contextual-rag · olga-salads-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · olga-salads-r2-directive — СБОЙ  эпоха 1/1 · 67/70 · contextual-rag · olga-salads-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · olga-salads-r2-supporting — СБОЙ  эпоха 1/1 · 68/70 · contextual-rag · olga-steak-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · olga-steak-r2-delegating — СБОЙ  эпоха 1/1 · 69/70 · contextual-rag · olga-steak-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · olga-steak-r2-directive — СБОЙ  эпоха 1/1 · 70/70 · contextual-rag · olga-steak-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · contextual-rag · olga-steak-r2-supporting — СБОЙ  эпоха 1/1 · 1/70 · rerank-rag · anna-apple_pies-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-apple_pies-r2-delegating — СБОЙ  эпоха 1/1 · 2/70 · rerank-rag · anna-apple_pies-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-apple_pies-r2-directive — СБОЙ  эпоха 1/1 · 3/70 · rerank-rag · anna-apple_pies-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-apple_pies-r2-supporting — СБОЙ  эпоха 1/1 · 4/70 · rerank-rag · anna-apple_pies-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-apple_pies-r3-coaching — СБОЙ  эпоха 1/1 · 5/70 · rerank-rag · anna-apple_pies-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-apple_pies-r3-delegating — СБОЙ  эпоха 1/1 · 6/70 · rerank-rag · anna-apple_pies-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-apple_pies-r3-directive — СБОЙ  эпоха 1/1 · 7/70 · rerank-rag · anna-apple_pies-r3-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-apple_pies-r3-supporting — СБОЙ  эпоха 1/1 · 8/70 · rerank-rag · anna-banquet_hot-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-banquet_hot-r2-coaching — СБОЙ  эпоха 1/1 · 9/70 · rerank-rag · anna-banquet_hot-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-banquet_hot-r2-delegating — СБОЙ  эпоха 1/1 · 10/70 · rerank-rag · anna-banquet_hot-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-banquet_hot-r2-directive — СБОЙ  эпоха 1/1 · 11/70 · rerank-rag · anna-banquet_hot-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-banquet_hot-r3-coaching — СБОЙ  эпоха 1/1 · 12/70 · rerank-rag · anna-banquet_hot-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-banquet_hot-r3-delegating — СБОЙ  эпоха 1/1 · 13/70 · rerank-rag · anna-banquet_hot-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-banquet_hot-r3-directive — СБОЙ  эпоха 1/1 · 14/70 · rerank-rag · anna-decorated_cake-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-decorated_cake-r2-coaching — СБОЙ  эпоха 1/1 · 15/70 · rerank-rag · anna-decorated_cake-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-decorated_cake-r2-delegating — СБОЙ  эпоха 1/1 · 16/70 · rerank-rag · anna-decorated_cake-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-decorated_cake-r2-directive — СБОЙ  эпоха 1/1 · 17/70 · rerank-rag · anna-decorated_cake-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-decorated_cake-r3-coaching — СБОЙ  эпоха 1/1 · 18/70 · rerank-rag · anna-decorated_cake-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-decorated_cake-r3-delegating — СБОЙ  эпоха 1/1 · 19/70 · rerank-rag · anna-decorated_cake-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-decorated_cake-r3-directive — СБОЙ  эпоха 1/1 · 20/70 · rerank-rag · anna-prep_veggies-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-prep_veggies-r2-coaching — СБОЙ  эпоха 1/1 · 21/70 · rerank-rag · anna-prep_veggies-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-prep_veggies-r2-delegating — СБОЙ  эпоха 1/1 · 22/70 · rerank-rag · anna-prep_veggies-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-prep_veggies-r2-directive — СБОЙ  эпоха 1/1 · 23/70 · rerank-rag · anna-prep_veggies-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-prep_veggies-r2-supporting — СБОЙ  эпоха 1/1 · 24/70 · rerank-rag · anna-salads-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-salads-r2-coaching — СБОЙ  эпоха 1/1 · 25/70 · rerank-rag · anna-salads-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-salads-r2-delegating — СБОЙ  эпоха 1/1 · 26/70 · rerank-rag · anna-salads-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-salads-r2-directive — СБОЙ  эпоха 1/1 · 27/70 · rerank-rag · anna-salads-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-salads-r2-supporting — СБОЙ  эпоха 1/1 · 28/70 · rerank-rag · anna-salads-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-salads-r3-coaching — СБОЙ  эпоха 1/1 · 29/70 · rerank-rag · anna-salads-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-salads-r3-delegating — СБОЙ  эпоха 1/1 · 30/70 · rerank-rag · anna-salads-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-salads-r3-directive — СБОЙ  эпоха 1/1 · 31/70 · rerank-rag · anna-salads-r3-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-salads-r3-supporting — СБОЙ  эпоха 1/1 · 32/70 · rerank-rag · anna-steak-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-steak-r2-coaching — СБОЙ  эпоха 1/1 · 33/70 · rerank-rag · anna-steak-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-steak-r2-delegating — СБОЙ  эпоха 1/1 · 34/70 · rerank-rag · anna-steak-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-steak-r2-directive — СБОЙ  эпоха 1/1 · 35/70 · rerank-rag · anna-tiramisu-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-tiramisu-r2-delegating — СБОЙ  эпоха 1/1 · 36/70 · rerank-rag · anna-tiramisu-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-tiramisu-r2-directive — СБОЙ  эпоха 1/1 · 37/70 · rerank-rag · anna-tiramisu-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-tiramisu-r2-supporting — СБОЙ  эпоха 1/1 · 38/70 · rerank-rag · anna-tiramisu-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-tiramisu-r3-coaching — СБОЙ  эпоха 1/1 · 39/70 · rerank-rag · anna-tiramisu-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-tiramisu-r3-delegating — СБОЙ  эпоха 1/1 · 40/70 · rerank-rag · anna-tiramisu-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-tiramisu-r3-directive — СБОЙ  эпоха 1/1 · 41/70 · rerank-rag · anna-tiramisu-r3-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · anna-tiramisu-r3-supporting — СБОЙ  эпоха 1/1 · 42/70 · rerank-rag · igor-banquet_hot-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · igor-banquet_hot-r2-coaching — СБОЙ  эпоха 1/1 · 43/70 · rerank-rag · igor-banquet_hot-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · igor-banquet_hot-r2-delegating — СБОЙ  эпоха 1/1 · 44/70 · rerank-rag · igor-banquet_hot-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · igor-banquet_hot-r2-directive — СБОЙ  эпоха 1/1 · 45/70 · rerank-rag · igor-banquet_hot-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · igor-banquet_hot-r2-supporting — СБОЙ  эпоха 1/1 · 46/70 · rerank-rag · igor-new_menu_dish-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · igor-new_menu_dish-r2-coaching — СБОЙ  эпоха 1/1 · 47/70 · rerank-rag · igor-new_menu_dish-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · igor-new_menu_dish-r2-delegating — СБОЙ  эпоха 1/1 · 48/70 · rerank-rag · igor-new_menu_dish-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · igor-new_menu_dish-r2-directive — СБОЙ  эпоха 1/1 · 49/70 · rerank-rag · igor-new_menu_dish-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · igor-new_menu_dish-r2-supporting — СБОЙ  эпоха 1/1 · 50/70 · rerank-rag · igor-new_menu_dish-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · igor-new_menu_dish-r3-coaching — СБОЙ  эпоха 1/1 · 51/70 · rerank-rag · igor-new_menu_dish-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · igor-new_menu_dish-r3-delegating — СБОЙ  эпоха 1/1 · 52/70 · rerank-rag · igor-new_menu_dish-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · igor-new_menu_dish-r3-directive — СБОЙ  эпоха 1/1 · 53/70 · rerank-rag · igor-new_menu_dish-r3-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · igor-new_menu_dish-r3-supporting — СБОЙ  эпоха 1/1 · 54/70 · rerank-rag · igor-steak-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · igor-steak-r2-coaching — СБОЙ  эпоха 1/1 · 55/70 · rerank-rag · igor-steak-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · igor-steak-r2-delegating — СБОЙ  эпоха 1/1 · 56/70 · rerank-rag · igor-steak-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · igor-steak-r2-directive — СБОЙ  эпоха 1/1 · 57/70 · rerank-rag · igor-steak-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · igor-steak-r2-supporting — СБОЙ  эпоха 1/1 · 58/70 · rerank-rag · marina-salads-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · marina-salads-r2-coaching — СБОЙ  эпоха 1/1 · 59/70 · rerank-rag · marina-salads-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · marina-salads-r2-delegating — СБОЙ  эпоха 1/1 · 60/70 · rerank-rag · marina-salads-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · marina-salads-r2-directive — СБОЙ  эпоха 1/1 · 61/70 · rerank-rag · marina-salads-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · marina-salads-r2-supporting — СБОЙ  эпоха 1/1 · 62/70 · rerank-rag · olga-banquet_hot-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · olga-banquet_hot-r2-delegating — СБОЙ  эпоха 1/1 · 63/70 · rerank-rag · olga-banquet_hot-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · olga-banquet_hot-r2-directive — СБОЙ  эпоха 1/1 · 64/70 · rerank-rag · olga-banquet_hot-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · olga-banquet_hot-r2-supporting — СБОЙ  эпоха 1/1 · 65/70 · rerank-rag · olga-salads-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · olga-salads-r2-delegating — СБОЙ  эпоха 1/1 · 66/70 · rerank-rag · olga-salads-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · olga-salads-r2-directive — СБОЙ  эпоха 1/1 · 67/70 · rerank-rag · olga-salads-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · olga-salads-r2-supporting — СБОЙ  эпоха 1/1 · 68/70 · rerank-rag · olga-steak-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · olga-steak-r2-delegating — СБОЙ  эпоха 1/1 · 69/70 · rerank-rag · olga-steak-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · olga-steak-r2-directive — СБОЙ  эпоха 1/1 · 70/70 · rerank-rag · olga-steak-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.rerank за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · rerank-rag · olga-steak-r2-supporting — СБОЙ  эпоха 1/1 · 1/70 · corrective-rag · anna-apple_pies-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-apple_pies-r2-delegating — СБОЙ  эпоха 1/1 · 2/70 · corrective-rag · anna-apple_pies-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-apple_pies-r2-directive — СБОЙ  эпоха 1/1 · 3/70 · corrective-rag · anna-apple_pies-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-apple_pies-r2-supporting — СБОЙ  эпоха 1/1 · 4/70 · corrective-rag · anna-apple_pies-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-apple_pies-r3-coaching — СБОЙ  эпоха 1/1 · 5/70 · corrective-rag · anna-apple_pies-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-apple_pies-r3-delegating — СБОЙ  эпоха 1/1 · 6/70 · corrective-rag · anna-apple_pies-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-apple_pies-r3-directive — СБОЙ  эпоха 1/1 · 7/70 · corrective-rag · anna-apple_pies-r3-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-apple_pies-r3-supporting — СБОЙ  эпоха 1/1 · 8/70 · corrective-rag · anna-banquet_hot-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-banquet_hot-r2-coaching — СБОЙ  эпоха 1/1 · 9/70 · corrective-rag · anna-banquet_hot-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-banquet_hot-r2-delegating — СБОЙ  эпоха 1/1 · 10/70 · corrective-rag · anna-banquet_hot-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-banquet_hot-r2-directive — СБОЙ  эпоха 1/1 · 11/70 · corrective-rag · anna-banquet_hot-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-banquet_hot-r3-coaching — СБОЙ  эпоха 1/1 · 12/70 · corrective-rag · anna-banquet_hot-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-banquet_hot-r3-delegating — СБОЙ  эпоха 1/1 · 13/70 · corrective-rag · anna-banquet_hot-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-banquet_hot-r3-directive — СБОЙ  эпоха 1/1 · 14/70 · corrective-rag · anna-decorated_cake-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-decorated_cake-r2-coaching — СБОЙ  эпоха 1/1 · 15/70 · corrective-rag · anna-decorated_cake-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-decorated_cake-r2-delegating — СБОЙ  эпоха 1/1 · 16/70 · corrective-rag · anna-decorated_cake-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-decorated_cake-r2-directive — СБОЙ  эпоха 1/1 · 17/70 · corrective-rag · anna-decorated_cake-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-decorated_cake-r3-coaching — СБОЙ  эпоха 1/1 · 18/70 · corrective-rag · anna-decorated_cake-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-decorated_cake-r3-delegating — СБОЙ  эпоха 1/1 · 19/70 · corrective-rag · anna-decorated_cake-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-decorated_cake-r3-directive — СБОЙ  эпоха 1/1 · 20/70 · corrective-rag · anna-prep_veggies-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-prep_veggies-r2-coaching — СБОЙ  эпоха 1/1 · 21/70 · corrective-rag · anna-prep_veggies-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-prep_veggies-r2-delegating — СБОЙ  эпоха 1/1 · 22/70 · corrective-rag · anna-prep_veggies-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-prep_veggies-r2-directive — СБОЙ  эпоха 1/1 · 23/70 · corrective-rag · anna-prep_veggies-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-prep_veggies-r2-supporting — СБОЙ  эпоха 1/1 · 24/70 · corrective-rag · anna-salads-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-salads-r2-coaching — СБОЙ  эпоха 1/1 · 25/70 · corrective-rag · anna-salads-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-salads-r2-delegating — СБОЙ  эпоха 1/1 · 26/70 · corrective-rag · anna-salads-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-salads-r2-directive — СБОЙ  эпоха 1/1 · 27/70 · corrective-rag · anna-salads-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-salads-r2-supporting — СБОЙ  эпоха 1/1 · 28/70 · corrective-rag · anna-salads-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-salads-r3-coaching — СБОЙ  эпоха 1/1 · 29/70 · corrective-rag · anna-salads-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-salads-r3-delegating — СБОЙ  эпоха 1/1 · 30/70 · corrective-rag · anna-salads-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-salads-r3-directive — СБОЙ  эпоха 1/1 · 31/70 · corrective-rag · anna-salads-r3-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-salads-r3-supporting — СБОЙ  эпоха 1/1 · 32/70 · corrective-rag · anna-steak-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-steak-r2-coaching — СБОЙ  эпоха 1/1 · 33/70 · corrective-rag · anna-steak-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-steak-r2-delegating — СБОЙ  эпоха 1/1 · 34/70 · corrective-rag · anna-steak-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-steak-r2-directive — СБОЙ  эпоха 1/1 · 35/70 · corrective-rag · anna-tiramisu-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-tiramisu-r2-delegating — СБОЙ  эпоха 1/1 · 36/70 · corrective-rag · anna-tiramisu-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-tiramisu-r2-directive — СБОЙ  эпоха 1/1 · 37/70 · corrective-rag · anna-tiramisu-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-tiramisu-r2-supporting — СБОЙ  эпоха 1/1 · 38/70 · corrective-rag · anna-tiramisu-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-tiramisu-r3-coaching — СБОЙ  эпоха 1/1 · 39/70 · corrective-rag · anna-tiramisu-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-tiramisu-r3-delegating — СБОЙ  эпоха 1/1 · 40/70 · corrective-rag · anna-tiramisu-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-tiramisu-r3-directive — СБОЙ  эпоха 1/1 · 41/70 · corrective-rag · anna-tiramisu-r3-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · anna-tiramisu-r3-supporting — СБОЙ  эпоха 1/1 · 42/70 · corrective-rag · igor-banquet_hot-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · igor-banquet_hot-r2-coaching — СБОЙ  эпоха 1/1 · 43/70 · corrective-rag · igor-banquet_hot-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · igor-banquet_hot-r2-delegating — СБОЙ  эпоха 1/1 · 44/70 · corrective-rag · igor-banquet_hot-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · igor-banquet_hot-r2-directive — СБОЙ  эпоха 1/1 · 45/70 · corrective-rag · igor-banquet_hot-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · igor-banquet_hot-r2-supporting — СБОЙ  эпоха 1/1 · 46/70 · corrective-rag · igor-new_menu_dish-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · igor-new_menu_dish-r2-coaching — СБОЙ  эпоха 1/1 · 47/70 · corrective-rag · igor-new_menu_dish-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · igor-new_menu_dish-r2-delegating — СБОЙ  эпоха 1/1 · 48/70 · corrective-rag · igor-new_menu_dish-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · igor-new_menu_dish-r2-directive — СБОЙ  эпоха 1/1 · 49/70 · corrective-rag · igor-new_menu_dish-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · igor-new_menu_dish-r2-supporting — СБОЙ  эпоха 1/1 · 50/70 · corrective-rag · igor-new_menu_dish-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · igor-new_menu_dish-r3-coaching — СБОЙ  эпоха 1/1 · 51/70 · corrective-rag · igor-new_menu_dish-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · igor-new_menu_dish-r3-delegating — СБОЙ  эпоха 1/1 · 52/70 · corrective-rag · igor-new_menu_dish-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · igor-new_menu_dish-r3-directive — СБОЙ  эпоха 1/1 · 53/70 · corrective-rag · igor-new_menu_dish-r3-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · igor-new_menu_dish-r3-supporting — СБОЙ  эпоха 1/1 · 54/70 · corrective-rag · igor-steak-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · igor-steak-r2-coaching — СБОЙ  эпоха 1/1 · 55/70 · corrective-rag · igor-steak-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · igor-steak-r2-delegating — СБОЙ  эпоха 1/1 · 56/70 · corrective-rag · igor-steak-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · igor-steak-r2-directive — СБОЙ  эпоха 1/1 · 57/70 · corrective-rag · igor-steak-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · igor-steak-r2-supporting — СБОЙ  эпоха 1/1 · 58/70 · corrective-rag · marina-salads-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · marina-salads-r2-coaching — СБОЙ  эпоха 1/1 · 59/70 · corrective-rag · marina-salads-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · marina-salads-r2-delegating — СБОЙ  эпоха 1/1 · 60/70 · corrective-rag · marina-salads-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · marina-salads-r2-directive — СБОЙ  эпоха 1/1 · 61/70 · corrective-rag · marina-salads-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · marina-salads-r2-supporting — СБОЙ  эпоха 1/1 · 62/70 · corrective-rag · olga-banquet_hot-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · olga-banquet_hot-r2-delegating — СБОЙ  эпоха 1/1 · 63/70 · corrective-rag · olga-banquet_hot-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · olga-banquet_hot-r2-directive — СБОЙ  эпоха 1/1 · 64/70 · corrective-rag · olga-banquet_hot-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · olga-banquet_hot-r2-supporting — СБОЙ  эпоха 1/1 · 65/70 · corrective-rag · olga-salads-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · olga-salads-r2-delegating — СБОЙ  эпоха 1/1 · 66/70 · corrective-rag · olga-salads-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · olga-salads-r2-directive — СБОЙ  эпоха 1/1 · 67/70 · corrective-rag · olga-salads-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · olga-salads-r2-supporting — СБОЙ  эпоха 1/1 · 68/70 · corrective-rag · olga-steak-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · olga-steak-r2-delegating — СБОЙ  эпоха 1/1 · 69/70 · corrective-rag · olga-steak-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · olga-steak-r2-directive — СБОЙ  эпоха 1/1 · 70/70 · corrective-rag · olga-steak-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для knowledge.grade за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · corrective-rag · olga-steak-r2-supporting — СБОЙ  эпоха 1/1 · 1/70 · self-consistency · anna-apple_pies-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-apple_pies-r2-delegating — СБОЙ  эпоха 1/1 · 2/70 · self-consistency · anna-apple_pies-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-apple_pies-r2-directive — СБОЙ  эпоха 1/1 · 3/70 · self-consistency · anna-apple_pies-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-apple_pies-r2-supporting — СБОЙ  эпоха 1/1 · 4/70 · self-consistency · anna-apple_pies-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-apple_pies-r3-coaching — СБОЙ  эпоха 1/1 · 5/70 · self-consistency · anna-apple_pies-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-apple_pies-r3-delegating — СБОЙ  эпоха 1/1 · 6/70 · self-consistency · anna-apple_pies-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-apple_pies-r3-directive — СБОЙ  эпоха 1/1 · 7/70 · self-consistency · anna-apple_pies-r3-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-apple_pies-r3-supporting — СБОЙ  эпоха 1/1 · 8/70 · self-consistency · anna-banquet_hot-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-banquet_hot-r2-coaching — СБОЙ  эпоха 1/1 · 9/70 · self-consistency · anna-banquet_hot-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-banquet_hot-r2-delegating — СБОЙ  эпоха 1/1 · 10/70 · self-consistency · anna-banquet_hot-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-banquet_hot-r2-directive — СБОЙ  эпоха 1/1 · 11/70 · self-consistency · anna-banquet_hot-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-banquet_hot-r3-coaching — СБОЙ  эпоха 1/1 · 12/70 · self-consistency · anna-banquet_hot-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-banquet_hot-r3-delegating — СБОЙ  эпоха 1/1 · 13/70 · self-consistency · anna-banquet_hot-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-banquet_hot-r3-directive — СБОЙ  эпоха 1/1 · 14/70 · self-consistency · anna-decorated_cake-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-decorated_cake-r2-coaching — СБОЙ  эпоха 1/1 · 15/70 · self-consistency · anna-decorated_cake-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-decorated_cake-r2-delegating — СБОЙ  эпоха 1/1 · 16/70 · self-consistency · anna-decorated_cake-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-decorated_cake-r2-directive — СБОЙ  эпоха 1/1 · 17/70 · self-consistency · anna-decorated_cake-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-decorated_cake-r3-coaching — СБОЙ  эпоха 1/1 · 18/70 · self-consistency · anna-decorated_cake-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-decorated_cake-r3-delegating — СБОЙ  эпоха 1/1 · 19/70 · self-consistency · anna-decorated_cake-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-decorated_cake-r3-directive — СБОЙ  эпоха 1/1 · 20/70 · self-consistency · anna-prep_veggies-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-prep_veggies-r2-coaching — СБОЙ  эпоха 1/1 · 21/70 · self-consistency · anna-prep_veggies-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-prep_veggies-r2-delegating — СБОЙ  эпоха 1/1 · 22/70 · self-consistency · anna-prep_veggies-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-prep_veggies-r2-directive — СБОЙ  эпоха 1/1 · 23/70 · self-consistency · anna-prep_veggies-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-prep_veggies-r2-supporting — СБОЙ  эпоха 1/1 · 24/70 · self-consistency · anna-salads-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-salads-r2-coaching — СБОЙ  эпоха 1/1 · 25/70 · self-consistency · anna-salads-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-salads-r2-delegating — СБОЙ  эпоха 1/1 · 26/70 · self-consistency · anna-salads-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-salads-r2-directive — СБОЙ  эпоха 1/1 · 27/70 · self-consistency · anna-salads-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-salads-r2-supporting — СБОЙ  эпоха 1/1 · 28/70 · self-consistency · anna-salads-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-salads-r3-coaching — СБОЙ  эпоха 1/1 · 29/70 · self-consistency · anna-salads-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-salads-r3-delegating — СБОЙ  эпоха 1/1 · 30/70 · self-consistency · anna-salads-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-salads-r3-directive — СБОЙ  эпоха 1/1 · 31/70 · self-consistency · anna-salads-r3-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-salads-r3-supporting — СБОЙ  эпоха 1/1 · 32/70 · self-consistency · anna-steak-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-steak-r2-coaching — СБОЙ  эпоха 1/1 · 33/70 · self-consistency · anna-steak-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-steak-r2-delegating — СБОЙ  эпоха 1/1 · 34/70 · self-consistency · anna-steak-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-steak-r2-directive — СБОЙ  эпоха 1/1 · 35/70 · self-consistency · anna-tiramisu-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-tiramisu-r2-delegating — СБОЙ  эпоха 1/1 · 36/70 · self-consistency · anna-tiramisu-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-tiramisu-r2-directive — СБОЙ  эпоха 1/1 · 37/70 · self-consistency · anna-tiramisu-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-tiramisu-r2-supporting — СБОЙ  эпоха 1/1 · 38/70 · self-consistency · anna-tiramisu-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-tiramisu-r3-coaching — СБОЙ  эпоха 1/1 · 39/70 · self-consistency · anna-tiramisu-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-tiramisu-r3-delegating — СБОЙ  эпоха 1/1 · 40/70 · self-consistency · anna-tiramisu-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-tiramisu-r3-directive — СБОЙ  эпоха 1/1 · 41/70 · self-consistency · anna-tiramisu-r3-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · anna-tiramisu-r3-supporting — СБОЙ  эпоха 1/1 · 42/70 · self-consistency · igor-banquet_hot-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · igor-banquet_hot-r2-coaching — СБОЙ  эпоха 1/1 · 43/70 · self-consistency · igor-banquet_hot-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · igor-banquet_hot-r2-delegating — СБОЙ  эпоха 1/1 · 44/70 · self-consistency · igor-banquet_hot-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · igor-banquet_hot-r2-directive — СБОЙ  эпоха 1/1 · 45/70 · self-consistency · igor-banquet_hot-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · igor-banquet_hot-r2-supporting — СБОЙ  эпоха 1/1 · 46/70 · self-consistency · igor-new_menu_dish-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · igor-new_menu_dish-r2-coaching — СБОЙ  эпоха 1/1 · 47/70 · self-consistency · igor-new_menu_dish-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · igor-new_menu_dish-r2-delegating — СБОЙ  эпоха 1/1 · 48/70 · self-consistency · igor-new_menu_dish-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · igor-new_menu_dish-r2-directive — СБОЙ  эпоха 1/1 · 49/70 · self-consistency · igor-new_menu_dish-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · igor-new_menu_dish-r2-supporting — СБОЙ  эпоха 1/1 · 50/70 · self-consistency · igor-new_menu_dish-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · igor-new_menu_dish-r3-coaching — СБОЙ  эпоха 1/1 · 51/70 · self-consistency · igor-new_menu_dish-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · igor-new_menu_dish-r3-delegating — СБОЙ  эпоха 1/1 · 52/70 · self-consistency · igor-new_menu_dish-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · igor-new_menu_dish-r3-directive — СБОЙ  эпоха 1/1 · 53/70 · self-consistency · igor-new_menu_dish-r3-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · igor-new_menu_dish-r3-supporting — СБОЙ  эпоха 1/1 · 54/70 · self-consistency · igor-steak-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · igor-steak-r2-coaching — СБОЙ  эпоха 1/1 · 55/70 · self-consistency · igor-steak-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · igor-steak-r2-delegating — СБОЙ  эпоха 1/1 · 56/70 · self-consistency · igor-steak-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · igor-steak-r2-directive — СБОЙ  эпоха 1/1 · 57/70 · self-consistency · igor-steak-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · igor-steak-r2-supporting — СБОЙ  эпоха 1/1 · 58/70 · self-consistency · marina-salads-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · marina-salads-r2-coaching — СБОЙ  эпоха 1/1 · 59/70 · self-consistency · marina-salads-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · marina-salads-r2-delegating — СБОЙ  эпоха 1/1 · 60/70 · self-consistency · marina-salads-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · marina-salads-r2-directive — СБОЙ  эпоха 1/1 · 61/70 · self-consistency · marina-salads-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · marina-salads-r2-supporting — СБОЙ  эпоха 1/1 · 62/70 · self-consistency · olga-banquet_hot-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · olga-banquet_hot-r2-delegating — СБОЙ  эпоха 1/1 · 63/70 · self-consistency · olga-banquet_hot-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · olga-banquet_hot-r2-directive — СБОЙ  эпоха 1/1 · 64/70 · self-consistency · olga-banquet_hot-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · olga-banquet_hot-r2-supporting — СБОЙ  эпоха 1/1 · 65/70 · self-consistency · olga-salads-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · olga-salads-r2-delegating — СБОЙ  эпоха 1/1 · 66/70 · self-consistency · olga-salads-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · olga-salads-r2-directive — СБОЙ  эпоха 1/1 · 67/70 · self-consistency · olga-salads-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · olga-salads-r2-supporting — СБОЙ  эпоха 1/1 · 68/70 · self-consistency · olga-steak-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · olga-steak-r2-delegating — СБОЙ  эпоха 1/1 · 69/70 · self-consistency · olga-steak-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · olga-steak-r2-directive — СБОЙ  эпоха 1/1 · 70/70 · self-consistency · olga-steak-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · self-consistency · olga-steak-r2-supporting — СБОЙ  эпоха 1/1 · 1/70 · debate-judge · anna-apple_pies-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-apple_pies-r2-delegating — СБОЙ  эпоха 1/1 · 2/70 · debate-judge · anna-apple_pies-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-apple_pies-r2-directive — СБОЙ  эпоха 1/1 · 3/70 · debate-judge · anna-apple_pies-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-apple_pies-r2-supporting — СБОЙ  эпоха 1/1 · 4/70 · debate-judge · anna-apple_pies-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-apple_pies-r3-coaching — СБОЙ  эпоха 1/1 · 5/70 · debate-judge · anna-apple_pies-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-apple_pies-r3-delegating — СБОЙ  эпоха 1/1 · 6/70 · debate-judge · anna-apple_pies-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-apple_pies-r3-directive — СБОЙ  эпоха 1/1 · 7/70 · debate-judge · anna-apple_pies-r3-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-apple_pies-r3-supporting — СБОЙ  эпоха 1/1 · 8/70 · debate-judge · anna-banquet_hot-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-banquet_hot-r2-coaching — СБОЙ  эпоха 1/1 · 9/70 · debate-judge · anna-banquet_hot-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-banquet_hot-r2-delegating — СБОЙ  эпоха 1/1 · 10/70 · debate-judge · anna-banquet_hot-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-banquet_hot-r2-directive — СБОЙ  эпоха 1/1 · 11/70 · debate-judge · anna-banquet_hot-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-banquet_hot-r3-coaching — СБОЙ  эпоха 1/1 · 12/70 · debate-judge · anna-banquet_hot-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-banquet_hot-r3-delegating — СБОЙ  эпоха 1/1 · 13/70 · debate-judge · anna-banquet_hot-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-banquet_hot-r3-directive — СБОЙ  эпоха 1/1 · 14/70 · debate-judge · anna-decorated_cake-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-decorated_cake-r2-coaching — СБОЙ  эпоха 1/1 · 15/70 · debate-judge · anna-decorated_cake-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-decorated_cake-r2-delegating — СБОЙ  эпоха 1/1 · 16/70 · debate-judge · anna-decorated_cake-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-decorated_cake-r2-directive — СБОЙ  эпоха 1/1 · 17/70 · debate-judge · anna-decorated_cake-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-decorated_cake-r3-coaching — СБОЙ  эпоха 1/1 · 18/70 · debate-judge · anna-decorated_cake-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-decorated_cake-r3-delegating — СБОЙ  эпоха 1/1 · 19/70 · debate-judge · anna-decorated_cake-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-decorated_cake-r3-directive — СБОЙ  эпоха 1/1 · 20/70 · debate-judge · anna-prep_veggies-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-prep_veggies-r2-coaching — СБОЙ  эпоха 1/1 · 21/70 · debate-judge · anna-prep_veggies-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-prep_veggies-r2-delegating — СБОЙ  эпоха 1/1 · 22/70 · debate-judge · anna-prep_veggies-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-prep_veggies-r2-directive — СБОЙ  эпоха 1/1 · 23/70 · debate-judge · anna-prep_veggies-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-prep_veggies-r2-supporting — СБОЙ  эпоха 1/1 · 24/70 · debate-judge · anna-salads-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-salads-r2-coaching — СБОЙ  эпоха 1/1 · 25/70 · debate-judge · anna-salads-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-salads-r2-delegating — СБОЙ  эпоха 1/1 · 26/70 · debate-judge · anna-salads-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-salads-r2-directive — СБОЙ  эпоха 1/1 · 27/70 · debate-judge · anna-salads-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-salads-r2-supporting — СБОЙ  эпоха 1/1 · 28/70 · debate-judge · anna-salads-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-salads-r3-coaching — СБОЙ  эпоха 1/1 · 29/70 · debate-judge · anna-salads-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-salads-r3-delegating — СБОЙ  эпоха 1/1 · 30/70 · debate-judge · anna-salads-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-salads-r3-directive — СБОЙ  эпоха 1/1 · 31/70 · debate-judge · anna-salads-r3-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-salads-r3-supporting — СБОЙ  эпоха 1/1 · 32/70 · debate-judge · anna-steak-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-steak-r2-coaching — СБОЙ  эпоха 1/1 · 33/70 · debate-judge · anna-steak-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-steak-r2-delegating — СБОЙ  эпоха 1/1 · 34/70 · debate-judge · anna-steak-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-steak-r2-directive — СБОЙ  эпоха 1/1 · 35/70 · debate-judge · anna-tiramisu-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-tiramisu-r2-delegating — СБОЙ  эпоха 1/1 · 36/70 · debate-judge · anna-tiramisu-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-tiramisu-r2-directive — СБОЙ  эпоха 1/1 · 37/70 · debate-judge · anna-tiramisu-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-tiramisu-r2-supporting — СБОЙ  эпоха 1/1 · 38/70 · debate-judge · anna-tiramisu-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-tiramisu-r3-coaching — СБОЙ  эпоха 1/1 · 39/70 · debate-judge · anna-tiramisu-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-tiramisu-r3-delegating — СБОЙ  эпоха 1/1 · 40/70 · debate-judge · anna-tiramisu-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-tiramisu-r3-directive — СБОЙ  эпоха 1/1 · 41/70 · debate-judge · anna-tiramisu-r3-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · anna-tiramisu-r3-supporting — СБОЙ  эпоха 1/1 · 42/70 · debate-judge · igor-banquet_hot-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · igor-banquet_hot-r2-coaching — СБОЙ  эпоха 1/1 · 43/70 · debate-judge · igor-banquet_hot-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · igor-banquet_hot-r2-delegating — СБОЙ  эпоха 1/1 · 44/70 · debate-judge · igor-banquet_hot-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · igor-banquet_hot-r2-directive — СБОЙ  эпоха 1/1 · 45/70 · debate-judge · igor-banquet_hot-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · igor-banquet_hot-r2-supporting — СБОЙ  эпоха 1/1 · 46/70 · debate-judge · igor-new_menu_dish-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · igor-new_menu_dish-r2-coaching — СБОЙ  эпоха 1/1 · 47/70 · debate-judge · igor-new_menu_dish-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · igor-new_menu_dish-r2-delegating — СБОЙ  эпоха 1/1 · 48/70 · debate-judge · igor-new_menu_dish-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · igor-new_menu_dish-r2-directive — СБОЙ  эпоха 1/1 · 49/70 · debate-judge · igor-new_menu_dish-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · igor-new_menu_dish-r2-supporting — СБОЙ  эпоха 1/1 · 50/70 · debate-judge · igor-new_menu_dish-r3-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · igor-new_menu_dish-r3-coaching — СБОЙ  эпоха 1/1 · 51/70 · debate-judge · igor-new_menu_dish-r3-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · igor-new_menu_dish-r3-delegating — СБОЙ  эпоха 1/1 · 52/70 · debate-judge · igor-new_menu_dish-r3-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · igor-new_menu_dish-r3-directive — СБОЙ  эпоха 1/1 · 53/70 · debate-judge · igor-new_menu_dish-r3-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · igor-new_menu_dish-r3-supporting — СБОЙ  эпоха 1/1 · 54/70 · debate-judge · igor-steak-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · igor-steak-r2-coaching — СБОЙ  эпоха 1/1 · 55/70 · debate-judge · igor-steak-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · igor-steak-r2-delegating — СБОЙ  эпоха 1/1 · 56/70 · debate-judge · igor-steak-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · igor-steak-r2-directive — СБОЙ  эпоха 1/1 · 57/70 · debate-judge · igor-steak-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · igor-steak-r2-supporting — СБОЙ  эпоха 1/1 · 58/70 · debate-judge · marina-salads-r2-coaching[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · marina-salads-r2-coaching — СБОЙ  эпоха 1/1 · 59/70 · debate-judge · marina-salads-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · marina-salads-r2-delegating — СБОЙ  эпоха 1/1 · 60/70 · debate-judge · marina-salads-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · marina-salads-r2-directive — СБОЙ  эпоха 1/1 · 61/70 · debate-judge · marina-salads-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · marina-salads-r2-supporting — СБОЙ  эпоха 1/1 · 62/70 · debate-judge · olga-banquet_hot-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · olga-banquet_hot-r2-delegating — СБОЙ  эпоха 1/1 · 63/70 · debate-judge · olga-banquet_hot-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · olga-banquet_hot-r2-directive — СБОЙ  эпоха 1/1 · 64/70 · debate-judge · olga-banquet_hot-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · olga-banquet_hot-r2-supporting — СБОЙ  эпоха 1/1 · 65/70 · debate-judge · olga-salads-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · olga-salads-r2-delegating — СБОЙ  эпоха 1/1 · 66/70 · debate-judge · olga-salads-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · olga-salads-r2-directive — СБОЙ  эпоха 1/1 · 67/70 · debate-judge · olga-salads-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · olga-salads-r2-supporting — СБОЙ  эпоха 1/1 · 68/70 · debate-judge · olga-steak-r2-delegating[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · olga-steak-r2-delegating — СБОЙ  эпоха 1/1 · 69/70 · debate-judge · olga-steak-r2-directive[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · olga-steak-r2-directive — СБОЙ  эпоха 1/1 · 70/70 · debate-judge · olga-steak-r2-supporting[пул] openai#1:gpt-5.5 выведен из ротации: gpt-5.5 не вернула валидный объект для persona.reply за 2 попыток:
+  эпоха 1/1 · debate-judge · olga-steak-r2-supporting — СБОЙ
+# Сравнение подходов ИИ-модуля
+
+- Провайдер: `pool` (модель `gpt-5.5`)
+- Сценариев: 70, прогонов на сценарий: 1, эпох: 1
+- Контрольный вариант: `hyde-rag`
+- Запуск: 2026-08-19T13:21:36.436Z → 2026-08-19T13:52:57.113Z
+
+> ⚠️ Экспертными метками подписано 0 из 70 сценариев,
+> остальные 70 — предварительные. Колонка «MAE к эксперту» показывает
+> расхождение с временной калибровкой, а не с методологом: она годится, чтобы
+> ловить регрессии, и не годится как основание внедрять подход.
+
+> ⚠️ Разная стратегия оценки против `hyde-rag`: `self-consistency`, `debate-judge`.
+> Сценарии размечены (близко к) правилами, а эти варианты судит LLM —
+> «F1 критериев» и «точность стиля» для них меряют в основном шум
+> судьи против источника разметки, а не эффект знания/персоны.
+
+> ⚠️ Цена неизвестна для: gpt-5.5.
+> Колонка «$/диалог» показывает 0 для этих моделей — это отсутствующая
+> цена в MODEL_PRICING, а не подтверждённо бесплатный вызов. Добавьте
+> модель в packages/ai/src/provider/pricing.ts, если тариф известен.
+
+> ⛔ Ни одного успешного диалога у: `contextual-rag`, `rerank-rag`, `corrective-rag`, `self-consistency`, `debate-judge`.
+> Эти варианты не сравнивались — по ним нет данных, а не нулевая ошибка.
+> Проверьте раздел «Несостоявшиеся сценарии»: если причина внешняя
+> (лимит провайдера, сеть), прогон надо повторить, а не делать выводы.
+
+## Значимость против контрольного варианта
+
+Парный бутстрап по сценариям, 95% доверительный интервал.
+Положительная Δ — вариант лучше контрольного. Вывод «лучше» только если интервал не пересекает ноль.
+
+### `contextual-rag`
+
+| Метрика | Δ | 95% ДИ | p | Вывод |
+| --- | ---: | :---: | ---: | --- |
+| MAE к эксперту | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| Точность стиля | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| F1 по критериям | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| Удержание роли | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| Дрейф персоны | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| Стоимость диалога | +0.0000 | [0.0000; 0.0000] | 1.000 | нет данных |
+
+### `rerank-rag`
+
+| Метрика | Δ | 95% ДИ | p | Вывод |
+| --- | ---: | :---: | ---: | --- |
+| MAE к эксперту | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| Точность стиля | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| F1 по критериям | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| Удержание роли | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| Дрейф персоны | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| Стоимость диалога | +0.0000 | [0.0000; 0.0000] | 1.000 | нет данных |
+
+### `corrective-rag`
+
+| Метрика | Δ | 95% ДИ | p | Вывод |
+| --- | ---: | :---: | ---: | --- |
+| MAE к эксперту | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| Точность стиля | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| F1 по критериям | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| Удержание роли | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| Дрейф персоны | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| Стоимость диалога | +0.0000 | [0.0000; 0.0000] | 1.000 | нет данных |
+
+### `self-consistency`
+
+| Метрика | Δ | 95% ДИ | p | Вывод |
+| --- | ---: | :---: | ---: | --- |
+| MAE к эксперту | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| Точность стиля | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| F1 по критериям | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| Удержание роли | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| Дрейф персоны | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| Стоимость диалога | +0.0000 | [0.0000; 0.0000] | 1.000 | нет данных |
+
+### `debate-judge`
+
+| Метрика | Δ | 95% ДИ | p | Вывод |
+| --- | ---: | :---: | ---: | --- |
+| MAE к эксперту | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| Точность стиля | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| F1 по критериям | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| Удержание роли | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| Дрейф персоны | +0.00 | [0.00; 0.00] | 1.000 | нет данных |
+| Стоимость диалога | +0.0000 | [0.0000; 0.0000] | 1.000 | нет данных |
+
+**Ни один вариант не показал доказанного улучшения точности оценки против `hyde-rag`.**
+
+## Сырые показатели
+
+| Вариант | MAE | σ внутри сценария | κ по стилю | F1 критериев | Роль | Дрейф | Молчание | Задержка | $/диалог |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `hyde-rag` | 14.6 | 0.0 | 0.83 | 0.89 | 100% | 0% | 100% | 60549 мс | $0.0000 |
+| `contextual-rag` | нет данных | — | — | — | — | — | — | — | — |
+| `rerank-rag` | нет данных | — | — | — | — | — | — | — | — |
+| `corrective-rag` | нет данных | — | — | — | — | — | — | — | — |
+| `self-consistency` | нет данных | — | — | — | — | — | — | — | — |
+| `debate-judge` | нет данных | — | — | — | — | — | — | — | — |
+
+Согласие со стилем эксперта у контрольного варианта: κ = 0.83 (почти полное).
+
+> Прогон один на сценарий, поэтому колонка «σ внутри сценария» пуста.
+> Запустите с `--runs 3`, чтобы отделить реальный эффект от разброса модели.
+
+## Кто обслуживал запросы
+
+| Кандидат | Успешно | Отказы по лимиту | Не осилил схему |
+| --- | ---: | ---: | ---: |
+| `openai#1:gpt-5.5` | 164 | 787 | 1 |
+
+## Худшие расхождения
+
+| Сценарий | Вариант | Авто | Эксперт | Δ | Стиль (авто → метка) |
+| --- | --- | ---: | ---: | ---: | --- |
+| anna-apple_pies-r2-supporting | `hyde-rag` | 78 | 40 | 38 | supporting → supporting |
+| anna-banquet_hot-r3-coaching | `hyde-rag` | 46 | 15 | 31 | directive → coaching |
+| anna-decorated_cake-r2-coaching | `hyde-rag` | 64 | 34 | 30 | coaching → coaching |
+| anna-apple_pies-r3-coaching | `hyde-rag` | 54 | 28 | 26 | directive → coaching |
+| anna-apple_pies-r3-directive | `hyde-rag` | 28 | 5 | 23 | directive → directive |
+| anna-decorated_cake-r2-directive | `hyde-rag` | 73 | 90 | 17 | directive → directive |
+| anna-apple_pies-r2-directive | `hyde-rag` | 32 | 20 | 12 | directive → directive |
+| anna-apple_pies-r3-delegating | `hyde-rag` | 17 | 5 | 12 | delegating → delegating |
+| anna-banquet_hot-r3-delegating | `hyde-rag` | 17 | 5 | 12 | delegating → delegating |
+| anna-decorated_cake-r2-delegating | `hyde-rag` | 16 | 5 | 11 | delegating → delegating |
+
+## Несостоявшиеся сценарии
+
+Эти диалоги не доехали до оценки и исключены из всех метрик выше.
+Если сбоев много и они распределены неравномерно, сравнение вариантов
+смещено: вариант мог «выиграть», уронив именно трудные сценарии.
+
+- `contextual-rag`: 70
+- `rerank-rag`: 70
+- `corrective-rag`: 70
+- `self-consistency`: 70
+- `debate-judge`: 70
+- `hyde-rag`: 54
+
+  - anna-decorated_cake-r3-coaching: Все кандидаты пула отказали для persona.reply:
+  - anna-decorated_cake-r3-delegating: Все кандидаты пула отказали для persona.reply:
+  - anna-decorated_cake-r3-directive: Все кандидаты пула отказали для persona.reply:
+  - anna-prep_veggies-r2-coaching: Все кандидаты пула отказали для persona.reply:
+  - anna-prep_veggies-r2-delegating: Все кандидаты пула отказали для persona.reply:
+
+
+Отчёт записан: reports/full-nyxos-gpt55.md

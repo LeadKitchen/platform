@@ -1,0 +1,89 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@acme/tailwind-config/theme";
+
+@source "../../../../packages/ui/src/**/*.{ts,tsx}";
+
+@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant light (&:where(.light, .light *));
+@custom-variant auto (&:where(.auto, .auto *));
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+  @media (width >= --theme(--breakpoint-sm)) {
+    max-width: none;
+  }
+  @media (width >= 1400px) {
+    max-width: 1400px;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    letter-spacing: var(--tracking-normal);
+  }
+  h1,
+  h2,
+  h3,
+  [data-slot="card-title"] {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+  svg.tabler-icon {
+    stroke-width: 1.7;
+  }
+  ::selection {
+    background: color-mix(in oklab, var(--brand) 24%, transparent);
+  }
+}
+
+@layer utilities {
+  .bg-sunset-soft {
+    background-image: var(--gradient-sunset-soft);
+  }
+
+  @keyframes steam-rise {
+    0% {
+      transform: translateY(0) scaleX(1);
+      opacity: 0;
+    }
+    20% {
+      opacity: 0.6;
+    }
+    100% {
+      transform: translateY(-22px) scaleX(1.2);
+      opacity: 0;
+    }
+  }
+  .animate-steam {
+    animation: steam-rise 2.4s ease-in-out infinite;
+  }
+}
+
+/*
+ * Print-to-PDF for /game/dialog/[dialogId]/report: the sidebar chrome is
+ * shared markup we don't control from that page, so the classic
+ * "hide everything, then reveal one subtree" pattern is the reliable way to
+ * keep it out of the printed output regardless of where it sits in the DOM.
+ */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+  .print-area {
+    position: absolute;
+    inset: 0;
+    padding: 0;
+  }
+  .no-print {
+    display: none !important;
+  }
+}

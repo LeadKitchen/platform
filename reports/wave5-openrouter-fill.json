@@ -1,0 +1,367 @@
+{
+  "startedAt": "2026-08-17T05:25:09.469Z",
+  "finishedAt": "2026-08-17T05:33:35.459Z",
+  "providerId": "pool",
+  "model": "nvidia/nemotron-3-super-120b-a12b:free",
+  "epochs": 1,
+  "runsPerFixture": 1,
+  "fixtures": 6,
+  "expertLabelledFixtures": 0,
+  "referenceVariantId": "llm-first",
+  "variants": [
+    {
+      "variantId": "llm-first",
+      "items": 4,
+      "scoreMae": 16.75,
+      "scoreStdDev": 0,
+      "expectedStyleAccuracy": 1,
+      "actualStyleAccuracy": 0.75,
+      "styleKappa": 0.636,
+      "criteriaF1": 0.867,
+      "personaAdherence": 1,
+      "personaDriftRate": 0,
+      "personaDriftSlope": 0,
+      "silenceAccuracy": 1,
+      "avgLatencyMs": 88440,
+      "totalInputTokens": 29028,
+      "totalOutputTokens": 19513,
+      "totalCostUsd": 0,
+      "avgCostUsd": 0,
+      "modelMix": {
+        "nvidia/nemotron-3-super-120b-a12b:free": 4
+      }
+    },
+    {
+      "variantId": "rag",
+      "items": 0,
+      "scoreMae": 0,
+      "scoreStdDev": 0,
+      "expectedStyleAccuracy": 0,
+      "actualStyleAccuracy": 0,
+      "styleKappa": 0,
+      "criteriaF1": 0,
+      "personaAdherence": 0,
+      "personaDriftRate": 0,
+      "personaDriftSlope": 0,
+      "silenceAccuracy": 0,
+      "avgLatencyMs": 0,
+      "totalInputTokens": 0,
+      "totalOutputTokens": 0,
+      "totalCostUsd": 0,
+      "avgCostUsd": 0,
+      "modelMix": {}
+    }
+  ],
+  "comparisons": [
+    {
+      "variantId": "rag",
+      "metrics": [
+        {
+          "metric": "scoreMae",
+          "label": "MAE к эксперту",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "actualStyleAccuracy",
+          "label": "Точность стиля",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "criteriaF1",
+          "label": "F1 по критериям",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "personaAdherence",
+          "label": "Удержание роли",
+          "direction": "higher",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "personaDriftRate",
+          "label": "Дрейф персоны",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        },
+        {
+          "metric": "costUsd",
+          "label": "Стоимость диалога",
+          "direction": "lower",
+          "delta": 0,
+          "ciLow": 0,
+          "ciHigh": 0,
+          "pValue": 1,
+          "pairs": 0,
+          "significant": false
+        }
+      ]
+    }
+  ],
+  "failures": [
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "llm-first",
+      "message": "Все кандидаты пула отказали для evaluation.criteria:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для evaluation.criteria за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для evaluation.criteria за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "llm-first",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-coaching",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:"
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-directive",
+      "variantId": "rag",
+      "message": "Все кандидаты пула отказали для persona.reply:\nopenrouter#1:nvidia/nemotron-3-super-120b-a12b:free: nvidia/nemotron-3-super-120b-a12b:free не вернула валидный объект для persona.reply за 2 попыток:\nopenrouter#1:nvidia/nemotron-nano-9b-v2:free: nvidia/nemotron-nano-9b-v2:free не вернула валидный объект для persona.reply за 2 попыток:"
+    }
+  ],
+  "epochSummaries": [
+    {
+      "epoch": 1,
+      "variants": [
+        {
+          "variantId": "llm-first",
+          "items": 4,
+          "scoreMae": 16.75,
+          "scoreStdDev": 0,
+          "expectedStyleAccuracy": 1,
+          "actualStyleAccuracy": 0.75,
+          "styleKappa": 0.636,
+          "criteriaF1": 0.867,
+          "personaAdherence": 1,
+          "personaDriftRate": 0,
+          "personaDriftSlope": 0,
+          "silenceAccuracy": 1,
+          "avgLatencyMs": 88440,
+          "totalInputTokens": 29028,
+          "totalOutputTokens": 19513,
+          "totalCostUsd": 0,
+          "avgCostUsd": 0,
+          "modelMix": {
+            "nvidia/nemotron-3-super-120b-a12b:free": 4
+          }
+        },
+        {
+          "variantId": "rag",
+          "items": 0,
+          "scoreMae": 0,
+          "scoreStdDev": 0,
+          "expectedStyleAccuracy": 0,
+          "actualStyleAccuracy": 0,
+          "styleKappa": 0,
+          "criteriaF1": 0,
+          "personaAdherence": 0,
+          "personaDriftRate": 0,
+          "personaDriftSlope": 0,
+          "silenceAccuracy": 0,
+          "avgLatencyMs": 0,
+          "totalInputTokens": 0,
+          "totalOutputTokens": 0,
+          "totalCostUsd": 0,
+          "avgCostUsd": 0,
+          "modelMix": {}
+        }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "fixtureId": "anna-apple_pies-r2-delegating",
+      "variantId": "llm-first",
+      "epoch": 1,
+      "score": 92,
+      "expertScore": 90,
+      "absError": 2,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "delegating",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 3,
+      "latencyMs": 74313,
+      "inputTokens": 5680,
+      "outputTokens": 2941,
+      "costUsd": 0,
+      "run": 1,
+      "models": ["nvidia/nemotron-3-super-120b-a12b:free"]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-directive",
+      "variantId": "llm-first",
+      "epoch": 1,
+      "score": 59,
+      "expertScore": 20,
+      "absError": 39,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "directive",
+      "labelActualStyle": "directive",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.5,
+        "recall": 1,
+        "f1": 0.6666666666666666
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 68097,
+      "inputTokens": 7093,
+      "outputTokens": 4587,
+      "costUsd": 0,
+      "run": 1,
+      "models": ["nvidia/nemotron-3-super-120b-a12b:free"]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r2-supporting",
+      "variantId": "llm-first",
+      "epoch": 1,
+      "score": 59,
+      "expertScore": 40,
+      "absError": 19,
+      "expectedStyle": "delegating",
+      "labelExpectedStyle": "delegating",
+      "actualStyle": "supporting",
+      "labelActualStyle": "supporting",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": true,
+      "criteria": {
+        "precision": 0.6666666666666666,
+        "recall": 1,
+        "f1": 0.8
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 113562,
+      "inputTokens": 7319,
+      "outputTokens": 4999,
+      "costUsd": 0,
+      "run": 1,
+      "models": ["nvidia/nemotron-3-super-120b-a12b:free"]
+    },
+    {
+      "fixtureId": "anna-apple_pies-r3-delegating",
+      "variantId": "llm-first",
+      "epoch": 1,
+      "score": 12,
+      "expertScore": 5,
+      "absError": 7,
+      "expectedStyle": "supporting",
+      "labelExpectedStyle": "supporting",
+      "actualStyle": "directive",
+      "labelActualStyle": "delegating",
+      "expectedStyleCorrect": true,
+      "actualStyleCorrect": false,
+      "criteria": {
+        "precision": 1,
+        "recall": 1,
+        "f1": 1
+      },
+      "personaViolations": [],
+      "personaDrift": {
+        "rate": 0,
+        "slope": 0
+      },
+      "silenceRespected": true,
+      "employeeReplies": 4,
+      "latencyMs": 97788,
+      "inputTokens": 8936,
+      "outputTokens": 6986,
+      "costUsd": 0,
+      "run": 1,
+      "models": ["nvidia/nemotron-3-super-120b-a12b:free"]
+    }
+  ],
+  "poolStats": {
+    "servedBy": {
+      "openrouter#1:nvidia/nemotron-3-super-120b-a12b:free": 40,
+      "openrouter#1:nvidia/nemotron-nano-9b-v2:free": 1
+    },
+    "availabilityFailures": {
+      "openrouter#1:nvidia/nemotron-3-super-120b-a12b:free": 7,
+      "openrouter#1:nvidia/nemotron-nano-9b-v2:free": 7
+    },
+    "capabilityFailures": {
+      "openrouter#1:nvidia/nemotron-3-super-120b-a12b:free": 2,
+      "openrouter#1:nvidia/nemotron-nano-9b-v2:free": 1
+    },
+    "coolingDown": {
+      "openrouter#1:nvidia/nemotron-3-super-120b-a12b:free": 1786945115457,
+      "openrouter#1:nvidia/nemotron-nano-9b-v2:free": 1786945115457
+    }
+  }
+}

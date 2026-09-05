@@ -1,0 +1,13 @@
+gpt-5.4-mini -> EXCEPTION: The request was canceled due to the configured HttpClient.Timeout of 30 seconds elapsing.
+gpt-5.5 -> OK: привет
+gpt-5.6-luna -> OK: Привет
+gpt-5.6-sol -> OK: привет
+gpt-5.6-terra -> OK: Привет
+deepseek-v4-pro -> HTTP 403: Access to model deepseek-v4-pro is disabled. Enable automatic conversion in Routing or switch your balance type. (request id: 202608181501024584918268268d9d6EUT706l5)
+deepseek-v4-flash -> EXCEPTION: The request was canceled due to the configured HttpClient.Timeout of 30 seconds elapsing.
+gemini-3.1-pro-preview -> HTTP 403: Access to model gemini-3.1-pro-preview is disabled. Enable automatic conversion in Routing or switch your balance type. (request id: 202608181501328991471588268d9d62guhleA1)
+gemini-3.5-flash -> HTTP 403: Access to model gemini-3.5-flash is disabled. Enable automatic conversion in Routing or switch your balance type. (request id: 202608181501333848695448268d9d6PQ7WCgRE)
+gemini-3.6-flash -> HTTP 403: Access to model gemini-3.6-flash is disabled. Enable automatic conversion in Routing or switch your balance type. (request id: 202608181501337770578578268d9d6GEdMmQd7)
+grok-4.5 -> EXCEPTION: The request was canceled due to the configured HttpClient.Timeout of 30 seconds elapsing.
+grok-4.6 -> HTTP 403: Access to model grok-4.6 is disabled. Enable automatic conversion in Routing or switch your balance type. (request id: 202608181502041589654098268d9d64SZHs6rm)
+kimi-k3 -> HTTP 403: Access to model kimi-k3 is disabled. Enable automatic conversion in Routing or switch your balance type. (request id: 202608181502045461554878268d9d6fWE0kWFQ)

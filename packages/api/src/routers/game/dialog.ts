@@ -1,0 +1,956 @@
+import {
+  and,
+  asc,
+  desc,
+  eq,
+  GameCoachingPathAssignment,
+  GameDialog,
+  GameEvaluation,
+  GameEvent,
+  GameOrder,
+  GameProductEvent,
+  GameSession,
+} from "@acme/db";
+import { detectCriteria, detectToxicity, resolveExpectation } from "@acme/game";
+import { Laminar, observe } from "@lmnr-ai/lmnr";
+import { ORPCError } from "@orpc/server";
+import { z } from "zod";
+import {
+  requireOwnedDialog,
+  requireOwnedOrder,
+  requireOwnedSession,
+} from "../../game/access";
+import { advanceCoachingPath } from "../../game/coaching-paths";
+import {
+  appendEvent,
+  countActiveOrders,
+  loadDialog,
+  loadEngine,
+  markDialogFinished,
+  requireOpenDialog,
+  saveEvaluation,
+  saveSkillPolicy,
+} from "../../game/service";
+import { adminProcedure, protectedProcedure, resolveIsAdmin } from "../../orpc";
+
+interface PersonaPrompt {
+  system: string;
+  messages: { role: "user" | "assistant"; content: string }[];
+}
+
+function extractPersonaPrompt(
+  payload: Record<string, unknown>,
+): PersonaPrompt | null {
+  const telemetry = payload.telemetry as
+    | { model?: string; meta?: Record<string, unknown> }
+    | undefined;
+  const prompt = telemetry?.meta?.prompt as PersonaPrompt | undefined;
+  if (!prompt || typeof prompt.system !== "string") return null;
+  return prompt;
+}
+
+/**
+ * Single-consumer async channel: `push`ed values are buffered until an
+ * iterator is ready for them.
+ *
+ * `sayStream` needs this because the LLM call must run inside `observe`'s
+ * traced callback (a plain async function — tracing context only propagates
+ * correctly through that, not through an async generator's later `.next()`
+ * calls) while the *procedure* handler that yields chunks to the client is
+ * itself the outer generator. The channel is what lets the traced callback
+ * push chunks out to the generator as they arrive instead of buffering the
+ * whole reply before yielding anything.
+ */
+function createChunkChannel<T>(): {
+  push: (value: T) => void;
+  close: () => void;
+  [Symbol.asyncIterator]: () => AsyncGenerator<T>;
+} {
+  const queue: T[] = [];
+  let done = false;
+  let wake: (() => void) | undefined;
+
+  function push(value: T) {
+    queue.push(value);
+    wake?.();
+  }
+  function close() {
+    done = true;
+    wake?.();
+  }
+  async function* iterate(): AsyncGenerator<T> {
+    while (true) {
+      if (queue.length > 0) {
+        yield queue.shift() as T;
+        continue;
+      }
+      if (done) return;
+      await new Promise<void>((resolve) => {
+        wake = resolve;
+      });
+      wake = undefined;
+    }
+  }
+  return { push, close, [Symbol.asyncIterator]: iterate };
+}
+
+function fallbackEmployeeReply(loaded: Awaited<ReturnType<typeof loadDialog>>) {
+  const employee = loaded.context.employee;
+  const task = loaded.context.task;
+  const load = loaded.context.shift.load;
+  const lastManagerTurn = loaded.context.turns
+    .filter((turn) => turn.role === "manager")
+    .at(-1)?.text;
+
+  if (load === "overload" || loaded.context.shift.soloOnShift) {
+    return `Понял задачу по заказу «${task.title}». Сейчас я один и нагрузка высокая — помогите расставить приоритеты и зафиксировать контрольную точку, чтобы я ничего не упустил.`;
+  }
+
+  if (lastManagerTurn) {
+    return `Понял. По задаче «${task.title}» начну работу и сверюсь с вами в обозначенной контрольной точке. Если увижу риск по сроку, сразу сообщу.`;
+  }
+
+  return `${employee.name}: понял задачу по заказу «${task.title}». Уточните срок и ожидаемый результат, пожалуйста.`;
+}
+
+/**
+ * Open a dialog with the employee an order was assigned to.
+ *
+ * The kitchen state is snapshotted here: queue length and whether the cook is
+ * alone on shift. That is what makes round 3 behave differently from round 2
+ * for the very same task.
+ *
+ * @example client.game.dialog.start({ orderId })
+ */
+export const start = protectedProcedure
+  .input(z.object({ orderId: z.uuid() }))
+  .handler(async ({ context, input }) => {
+    const row = await requireOwnedOrder(
+      context.db,
+      input.orderId,
+      context.session.user.id,
+    );
+    const [existing] = await context.db
+      .select()
+      .from(GameDialog)
+      .where(eq(GameDialog.orderId, row.order.id))
+      .orderBy(desc(GameDialog.startedAt))
+      .limit(1);
+    if (existing) return existing;
+
+    const engine = await loadEngine(context.db);
+    const variantId = row.session.variantId ?? engine.defaultVariantId;
+    const round = row.session.round === 3 ? 3 : 2;
+
+    const activeOrders = await countActiveOrders(
+      context.db,
+      row.session.id,
+      row.order.employeeId,
+    );
+
+    const dialog = await context.db.transaction(async (tx) => {
+      const [created] = await tx
+        .insert(GameDialog)
+        .values({
+          sessionId: row.session.id,
+          orderId: row.order.id,
+          employeeId: row.order.employeeId,
+          taskId: row.order.taskId,
+          round,
+          variantId,
+          activeOrders: Math.max(1, activeOrders),
+          soloOnShift: round === 3,
+        })
+        .returning();
+      if (!created) return undefined;
+      await tx
+        .update(GameOrder)
+        .set({ status: "in_progress" })
+        .where(eq(GameOrder.id, row.order.id));
+      await tx.insert(GameProductEvent).values({
+        userId: context.session.user.id,
+        sessionId: row.session.id,
+        dialogId: created.id,
+        name: "dialog_started",
+        properties: {
+          taskId: row.order.taskId,
+          employeeId: row.order.employeeId,
+        },
+      });
+      return created;
+    });
+
+    if (!dialog) {
+      throw new ORPCError("INTERNAL_SERVER_ERROR", {
+        message: "Не удалось создать диалог",
+      });
+    }
+
+    return dialog;
+  });
+
+/**
+ * Send the manager's utterance (already transcribed by the platform's STT) and
+ * get the character's answer.
+ *
+ * Speech recognition deliberately stays on the platform side: this module
+ * works with text, which is what makes it cheap to scale and easy to test.
+ *
+ * @example client.game.dialog.say({ dialogId, text: "Анна, нужен торт к 19:00" })
+ */
+export const say = protectedProcedure
+  .input(
+    z.object({
+      dialogId: z.uuid(),
+      text: z.string().min(1).max(2000),
+    }),
+  )
+  .handler(async ({ context, input, signal }) => {
+    await requireOwnedDialog(
+      context.db,
+      input.dialogId,
+      context.session.user.id,
+    );
+    const loaded = await requireOpenDialog(context.db, input.dialogId);
+    const engine = await loadEngine(context.db);
+    const pipeline = engine.pipeline(loaded.record.variantId);
+
+    // Записываем реплику руководителя ДО обращения к модели: если модель
+    // упадёт (сеть, 5xx, refusal), реплика всё равно останется в логе диалога,
+    // а не потеряется вместе с ошибкой.
+    const managerToxic = detectToxicity(input.text);
+    await appendEvent(context.db, input.dialogId, "manager_utterance", {
+      text: input.text,
+      toxic: managerToxic,
+    });
+
+    let turn: Awaited<ReturnType<typeof pipeline.respond>>;
+    try {
+      turn = await observe(
+        {
+          name: "game.dialog.say",
+          userId: context.session.user.id,
+          sessionId: input.dialogId,
+          metadata: { variantId: loaded.record.variantId },
+        },
+        async () => {
+          Laminar.setTraceUserId(context.session.user.id);
+          Laminar.setTraceSessionId(input.dialogId);
+          return pipeline.respond({
+            dialog: loaded.context,
+            utterance: input.text,
+            signal,
+          });
+        },
+      );
+    } catch (cause) {
+      if (signal?.aborted) {
+        await appendEvent(context.db, input.dialogId, "error", {
+          stage: "persona",
+          message: "Ответ остановлен игроком",
+          recovered: false,
+          aborted: true,
+        });
+        throw cause;
+      }
+      const fallbackReply = fallbackEmployeeReply(loaded);
+      await appendEvent(context.db, input.dialogId, "error", {
+        stage: "persona",
+        message: cause instanceof Error ? cause.message : String(cause),
+        recovered: true,
+      });
+      await appendEvent(context.db, input.dialogId, "employee_reply", {
+        text: fallbackReply,
+        understood: loaded.context.task.title,
+        readiness: "unsure",
+        requests: ["Уточнить срок и контрольную точку"],
+        confirmsCheckpoints: false,
+        fallback: true,
+      });
+
+      await context.db
+        .update(GameDialog)
+        .set({ engaged: true })
+        .where(eq(GameDialog.id, input.dialogId));
+
+      return {
+        silent: false,
+        reply: fallbackReply,
+        understood: loaded.context.task.title,
+        readiness: "unsure" as const,
+        requests: ["Уточнить срок и контрольную точку"],
+        confirmsCheckpoints: false,
+        engaged: true,
+        emotion: loaded.context.emotion,
+        managerToxic,
+        degraded: true,
+      };
+    }
+
+    let replyEvent: { id: string } | undefined;
+    if (turn.reply.silent) {
+      await appendEvent(context.db, input.dialogId, "employee_silent", {
+        reason: "не включён в диалог",
+      });
+    } else {
+      replyEvent = await appendEvent(
+        context.db,
+        input.dialogId,
+        "employee_reply",
+        {
+          text: turn.reply.reply,
+          understood: turn.reply.understood,
+          readiness: turn.reply.readiness,
+          requests: turn.reply.requests,
+          confirmsCheckpoints: turn.reply.confirmsCheckpoints,
+          telemetry: turn.telemetry,
+        },
+      );
+    }
+
+    await context.db
+      .update(GameDialog)
+      .set({ engaged: turn.dialog.engaged, emotion: turn.dialog.emotion })
+      .where(eq(GameDialog.id, input.dialogId));
+
+    return {
+      silent: turn.reply.silent,
+      reply: turn.reply.reply,
+      understood: turn.reply.understood,
+      readiness: turn.reply.readiness,
+      requests: turn.reply.requests,
+      confirmsCheckpoints: turn.reply.confirmsCheckpoints,
+      engaged: turn.dialog.engaged,
+      emotion: turn.dialog.emotion,
+      managerToxic: turn.managerToxic,
+      // Lets an admin/QA caller fetch the exact prompt behind this reply
+      // via `promptDebug` — the id alone reveals nothing on its own.
+      promptEventId: replyEvent?.id,
+    };
+  });
+
+/**
+ * Same call as `say`, but the character's reply streams in as the model
+ * produces it instead of arriving as one JSON payload — for a live chat
+ * surface that wants to show a "typing" reply rather than a blank wait.
+ *
+ * Yields `{ type: "chunk", reply }` events with the reply so far, then
+ * exactly one `{ type: "done", ... }` event carrying the same fields `say`
+ * returns. Every side effect (event log, dialog state, the fallback reply on
+ * a model failure) matches `say` exactly — this is the same turn, just
+ * delivered incrementally.
+ *
+ * @example
+ * const stream = await client.game.dialog.sayStream({ dialogId, text });
+ * for await (const event of stream) { ... }
+ */
+export const sayStream = protectedProcedure
+  .input(
+    z.object({
+      dialogId: z.uuid(),
+      text: z.string().min(1).max(2000),
+    }),
+  )
+  .handler(async function* ({ context, input, signal }) {
+    await requireOwnedDialog(
+      context.db,
+      input.dialogId,
+      context.session.user.id,
+    );
+    const loaded = await requireOpenDialog(context.db, input.dialogId);
+    const engine = await loadEngine(context.db);
+    const pipeline = engine.pipeline(loaded.record.variantId);
+
+    const managerToxic = detectToxicity(input.text);
+    await appendEvent(context.db, input.dialogId, "manager_utterance", {
+      text: input.text,
+      toxic: managerToxic,
+    });
+
+    const channel = createChunkChannel<{ reply: string }>();
+
+    // The LLM call has to run inside `observe`'s plain-async callback for
+    // tracing context to attach correctly (see `createChunkChannel`) — this
+    // promise settles once that callback returns, independently of how much
+    // of `channel` the code below has consumed by then.
+    const tracedTurn: Promise<Awaited<ReturnType<typeof pipeline.respond>>> =
+      observe(
+        {
+          name: "game.dialog.say",
+          userId: context.session.user.id,
+          sessionId: input.dialogId,
+          metadata: { variantId: loaded.record.variantId },
+        },
+        async () => {
+          Laminar.setTraceUserId(context.session.user.id);
+          Laminar.setTraceSessionId(input.dialogId);
+          const { stream, result } = pipeline.respondStream({
+            dialog: loaded.context,
+            utterance: input.text,
+            signal,
+          });
+          try {
+            for await (const chunk of stream) {
+              channel.push(chunk);
+            }
+          } finally {
+            channel.close();
+          }
+          return result;
+        },
+      );
+
+    let lastReply = "";
+    for await (const chunk of channel) {
+      if (chunk.reply.length <= lastReply.length) continue;
+      lastReply = chunk.reply;
+      yield { type: "chunk" as const, reply: lastReply };
+    }
+
+    let turn: Awaited<ReturnType<typeof pipeline.respond>>;
+    try {
+      turn = await tracedTurn;
+    } catch (cause) {
+      if (signal?.aborted) {
+        await appendEvent(context.db, input.dialogId, "error", {
+          stage: "persona",
+          message: "Ответ остановлен игроком",
+          recovered: false,
+          aborted: true,
+        });
+        throw cause;
+      }
+      const fallbackReply = fallbackEmployeeReply(loaded);
+      await appendEvent(context.db, input.dialogId, "error", {
+        stage: "persona",
+        message: cause instanceof Error ? cause.message : String(cause),
+        recovered: true,
+      });
+      await appendEvent(context.db, input.dialogId, "employee_reply", {
+        text: fallbackReply,
+        understood: loaded.context.task.title,
+        readiness: "unsure",
+        requests: ["Уточнить срок и контрольную точку"],
+        confirmsCheckpoints: false,
+        fallback: true,
+      });
+
+      await context.db
+        .update(GameDialog)
+        .set({ engaged: true })
+        .where(eq(GameDialog.id, input.dialogId));
+
+      yield {
+        type: "done" as const,
+        silent: false,
+        reply: fallbackReply,
+        understood: loaded.context.task.title,
+        readiness: "unsure" as const,
+        requests: ["Уточнить срок и контрольную точку"],
+        confirmsCheckpoints: false,
+        engaged: true,
+        emotion: loaded.context.emotion,
+        managerToxic,
+        degraded: true,
+      };
+      return;
+    }
+
+    let replyEvent: { id: string } | undefined;
+    if (turn.reply.silent) {
+      await appendEvent(context.db, input.dialogId, "employee_silent", {
+        reason: "не включён в диалог",
+      });
+    } else {
+      replyEvent = await appendEvent(
+        context.db,
+        input.dialogId,
+        "employee_reply",
+        {
+          text: turn.reply.reply,
+          understood: turn.reply.understood,
+          readiness: turn.reply.readiness,
+          requests: turn.reply.requests,
+          confirmsCheckpoints: turn.reply.confirmsCheckpoints,
+          telemetry: turn.telemetry,
+        },
+      );
+    }
+
+    await context.db
+      .update(GameDialog)
+      .set({ engaged: turn.dialog.engaged, emotion: turn.dialog.emotion })
+      .where(eq(GameDialog.id, input.dialogId));
+
+    yield {
+      type: "done" as const,
+      silent: turn.reply.silent,
+      reply: turn.reply.reply,
+      understood: turn.reply.understood,
+      readiness: turn.reply.readiness,
+      requests: turn.reply.requests,
+      confirmsCheckpoints: turn.reply.confirmsCheckpoints,
+      engaged: turn.dialog.engaged,
+      emotion: turn.dialog.emotion,
+      managerToxic: turn.managerToxic,
+      promptEventId: replyEvent?.id,
+    };
+  });
+
+/**
+ * Finish the dialog and score it.
+ *
+ * The evaluation is written once per dialog and carries the variant plus the
+ * cost/latency of the whole conversation, which is what the admin analytics
+ * aggregates over.
+ *
+ * @example client.game.dialog.finish({ dialogId })
+ */
+export const finish = protectedProcedure
+  .input(z.object({ dialogId: z.uuid() }))
+  .handler(async ({ context, input }) => {
+    await requireOwnedDialog(
+      context.db,
+      input.dialogId,
+      context.session.user.id,
+    );
+    const loaded = await requireOpenDialog(context.db, input.dialogId);
+    const engine = await loadEngine(context.db);
+    const pipeline = engine.pipeline(loaded.record.variantId);
+
+    const result = await observe(
+      {
+        name: "game.dialog.finish",
+        userId: context.session.user.id,
+        sessionId: input.dialogId,
+        metadata: { variantId: loaded.record.variantId },
+      },
+      async () => {
+        Laminar.setTraceUserId(context.session.user.id);
+        Laminar.setTraceSessionId(input.dialogId);
+        return pipeline.evaluate(loaded.context);
+      },
+    );
+
+    // Sum what the conversation itself cost, then add the scoring call.
+    const events = await context.db
+      .select()
+      .from(GameEvent)
+      .where(eq(GameEvent.dialogId, input.dialogId));
+
+    let latencyMs = result.latencyMs;
+    let inputTokens = result.usage?.inputTokens ?? 0;
+    let outputTokens = result.usage?.outputTokens ?? 0;
+    let costUsd = result.costUsd;
+    const turnMeta: Record<string, unknown>[] = [];
+
+    for (const event of events) {
+      const telemetry = event.payload.telemetry as
+        | {
+            totalMs?: number;
+            costUsd?: number;
+            usage?: { inputTokens?: number; outputTokens?: number };
+            meta?: Record<string, unknown>;
+          }
+        | undefined;
+      if (!telemetry) continue;
+      latencyMs += telemetry.totalMs ?? 0;
+      costUsd += telemetry.costUsd ?? 0;
+      inputTokens += telemetry.usage?.inputTokens ?? 0;
+      outputTokens += telemetry.usage?.outputTokens ?? 0;
+      if (telemetry.meta) turnMeta.push(telemetry.meta);
+    }
+
+    // Feed the outcome back to learning persona strategies (e.g. skill-rl).
+    // There is no expert label in production, so `scorePercent` — how well
+    // the methodology's own rubric scored this dialog — is the best available
+    // proxy for "was this a good episode". Strategies without a `learn` hook
+    // ignore this.
+    await pipeline.learn({
+      dialogId: input.dialogId,
+      variantId: loaded.record.variantId,
+      evaluation: result.evaluation,
+      reward: Math.max(0, Math.min(1, result.evaluation.scorePercent / 100)),
+      turnMeta,
+    });
+    await saveSkillPolicy(context.db);
+
+    await saveEvaluation(context.db, {
+      dialogId: input.dialogId,
+      variantId: loaded.record.variantId,
+      evaluation: result.evaluation,
+      latencyMs,
+      inputTokens,
+      outputTokens,
+      costUsd,
+      scorecard: loaded.context.evaluationScorecard,
+    });
+
+    await appendEvent(context.db, input.dialogId, "evaluation", {
+      scorePercent: result.evaluation.scorePercent,
+      expectedStyle: result.evaluation.expectedStyle,
+      actualStyle: result.evaluation.actualStyle,
+    });
+
+    await markDialogFinished(context.db, input.dialogId);
+    await context.db
+      .update(GameOrder)
+      .set({
+        status:
+          result.evaluation.outcome.status === "failed" ? "failed" : "done",
+      })
+      .where(eq(GameOrder.id, loaded.record.orderId));
+    await context.db
+      .insert(GameProductEvent)
+      .values({
+        userId: context.session.user.id,
+        sessionId: loaded.record.sessionId,
+        dialogId: input.dialogId,
+        name: "dialog_completed",
+        properties: { score: result.evaluation.scorePercent },
+      })
+      .catch(() => undefined);
+
+    const [coachingSession] = await context.db
+      .select({
+        assignmentId: GameSession.coachingPathAssignmentId,
+        stepId: GameSession.coachingPathStepId,
+      })
+      .from(GameSession)
+      .where(eq(GameSession.id, loaded.record.sessionId))
+      .limit(1);
+    if (coachingSession?.assignmentId && coachingSession.stepId) {
+      const { assignmentId, stepId } = coachingSession;
+      const progressEvent = await context.db.transaction(async (tx) => {
+        const [assignment] = await tx
+          .select()
+          .from(GameCoachingPathAssignment)
+          .where(eq(GameCoachingPathAssignment.id, assignmentId))
+          .limit(1)
+          .for("update");
+        if (!assignment) return null;
+        const scorePercent = result.evaluation.scorePercent;
+        const progress = advanceCoachingPath({
+          snapshot: assignment.pathSnapshot,
+          currentStep: assignment.currentStep,
+          stepResults: assignment.stepResults,
+          stepId,
+          sessionId: loaded.record.sessionId,
+          dialogId: input.dialogId,
+          scorePercent,
+        });
+        if (!progress) return null;
+        await tx
+          .update(GameCoachingPathAssignment)
+          .set({
+            stepResults: progress.stepResults,
+            currentStep: progress.currentStep,
+            status: progress.status,
+            completedAt: progress.completedAt,
+          })
+          .where(eq(GameCoachingPathAssignment.id, assignment.id));
+        return {
+          assignmentId: assignment.id,
+          eventName: progress.eventName,
+          minScore: progress.minScore,
+          scorePercent,
+        };
+      });
+      if (progressEvent) {
+        await context.db
+          .insert(GameProductEvent)
+          .values({
+            userId: context.session.user.id,
+            sessionId: loaded.record.sessionId,
+            dialogId: input.dialogId,
+            name: progressEvent.eventName,
+            properties: {
+              assignmentId: progressEvent.assignmentId,
+              stepId,
+              scorePercent: progressEvent.scorePercent,
+              minScore: progressEvent.minScore,
+            },
+          })
+          .catch(() => undefined);
+      }
+    }
+
+    return {
+      evaluation: result.evaluation,
+      variantId: loaded.record.variantId,
+      telemetry: { latencyMs, inputTokens, outputTokens, costUsd },
+    };
+  });
+
+export const preflight = protectedProcedure
+  .input(z.object({ dialogId: z.uuid() }))
+  .handler(async ({ context, input }) => {
+    await requireOwnedDialog(
+      context.db,
+      input.dialogId,
+      context.session.user.id,
+    );
+    const loaded = await requireOpenDialog(context.db, input.dialogId);
+    const expectation = resolveExpectation(
+      loaded.context.employee,
+      loaded.context.task,
+      loaded.context.shift,
+    );
+    const met = detectCriteria(loaded.context.turns);
+    const criteria = expectation.requiredCriteria.map((criterion) => ({
+      id: criterion.id,
+      title: criterion.title,
+      met: met.has(criterion.id),
+    }));
+    const critical = new Set([
+      "clarify_task",
+      "set_deadline",
+      "check_understanding",
+    ]);
+    const missingCritical = criteria.filter(
+      (criterion) => critical.has(criterion.id) && !criterion.met,
+    );
+    return {
+      ready: missingCritical.length === 0,
+      criteria,
+      missingCritical,
+      managerTurns: loaded.context.turns.filter(
+        (turn) => turn.role === "manager",
+      ).length,
+    };
+  });
+
+export const replay = protectedProcedure
+  .input(z.object({ dialogId: z.uuid() }))
+  .handler(async ({ context, input }) => {
+    const owned = await requireOwnedDialog(
+      context.db,
+      input.dialogId,
+      context.session.user.id,
+    );
+    const [sourceOrder] = await context.db
+      .select()
+      .from(GameOrder)
+      .where(eq(GameOrder.id, owned.dialog.orderId))
+      .limit(1);
+    if (!sourceOrder) {
+      throw new ORPCError("NOT_FOUND", { message: "Исходный заказ не найден" });
+    }
+    const activeOrders = await countActiveOrders(
+      context.db,
+      owned.session.id,
+      sourceOrder.employeeId,
+    );
+    const dialog = await context.db.transaction(async (tx) => {
+      const [order] = await tx
+        .insert(GameOrder)
+        .values({
+          sessionId: sourceOrder.sessionId,
+          taskId: sourceOrder.taskId,
+          employeeId: sourceOrder.employeeId,
+          portions: sourceOrder.portions,
+          deadlineMinutes: sourceOrder.deadlineMinutes,
+          notes: sourceOrder.notes,
+          status: "in_progress",
+        })
+        .returning();
+      if (!order) throw new Error("Не удалось повторить заказ");
+      const [created] = await tx
+        .insert(GameDialog)
+        .values({
+          sessionId: owned.session.id,
+          orderId: order.id,
+          employeeId: order.employeeId,
+          taskId: order.taskId,
+          round: owned.dialog.round,
+          variantId: owned.dialog.variantId,
+          activeOrders: Math.max(1, activeOrders + 1),
+          soloOnShift: owned.dialog.soloOnShift,
+        })
+        .returning();
+      if (created) {
+        await tx.insert(GameProductEvent).values({
+          userId: context.session.user.id,
+          sessionId: owned.session.id,
+          dialogId: input.dialogId,
+          name: "situation_replayed",
+          properties: { newDialogId: created.id },
+        });
+      }
+      return created;
+    });
+    if (!dialog) throw new Error("Не удалось открыть повторный разговор");
+    return dialog;
+  });
+
+/**
+ * Dialog with its full transcript and score.
+ *
+ * @example client.game.dialog.byId({ dialogId })
+ */
+export const byId = protectedProcedure
+  .input(z.object({ dialogId: z.uuid() }))
+  .handler(async ({ context, input }) => {
+    await requireOwnedDialog(
+      context.db,
+      input.dialogId,
+      context.session.user.id,
+    );
+    const loaded = await loadDialog(context.db, input.dialogId);
+
+    const [evaluation, events, engine, isAdmin] = await Promise.all([
+      context.db
+        .select()
+        .from(GameEvaluation)
+        .where(eq(GameEvaluation.dialogId, input.dialogId))
+        .limit(1)
+        .then((rows) => rows[0]),
+      context.db
+        .select()
+        .from(GameEvent)
+        .where(eq(GameEvent.dialogId, input.dialogId))
+        .orderBy(asc(GameEvent.seq)),
+      loadEngine(context.db),
+      resolveIsAdmin(context.db, context.session.user),
+    ]);
+    const variantName =
+      engine.variants().find((item) => item.id === loaded.record.variantId)
+        ?.name ?? loaded.record.variantId;
+
+    // Turns are derived from the same `employee_reply` events in the same
+    // order (see `loadDialog`), so zipping them by position recovers which
+    // event backs which turn — enough to let an admin ask `promptDebug` for
+    // it without carrying the (potentially large) prompt on every load.
+    const employeeReplyEvents = events.filter(
+      (event) =>
+        event.type === "employee_reply" &&
+        typeof event.payload.text === "string" &&
+        event.payload.text.length > 0,
+    );
+    let replyIndex = 0;
+    const turns = loaded.context.turns.map((turn) => {
+      if (turn.role !== "employee") return turn;
+      const event = employeeReplyEvents[replyIndex++];
+      return { ...turn, promptEventId: event?.id };
+    });
+
+    // The raw prompt text is only for admin/QA eyes — strip it from the
+    // event log before it reaches a regular player's browser.
+    const visibleEvents = isAdmin
+      ? events
+      : events.map((event) => {
+          if (event.type !== "employee_reply") return event;
+          const telemetry = event.payload.telemetry as
+            | { meta?: Record<string, unknown> }
+            | undefined;
+          if (!telemetry?.meta?.prompt) return event;
+          const { prompt: _prompt, ...restMeta } = telemetry.meta;
+          return {
+            ...event,
+            payload: {
+              ...event.payload,
+              telemetry: { ...telemetry, meta: restMeta },
+            },
+          };
+        });
+
+    return {
+      dialog: loaded.record,
+      variantName,
+      employee: loaded.context.employee,
+      task: loaded.context.task,
+      shift: loaded.context.shift,
+      turns,
+      emotion: loaded.context.emotion,
+      engaged: loaded.context.engaged,
+      events: visibleEvents,
+      evaluation: evaluation ?? null,
+      isAdmin,
+    };
+  });
+
+/**
+ * The exact system prompt + transcript sent to the LLM for one employee
+ * reply — the "hint" behind the debug button in the game chat.
+ *
+ * Admin/QA only: this is the prompt engineering behind the character, not
+ * something a player should be able to pull out of their own dialog.
+ *
+ * @example client.game.dialog.promptDebug({ dialogId, eventId })
+ */
+export const promptDebug = adminProcedure
+  .input(z.object({ dialogId: z.uuid(), eventId: z.uuid() }))
+  .handler(async ({ context, input }) => {
+    const [event] = await context.db
+      .select()
+      .from(GameEvent)
+      .where(
+        and(
+          eq(GameEvent.id, input.eventId),
+          eq(GameEvent.dialogId, input.dialogId),
+        ),
+      )
+      .limit(1);
+
+    if (event?.type !== "employee_reply") {
+      throw new ORPCError("NOT_FOUND", { message: "Событие не найдено" });
+    }
+
+    const prompt = extractPersonaPrompt(event.payload);
+    if (!prompt) {
+      throw new ORPCError("NOT_FOUND", {
+        message: "Промпт для этой реплики не сохранён",
+      });
+    }
+
+    const telemetry = event.payload.telemetry as { model?: string } | undefined;
+    return {
+      system: prompt.system,
+      messages: prompt.messages,
+      model: telemetry?.model,
+    };
+  });
+
+/**
+ * Dialogs of a session, newest first.
+ *
+ * @example client.game.dialog.list({ sessionId })
+ */
+export const list = protectedProcedure
+  .input(z.object({ sessionId: z.uuid() }))
+  .handler(async ({ context, input }) => {
+    await requireOwnedSession(
+      context.db,
+      input.sessionId,
+      context.session.user.id,
+    );
+    return context.db
+      .select({ dialog: GameDialog, evaluation: GameEvaluation })
+      .from(GameDialog)
+      .leftJoin(GameEvaluation, eq(GameEvaluation.dialogId, GameDialog.id))
+      .where(eq(GameDialog.sessionId, input.sessionId))
+      .orderBy(desc(GameDialog.startedAt));
+  });
+
+/**
+ * Cheap guardrail the platform can call before sending audio transcripts on,
+ * so an abusive utterance never reaches the model at all.
+ *
+ * @example client.game.dialog.screen({ text })
+ */
+export const screen = protectedProcedure
+  .input(z.object({ text: z.string().max(2000) }))
+  .handler(({ input }) => ({ toxic: detectToxicity(input.text) }));
+
+export const gameDialogRouter = {
+  start,
+  say,
+  sayStream,
+  finish,
+  preflight,
+  replay,
+  byId,
+  list,
+  screen,
+  promptDebug,
+};

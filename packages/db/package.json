@@ -1,0 +1,48 @@
+{
+  "name": "@acme/db",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./client": {
+      "default": "./src/client.ts"
+    },
+    "./schema": {
+      "default": "./src/schema/index.ts"
+    }
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "tsc",
+    "format": "biome format .",
+    "lint": "biome lint .",
+    "check": "biome check .",
+    "review": "bun --env-file=../../.env run src/scripts/publish-review.ts sitruk-review.md --title 'Технический анализ продукта Sitruk' --summary '10 проблем: 4 критичные (захват чужой команды, XSS в чате), 4 важные, 2 технического долга' --kind legacy-review",
+    "push": "bun --env-file=../../.env run drizzle-kit push",
+    "studio": "bun --env-file=../../.env run drizzle-kit studio",
+    "drop": "bun --env-file=../../.env run src/scripts/drop-schema.ts",
+    "generate": "bun --env-file=../../.env run drizzle-kit generate",
+    "migrate": "bun --env-file=../../.env run drizzle-kit migrate && bun --env-file=../../.env run src/scripts/create-concurrent-indexes.ts",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "dependencies": {
+    "@acme/config": "workspace:*",
+    "drizzle-orm": "0.45.2",
+    "drizzle-zod": "0.8.3",
+    "pg": "^8.23.0",
+    "zod": "4.5.4"
+  },
+  "devDependencies": {
+    "@acme/tsconfig": "workspace:*",
+    "@types/bun": "1.4.1",
+    "@types/node": "26.4.1",
+    "@types/pg": "^8.23.1",
+    "drizzle-kit": "^0.31.10",
+    "typescript": "7.0.2"
+  }
+}
