@@ -103,7 +103,7 @@ jobs:
           APP_IMAGE_TAG: ${{ needs.build-and-push.outputs.app_image }}
           WORKER_IMAGE_TAG: ${{ needs.build-and-push.outputs.worker_image }}
         run: |
-          kubectl set image deployment/app app="${APP_IMAGE_TAG}" -n "$NAMESPACE"
+          kubectl set image deployment/sitruk-app app="${APP_IMAGE_TAG}" -n "$NAMESPACE"
           kubectl set image deployment/worker worker="${WORKER_IMAGE_TAG}" -n "$NAMESPACE"
-          kubectl rollout status deployment/app -n "$NAMESPACE" --timeout=180s
+          kubectl rollout status deployment/sitruk-app -n "$NAMESPACE" --timeout=180s
           kubectl rollout status deployment/worker -n "$NAMESPACE" --timeout=180s

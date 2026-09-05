@@ -1,5 +1,6 @@
 import {
   and,
+  type Database,
   desc,
   eq,
   GameScorecard,
@@ -8,7 +9,7 @@ import {
 import { CRITERION_IDS } from "@acme/game";
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
-import { requireFacilitatorOrgId } from "../../game/organizations";
+import { requireFacilitatorOrgIdFromContext } from "../../game/organizations";
 import { SCORECARD_TEMPLATES, SYSTEM_SCORECARD } from "../../game/scorecards";
 import { protectedProcedure } from "../../orpc";
 
@@ -82,12 +83,8 @@ function response(row: typeof GameScorecard.$inferSelect) {
   };
 }
 
-async function assertOwned(
-  context: Parameters<typeof requireFacilitatorOrgId>[0],
-  orgId: string,
-  id: string,
-) {
-  const [row] = await context
+async function assertOwned(db: Database, orgId: string, id: string) {
+  const [row] = await db
     .select()
     .from(GameScorecard)
     .where(
@@ -105,10 +102,7 @@ async function assertOwned(
 }
 
 export const list = protectedProcedure.handler(async ({ context }) => {
-  const orgId = await requireFacilitatorOrgId(
-    context.db,
-    context.session.user.id,
-  );
+  const orgId = await requireFacilitatorOrgIdFromContext(context);
   const rows = await context.db
     .select()
     .from(GameScorecard)
@@ -129,10 +123,7 @@ export const list = protectedProcedure.handler(async ({ context }) => {
 export const create = protectedProcedure
   .input(scorecardFields.extend({ activate: z.boolean().default(false) }))
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
+    const orgId = await requireFacilitatorOrgIdFromContext(context);
     const { activate, ...values } = input;
     return context.db.transaction(async (tx) => {
       if (activate) {
@@ -159,10 +150,7 @@ export const create = protectedProcedure
 export const update = protectedProcedure
   .input(scorecardFields.extend({ id: z.uuid() }))
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
+    const orgId = await requireFacilitatorOrgIdFromContext(context);
     await assertOwned(context.db, orgId, input.id);
     const { id, ...values } = input;
     const [updated] = await context.db
@@ -180,10 +168,7 @@ export const update = protectedProcedure
 export const activate = protectedProcedure
   .input(z.object({ id: z.union([z.literal("system"), z.uuid()]) }))
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
+    const orgId = await requireFacilitatorOrgIdFromContext(context);
     if (input.id !== "system") {
       await assertOwned(context.db, orgId, input.id);
     }
@@ -205,10 +190,7 @@ export const activate = protectedProcedure
 export const archive = protectedProcedure
   .input(z.object({ id: z.uuid() }))
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
+    const orgId = await requireFacilitatorOrgIdFromContext(context);
     await assertOwned(context.db, orgId, input.id);
     await context.db
       .update(GameScorecard)

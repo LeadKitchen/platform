@@ -13,7 +13,7 @@ import {
 } from "@acme/db";
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
-import { requireFacilitatorOrgId } from "../../game/organizations";
+import { requireFacilitatorOrgIdFromContext } from "../../game/organizations";
 import {
   resolveRoleplayScenario,
   snapshotRoleplayScenario,
@@ -73,10 +73,7 @@ async function assertPath(
 }
 
 export const list = protectedProcedure.handler(async ({ context }) => {
-  const orgId = await requireFacilitatorOrgId(
-    context.db,
-    context.session.user.id,
-  );
+  const orgId = await requireFacilitatorOrgIdFromContext(context);
   const [paths, assignmentStats] = await Promise.all([
     context.db
       .select()
@@ -118,10 +115,7 @@ export const list = protectedProcedure.handler(async ({ context }) => {
 export const byId = protectedProcedure
   .input(z.object({ id: z.uuid() }))
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
+    const orgId = await requireFacilitatorOrgIdFromContext(context);
     const path = await assertPath(context.db, orgId, input.id);
     const assignments = await context.db
       .select({
@@ -143,10 +137,7 @@ export const byId = protectedProcedure
 export const create = protectedProcedure
   .input(pathFields)
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
+    const orgId = await requireFacilitatorOrgIdFromContext(context);
     const steps = await buildSteps(
       context.db,
       context.session.user.id,
@@ -163,10 +154,7 @@ export const create = protectedProcedure
 export const update = protectedProcedure
   .input(pathFields.extend({ id: z.uuid() }))
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
+    const orgId = await requireFacilitatorOrgIdFromContext(context);
     await assertPath(context.db, orgId, input.id);
     const steps = await buildSteps(
       context.db,
@@ -186,10 +174,7 @@ export const update = protectedProcedure
 export const archive = protectedProcedure
   .input(z.object({ id: z.uuid() }))
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
+    const orgId = await requireFacilitatorOrgIdFromContext(context);
     await assertPath(context.db, orgId, input.id);
     await context.db
       .update(GameCoachingPath)
@@ -199,10 +184,7 @@ export const archive = protectedProcedure
   });
 
 export const members = protectedProcedure.handler(async ({ context }) => {
-  const orgId = await requireFacilitatorOrgId(
-    context.db,
-    context.session.user.id,
-  );
+  const orgId = await requireFacilitatorOrgIdFromContext(context);
   return context.db
     .select({
       id: user.id,
@@ -224,10 +206,7 @@ export const assign = protectedProcedure
     }),
   )
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
+    const orgId = await requireFacilitatorOrgIdFromContext(context);
     const path = await assertPath(context.db, orgId, input.pathId);
     if (!path.isActive) {
       throw new ORPCError("BAD_REQUEST", {

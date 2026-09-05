@@ -8,21 +8,24 @@ import {
   setActiveWorkspace,
   slugifyOrgId,
 } from "../../game/organizations";
-import { protectedProcedure } from "../../orpc";
+import { protectedProcedure, resolveIsAdmin } from "../../orpc";
 
 /** Workspace picker and self-service team creation used by the app sidebar. */
 export const orgWorkspaceRouter = {
-  list: protectedProcedure.handler(async ({ context }) =>
-    listWorkspaces(context.db, context.session.user.id),
-  ),
+  list: protectedProcedure.handler(async ({ context }) => {
+    const isAdmin = await resolveIsAdmin(context.db, context.session.user);
+    return listWorkspaces(context.db, context.session.user.id, isAdmin);
+  }),
 
   select: protectedProcedure
     .input(z.object({ orgId: z.string().min(1) }))
     .handler(async ({ context, input }) => {
+      const isAdmin = await resolveIsAdmin(context.db, context.session.user);
       await setActiveWorkspace(
         context.db,
         context.session.user.id,
         input.orgId,
+        isAdmin,
       );
       return { orgId: input.orgId };
     }),

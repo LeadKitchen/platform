@@ -12,7 +12,7 @@ import {
 } from "@acme/db";
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
-import { requireFacilitatorOrgId } from "../../game/organizations";
+import { requireFacilitatorOrgIdFromContext } from "../../game/organizations";
 import { protectedProcedure } from "../../orpc";
 
 /**
@@ -24,10 +24,7 @@ import { protectedProcedure } from "../../orpc";
  * @example client.org.members.list()
  */
 const list = protectedProcedure.handler(async ({ context }) => {
-  const orgId = await requireFacilitatorOrgId(
-    context.db,
-    context.session.user.id,
-  );
+  const orgId = await requireFacilitatorOrgIdFromContext(context);
 
   const [rows, sessions, evaluations] = await Promise.all([
     context.db
@@ -143,10 +140,7 @@ const list = protectedProcedure.handler(async ({ context }) => {
 const add = protectedProcedure
   .input(z.object({ email: z.string().trim().email() }))
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
+    const orgId = await requireFacilitatorOrgIdFromContext(context);
 
     const [candidate] = await context.db
       .select({ id: user.id, name: user.name })
@@ -187,10 +181,7 @@ const add = protectedProcedure
 const remove = protectedProcedure
   .input(z.object({ userId: z.string().min(1) }))
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
+    const orgId = await requireFacilitatorOrgIdFromContext(context);
 
     if (input.userId === context.session.user.id) {
       throw new ORPCError("BAD_REQUEST", {
@@ -224,10 +215,7 @@ const remove = protectedProcedure
 const setFacilitator = protectedProcedure
   .input(z.object({ userId: z.string().min(1), isFacilitator: z.boolean() }))
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
+    const orgId = await requireFacilitatorOrgIdFromContext(context);
 
     if (!input.isFacilitator) {
       const facilitators = await context.db

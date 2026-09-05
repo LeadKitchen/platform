@@ -8,7 +8,7 @@ import {
 } from "@acme/db";
 import { CRITERIA, type CriterionId } from "@acme/game";
 import { z } from "zod";
-import { requireFacilitatorOrgId } from "../../game/organizations";
+import { requireFacilitatorOrgIdFromContext } from "../../game/organizations";
 import { protectedProcedure } from "../../orpc";
 
 interface CriterionRow {
@@ -79,10 +79,7 @@ function topMissed(rows: CriterionRow[], limit: number): MissedCount[] {
 export const list = protectedProcedure
   .input(z.object({ limit: z.number().int().min(1).max(5000).default(2000) }))
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
+    const orgId = await requireFacilitatorOrgIdFromContext(context);
 
     const rows = await context.db
       .select({

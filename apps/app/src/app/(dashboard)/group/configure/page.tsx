@@ -26,7 +26,7 @@ export default async function ConfigurePage() {
     api.org.mine(),
     api.game.catalog.methodology(),
   ]);
-  if (!mine.isFacilitator) redirect("/game");
+  if (!mine.isFacilitator && !mine.isAdmin) redirect("/game");
 
   return (
     <>

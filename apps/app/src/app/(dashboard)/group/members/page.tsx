@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 export default async function MembersPage() {
   const mine = await api.org.mine();
-  if (!mine.isFacilitator) redirect("/game");
+  if (!mine.isFacilitator && !mine.isAdmin) redirect("/game");
 
   const { members } = await api.org.members.list();
   const teamName = mine.orgName ?? "Команда";

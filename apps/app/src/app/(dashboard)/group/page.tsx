@@ -77,7 +77,7 @@ function TrendBadge({ trend }: { trend: number | null }) {
 
 export default async function GroupPage() {
   const mine = await api.org.mine();
-  if (!mine.isFacilitator) redirect("/game");
+  if (!mine.isFacilitator && !mine.isAdmin) redirect("/game");
 
   const [sessions, { people, topMissedOrg }, assignments] = await Promise.all([
     api.org.sessions.list({ limit: SESSIONS_LIMIT, offset: 0 }),

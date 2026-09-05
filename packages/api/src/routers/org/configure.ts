@@ -1,6 +1,6 @@
 import { GameOrganizationConfigure } from "@acme/db";
 import { z } from "zod";
-import { requireFacilitatorOrgId } from "../../game/organizations";
+import { requireFacilitatorOrgIdFromContext } from "../../game/organizations";
 import { protectedProcedure } from "../../orpc";
 
 const input = z.object({
@@ -17,19 +17,13 @@ const input = z.object({
 
 export const orgConfigureRouter = {
   get: protectedProcedure.handler(async ({ context }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
+    const orgId = await requireFacilitatorOrgIdFromContext(context);
     return context.db.query.GameOrganizationConfigure.findFirst({
       where: (table, { eq }) => eq(table.orgId, orgId),
     });
   }),
   save: protectedProcedure.input(input).handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
+    const orgId = await requireFacilitatorOrgIdFromContext(context);
     await context.db
       .insert(GameOrganizationConfigure)
       .values({ orgId, ...input })

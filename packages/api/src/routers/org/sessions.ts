@@ -13,7 +13,7 @@ import {
   user,
 } from "@acme/db";
 import { z } from "zod";
-import { requireFacilitatorOrgId } from "../../game/organizations";
+import { requireFacilitatorOrgIdFromContext } from "../../game/organizations";
 import { protectedProcedure } from "../../orpc";
 
 /**
@@ -38,10 +38,7 @@ export const list = protectedProcedure
     }),
   )
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
+    const orgId = await requireFacilitatorOrgIdFromContext(context);
 
     const sessions = await context.db
       .select({ session: GameSession, participant: user.name })
