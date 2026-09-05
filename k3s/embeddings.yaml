@@ -1,0 +1,113 @@
+# Self-hosted embeddings (dense retrieval for org-rag/org-fusion-rag/
+# hybrid-rag/hyde-rag/contextual-rag — see packages/ai/src/knowledge/
+# embeddings.ts and docker-compose.yml's `embeddings` service, which this
+# mirrors). Text Embeddings Inference (TEI) serving intfloat/multilingual-
+# e5-large. Public image — no imagePullSecrets needed, unlike app/worker.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: embeddings-data
+  namespace: orixon
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      # Model weights are ~1.1GB; headroom for HF's on-disk blob layout.
+      storage: 3Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: embeddings
+  namespace: orixon
+  labels:
+    app: embeddings
+spec:
+  # One instance: usage is a single short query embedded per dialog turn
+  # plus one-off document ingestion, not a throughput workload. Scale up
+  # only if query volume actually demands it.
+  replicas: 1
+  strategy:
+    # RollingUpdate would try to schedule a second pod that immediately
+    # fights the first for the ReadWriteOnce PVC. Recreate accepts a short
+    # gap on deploy instead.
+    type: Recreate
+  selector:
+    matchLabels:
+      app: embeddings
+  template:
+    metadata:
+      labels:
+        app: embeddings
+    spec:
+      containers:
+        - name: embeddings
+          # CPU build — no GPU needed for a 560M-param model at this query
+          # volume. Pin the same tag docker-compose.yml uses.
+          image: ghcr.io/huggingface/text-embeddings-inference:cpu-1.8.1
+          args:
+            - --model-id
+            - intfloat/multilingual-e5-large
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            # TEI's default HF cache path — matches HUGGINGFACE_HUB_CACHE's
+            # built-in default, so no extra env var is needed to point it
+            # here. Persists the ~1.1GB model download across pod restarts.
+            - name: data
+              mountPath: /data
+          # No securityContext override here (unlike app/postgres): this
+          # image's runtime user/uid isn't verified against a Dockerfile we
+          # control, so pinning runAsUser risks a permission mismatch on
+          # the mounted PVC instead of a real hardening gain.
+          # kubelet's httpGet probes hit the container over HTTP directly —
+          # unlike docker-compose's healthcheck, they don't need curl/wget
+          # inside the image (docker-compose.yml's `embeddings` service
+          # skips a healthcheck for exactly that missing-tooling reason).
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 80
+            # First start downloads the model (minutes, depending on
+            # network) before /health responds; a warm restart with the
+            # PVC already populated is much faster. 10 minutes covers both.
+            periodSeconds: 10
+            failureThreshold: 60
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            periodSeconds: 20
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: "1"
+              memory: 1.5Gi
+            limits:
+              cpu: "2"
+              memory: 3Gi
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: embeddings-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: embeddings
+  namespace: orixon
+spec:
+  # ClusterIP only, same as Qdrant/Neo4j — this channel is internal, called
+  # from app/worker pods via EMBEDDINGS_BASE_URL, never from outside the
+  # cluster. No IngressRoute.
+  selector:
+    app: embeddings
+  ports:
+    - port: 80
+      targetPort: 80

@@ -17,6 +17,12 @@ engine to run ourselves.
   IngressClass)
 - `worker.yaml` — Deployment for the Hatchet worker (no Service — it only
   long-polls the Hatchet engine, nothing connects to it)
+- `embeddings.yaml` — PVC, Deployment, and internal-only Service for
+  self-hosted embeddings (Text Embeddings Inference, see
+  `packages/ai/src/knowledge/embeddings.ts`). Mirrors docker-compose.yml's
+  `embeddings` service; Qdrant and Neo4j run the same in-cluster way but
+  aren't tracked here — see `QDRANT_URL`/`NEO4J_URL` in your filled-in
+  `secret.yaml` for how those are expected to already be reachable
 
 ## Building images
 
@@ -59,6 +65,7 @@ kubectl apply -n orixon -f secret.yaml   # your filled-in copy
 # (ghcr-creds — see above)
 kubectl apply -n orixon -f app.yaml
 kubectl apply -n orixon -f worker.yaml
+kubectl apply -n orixon -f embeddings.yaml
 ```
 
 `app.yaml`'s `IngressRoute` assumes `web`/`websecure` entryPoints on your
