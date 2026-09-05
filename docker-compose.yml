@@ -155,7 +155,7 @@ services:
     # CPU build of Text Embeddings Inference — no GPU needed for a 560M-param
     # model serving one short query per dialog turn plus one-off document
     # ingestion. Swap for a GPU tag (see TEI's docs) if that ever changes.
-    image: ghcr.io/huggingface/text-embeddings-inference:cpu-1.8.1
+    image: ghcr.io/huggingface/text-embeddings-inference:cpu-1.9.3
     container_name: embeddings
     ports:
       # OpenAI-compatible channel for org-rag/org-fusion-rag/hybrid-rag/
