@@ -35,19 +35,19 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app
+  name: sitruk-app
   namespace: orixon
   labels:
-    app: app
+    app: sitruk-app
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: app
+      app: sitruk-app
   template:
     metadata:
       labels:
-        app: app
+        app: sitruk-app
     spec:
       imagePullSecrets:
         - name: ghcr-creds
@@ -95,11 +95,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: app
+  name: sitruk-app
   namespace: orixon
 spec:
   selector:
-    app: app
+    app: sitruk-app
   ports:
     - port: 80
       targetPort: 3000
@@ -123,7 +123,7 @@ spec:
     - kind: Rule
       match: Host(`sitruk.orixon.ru`)
       services:
-        - name: app
+        - name: sitruk-app
           port: 80
   tls:
     certResolver: letsencrypt

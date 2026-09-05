@@ -9,7 +9,7 @@ import {
 } from "@acme/db";
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
-import { requireFacilitatorOrgId } from "../../game/organizations";
+import { requireFacilitatorOrgIdFromContext } from "../../game/organizations";
 import { protectedProcedure } from "../../orpc";
 
 const assignmentInput = z.object({
@@ -22,10 +22,7 @@ const assignmentInput = z.object({
 export const assign = protectedProcedure
   .input(assignmentInput)
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
+    const orgId = await requireFacilitatorOrgIdFromContext(context);
     const [participant] = await context.db
       .select({ userId: GameOrgMember.userId })
       .from(GameOrgMember)
@@ -80,10 +77,7 @@ export const assign = protectedProcedure
 
 /** Active assignments, for a facilitator's own organization only. */
 export const list = protectedProcedure.handler(async ({ context }) => {
-  const orgId = await requireFacilitatorOrgId(
-    context.db,
-    context.session.user.id,
-  );
+  const orgId = await requireFacilitatorOrgIdFromContext(context);
   return context.db
     .select({ assignment: GameTrainingAssignment, participant: user.name })
     .from(GameTrainingAssignment)
