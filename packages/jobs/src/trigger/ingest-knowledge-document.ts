@@ -455,7 +455,18 @@ async function markDocumentFailed(
   input: IngestKnowledgeDocumentInput,
   errors: Record<string, string>,
 ) {
-  const message = Object.values(errors)[0] ?? "Ошибка обработки документа";
+  // `Object.values(errors)[0]` is sometimes the literal string "{}" rather
+  // than the thrown Error's message — `Error` instances serialize to "{}"
+  // (their `message`/`stack` aren't enumerable own properties), and
+  // something upstream of `ctx.errors()` appears to JSON.stringify the
+  // error rather than read `.message` off it. Falling back here is the only
+  // place that can catch it: whatever serializes it happens before this
+  // task sees the value.
+  const rawMessage = Object.values(errors)[0];
+  const message =
+    rawMessage && rawMessage !== "{}"
+      ? rawMessage
+      : "Ошибка обработки документа";
   await db
     .update(GameKnowledgeDocument)
     .set({ status: "failed", statusMessage: message.slice(0, 2000) })
