@@ -30,6 +30,11 @@ function getS3Client(): S3Client {
       accessKeyId,
       secretAccessKey,
     },
+    // AWS SDK v3 adds x-amz-checksum-* to presigned PutObject URLs by default,
+    // but those params aren't in SignedHeaders — Yandex Object Storage then
+    // rejects the upload as AccessDenied ("headers ... not signed"), which
+    // the browser reports as an opaque CORS failure.
+    requestChecksumCalculation: "WHEN_REQUIRED",
     ...(s3Endpoint
       ? {
           endpoint: s3Endpoint,
