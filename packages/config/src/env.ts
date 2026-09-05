@@ -80,6 +80,12 @@ export const env = createEnv({
     NEO4J_URL: z.string().optional(),
     NEO4J_USER: z.string().optional(),
     NEO4J_PASSWORD: z.string().optional(),
+
+    // Redis — shared store for state that must survive a restart or be
+    // consistent across instances (currently: the ElevenLabs TTS rate
+    // limiter). Unset means every caller falls back to an in-memory,
+    // per-process equivalent instead of failing.
+    REDIS_URL: z.url().optional(),
   },
   client: {
     NEXT_PUBLIC_APP_NAME: z.string().default("Ситрук"),
@@ -122,6 +128,7 @@ export const env = createEnv({
     NEO4J_URL: process.env.NEO4J_URL,
     NEO4J_USER: process.env.NEO4J_USER,
     NEO4J_PASSWORD: process.env.NEO4J_PASSWORD,
+    REDIS_URL: process.env.REDIS_URL,
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
     NEXT_PUBLIC_APP_SHORT_NAME: process.env.NEXT_PUBLIC_APP_SHORT_NAME,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
