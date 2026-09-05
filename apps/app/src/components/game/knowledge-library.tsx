@@ -21,9 +21,13 @@ import {
   DialogHeader,
   DialogTitle,
   Field,
+  FieldDescription,
   FieldGroup,
   FieldLabel,
   Input,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
   Select,
   SelectContent,
   SelectGroup,
@@ -40,11 +44,13 @@ import {
 } from "@acme/ui";
 import {
   IconFileText,
+  IconInfoCircle,
   IconRefresh,
   IconSearch,
   IconTrash,
   IconUpload,
 } from "@tabler/icons-react";
+import type { ReactNode } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { client } from "~/orpc/react";
 
@@ -99,6 +105,24 @@ const STATUS_LABEL: Record<DocumentStatus, string> = {
   ready: "Опубликован",
   failed: "Ошибка",
 };
+
+/** Click-triggered explainer for a label — works on touch, unlike a hover tooltip. */
+function InfoPopover({ children }: { children: ReactNode }) {
+  return (
+    <Popover>
+      <PopoverTrigger
+        type="button"
+        className="text-muted-foreground hover:text-foreground inline-flex"
+        aria-label="Пояснение"
+      >
+        <IconInfoCircle className="size-4" />
+      </PopoverTrigger>
+      <PopoverContent className="w-80 text-sm leading-6">
+        {children}
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 function sourceTypeForFile(file: File): SourceType | null {
   const extension = file.name.split(".").pop()?.toLowerCase();
@@ -205,8 +229,10 @@ function UploadDialog({
         <DialogHeader>
           <DialogTitle>Загрузить документ</DialogTitle>
           <DialogDescription>
-            PDF, DOCX или TXT. После обработки проверьте разметку разделов перед
-            публикацией — до этого документ не виден персонажу.
+            PDF, DOCX или TXT. ИИ разобьёт документ на фрагменты и сам
+            предложит, что из него может знать персонаж, а что должно остаться
+            скрытым. Проверьте эту разметку на шаге «Проверить» и опубликуйте —
+            до этого документ персонажу не виден.
           </DialogDescription>
         </DialogHeader>
         <FieldGroup>
@@ -241,6 +267,18 @@ function UploadDialog({
             <Field>
               <FieldLabel htmlFor="knowledge-audience">
                 Доступ по умолчанию
+                <InfoPopover>
+                  <p className="mb-1 font-medium">Зачем это нужно</p>
+                  <p>
+                    Это стартовое значение — оно применяется, только если ИИ не
+                    сможет сам определить доступ для фрагмента текста. Обычно ИИ
+                    справляется сам и предлагает свой вариант для каждого
+                    фрагмента отдельно, поэтому итоговая разметка может
+                    отличаться от того, что вы выберете здесь. Проверить и при
+                    необходимости изменить её можно на шаге «Проверить» после
+                    обработки документа.
+                  </p>
+                </InfoPopover>
               </FieldLabel>
               <Select
                 value={audience}
@@ -257,6 +295,7 @@ function UploadDialog({
                   </SelectGroup>
                 </SelectContent>
               </Select>
+              <FieldDescription>{AUDIENCE_HINT[audience]}</FieldDescription>
             </Field>
           </div>
           <Field>
@@ -359,9 +398,11 @@ function ReviewDialog({
         <DialogHeader>
           <DialogTitle>{document.title}</DialogTitle>
           <DialogDescription>
-            Проверьте разметку каждого фрагмента: «Персонаж» — сотрудник может
-            это сказать; «Только методология» — скрыто от него и участник не
-            получит подсказку.
+            ИИ уже разбил документ на фрагменты и предложил доступ для каждого.
+            Проверьте и при необходимости смените вариант: «Персонаж» —
+            сотрудник может это сказать; «Только методология» — скрыто от него,
+            участник подсказки не получит. Пока вы не нажмёте «Опубликовать»,
+            документ персонажу не виден.
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-3">
@@ -625,7 +666,17 @@ export function KnowledgeLibrary({
                 <TableRow>
                   <TableHead>Документ</TableHead>
                   <TableHead>Статус</TableHead>
-                  <TableHead>Доступ</TableHead>
+                  <TableHead>
+                    <span className="inline-flex items-center gap-1">
+                      Доступ по умолчанию
+                      <InfoPopover>
+                        Значение, заданное при загрузке. У отдельных фрагментов
+                        документа доступ может отличаться — ИИ предлагает его
+                        для каждого фрагмента отдельно, это видно на шаге
+                        «Проверить».
+                      </InfoPopover>
+                    </span>
+                  </TableHead>
                   <TableHead>Загружен</TableHead>
                   <TableHead className="text-right">Действия</TableHead>
                 </TableRow>
