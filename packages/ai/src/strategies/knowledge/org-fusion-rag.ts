@@ -60,15 +60,6 @@ export const orgFusionRagKnowledge: KnowledgeStrategy = {
     const pool = topK * poolMultiplier;
     const hops = typeof deps.params.hops === "number" ? deps.params.hops : 2;
 
-    const orgId = request.dialog.orgId;
-    if (!orgId) {
-      return {
-        snippets: [],
-        latencyMs: Date.now() - startedAt,
-        meta: { reason: "no-org", topK },
-      };
-    }
-
     const { employee, task, shift } = request.dialog;
     const query = [
       request.query,
@@ -88,8 +79,12 @@ export const orgFusionRagKnowledge: KnowledgeStrategy = {
       GameKnowledgeChunk,
       GameKnowledgeDocument,
       GameKnowledgeFact,
+      GLOBAL_KNOWLEDGE_ORG_ID,
       inArray,
     } = await import("@acme/db");
+    // Shared platform-wide while the knowledge base isn't split per team yet
+    // — see `GLOBAL_KNOWLEDGE_ORG_ID` in `packages/db/src/schema/game/game.ts`.
+    const orgId = GLOBAL_KNOWLEDGE_ORG_ID;
 
     // Pulled once, reused for both the lexical channel (BM25 index) and as
     // the text lookup for vector-channel hits (Qdrant returns ids/scores

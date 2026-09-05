@@ -27,15 +27,6 @@ export const orgRagKnowledge: KnowledgeStrategy = {
   async retrieve(request, deps) {
     const startedAt = Date.now();
     const topK = typeof deps.params.topK === "number" ? deps.params.topK : 6;
-    const orgId = request.dialog.orgId;
-
-    if (!orgId) {
-      return {
-        snippets: [],
-        latencyMs: Date.now() - startedAt,
-        meta: { reason: "no-org", topK },
-      };
-    }
 
     const { employee, task, shift } = request.dialog;
     const query = [
@@ -70,6 +61,19 @@ export const orgRagKnowledge: KnowledgeStrategy = {
       };
     }
 
+    const {
+      and,
+      db,
+      eq,
+      GameKnowledgeChunk,
+      GameKnowledgeDocument,
+      GLOBAL_KNOWLEDGE_ORG_ID,
+      inArray,
+    } = await import("@acme/db");
+    // Shared platform-wide while the knowledge base isn't split per team yet
+    // — see `GLOBAL_KNOWLEDGE_ORG_ID` in `packages/db/src/schema/game/game.ts`.
+    const orgId = GLOBAL_KNOWLEDGE_ORG_ID;
+
     const hits = await searchQdrant(orgId, queryVector, topK);
     if (hits.length === 0) {
       return {
@@ -78,9 +82,6 @@ export const orgRagKnowledge: KnowledgeStrategy = {
         meta: { topK, orgId, hits: 0 },
       };
     }
-
-    const { and, db, eq, GameKnowledgeChunk, GameKnowledgeDocument, inArray } =
-      await import("@acme/db");
 
     // Qdrant returns ids/scores only — the chunk text lives in Postgres.
     // Filtered by status here (not in Qdrant, which doesn't know about

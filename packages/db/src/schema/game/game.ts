@@ -744,6 +744,19 @@ export const GameReviewReport = pgTable(
  */
 export type GameKnowledgeAudience = "character" | "judge" | "both";
 
+/**
+ * The `GameOrganization` every knowledge document/chunk is attached to while
+ * the knowledge base is shared platform-wide instead of split per team. Not
+ * a real team — nobody plays under it — just a stable FK target for
+ * `GameKnowledgeDocument.orgId`/`GameKnowledgeChunk.orgId` (both `notNull`
+ * references to `GameOrganization.id`). The row is upserted lazily on first
+ * write (`ensureGlobalKnowledgeOrg` in
+ * `packages/api/src/routers/org/knowledge.ts`) rather than via a migration,
+ * so it self-heals in any environment. Revisit once knowledge goes back to
+ * being per-team.
+ */
+export const GLOBAL_KNOWLEDGE_ORG_ID = "global-knowledge-base";
+
 /** One-time authorization for completing a direct-to-S3 knowledge upload. */
 export const GameKnowledgePendingUpload = pgTable(
   "game_knowledge_pending_uploads",

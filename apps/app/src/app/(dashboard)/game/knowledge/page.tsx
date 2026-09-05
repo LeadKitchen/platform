@@ -10,16 +10,8 @@ import { api } from "~/orpc/server";
 
 export const dynamic = "force-dynamic";
 
-export default async function KnowledgePage({
-  searchParams,
-}: {
-  searchParams: Promise<{ orgId?: string }>;
-}) {
-  const [mine, authSession, { orgId: requestedOrgId }] = await Promise.all([
-    api.org.mine(),
-    getSession(),
-    searchParams,
-  ]);
+export default async function KnowledgePage() {
+  const [mine, authSession] = await Promise.all([api.org.mine(), getSession()]);
 
   // Mirrors the check in `(dashboard)/layout.tsx` — there is no shared
   // helper across server components, only the oRPC `adminProcedure`
@@ -41,15 +33,7 @@ export default async function KnowledgePage({
   const isAdmin = isBootstrapAdmin || persistedAdmin !== undefined;
 
   if (!mine.isFacilitator && !isAdmin) redirect("/game");
-
-  // A facilitator only ever has their own team's knowledge base; an admin
-  // instead picks any team, since `org.knowledge.*` accepts an explicit
-  // `orgId` only for admins (see `resolveOrgId` in the knowledge router).
-  const orgs = isAdmin ? await api.admin.game.organizations.list() : [];
-  const orgId = isAdmin ? (requestedOrgId ?? orgs[0]?.id) : undefined;
-
-  const documents =
-    isAdmin && !orgId ? [] : await api.org.knowledge.list({ orgId });
+  const documents = await api.org.knowledge.list();
 
   return (
     <>
@@ -63,12 +47,6 @@ export default async function KnowledgePage({
       <main className="flex flex-1 flex-col p-4 lg:p-6">
         <KnowledgeLibrary
           initialDocuments={documents as KnowledgeDocumentView[]}
-          orgId={orgId}
-          orgOptions={
-            isAdmin
-              ? orgs.map((org) => ({ id: org.id, name: org.name }))
-              : undefined
-          }
         />
       </main>
     </>
