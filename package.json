@@ -12,7 +12,7 @@
     "auth:generate": "bun --filter @acme/auth generate",
     "db:push": "turbo -F @acme/db push",
     "db:generate": "turbo -F @acme/db generate",
-    "db:migrate": "turbo -F @acme/db migrate",
+    "db:migrate": "turbo -F @acme/db migrate && bun --filter @acme/jobs reindex:global-knowledge",
     "db:studio": "turbo -F @acme/db studio",
     "db:seed": "bun --env-file=.env run scripts/seed-game.ts",
     "db:seed-demo-users": "bun --env-file=.env run scripts/seed-demo-users.ts",

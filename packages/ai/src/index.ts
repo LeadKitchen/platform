@@ -30,14 +30,14 @@ export {
 } from "./knowledge/embeddings";
 export {
   type ChunkGraph,
-  extractGraph,
   type ExtractedEntity,
   type ExtractedRelation,
+  extractGraph,
 } from "./knowledge/entity-extractor";
 export {
   type ChunkFacts,
-  extractFacts,
   type ExtractedFact,
+  extractFacts,
 } from "./knowledge/facts-extractor";
 export {
   buildGraph,
@@ -54,12 +54,17 @@ export {
   type GraphFact,
   type GraphRelationInput,
   type GraphTraversalResult,
+  hasLegacyKnowledgeGraph,
+  type KnowledgeGraphDocumentInput,
+  replaceKnowledgeGraph,
   traverseOrgGraph,
   upsertEntities,
 } from "./knowledge/neo4j-graph";
 export {
+  migrateQdrantChunksToOrg,
   type QdrantChunkInput,
   type QdrantHit,
+  type QdrantOrgMigrationResult,
   searchQdrant,
   upsertChunks,
 } from "./knowledge/qdrant";

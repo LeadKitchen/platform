@@ -1,11 +1,14 @@
 import { createEmbeddingProvider, searchQdrant } from "@acme/ai";
 import {
   and,
+  type Database,
   desc,
   eq,
   GameKnowledgeChunk,
   GameKnowledgeDocument,
   GameKnowledgePendingUpload,
+  GameOrganization,
+  GLOBAL_KNOWLEDGE_ORG_ID,
   inArray,
   ne,
   sql,
@@ -19,36 +22,57 @@ import {
 } from "@acme/storage";
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
-import { requireFacilitatorOrgId } from "../../game/organizations";
-import { protectedProcedure } from "../../orpc";
+import { getFacilitatorOrgId } from "../../game/organizations";
+import { protectedProcedure, resolveIsAdmin } from "../../orpc";
 
 const audienceSchema = z.enum(["character", "judge", "both"]);
 const sourceTypeSchema = z.enum(["pdf", "docx", "txt"]);
 
 /**
- * Admin-uploaded knowledge base for the org's role-play "virtual employee".
- *
- * Every mutation here is org-scoped through `requireFacilitatorOrgId`, same
- * as `scorecards.ts` — a facilitator only ever touches their own team's
- * documents. Nothing published here is retrievable by `org-rag`
+ * Knowledge base for the AI role-play "virtual employee" — shared
+ * platform-wide for now (`GLOBAL_KNOWLEDGE_ORG_ID`) rather than split per
+ * team; per-team scoping is coming back later. `assertKnowledgeAccess` keeps
+ * the same audience that used to imply access via team facilitation — a
+ * facilitator of *any* team, or an admin — since dropping the org filter
+ * shouldn't also drop who may manage the shared library. Nothing published
+ * here is retrievable by `org-rag`
  * (`packages/ai/src/strategies/knowledge/org-rag.ts`) until `publish` moves
  * a document from `needs_review` to `ready`: the LLM-suggested audience
  * labels are a draft, and only a human confirming them puts the document in
  * front of the character.
  */
 
-async function assertOwnedDocument(
-  context: Parameters<typeof requireFacilitatorOrgId>[0],
-  orgId: string,
-  documentId: string,
-) {
+async function assertKnowledgeAccess(
+  db: Database,
+  user: { id: string; email: string },
+): Promise<void> {
+  const isAdmin = await resolveIsAdmin(db, user);
+  if (isAdmin) return;
+  const facilitatorOrgId = await getFacilitatorOrgId(db, user.id);
+  if (!facilitatorOrgId) {
+    throw new ORPCError("FORBIDDEN", {
+      message: "Доступно только ведущим группы или администраторам",
+    });
+  }
+}
+
+/** Upserts the shared `GameOrganization` row every knowledge row's `orgId` FK points at. */
+async function ensureGlobalKnowledgeOrg(db: Database): Promise<string> {
+  await db
+    .insert(GameOrganization)
+    .values({ id: GLOBAL_KNOWLEDGE_ORG_ID, name: "Общая база знаний" })
+    .onConflictDoNothing();
+  return GLOBAL_KNOWLEDGE_ORG_ID;
+}
+
+async function assertOwnedDocument(context: Database, documentId: string) {
   const [row] = await context
     .select()
     .from(GameKnowledgeDocument)
     .where(
       and(
         eq(GameKnowledgeDocument.id, documentId),
-        eq(GameKnowledgeDocument.orgId, orgId),
+        eq(GameKnowledgeDocument.orgId, GLOBAL_KNOWLEDGE_ORG_ID),
       ),
     )
     .limit(1);
@@ -59,7 +83,7 @@ async function assertOwnedDocument(
 }
 
 async function markDocumentEnqueueFailed(
-  context: Parameters<typeof assertOwnedDocument>[0],
+  context: Database,
   documentId: string,
   version: number,
 ) {
@@ -79,25 +103,19 @@ async function markDocumentEnqueueFailed(
 }
 
 export const list = protectedProcedure.handler(async ({ context }) => {
-  const orgId = await requireFacilitatorOrgId(
-    context.db,
-    context.session.user.id,
-  );
+  await assertKnowledgeAccess(context.db, context.session.user);
   return context.db
     .select()
     .from(GameKnowledgeDocument)
-    .where(eq(GameKnowledgeDocument.orgId, orgId))
+    .where(eq(GameKnowledgeDocument.orgId, GLOBAL_KNOWLEDGE_ORG_ID))
     .orderBy(desc(GameKnowledgeDocument.createdAt));
 });
 
 export const get = protectedProcedure
   .input(z.object({ id: z.uuid() }))
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
-    const document = await assertOwnedDocument(context.db, orgId, input.id);
+    await assertKnowledgeAccess(context.db, context.session.user);
+    const document = await assertOwnedDocument(context.db, input.id);
     const chunks = await context.db
       .select()
       .from(GameKnowledgeChunk)
@@ -115,10 +133,8 @@ export const requestUpload = protectedProcedure
     }),
   )
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
+    await assertKnowledgeAccess(context.db, context.session.user);
+    const orgId = await ensureGlobalKnowledgeOrg(context.db);
     const key = generateS3Key(`knowledge.${input.sourceType}`);
     const uploadUrl = await createPresignedUrl(key, input.size);
     await context.db.insert(GameKnowledgePendingUpload).values({
@@ -142,10 +158,8 @@ export const confirmUpload = protectedProcedure
     }),
   )
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
+    await assertKnowledgeAccess(context.db, context.session.user);
+    const orgId = await ensureGlobalKnowledgeOrg(context.db);
     const document = await context.db.transaction(async (tx) => {
       const [pendingUpload] = await tx
         .delete(GameKnowledgePendingUpload)
@@ -200,11 +214,8 @@ export const confirmUpload = protectedProcedure
 export const retry = protectedProcedure
   .input(z.object({ id: z.uuid() }))
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
-    const document = await assertOwnedDocument(context.db, orgId, input.id);
+    await assertKnowledgeAccess(context.db, context.session.user);
+    const document = await assertOwnedDocument(context.db, input.id);
     if (document.status !== "failed") {
       throw new ORPCError("BAD_REQUEST", {
         message: "Повторная обработка доступна только после ошибки",
@@ -255,11 +266,8 @@ export const updateChunkAudience = protectedProcedure
     }),
   )
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
-    await assertOwnedDocument(context.db, orgId, input.documentId);
+    await assertKnowledgeAccess(context.db, context.session.user);
+    await assertOwnedDocument(context.db, input.documentId);
     await context.db
       .update(GameKnowledgeChunk)
       .set({ audience: input.audience })
@@ -276,11 +284,8 @@ export const updateChunkAudience = protectedProcedure
 export const publish = protectedProcedure
   .input(z.object({ id: z.uuid() }))
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
-    const document = await assertOwnedDocument(context.db, orgId, input.id);
+    await assertKnowledgeAccess(context.db, context.session.user);
+    const document = await assertOwnedDocument(context.db, input.id);
     if (document.status !== "needs_review") {
       throw new ORPCError("BAD_REQUEST", {
         message: "Документ должен пройти обработку перед публикацией",
@@ -296,11 +301,8 @@ export const publish = protectedProcedure
 export const remove = protectedProcedure
   .input(z.object({ id: z.uuid() }))
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
-    const document = await assertOwnedDocument(context.db, orgId, input.id);
+    await assertKnowledgeAccess(context.db, context.session.user);
+    const document = await assertOwnedDocument(context.db, input.id);
     await context.db
       .delete(GameKnowledgeDocument)
       .where(eq(GameKnowledgeDocument.id, input.id));
@@ -315,21 +317,19 @@ export const remove = protectedProcedure
 export const previewRetrieval = protectedProcedure
   .input(z.object({ query: z.string().trim().min(1).max(2000) }))
   .handler(async ({ context, input }) => {
-    const orgId = await requireFacilitatorOrgId(
-      context.db,
-      context.session.user.id,
-    );
+    await assertKnowledgeAccess(context.db, context.session.user);
     const [queryVector] = await createEmbeddingProvider().embed([input.query]);
     if (!queryVector) return { hits: [] };
 
     // Unlike the in-dialog strategies, admin QA is allowed to see `judge`
     // chunks (a facilitator reviewing labels), so pass the full audience
     // set rather than relying on searchQdrant's character/both default.
-    const qdrantHits = await searchQdrant(orgId, queryVector, 10, [
-      "character",
-      "judge",
-      "both",
-    ]);
+    const qdrantHits = await searchQdrant(
+      GLOBAL_KNOWLEDGE_ORG_ID,
+      queryVector,
+      10,
+      ["character", "judge", "both"],
+    );
     if (qdrantHits.length === 0) return { hits: [] };
 
     const rows = await context.db
@@ -348,7 +348,7 @@ export const previewRetrieval = protectedProcedure
       )
       .where(
         and(
-          eq(GameKnowledgeChunk.orgId, orgId),
+          eq(GameKnowledgeChunk.orgId, GLOBAL_KNOWLEDGE_ORG_ID),
           inArray(
             GameKnowledgeChunk.id,
             qdrantHits.map((hit) => hit.id),
