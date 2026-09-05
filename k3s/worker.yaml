@@ -8,7 +8,7 @@ metadata:
 spec:
   # Hatchet fans work out across however many workers are registered — scale
   # this independently of `app` based on job throughput.
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: worker
