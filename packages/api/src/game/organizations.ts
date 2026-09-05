@@ -72,8 +72,7 @@ export async function getMemberOrgId(
 ): Promise<string | null> {
   if (isAdmin) {
     return (
-      (await getSavedActiveOrgIdForAdmin(db, userId)) ??
-      (await getAnyOrgId(db))
+      (await getSavedActiveOrgIdForAdmin(db, userId)) ?? (await getAnyOrgId(db))
     );
   }
 
