@@ -22,8 +22,12 @@ describe("parseWithMinerU", () => {
   });
 
   test("returns the parsed text on a healthy response", async () => {
-    mockFetch(async (input) => {
+    mockFetch(async (input, init) => {
       expect(String(input)).toBe("http://mineru.local/file_parse");
+      const form = init?.body as FormData;
+      expect(form.get("backend")).toBe("pipeline");
+      expect(form.get("parse_method")).toBe("auto");
+      expect(form.get("lang_list")).toBe("east_slavic");
       return Response.json({
         results: { doc: { md_content: "a".repeat(200) } },
       });

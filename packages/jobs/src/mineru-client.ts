@@ -72,6 +72,7 @@ export async function parseWithMinerU(
     // (need a separately hosted OpenAI-compatible model server).
     form.append("backend", "pipeline");
     form.append("parse_method", "auto");
+    form.append("lang_list", "east_slavic");
 
     const response = await fetch(new URL("/file_parse", baseUrl), {
       method: "POST",

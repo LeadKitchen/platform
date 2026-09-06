@@ -89,13 +89,21 @@ async function fetchWithDeadline(
   url: URL,
   init: RequestInit,
   deadline: number,
-): Promise<Response> {
+): Promise<{ ok: boolean; status: number; body?: unknown }> {
   const remainingMs = deadline - Date.now();
   if (remainingMs <= 0) throw new Error("timeout");
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), remainingMs);
   try {
-    return await fetch(url, { ...init, signal: controller.signal });
+    const response = await fetch(url, { ...init, signal: controller.signal });
+    return {
+      ok: response.ok,
+      status: response.status,
+      body: response.ok ? await response.json() : undefined,
+    };
+  } catch (error) {
+    if (controller.signal.aborted) throw new Error("timeout");
+    throw error;
   } finally {
     clearTimeout(timer);
   }
@@ -140,9 +148,7 @@ export async function parseWithDocling(
     if (!submitResponse.ok) {
       return { ok: false, reason: `http-${submitResponse.status}` };
     }
-    const submitParsed = taskStatusSchema.safeParse(
-      await submitResponse.json(),
-    );
+    const submitParsed = taskStatusSchema.safeParse(submitResponse.body);
     if (!submitParsed.success) {
       return { ok: false, reason: "malformed-response" };
     }
@@ -166,7 +172,7 @@ export async function parseWithDocling(
       if (!pollResponse.ok) {
         return { ok: false, reason: `http-${pollResponse.status}` };
       }
-      const pollParsed = taskStatusSchema.safeParse(await pollResponse.json());
+      const pollParsed = taskStatusSchema.safeParse(pollResponse.body);
       if (!pollParsed.success) {
         return { ok: false, reason: "malformed-response" };
       }
@@ -181,7 +187,7 @@ export async function parseWithDocling(
     if (!resultResponse.ok) {
       return { ok: false, reason: `http-${resultResponse.status}` };
     }
-    const resultParsed = resultSchema.safeParse(await resultResponse.json());
+    const resultParsed = resultSchema.safeParse(resultResponse.body);
     if (!resultParsed.success) {
       return { ok: false, reason: "malformed-response" };
     }
