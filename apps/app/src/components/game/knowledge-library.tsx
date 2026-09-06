@@ -660,9 +660,7 @@ export function KnowledgeLibrary({
                     </span>
                   </TableHead>
                   <TableHead className="w-[12%]">Загружен</TableHead>
-                  <TableHead className="w-[20%] text-right">
-                    Действия
-                  </TableHead>
+                  <TableHead className="w-[20%] text-right">Действия</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
