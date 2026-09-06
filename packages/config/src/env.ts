@@ -64,11 +64,16 @@ export const env = createEnv({
     DOCLING_SERVICE_URL: z.url().optional(),
     DOCLING_TIMEOUT_MS: z.coerce.number().int().positive().default(900_000),
 
-    // MinerU microservice (services/mineru-parser) — second-tier parser,
-    // tried only after Docling fails or reports low quality. Unset means
-    // the ingestion job skips straight to the unpdf/mammoth fallback.
+    // MinerU (https://github.com/opendatalab/MinerU) — second-tier
+    // parser, tried only after Docling fails or reports low quality.
+    // Unset means the ingestion job skips straight to the unpdf/mammoth
+    // fallback. Its `pipeline` backend is CPU-only and noticeably heavier
+    // than Docling's OCR pass (layout + OCR + table + formula detection
+    // per page): a real 72-page scanned document measured 2602s (~43min).
+    // The client (mineru-client.ts) submits then polls, so this bounds
+    // the whole conversion, not any single HTTP call.
     MINERU_SERVICE_URL: z.url().optional(),
-    MINERU_TIMEOUT_MS: z.coerce.number().int().positive().default(180_000),
+    MINERU_TIMEOUT_MS: z.coerce.number().int().positive().default(3_600_000),
 
     // Qdrant backs org-rag's and org-fusion-rag's vector channels; the
     // built-in corpus strategies are untouched. Unset means both arms'
