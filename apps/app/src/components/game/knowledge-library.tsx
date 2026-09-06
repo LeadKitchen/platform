@@ -646,9 +646,9 @@ export function KnowledgeLibrary({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Документ</TableHead>
-                  <TableHead>Статус</TableHead>
-                  <TableHead>
+                  <TableHead className="w-[36%]">Документ</TableHead>
+                  <TableHead className="w-[12%]">Статус</TableHead>
+                  <TableHead className="w-[20%]">
                     <span className="inline-flex items-center gap-1">
                       Доступ по умолчанию
                       <InfoPopover>
@@ -659,14 +659,14 @@ export function KnowledgeLibrary({
                       </InfoPopover>
                     </span>
                   </TableHead>
-                  <TableHead>Загружен</TableHead>
-                  <TableHead className="text-right">Действия</TableHead>
+                  <TableHead className="w-[12%]">Загружен</TableHead>
+                  <TableHead className="w-[20%] text-right">Действия</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {documents.map((document) => (
                   <TableRow key={document.id}>
-                    <TableCell>
+                    <TableCell className="align-top whitespace-normal">
                       <button
                         type="button"
                         className="font-medium hover:underline"
@@ -685,20 +685,20 @@ export function KnowledgeLibrary({
                         </div>
                       ) : null}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="align-top">
                       <Badge variant={statusVariant(document.status)}>
                         {STATUS_LABEL[document.status]}
                       </Badge>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="align-top">
                       <span className="text-sm">
                         {AUDIENCE_LABEL[document.audience]}
                       </span>
                     </TableCell>
-                    <TableCell className="text-muted-foreground text-sm">
+                    <TableCell className="text-muted-foreground align-top text-sm">
                       {formatDate(document.createdAt)}
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="align-top text-right">
                       <div className="flex justify-end gap-2">
                         {document.status === "needs_review" ? (
                           <Button
