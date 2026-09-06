@@ -92,6 +92,25 @@ async function extractWithFallback(
 }
 
 /**
+ * Scores extracted text for "did OCR actually read this, or did it just not
+ * error out" — a real failure mode we hit in production: Docling's default
+ * OCR engine (RapidOCR) reported `status: "success"` with a "good"
+ * confidence grade on a real scanned Russian document while silently
+ * dropping nearly every Cyrillic character, keeping only Latin-script
+ * fragments (titles, ISBNs). That result still clears `docling-client.ts`'s
+ * length floor, so length alone can't tell a real extraction from a
+ * garbled one for this app's knowledge base, which is overwhelmingly
+ * Russian. Cyrillic letters count double over other letters as the
+ * specific signal that was missing; total letter count is the tie-breaker/
+ * base signal for non-Cyrillic content.
+ */
+function scoreExtractedText(text: string): number {
+  const letters = text.match(/\p{L}/gu)?.length ?? 0;
+  const cyrillic = text.match(/\p{Script=Cyrillic}/gu)?.length ?? 0;
+  return letters + cyrillic;
+}
+
+/**
  * Turns an admin-uploaded file into searchable, org-scoped knowledge chunks
  * for the `org-rag` strategy (`packages/ai/src/strategies/knowledge/org-rag.ts`).
  *
@@ -113,14 +132,15 @@ export const extractContentTask = hatchet.task<
 >({
   name: "ingest-extract-content",
   retries: 3,
-  // Headroom for the full parser cascade: Docling (DOCLING_TIMEOUT_MS,
-  // default 900s — its client submits then polls, so a large scanned
-  // document's OCR can run that long; a real 72-page scan measured 623s)
-  // → MinerU on PDFs only (MINERU_TIMEOUT_MS, default 3600s — CPU-only
-  // layout+OCR+table+formula per page is much heavier than Docling's OCR
-  // pass; that same 72-page scan measured 2602s there) → unpdf/mammoth.
-  // The S3 download and the final fallback itself are comparatively
-  // instant.
+  // Headroom for Docling and MinerU running concurrently on PDFs (see
+  // below): DOCLING_TIMEOUT_MS (default 900s — its client submits then
+  // polls, so a large scanned document's OCR can run that long; a real
+  // 72-page scan measured 623s) and MINERU_TIMEOUT_MS (default 3600s —
+  // CPU-only layout+OCR+table+formula per page is much heavier than
+  // Docling's OCR pass; that same 72-page scan measured 2602s there) run
+  // in parallel, so the real bound is max(900, 3600) plus slack, not
+  // their sum — this budget just doesn't bother tightening that far. The
+  // S3 download and unpdf/mammoth fallback are comparatively instant.
   executionTimeout: "4800s",
   fn: async (input) => {
     const [document] = await db
@@ -141,31 +161,50 @@ export const extractContentTask = hatchet.task<
     let text: string;
     if (document.sourceType === "pdf" || document.sourceType === "docx") {
       const filename = `document.${document.sourceType}`;
-      const docling = await parseWithDocling(buffer, filename);
-      if (docling.ok) {
-        text = docling.text;
-      } else {
-        // Docling not configured, unreachable, or the extraction it
-        // returned was too sparse to trust (see docling-client.ts) — a
-        // parser problem costs table structure, not the whole ingestion.
+      // Always run both rather than short-circuiting on Docling's own
+      // "ok" — a parser reporting success is not the same as it having
+      // actually read the page (see scoreExtractedText's docstring).
+      // MinerU only handles PDFs (services/mineru-parser) — DOCX goes
+      // straight to mammoth if Docling doesn't pan out. Run concurrently
+      // so DOCX/simple PDFs aren't held up any longer than Docling alone
+      // takes, and a scanned PDF's wall-clock cost is max(docling,
+      // mineru) rather than their sum.
+      const [docling, mineru] = await Promise.all([
+        parseWithDocling(buffer, filename),
+        document.sourceType === "pdf"
+          ? parseWithMinerU(buffer, filename)
+          : Promise.resolve({
+              ok: false as const,
+              reason: "not-applicable-to-docx",
+            }),
+      ]);
+      if (!docling.ok) {
         console.warn(
           `Docling parse skipped for document ${input.documentId} (${docling.reason})`,
         );
-        // MinerU only handles PDFs (services/mineru-parser) — it exists
-        // for the scans/layout-heavy pages Docling struggles with, not as
-        // a general DOCX path, so DOCX goes straight to mammoth.
-        const mineru =
-          document.sourceType === "pdf"
-            ? await parseWithMinerU(buffer, filename)
-            : { ok: false as const, reason: "not-applicable-to-docx" };
-        if (mineru.ok) {
-          text = mineru.text;
-        } else {
-          console.warn(
-            `MinerU parse skipped for document ${input.documentId} (${mineru.reason}), falling back to ${document.sourceType === "pdf" ? "unpdf" : "mammoth"}`,
-          );
-          text = await extractWithFallback(document.sourceType, buffer);
-        }
+      }
+      if (!mineru.ok) {
+        console.warn(
+          `MinerU parse skipped for document ${input.documentId} (${mineru.reason})`,
+        );
+      }
+
+      if (docling.ok && mineru.ok) {
+        const useDocling =
+          scoreExtractedText(docling.text) >= scoreExtractedText(mineru.text);
+        console.warn(
+          `Both parsers succeeded for document ${input.documentId}, using ${useDocling ? "docling" : "mineru"} (higher letter/Cyrillic count)`,
+        );
+        text = useDocling ? docling.text : mineru.text;
+      } else if (docling.ok) {
+        text = docling.text;
+      } else if (mineru.ok) {
+        text = mineru.text;
+      } else {
+        console.warn(
+          `Both parsers unavailable for document ${input.documentId}, falling back to ${document.sourceType === "pdf" ? "unpdf" : "mammoth"}`,
+        );
+        text = await extractWithFallback(document.sourceType, buffer);
       }
     } else {
       text = buffer.toString("utf-8");
