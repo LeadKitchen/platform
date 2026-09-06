@@ -9,6 +9,10 @@ function mockFetch(handler: typeof fetch) {
   globalThis.fetch = handler;
 }
 
+function urlPath(input: RequestInfo | URL): string {
+  return new URL(String(input)).pathname;
+}
+
 afterEach(() => {
   globalThis.fetch = originalFetch;
 });
@@ -21,16 +25,50 @@ describe("parseWithMinerU", () => {
     );
   });
 
-  test("returns the parsed text on a healthy response", async () => {
+  test("submits, polls to a terminal status, and returns the result's text", async () => {
+    const calls: string[] = [];
     mockFetch(async (input, init) => {
-      expect(String(input)).toBe("http://mineru.local/file_parse");
-      const form = init?.body as FormData;
-      expect(form.get("backend")).toBe("pipeline");
-      expect(form.get("parse_method")).toBe("auto");
-      expect(form.get("lang_list")).toBe("east_slavic");
-      return Response.json({
-        results: { doc: { md_content: "a".repeat(200) } },
-      });
+      const path = urlPath(input);
+      calls.push(path);
+      if (path === "/tasks") {
+        const form = init?.body as FormData;
+        expect(form.get("backend")).toBe("pipeline");
+        expect(form.get("parse_method")).toBe("auto");
+        expect(form.get("lang_list")).toBe("east_slavic");
+        return Response.json({ task_id: "t1", status: "pending" });
+      }
+      if (path === "/tasks/t1") {
+        return Response.json({ task_id: "t1", status: "completed" });
+      }
+      if (path === "/tasks/t1/result") {
+        return Response.json({
+          results: { doc: { md_content: "a".repeat(200) } },
+        });
+      }
+      throw new Error(`unexpected request: ${path}`);
+    });
+
+    await expect(
+      parseWithMinerU(Buffer.from("x"), "doc.pdf", {
+        baseUrl,
+        pollIntervalMs: 1,
+      }),
+    ).resolves.toEqual({ ok: true, text: "a".repeat(200) });
+    expect(calls).toEqual(["/tasks", "/tasks/t1", "/tasks/t1/result"]);
+  });
+
+  test("accepts a terminal status straight from the submit response", async () => {
+    mockFetch(async (input) => {
+      const path = urlPath(input);
+      if (path === "/tasks") {
+        return Response.json({ task_id: "t1", status: "completed" });
+      }
+      if (path === "/tasks/t1/result") {
+        return Response.json({
+          results: { doc: { md_content: "a".repeat(200) } },
+        });
+      }
+      throw new Error(`unexpected request: ${path}`);
     });
 
     await expect(
@@ -38,10 +76,14 @@ describe("parseWithMinerU", () => {
     ).resolves.toEqual({ ok: true, text: "a".repeat(200) });
   });
 
-  test("falls back when the response text is too sparse", async () => {
-    mockFetch(async () =>
-      Response.json({ results: { doc: { md_content: "  " } } }),
-    );
+  test("falls back when the result text is too sparse", async () => {
+    mockFetch(async (input) => {
+      const path = urlPath(input);
+      if (path === "/tasks") {
+        return Response.json({ task_id: "t1", status: "completed" });
+      }
+      return Response.json({ results: { doc: { md_content: "  " } } });
+    });
 
     await expect(
       parseWithMinerU(Buffer.from("x"), "doc.pdf", { baseUrl }),
@@ -50,7 +92,11 @@ describe("parseWithMinerU", () => {
 
   test("surfaces the real reason when MinerU's own backend fails", async () => {
     mockFetch(async () =>
-      Response.json({ status: "failed", error: "No module named 'six'" }),
+      Response.json({
+        task_id: "t1",
+        status: "failed",
+        error: "No module named 'six'",
+      }),
     );
 
     await expect(
@@ -58,7 +104,23 @@ describe("parseWithMinerU", () => {
     ).resolves.toEqual({ ok: false, reason: "No module named 'six'" });
   });
 
-  test("falls back when the response doesn't match MinerU's shape", async () => {
+  test("gives up once the overall deadline passes without a terminal status", async () => {
+    mockFetch(async (input) => {
+      const path = urlPath(input);
+      if (path === "/tasks") {
+        return Response.json({ task_id: "t1", status: "pending" });
+      }
+      // Never reaches a terminal status — parseWithMinerU must stop
+      // polling once its own deadline (timeoutMs) elapses.
+      return Response.json({ task_id: "t1", status: "processing" });
+    });
+
+    await expect(
+      parseWithMinerU(Buffer.from("x"), "doc.pdf", { baseUrl, timeoutMs: 5 }),
+    ).resolves.toEqual({ ok: false, reason: "timeout" });
+  });
+
+  test("falls back when the submit response doesn't match MinerU's shape", async () => {
     mockFetch(async () => Response.json({ unexpected: true }));
 
     await expect(
