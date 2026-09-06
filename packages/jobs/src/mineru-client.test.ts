@@ -13,9 +13,6 @@ afterEach(() => {
   globalThis.fetch = originalFetch;
 });
 
-// Exhaustive response-handling cases live in parser-client.test.ts against
-// the shared `parseWithService` this wraps — these just confirm the
-// wrapper plumbs its own options/env through correctly.
 describe("parseWithMinerU", () => {
   test("reports not-configured when no base URL is available", async () => {
     // No `baseUrl` option and MINERU_SERVICE_URL is unset in this env.
@@ -25,22 +22,61 @@ describe("parseWithMinerU", () => {
   });
 
   test("returns the parsed text on a healthy response", async () => {
+    mockFetch(async (input) => {
+      expect(String(input)).toBe("http://mineru.local/file_parse");
+      return Response.json({
+        results: { doc: { md_content: "a".repeat(200) } },
+      });
+    });
+
+    await expect(
+      parseWithMinerU(Buffer.from("x"), "doc.pdf", { baseUrl }),
+    ).resolves.toEqual({ ok: true, text: "a".repeat(200) });
+  });
+
+  test("falls back when the response text is too sparse", async () => {
     mockFetch(async () =>
-      Response.json({
-        text: "a".repeat(200),
-        page_count: 2,
-        table_count: 1,
-        avg_chars_per_page: 100,
-      }),
+      Response.json({ results: { doc: { md_content: "  " } } }),
     );
 
     await expect(
       parseWithMinerU(Buffer.from("x"), "doc.pdf", { baseUrl }),
-    ).resolves.toEqual({
-      ok: true,
-      text: "a".repeat(200),
-      pageCount: 2,
-      tableCount: 1,
+    ).resolves.toEqual({ ok: false, reason: "low-quality" });
+  });
+
+  test("surfaces the real reason when MinerU's own backend fails", async () => {
+    mockFetch(async () =>
+      Response.json({ status: "failed", error: "No module named 'six'" }),
+    );
+
+    await expect(
+      parseWithMinerU(Buffer.from("x"), "doc.pdf", { baseUrl }),
+    ).resolves.toEqual({ ok: false, reason: "No module named 'six'" });
+  });
+
+  test("falls back when the response doesn't match MinerU's shape", async () => {
+    mockFetch(async () => Response.json({ unexpected: true }));
+
+    await expect(
+      parseWithMinerU(Buffer.from("x"), "doc.pdf", { baseUrl }),
+    ).resolves.toEqual({ ok: false, reason: "malformed-response" });
+  });
+
+  test("falls back on a non-2xx response", async () => {
+    mockFetch(async () => new Response("bad", { status: 404 }));
+
+    await expect(
+      parseWithMinerU(Buffer.from("x"), "doc.pdf", { baseUrl }),
+    ).resolves.toEqual({ ok: false, reason: "http-404" });
+  });
+
+  test("falls back when the request throws (service unreachable)", async () => {
+    mockFetch(async () => {
+      throw new Error("connect ECONNREFUSED");
     });
+
+    await expect(
+      parseWithMinerU(Buffer.from("x"), "doc.pdf", { baseUrl }),
+    ).resolves.toEqual({ ok: false, reason: "connect ECONNREFUSED" });
   });
 });

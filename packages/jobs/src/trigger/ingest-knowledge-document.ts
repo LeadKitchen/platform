@@ -114,10 +114,12 @@ export const extractContentTask = hatchet.task<
   name: "ingest-extract-content",
   retries: 3,
   // Headroom for the full parser cascade: Docling (DOCLING_TIMEOUT_MS,
-  // default 90s) → MinerU on PDFs only (MINERU_TIMEOUT_MS, default 180s,
-  // heavier CPU-bound OCR) → unpdf/mammoth. The S3 download and the final
+  // default 900s — its client submits then polls, so a large scanned
+  // document's OCR can run that long; a real 72-page scan measured 623s)
+  // → MinerU on PDFs only (MINERU_TIMEOUT_MS, default 180s, heavier
+  // CPU-bound OCR) → unpdf/mammoth. The S3 download and the final
   // fallback itself are comparatively instant.
-  executionTimeout: "350s",
+  executionTimeout: "1200s",
   fn: async (input) => {
     const [document] = await db
       .select()
@@ -500,9 +502,9 @@ ingestKnowledgeDocumentWorkflow.task({
   // itself would just repeat whichever step already exhausted its retries.
   retries: 1,
   // Headroom for the worst case across every step: the three-tier parser
-  // cascade (up to 350s) plus chunk/classify and the Postgres/Qdrant/Neo4j/
+  // cascade (up to 1200s) plus chunk/classify and the Postgres/Qdrant/Neo4j/
   // facts fan-out afterward.
-  executionTimeout: "900s",
+  executionTimeout: "1800s",
   fn: async (payload) => {
     const extracted = await extractContentTask.run(payload);
 

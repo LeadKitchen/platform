@@ -54,11 +54,15 @@ export const env = createEnv({
     AWS_REGION: z.string().default("ru-central1"),
     AWS_S3_BUCKET: z.string().default("acme-bucket"),
 
-    // Docling microservice (services/docling-parser) — structure-aware
-    // PDF/DOCX extraction for the knowledge-base ingestion job. Unset means
-    // the job uses unpdf/mammoth only, same as before this existed.
+    // Docling Serve (https://github.com/docling-project/docling-serve) —
+    // structure-aware PDF/DOCX extraction for the knowledge-base ingestion
+    // job. Unset means the job uses unpdf/mammoth only. The client
+    // (docling-client.ts) submits then polls for a result rather than
+    // blocking one request, so this bounds the whole conversion — a
+    // multi-page scanned document can genuinely take several minutes of
+    // OCR — not any single HTTP call.
     DOCLING_SERVICE_URL: z.url().optional(),
-    DOCLING_TIMEOUT_MS: z.coerce.number().int().positive().default(90_000),
+    DOCLING_TIMEOUT_MS: z.coerce.number().int().positive().default(900_000),
 
     // MinerU microservice (services/mineru-parser) — second-tier parser,
     // tried only after Docling fails or reports low quality. Unset means
