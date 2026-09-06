@@ -13,6 +13,21 @@ function urlPath(input: RequestInfo | URL): string {
   return new URL(String(input)).pathname;
 }
 
+function neverEndingJsonResponse(signal: AbortSignal | null | undefined) {
+  return new Response(
+    new ReadableStream({
+      start(controller) {
+        signal?.addEventListener(
+          "abort",
+          () => controller.error(signal.reason),
+          { once: true },
+        );
+      },
+    }),
+    { headers: { "content-type": "application/json" } },
+  );
+}
+
 afterEach(() => {
   globalThis.fetch = originalFetch;
 });
@@ -129,6 +144,36 @@ describe("parseWithDocling", () => {
       parseWithDocling(Buffer.from("x"), "doc.pdf", { baseUrl, timeoutMs: 5 }),
     ).resolves.toEqual({ ok: false, reason: "timeout" });
   });
+
+  test.each([
+    ["submit", "/v1/convert/file/async"],
+    ["poll", "/v1/status/poll/t1"],
+    ["result", "/v1/result/t1"],
+  ])(
+    "aborts a stalled %s response body at the deadline",
+    async (_, stalledPath) => {
+      mockFetch(async (input, init) => {
+        const path = urlPath(input);
+        if (path === stalledPath) {
+          return neverEndingJsonResponse(init?.signal);
+        }
+        if (path === "/v1/convert/file/async") {
+          return Response.json({ task_id: "t1", task_status: "started" });
+        }
+        if (path === "/v1/status/poll/t1") {
+          return Response.json({ task_id: "t1", task_status: "success" });
+        }
+        throw new Error(`unexpected request: ${path}`);
+      });
+
+      await expect(
+        parseWithDocling(Buffer.from("x"), "doc.pdf", {
+          baseUrl,
+          timeoutMs: 10,
+        }),
+      ).resolves.toEqual({ ok: false, reason: "timeout" });
+    },
+  );
 
   test("falls back when the submit response doesn't match docling-serve's shape", async () => {
     mockFetch(async () => Response.json({ unexpected: true }));
