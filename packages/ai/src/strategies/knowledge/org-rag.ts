@@ -28,6 +28,19 @@ export const orgRagKnowledge: KnowledgeStrategy = {
     const startedAt = Date.now();
     const topK = typeof deps.params.topK === "number" ? deps.params.topK : 6;
 
+    // This arm has no non-dense fallback — it's a thin wrapper over a Qdrant
+    // vector search. `dense: false` means "stay offline" (see hybrid-rag and
+    // friends), and offline here can only mean skipping the arm entirely,
+    // same as `indexes.dense === null` does for them. Checked before the
+    // `@acme/db` import below so an offline caller never needs POSTGRES_URL.
+    if (deps.params.dense === false) {
+      return {
+        snippets: [],
+        latencyMs: Date.now() - startedAt,
+        meta: { reason: "dense-disabled", topK },
+      };
+    }
+
     const { employee, task, shift } = request.dialog;
     const query = [
       request.query,

@@ -60,6 +60,19 @@ export const orgFusionRagKnowledge: KnowledgeStrategy = {
     const pool = topK * poolMultiplier;
     const hops = typeof deps.params.hops === "number" ? deps.params.hops : 2;
 
+    // Unlike hybrid-rag/hyde-rag/contextual-rag, none of this arm's four
+    // channels has a non-DB fallback — org documents only exist in Postgres/
+    // Qdrant/Neo4j. `dense: false` means "stay offline" for the whole
+    // strategy here, checked before the `@acme/db` import below so an
+    // offline caller never needs POSTGRES_URL.
+    if (deps.params.dense === false) {
+      return {
+        snippets: [],
+        latencyMs: Date.now() - startedAt,
+        meta: { reason: "dense-disabled", topK },
+      };
+    }
+
     const { employee, task, shift } = request.dialog;
     const query = [
       request.query,
