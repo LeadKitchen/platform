@@ -632,7 +632,7 @@ export function KnowledgeLibrary({
         </div>
       </header>
 
-      <Card>
+      <Card className="gap-0 overflow-hidden py-0">
         <CardContent className="p-0">
           {documents.length === 0 ? (
             <div className="flex flex-col items-center gap-2 p-10 text-center">
