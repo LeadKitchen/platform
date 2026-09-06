@@ -33,6 +33,16 @@ export interface EmbeddingOptions {
 export const KNOWLEDGE_EMBEDDING_DIMENSIONS = 1024;
 const KNOWLEDGE_EMBEDDING_MODEL = "intfloat/multilingual-e5-large";
 
+// TEI's OpenAI-compatible route rejects a request outright with 422 ("batch
+// size N > maximum allowed batch size 32") rather than splitting it — unlike
+// `auto_truncate`, there's no server-side flag that makes it chunk an
+// oversized batch for you. `embedMany`'s own `maxEmbeddingsPerCall` batching
+// isn't reachable here either: `@ai-sdk/openai-compatible` only exposes that
+// knob through its internal embedding-model config, not through
+// `createOpenAICompatible`'s public options. So this batches by hand instead.
+// Confirmed against the deployed TEI instance's `/info` (`max_client_batch_size: 32`).
+const MAX_EMBEDDINGS_PER_CALL = 32;
+
 export function createEmbeddingProvider(
   options: EmbeddingOptions = {},
 ): EmbeddingProvider {
@@ -72,7 +82,16 @@ export function createEmbeddingProvider(
     id: `embeddings:${modelId}`,
     async embed(texts) {
       if (texts.length === 0) return [];
-      const { embeddings } = await embedMany({ model, values: texts });
+      const embeddings: number[][] = [];
+      for (
+        let offset = 0;
+        offset < texts.length;
+        offset += MAX_EMBEDDINGS_PER_CALL
+      ) {
+        const batch = texts.slice(offset, offset + MAX_EMBEDDINGS_PER_CALL);
+        const result = await embedMany({ model, values: batch });
+        embeddings.push(...result.embeddings);
+      }
       for (const embedding of embeddings) {
         if (embedding.length !== KNOWLEDGE_EMBEDDING_DIMENSIONS) {
           throw new Error(
