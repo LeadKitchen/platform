@@ -8,6 +8,7 @@ import {
   GameKnowledgeDocument,
   GameKnowledgePendingUpload,
   GameOrganization,
+  GameProductEvent,
   GLOBAL_KNOWLEDGE_ORG_ID,
   inArray,
   ne,
@@ -404,6 +405,29 @@ export const previewRetrieval = protectedProcedure
     return { hits };
   });
 
+const GAP_LIST_LIMIT = 30;
+
+/** Recent participant questions `org-rag` found nothing for — what to consider adding next. */
+export const listGaps = protectedProcedure.handler(async ({ context }) => {
+  await assertKnowledgeAccess(context.db, context.session.user);
+  const rows = await context.db
+    .select({
+      id: GameProductEvent.id,
+      properties: GameProductEvent.properties,
+      createdAt: GameProductEvent.createdAt,
+    })
+    .from(GameProductEvent)
+    .where(eq(GameProductEvent.name, "knowledge_gap"))
+    .orderBy(desc(GameProductEvent.createdAt))
+    .limit(GAP_LIST_LIMIT);
+  return rows.flatMap((row) => {
+    const query = row.properties.query;
+    return typeof query === "string"
+      ? [{ id: row.id, query, createdAt: row.createdAt }]
+      : [];
+  });
+});
+
 export const orgKnowledgeRouter = {
   list,
   get,
@@ -414,4 +438,5 @@ export const orgKnowledgeRouter = {
   publish,
   remove,
   previewRetrieval,
+  listGaps,
 };

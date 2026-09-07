@@ -80,6 +80,7 @@ export const orgRagKnowledge: KnowledgeStrategy = {
       eq,
       GameKnowledgeChunk,
       GameKnowledgeDocument,
+      GameProductEvent,
       GLOBAL_KNOWLEDGE_ORG_ID,
       inArray,
       sql,
@@ -90,6 +91,25 @@ export const orgRagKnowledge: KnowledgeStrategy = {
 
     const hits = await searchQdrant(orgId, queryVector, topK);
     if (hits.length === 0) {
+      // Nothing in the vector index came back at all — a genuine content
+      // gap, not a publish-status hiccup (a chunk that exists but isn't
+      // `ready` yet still counts as a Qdrant hit here; see the row filter
+      // below). Recorded so the admin's "what's missing" panel has
+      // something to show, same fire-and-forget contract as the retrieval
+      // counters below.
+      const trimmedQuery = request.query.trim();
+      if (trimmedQuery.length > 0) {
+        db.insert(GameProductEvent)
+          .values({
+            name: "knowledge_gap",
+            properties: { query: trimmedQuery.slice(0, 500) },
+          })
+          .catch((error) => {
+            console.warn(
+              `org-rag: failed to record knowledge gap: ${error instanceof Error ? error.message : String(error)}`,
+            );
+          });
+      }
       return {
         snippets: [],
         latencyMs: Date.now() - startedAt,
