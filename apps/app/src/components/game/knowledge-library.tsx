@@ -577,15 +577,23 @@ interface GapEntry {
 /** What participants asked that `org-rag` found nothing for — a to-do list for the next upload, not an error. */
 function KnowledgeGapsPanel() {
   const [gaps, setGaps] = useState<GapEntry[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    client.org.knowledge
-      .listGaps()
-      .then((rows) => setGaps(rows as GapEntry[]))
-      .catch(() => setGaps([]));
+  const loadGaps = useCallback(async () => {
+    setError(null);
+    try {
+      const rows = await client.org.knowledge.listGaps();
+      setGaps(rows as GapEntry[]);
+    } catch {
+      setError("Не удалось загрузить вопросы. Попробуйте ещё раз.");
+    }
   }, []);
 
-  if (gaps !== null && gaps.length === 0) return null;
+  useEffect(() => {
+    void loadGaps();
+  }, [loadGaps]);
+
+  if (!error && gaps !== null && gaps.length === 0) return null;
 
   return (
     <Card>
@@ -600,7 +608,14 @@ function KnowledgeGapsPanel() {
         </p>
       </CardHeader>
       <CardContent>
-        {gaps === null ? (
+        {error ? (
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="text-destructive text-sm">{error}</p>
+            <Button variant="outline" size="sm" onClick={loadGaps}>
+              Повторить
+            </Button>
+          </div>
+        ) : gaps === null ? (
           <p className="text-muted-foreground text-sm">Загрузка…</p>
         ) : (
           <div className="flex flex-col gap-2">

@@ -409,7 +409,16 @@ const GAP_LIST_LIMIT = 30;
 
 /** Recent participant questions `org-rag` found nothing for — what to consider adding next. */
 export const listGaps = protectedProcedure.handler(async ({ context }) => {
-  await assertKnowledgeAccess(context.db, context.session.user);
+  const isAdmin = await resolveIsAdmin(context.db, context.session.user);
+  const facilitatorOrgId = isAdmin
+    ? null
+    : await getFacilitatorOrgId(context.db, context.session.user.id);
+  if (!isAdmin && !facilitatorOrgId) {
+    throw new ORPCError("FORBIDDEN", {
+      message: "Доступно только ведущим группы или администраторам",
+    });
+  }
+
   const rows = await context.db
     .select({
       id: GameProductEvent.id,
@@ -417,7 +426,16 @@ export const listGaps = protectedProcedure.handler(async ({ context }) => {
       createdAt: GameProductEvent.createdAt,
     })
     .from(GameProductEvent)
-    .where(eq(GameProductEvent.name, "knowledge_gap"))
+    .where(
+      and(
+        eq(GameProductEvent.name, "knowledge_gap"),
+        // Global admins audit gaps across every organization (including
+        // legacy unattributed events); facilitators only see their workspace.
+        isAdmin
+          ? undefined
+          : sql`${GameProductEvent.properties} ->> 'orgId' = ${facilitatorOrgId}`,
+      ),
+    )
     .orderBy(desc(GameProductEvent.createdAt))
     .limit(GAP_LIST_LIMIT);
   return rows.flatMap((row) => {

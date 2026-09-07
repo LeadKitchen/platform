@@ -102,7 +102,10 @@ export const orgRagKnowledge: KnowledgeStrategy = {
         db.insert(GameProductEvent)
           .values({
             name: "knowledge_gap",
-            properties: { query: trimmedQuery.slice(0, 500) },
+            properties: {
+              query: trimmedQuery.slice(0, 500),
+              orgId: request.dialog.orgId,
+            },
           })
           .catch((error) => {
             console.warn(
