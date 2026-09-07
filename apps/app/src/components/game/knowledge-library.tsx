@@ -147,10 +147,18 @@ function statusVariant(
 }
 
 function formatDate(value: string | Date) {
+  // Pin the timezone — without it this renders the server's local zone (UTC
+  // in prod) during SSR and the browser's zone during hydration, so a
+  // timestamp near midnight (e.g. 21:42 UTC — already the next day in
+  // Moscow) mismatches and trips React error #418. That hydration failure
+  // aborts reconciliation for the whole subtree, including the audience
+  // <Select> next to it, leaving it visually stuck on its first render and
+  // unresponsive to clicks — not a Select bug, a date-formatting one.
   return new Date(value).toLocaleDateString("ru-RU", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
+    timeZone: "UTC",
   });
 }
 
