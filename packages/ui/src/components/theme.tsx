@@ -83,15 +83,36 @@ const ThemeContext = React.createContext<ThemeContextProps | undefined>(
 );
 
 export function ThemeProvider({ children }: React.PropsWithChildren) {
-  const [themeMode, setThemeMode] = React.useState(getStoredThemeMode);
+  // Seeded with the server-safe default ("auto"), not localStorage — a
+  // lazy initializer reading localStorage here would return a different
+  // value on the client's hydration render than on the server's (which
+  // has no localStorage and always sees "auto"), tripping a React
+  // hydration-mismatch error for every consumer of this context. Reading
+  // the real stored value only in the effect below keeps the first client
+  // render identical to the server's.
+  const [themeMode, setThemeMode] = React.useState<ThemeMode>("auto");
+  const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
+    setMounted(true);
+    setThemeMode(getStoredThemeMode());
+  }, []);
+
+  React.useEffect(() => {
+    if (!mounted) return;
     updateThemeClass(themeMode);
     if (themeMode !== "auto") return;
     return setupPreferredListener();
-  }, [themeMode]);
+  }, [themeMode, mounted]);
 
-  const resolvedTheme = themeMode === "auto" ? getSystemTheme() : themeMode;
+  // Same reasoning as themeMode: getSystemTheme() reads matchMedia, which
+  // doesn't exist on the server, so it must stay at its SSR-safe default
+  // until after mount too.
+  const resolvedTheme = !mounted
+    ? "light"
+    : themeMode === "auto"
+      ? getSystemTheme()
+      : themeMode;
 
   const setTheme = (newTheme: ThemeMode) => {
     setThemeMode(newTheme);
