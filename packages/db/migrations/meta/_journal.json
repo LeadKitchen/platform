@@ -15,6 +15,20 @@
       "when": 1788599078574,
       "tag": "0001_global_knowledge_backfill",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788785766632,
+      "tag": "0002_freezing_rogue",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1788789682880,
+      "tag": "0003_yummy_human_cannonball",
+      "breakpoints": true
     }
   ]
 }

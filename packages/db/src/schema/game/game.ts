@@ -805,6 +805,14 @@ export const GameKnowledgeDocument = pgTable(
       .$type<"pdf" | "docx" | "txt">()
       .notNull(),
     s3Key: t.text().notNull(),
+    /** As selected by the uploader — `s3Key` is a generated storage path, not this. */
+    originalFilename: t.text(),
+    fileSizeBytes: t.integer(),
+    /** Filled in once text extraction succeeds; null while `processing` or on `failed`. */
+    wordCount: t.integer(),
+    charCount: t.integer(),
+    /** Denormalized count of this version's `GameKnowledgeChunk` rows, set alongside them. */
+    chunkCount: t.integer().default(0).notNull(),
     /**
      * `needs_review`: ingested and chunked, but the LLM-suggested audience
      * labels have not been confirmed by an admin yet — excluded from
@@ -870,6 +878,15 @@ export const GameKnowledgeChunk = pgTable(
       .notNull(),
     tags: t.jsonb().$type<string[]>().default([]).notNull(),
     createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+    /**
+     * How many times `org-rag` (`packages/ai/src/strategies/knowledge/org-rag.ts`)
+     * has returned this chunk as a live-dialog retrieval hit — incremented
+     * there, not here. Admin QA (`previewRetrieval`) never touches this: it
+     * answers "did this document ever help a real conversation", which a
+     * facilitator's own test queries would only pollute.
+     */
+    retrievalCount: t.integer().default(0).notNull(),
+    lastRetrievedAt: t.timestamp({ withTimezone: true }),
   }),
   (table) => [
     index("game_knowledge_chunks_document_idx").on(table.documentId),

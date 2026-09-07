@@ -105,9 +105,42 @@ async function markDocumentEnqueueFailed(
 export const list = protectedProcedure.handler(async ({ context }) => {
   await assertKnowledgeAccess(context.db, context.session.user);
   return context.db
-    .select()
+    .select({
+      id: GameKnowledgeDocument.id,
+      orgId: GameKnowledgeDocument.orgId,
+      title: GameKnowledgeDocument.title,
+      sourceType: GameKnowledgeDocument.sourceType,
+      s3Key: GameKnowledgeDocument.s3Key,
+      status: GameKnowledgeDocument.status,
+      statusMessage: GameKnowledgeDocument.statusMessage,
+      audience: GameKnowledgeDocument.audience,
+      version: GameKnowledgeDocument.version,
+      uploadedBy: GameKnowledgeDocument.uploadedBy,
+      createdAt: GameKnowledgeDocument.createdAt,
+      updatedAt: GameKnowledgeDocument.updatedAt,
+      originalFilename: GameKnowledgeDocument.originalFilename,
+      fileSizeBytes: GameKnowledgeDocument.fileSizeBytes,
+      wordCount: GameKnowledgeDocument.wordCount,
+      charCount: GameKnowledgeDocument.charCount,
+      chunkCount: GameKnowledgeDocument.chunkCount,
+      // Aggregated from chunks rather than denormalized onto the document
+      // row — org-rag increments per-chunk counters only, so this is always
+      // the current sum rather than something that can drift out of sync.
+      totalRetrievals:
+        sql<number>`coalesce(sum(${GameKnowledgeChunk.retrievalCount}), 0)`.mapWith(
+          Number,
+        ),
+      lastRetrievedAt: sql<
+        string | null
+      >`max(${GameKnowledgeChunk.lastRetrievedAt})`,
+    })
     .from(GameKnowledgeDocument)
+    .leftJoin(
+      GameKnowledgeChunk,
+      eq(GameKnowledgeChunk.documentId, GameKnowledgeDocument.id),
+    )
     .where(eq(GameKnowledgeDocument.orgId, GLOBAL_KNOWLEDGE_ORG_ID))
+    .groupBy(GameKnowledgeDocument.id)
     .orderBy(desc(GameKnowledgeDocument.createdAt));
 });
 
@@ -155,6 +188,7 @@ export const confirmUpload = protectedProcedure
       title: z.string().trim().min(1).max(200),
       sourceType: sourceTypeSchema,
       audience: audienceSchema.default("character"),
+      originalFilename: z.string().trim().min(1).max(255),
     }),
   )
   .handler(async ({ context, input }) => {
@@ -187,6 +221,8 @@ export const confirmUpload = protectedProcedure
           s3Key: input.key,
           audience: input.audience,
           uploadedBy: context.session.user.id,
+          originalFilename: input.originalFilename,
+          fileSizeBytes: pendingUpload.size,
         })
         .returning();
       return createdDocument;
