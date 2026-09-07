@@ -148,7 +148,21 @@ export interface AiSdkProviderOptions {
   headers?: Record<string, string>;
   /** Injectable transport: used by tests and by proxied environments. */
   fetchImpl?: typeof fetch;
+  /**
+   * Per-attempt network timeout. Without this, a gateway that accepts the
+   * connection and then never responds (seen in practice on router.cheap
+   * under load) hangs the call forever — `generateText`'s own `abortSignal`
+   * is whatever the caller passed in `request.signal`, which is usually
+   * unset, so nothing here bounds the fetch on its own. Hatchet's task-level
+   * executionTimeout doesn't save you either: it can only mark the run
+   * cancelled, not actually abort in-flight JS ("cannot force-kill user
+   * code"), so a hung call blocks a worker slot indefinitely instead of
+   * failing and letting a retry take over.
+   */
+  timeoutMs?: number;
 }
+
+const DEFAULT_TIMEOUT_MS = 120_000;
 
 function buildModel(options: AiSdkProviderOptions): LanguageModel {
   switch (options.vendor) {
@@ -210,6 +224,7 @@ export function createAiSdkProvider(
   const model = buildModel(options);
   const maxOutputTokens = options.maxOutputTokens ?? 16000;
   const maxAttempts = Math.max(1, options.maxAttempts ?? 3);
+  const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
 
   return {
     id: `ai-sdk:${options.vendor}`,
@@ -240,6 +255,11 @@ export function createAiSdkProvider(
             ? request.system
             : request.system + schemaHint(request.schema);
 
+        const timeoutSignal = AbortSignal.timeout(timeoutMs);
+        const attemptSignal = request.signal
+          ? AbortSignal.any([request.signal, timeoutSignal])
+          : timeoutSignal;
+
         try {
           const result = await generateText({
             model,
@@ -254,7 +274,7 @@ export function createAiSdkProvider(
             // failure should move to the next candidate immediately instead of
             // backing off against an endpoint that is already out of quota.
             maxRetries: 0,
-            abortSignal: request.signal,
+            abortSignal: attemptSignal,
           });
 
           inputTokens += result.usage.inputTokens ?? 0;
@@ -368,6 +388,11 @@ export function createAiSdkProvider(
           ? request.system
           : request.system + schemaHint(request.schema);
 
+      const timeoutSignal = AbortSignal.timeout(timeoutMs);
+      const streamSignal = request.signal
+        ? AbortSignal.any([request.signal, timeoutSignal])
+        : timeoutSignal;
+
       const streamed = streamText({
         model,
         system,
@@ -378,7 +403,7 @@ export function createAiSdkProvider(
         output: Output.object({ schema: request.schema }),
         maxOutputTokens,
         maxRetries: 0,
-        abortSignal: request.signal,
+        abortSignal: streamSignal,
       });
 
       const wrap = (cause: unknown): unknown => {
