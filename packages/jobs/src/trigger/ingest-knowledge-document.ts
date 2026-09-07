@@ -45,6 +45,8 @@ type ExtractedContent = {
   orgId: string;
   defaultAudience: GameKnowledgeAudience;
   expectedVersion: number;
+  wordCount: number;
+  charCount: number;
 };
 
 type ChunkAndClassifyInput = {
@@ -62,6 +64,8 @@ type EmbedAndPersistInput = {
   orgId: string;
   expectedVersion: number;
   chunks: KnowledgeChunk[];
+  wordCount: number;
+  charCount: number;
 };
 
 type IndexQdrantInput = {
@@ -220,6 +224,8 @@ export const extractContentTask = hatchet.task<
       orgId: document.orgId,
       defaultAudience: document.audience,
       expectedVersion: document.version,
+      wordCount: text.split(/\s+/).length,
+      charCount: text.length,
     };
   },
 });
@@ -310,7 +316,13 @@ export const embedAndPersistTask = hatchet.task<
     const insertedRows = await db.transaction(async (tx) => {
       const [claimedDocument] = await tx
         .update(GameKnowledgeDocument)
-        .set({ status: "needs_review", statusMessage: null })
+        .set({
+          status: "needs_review",
+          statusMessage: null,
+          wordCount: input.wordCount,
+          charCount: input.charCount,
+          chunkCount: input.chunks.length,
+        })
         .where(
           and(
             eq(GameKnowledgeDocument.id, input.documentId),
@@ -567,6 +579,8 @@ ingestKnowledgeDocumentWorkflow.task({
       orgId: extracted.orgId,
       expectedVersion: extracted.expectedVersion,
       chunks: classified.chunks,
+      wordCount: extracted.wordCount,
+      charCount: extracted.charCount,
     });
 
     // Qdrant/Neo4j/atomic-facts are org-fusion-rag's supplementary

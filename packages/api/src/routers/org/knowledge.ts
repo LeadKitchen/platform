@@ -155,6 +155,7 @@ export const confirmUpload = protectedProcedure
       title: z.string().trim().min(1).max(200),
       sourceType: sourceTypeSchema,
       audience: audienceSchema.default("character"),
+      originalFilename: z.string().trim().min(1).max(255),
     }),
   )
   .handler(async ({ context, input }) => {
@@ -187,6 +188,8 @@ export const confirmUpload = protectedProcedure
           s3Key: input.key,
           audience: input.audience,
           uploadedBy: context.session.user.id,
+          originalFilename: input.originalFilename,
+          fileSizeBytes: pendingUpload.size,
         })
         .returning();
       return createdDocument;

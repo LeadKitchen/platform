@@ -67,6 +67,10 @@ export interface KnowledgeDocumentView {
   audience: Audience;
   version: number;
   createdAt: string | Date;
+  originalFilename: string | null;
+  fileSizeBytes: number | null;
+  wordCount: number | null;
+  chunkCount: number;
 }
 
 interface ChunkView {
@@ -146,6 +150,20 @@ function statusVariant(
   }
 }
 
+const WORD_COUNT_FORMATTER = new Intl.NumberFormat("ru-RU");
+
+function formatWordCount(count: number | null): string {
+  return count === null ? "—" : `${WORD_COUNT_FORMATTER.format(count)} слов`;
+}
+
+function formatFileSize(bytes: number | null): string {
+  if (bytes === null) return "—";
+  if (bytes < 1024) return `${bytes} Б`;
+  const kb = bytes / 1024;
+  if (kb < 1024) return `${kb.toFixed(0)} КБ`;
+  return `${(kb / 1024).toFixed(1)} МБ`;
+}
+
 function formatDate(value: string | Date) {
   // Pin the timezone — without it this renders the server's local zone (UTC
   // in prod) during SSR and the browser's zone during hydration, so a
@@ -208,6 +226,7 @@ function UploadDialog({
         title: title.trim(),
         sourceType: detectedSourceType,
         audience,
+        originalFilename: file.name,
       });
       onUploaded(document as KnowledgeDocumentView);
       toast.success("Документ загружен, начата обработка");
@@ -654,9 +673,9 @@ export function KnowledgeLibrary({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[36%]">Документ</TableHead>
+                  <TableHead className="w-[30%]">Документ</TableHead>
                   <TableHead className="w-[12%]">Статус</TableHead>
-                  <TableHead className="w-[20%]">
+                  <TableHead className="w-[16%]">
                     <span className="inline-flex items-center gap-1">
                       Доступ по умолчанию
                       <InfoPopover>
@@ -667,8 +686,18 @@ export function KnowledgeLibrary({
                       </InfoPopover>
                     </span>
                   </TableHead>
-                  <TableHead className="w-[12%]">Загружен</TableHead>
-                  <TableHead className="w-[20%] text-right">Действия</TableHead>
+                  <TableHead className="w-[16%]">
+                    <span className="inline-flex items-center gap-1">
+                      Обработано
+                      <InfoPopover>
+                        Сколько слов извлекли из документа и на сколько
+                        фрагментов его разбили для поиска. Появляется, когда
+                        обработка завершена.
+                      </InfoPopover>
+                    </span>
+                  </TableHead>
+                  <TableHead className="w-[10%]">Загружен</TableHead>
+                  <TableHead className="w-[16%] text-right">Действия</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -683,8 +712,14 @@ export function KnowledgeLibrary({
                       >
                         {document.title}
                       </button>
-                      <div className="text-muted-foreground text-xs uppercase">
-                        {document.sourceType}
+                      <div className="text-muted-foreground text-xs">
+                        <span className="uppercase">{document.sourceType}</span>
+                        {document.originalFilename
+                          ? ` · ${document.originalFilename}`
+                          : null}
+                        {document.fileSizeBytes !== null
+                          ? ` · ${formatFileSize(document.fileSizeBytes)}`
+                          : null}
                       </div>
                       {document.status === "failed" &&
                       document.statusMessage ? (
@@ -702,6 +737,18 @@ export function KnowledgeLibrary({
                       <span className="text-sm">
                         {AUDIENCE_LABEL[document.audience]}
                       </span>
+                    </TableCell>
+                    <TableCell className="align-top text-sm">
+                      {document.wordCount !== null ? (
+                        <>
+                          <div>{formatWordCount(document.wordCount)}</div>
+                          <div className="text-muted-foreground text-xs">
+                            {document.chunkCount} фрагм.
+                          </div>
+                        </>
+                      ) : (
+                        <span className="text-muted-foreground">—</span>
+                      )}
                     </TableCell>
                     <TableCell className="text-muted-foreground align-top text-sm">
                       {formatDate(document.createdAt)}
