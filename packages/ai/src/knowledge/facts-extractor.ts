@@ -56,7 +56,11 @@ const SYSTEM_PROMPT = [
   "Верни результат для каждого переданного индекса ровно один раз.",
 ].join("\n");
 
-const BATCH_SIZE = 15;
+// See entity-extractor.ts's BATCH_SIZE comment — same failure mode: a
+// full 15-chunk batch's JSON output can run long enough to hit
+// maxOutputTokens and come back truncated, which reads as a generic
+// "didn't return a valid object" rather than a token-limit error.
+const BATCH_SIZE = 5;
 const MAX_FACTS_PER_CHUNK = 8;
 
 function batches<T>(items: T[], size: number): T[][] {

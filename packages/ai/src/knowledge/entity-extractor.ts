@@ -71,7 +71,15 @@ const SYSTEM_PROMPT = [
   "Верни результат для каждого переданного индекса ровно один раз.",
 ].join("\n");
 
-const BATCH_SIZE = 15;
+// Smaller than it looks like it needs to be: at 15 chunks x up to 12
+// entities x up to 16 relations each, the model's own JSON output for a
+// full batch can run long enough to bump into maxOutputTokens (16000) and
+// come back truncated — which surfaces as a generic "didn't return a valid
+// object" failure, not a token-limit error, so it looked like a flaky
+// gateway before this was narrowed down. Neither cap below is stated in the
+// prompt to bound generation up front; they only trim the response after
+// the fact.
+const BATCH_SIZE = 5;
 const MAX_ENTITIES_PER_CHUNK = 12;
 const MAX_RELATIONS_PER_CHUNK = 16;
 
