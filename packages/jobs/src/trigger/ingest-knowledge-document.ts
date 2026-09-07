@@ -405,9 +405,13 @@ export const extractGraphTask = hatchet.task<
   name: "ingest-extract-graph",
   retries: 3,
   // LLM entity/relation extraction runs one batched call per ~5 chunks
-  // (packages/ai/src/knowledge/entity-extractor.ts) — slower than a single
-  // embedding call, hence the wider budget.
-  executionTimeout: "300s",
+  // (packages/ai/src/knowledge/entity-extractor.ts), each bounded at 120s
+  // by the provider's own per-attempt timeout (ai-sdk.ts) — and since a
+  // failing batch is now skipped rather than aborting the whole call, a
+  // large document works through every batch instead of stopping at the
+  // first failure, so the budget has to cover the worst case across all
+  // of them, not just one.
+  executionTimeout: "1800s",
   fn: async (input) => {
     const perChunk = await extractGraph(input.chunks);
 
@@ -450,7 +454,10 @@ export const extractFactsTask = hatchet.task<
 >({
   name: "ingest-extract-facts",
   retries: 3,
-  executionTimeout: "300s",
+  // See ingest-extract-graph's identical comment: a failing batch is now
+  // skipped rather than aborting the whole call, so the budget covers
+  // every ~5-chunk batch's 120s provider timeout, not just the first.
+  executionTimeout: "1800s",
   fn: async (input) => {
     const perChunk = await extractFacts(
       input.chunks.map((chunk) => ({ index: chunk.index, text: chunk.text })),
