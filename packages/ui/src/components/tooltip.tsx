@@ -45,12 +45,15 @@ function TooltipContent({
         alignOffset={alignOffset}
         side={side}
         sideOffset={sideOffset}
-        className="isolate z-50"
+        // z-[110]: above Dialog's z-[100] (dialog.tsx) — see popover.tsx's
+        // identical comment. A tooltip triggered from inside a dialog must
+        // render in front of it, not behind.
+        className="isolate z-[110]"
       >
         <TooltipPrimitive.Popup
           data-slot="tooltip-content"
           className={cn(
-            "bg-foreground text-background animate-in fade-in-0 zoom-in-95 data-[ending-style]:animate-out data-[ending-style]:fade-out-0 data-[ending-style]:zoom-out-95 z-50 w-fit max-w-xs origin-(--transform-origin) rounded-md px-3 py-1.5 text-xs text-balance",
+            "bg-foreground text-background animate-in fade-in-0 zoom-in-95 data-[ending-style]:animate-out data-[ending-style]:fade-out-0 data-[ending-style]:zoom-out-95 z-[110] w-fit max-w-xs origin-(--transform-origin) rounded-md px-3 py-1.5 text-xs text-balance",
             className,
           )}
           {...props}

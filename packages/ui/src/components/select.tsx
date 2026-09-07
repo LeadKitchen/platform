@@ -124,12 +124,20 @@ function SelectContent({
         align={align}
         alignOffset={alignOffset}
         alignItemWithTrigger={alignItemWithTrigger}
-        className="isolate z-50"
+        className="isolate z-[110]"
       >
         <SelectPrimitive.Popup
           data-slot="select-content"
           className={cn(
-            "bg-popover text-popover-foreground data-[open]:animate-in data-[ending-style]:animate-out data-[ending-style]:fade-out-0 data-[open]:fade-in-0 data-[ending-style]:zoom-out-95 data-[open]:zoom-in-95 relative z-50 max-h-(--available-height) min-w-[8rem] w-(--anchor-width) origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-md border shadow-md",
+            // z-[110]: above Dialog's z-[100] (dialog.tsx) — see popover.tsx's
+            // identical comment. A select opened from a field inside a
+            // dialog (e.g. the knowledge-base review dialog's per-chunk
+            // audience picker) must render in front of it, not behind —
+            // without this its popup is present in the DOM and reports
+            // aria-expanded="true", but sits under the dialog for hit-testing
+            // and paint alike, so clicks on its options land on whatever
+            // dialog content is underneath instead.
+            "bg-popover text-popover-foreground data-[open]:animate-in data-[ending-style]:animate-out data-[ending-style]:fade-out-0 data-[open]:fade-in-0 data-[ending-style]:zoom-out-95 data-[open]:zoom-in-95 relative z-[110] max-h-(--available-height) min-w-[8rem] w-(--anchor-width) origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-md border shadow-md",
             className,
           )}
           {...props}
