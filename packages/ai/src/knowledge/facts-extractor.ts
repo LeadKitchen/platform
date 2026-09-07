@@ -80,32 +80,48 @@ export async function extractFacts(
   const results: ChunkFacts[] = [];
 
   for (const batch of batches(chunks, BATCH_SIZE)) {
-    const { value } = await provider.generate({
-      purpose: "knowledge.extract-facts",
-      schemaName: "ExtractedFacts",
-      schema: factsSchema,
-      effort: "low",
-      signal: options.signal,
-      system: SYSTEM_PROMPT,
-      messages: [
-        {
-          role: "user",
-          content: JSON.stringify({
-            chunks: batch.map((item) => ({
-              index: item.index,
-              text: item.text.slice(0, 4000),
-            })),
-          }),
-        },
-      ],
-    });
-
     const expectedIndexes = new Set(batch.map((item) => item.index));
     if (expectedIndexes.size !== batch.length) {
       // Our own bug, not the model's — see entity-extractor.ts's identical
       // check for why this stays a hard failure while the model-output
       // mismatches below don't.
       throw new Error("Duplicate chunk indexes in fact-extraction batch");
+    }
+
+    // One batch's call failing (seen in practice: an unreliable gateway
+    // failing intermittently, not deterministically per input) used to
+    // throw away every other batch's already-extracted facts along with
+    // it — a single bad roll on an 11-batch document meant zero facts
+    // persisted instead of 10 batches' worth. Skip the batch and keep
+    // going instead; a document with a facts gap on a few chunks beats one
+    // where a mid-document hiccup wipes out everything already extracted.
+    let value: z.infer<typeof factsSchema>;
+    try {
+      ({ value } = await provider.generate({
+        purpose: "knowledge.extract-facts",
+        schemaName: "ExtractedFacts",
+        schema: factsSchema,
+        effort: "low",
+        signal: options.signal,
+        system: SYSTEM_PROMPT,
+        messages: [
+          {
+            role: "user",
+            content: JSON.stringify({
+              chunks: batch.map((item) => ({
+                index: item.index,
+                text: item.text.slice(0, 4000),
+              })),
+            }),
+          },
+        ],
+      }));
+    } catch (cause) {
+      if (options.signal?.aborted) throw cause;
+      console.warn(
+        `[knowledge.extract-facts] batch skipped (chunks ${batch[0]?.index}-${batch.at(-1)?.index}): ${cause instanceof Error ? cause.message.split("\n")[0] : String(cause)}`,
+      );
+      continue;
     }
 
     // Salvage whatever the model got right rather than discarding the whole

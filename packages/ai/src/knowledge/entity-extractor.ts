@@ -100,32 +100,48 @@ export async function extractGraph(
   const results: ChunkGraph[] = [];
 
   for (const batch of batches(chunks, BATCH_SIZE)) {
-    const { value } = await provider.generate({
-      purpose: "knowledge.extract-graph",
-      schemaName: "ExtractedGraph",
-      schema: graphSchema,
-      effort: "low",
-      signal: options.signal,
-      system: SYSTEM_PROMPT,
-      messages: [
-        {
-          role: "user",
-          content: JSON.stringify({
-            chunks: batch.map((item) => ({
-              index: item.index,
-              text: item.text.slice(0, 4000),
-            })),
-          }),
-        },
-      ],
-    });
-
     const expectedIndexes = new Set(batch.map((item) => item.index));
     if (expectedIndexes.size !== batch.length) {
       // Our own bug, not the model's — the caller passed duplicate indexes
       // in the same batch. Worth failing loudly on, unlike the model-output
       // mismatches below.
       throw new Error("Duplicate chunk indexes in graph-extraction batch");
+    }
+
+    // One batch's call failing (seen in practice: an unreliable gateway
+    // failing intermittently, not deterministically per input) used to
+    // throw away every other batch's already-extracted graph data along
+    // with it — a single bad roll on an 11-batch document meant zero graph
+    // data persisted instead of 10 batches' worth. Skip the batch and keep
+    // going instead; a document with a graph gap on a few chunks beats one
+    // where a mid-document hiccup wipes out everything already extracted.
+    let value: z.infer<typeof graphSchema>;
+    try {
+      ({ value } = await provider.generate({
+        purpose: "knowledge.extract-graph",
+        schemaName: "ExtractedGraph",
+        schema: graphSchema,
+        effort: "low",
+        signal: options.signal,
+        system: SYSTEM_PROMPT,
+        messages: [
+          {
+            role: "user",
+            content: JSON.stringify({
+              chunks: batch.map((item) => ({
+                index: item.index,
+                text: item.text.slice(0, 4000),
+              })),
+            }),
+          },
+        ],
+      }));
+    } catch (cause) {
+      if (options.signal?.aborted) throw cause;
+      console.warn(
+        `[knowledge.extract-graph] batch skipped (chunks ${batch[0]?.index}-${batch.at(-1)?.index}): ${cause instanceof Error ? cause.message.split("\n")[0] : String(cause)}`,
+      );
+      continue;
     }
 
     // The model occasionally drops or duplicates an index instead of
