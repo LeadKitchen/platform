@@ -404,7 +404,7 @@ export const extractGraphTask = hatchet.task<
 >({
   name: "ingest-extract-graph",
   retries: 3,
-  // LLM entity/relation extraction runs one batched call per ~15 chunks
+  // LLM entity/relation extraction runs one batched call per ~5 chunks
   // (packages/ai/src/knowledge/entity-extractor.ts) — slower than a single
   // embedding call, hence the wider budget.
   executionTimeout: "300s",

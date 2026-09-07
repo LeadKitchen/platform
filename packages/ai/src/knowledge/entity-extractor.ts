@@ -121,28 +121,32 @@ export async function extractGraph(
     });
 
     const expectedIndexes = new Set(batch.map((item) => item.index));
-    const responseIndexes = new Set<number>();
-    if (
-      expectedIndexes.size !== batch.length ||
-      value.chunks.length !== batch.length
-    ) {
-      throw new Error("Invalid graph-extraction chunk indexes");
-    }
-    for (const chunk of value.chunks) {
-      if (
-        !expectedIndexes.has(chunk.index) ||
-        responseIndexes.has(chunk.index)
-      ) {
-        throw new Error("Invalid graph-extraction chunk indexes");
-      }
-      responseIndexes.add(chunk.index);
-    }
-    if (responseIndexes.size !== expectedIndexes.size) {
-      throw new Error("Invalid graph-extraction chunk indexes");
+    if (expectedIndexes.size !== batch.length) {
+      // Our own bug, not the model's — the caller passed duplicate indexes
+      // in the same batch. Worth failing loudly on, unlike the model-output
+      // mismatches below.
+      throw new Error("Duplicate chunk indexes in graph-extraction batch");
     }
 
+    // The model occasionally drops or duplicates an index instead of
+    // returning exactly one entry per chunk (more likely on a gateway
+    // without native structured outputs). Discarding the whole batch over
+    // one bad entry throws away entities/relations it got right for every
+    // other chunk in the batch — salvage the valid ones and just skip
+    // whichever chunk(s) came back wrong; a document with a graph gap on a
+    // couple of chunks beats one where a flaky model response makes the
+    // ingest step this batch's chunks entirely lose their graph forever.
+    const seenIndexes = new Set<number>();
+    const validChunks = value.chunks.filter((chunk) => {
+      if (!expectedIndexes.has(chunk.index) || seenIndexes.has(chunk.index)) {
+        return false;
+      }
+      seenIndexes.add(chunk.index);
+      return true;
+    });
+
     results.push(
-      ...value.chunks.map((chunk) => ({
+      ...validChunks.map((chunk) => ({
         index: chunk.index,
         entities: chunk.entities.slice(0, MAX_ENTITIES_PER_CHUNK),
         relations: chunk.relations.slice(0, MAX_RELATIONS_PER_CHUNK),

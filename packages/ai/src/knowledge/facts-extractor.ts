@@ -101,28 +101,27 @@ export async function extractFacts(
     });
 
     const expectedIndexes = new Set(batch.map((item) => item.index));
-    const responseIndexes = new Set<number>();
-    if (
-      expectedIndexes.size !== batch.length ||
-      value.chunks.length !== batch.length
-    ) {
-      throw new Error("Invalid fact-extraction chunk indexes");
-    }
-    for (const chunk of value.chunks) {
-      if (
-        !expectedIndexes.has(chunk.index) ||
-        responseIndexes.has(chunk.index)
-      ) {
-        throw new Error("Invalid fact-extraction chunk indexes");
-      }
-      responseIndexes.add(chunk.index);
-    }
-    if (responseIndexes.size !== expectedIndexes.size) {
-      throw new Error("Invalid fact-extraction chunk indexes");
+    if (expectedIndexes.size !== batch.length) {
+      // Our own bug, not the model's — see entity-extractor.ts's identical
+      // check for why this stays a hard failure while the model-output
+      // mismatches below don't.
+      throw new Error("Duplicate chunk indexes in fact-extraction batch");
     }
 
+    // Salvage whatever the model got right rather than discarding the whole
+    // batch over one dropped/duplicated index — see entity-extractor.ts's
+    // extractGraph for the full rationale.
+    const seenIndexes = new Set<number>();
+    const validChunks = value.chunks.filter((chunk) => {
+      if (!expectedIndexes.has(chunk.index) || seenIndexes.has(chunk.index)) {
+        return false;
+      }
+      seenIndexes.add(chunk.index);
+      return true;
+    });
+
     results.push(
-      ...value.chunks.map((chunk) => ({
+      ...validChunks.map((chunk) => ({
         index: chunk.index,
         facts: chunk.facts.slice(0, MAX_FACTS_PER_CHUNK),
       })),
