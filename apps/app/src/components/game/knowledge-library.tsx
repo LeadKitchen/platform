@@ -568,6 +568,75 @@ function PreviewPanel() {
   );
 }
 
+interface GapEntry {
+  id: string;
+  query: string;
+  createdAt: string | Date;
+}
+
+/** What participants asked that `org-rag` found nothing for — a to-do list for the next upload, not an error. */
+function KnowledgeGapsPanel() {
+  const [gaps, setGaps] = useState<GapEntry[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const loadGaps = useCallback(async () => {
+    setError(null);
+    try {
+      const rows = await client.org.knowledge.listGaps();
+      setGaps(rows as GapEntry[]);
+    } catch {
+      setError("Не удалось загрузить вопросы. Попробуйте ещё раз.");
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadGaps();
+  }, [loadGaps]);
+
+  if (!error && gaps !== null && gaps.length === 0) return null;
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center gap-2">
+          <IconInfoCircle className="size-4" />
+          <span className="font-medium">Чего не хватает в базе знаний</span>
+        </div>
+        <p className="text-muted-foreground text-sm">
+          Вопросы участников, на которые бот не нашёл ни одного фрагмента ни в
+          одном документе — возможно, стоит загрузить материал по этой теме.
+        </p>
+      </CardHeader>
+      <CardContent>
+        {error ? (
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="text-destructive text-sm">{error}</p>
+            <Button variant="outline" size="sm" onClick={loadGaps}>
+              Повторить
+            </Button>
+          </div>
+        ) : gaps === null ? (
+          <p className="text-muted-foreground text-sm">Загрузка…</p>
+        ) : (
+          <div className="flex flex-col gap-2">
+            {gaps.map((gap) => (
+              <div
+                key={gap.id}
+                className="flex items-center justify-between gap-3 rounded-lg border p-3 text-sm"
+              >
+                <span>{gap.query}</span>
+                <span className="text-muted-foreground shrink-0 text-xs">
+                  {formatDate(gap.createdAt)}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
 export function KnowledgeLibrary({
   initialDocuments,
 }: {
@@ -826,6 +895,8 @@ export function KnowledgeLibrary({
           )}
         </CardContent>
       </Card>
+
+      <KnowledgeGapsPanel />
 
       <PreviewPanel />
 

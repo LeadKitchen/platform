@@ -8,6 +8,7 @@ import {
   GameKnowledgeDocument,
   GameKnowledgePendingUpload,
   GameOrganization,
+  GameProductEvent,
   GLOBAL_KNOWLEDGE_ORG_ID,
   inArray,
   ne,
@@ -404,6 +405,47 @@ export const previewRetrieval = protectedProcedure
     return { hits };
   });
 
+const GAP_LIST_LIMIT = 30;
+
+/** Recent participant questions `org-rag` found nothing for — what to consider adding next. */
+export const listGaps = protectedProcedure.handler(async ({ context }) => {
+  const isAdmin = await resolveIsAdmin(context.db, context.session.user);
+  const facilitatorOrgId = isAdmin
+    ? null
+    : await getFacilitatorOrgId(context.db, context.session.user.id);
+  if (!isAdmin && !facilitatorOrgId) {
+    throw new ORPCError("FORBIDDEN", {
+      message: "Доступно только ведущим группы или администраторам",
+    });
+  }
+
+  const rows = await context.db
+    .select({
+      id: GameProductEvent.id,
+      properties: GameProductEvent.properties,
+      createdAt: GameProductEvent.createdAt,
+    })
+    .from(GameProductEvent)
+    .where(
+      and(
+        eq(GameProductEvent.name, "knowledge_gap"),
+        // Global admins audit gaps across every organization (including
+        // legacy unattributed events); facilitators only see their workspace.
+        isAdmin
+          ? undefined
+          : sql`${GameProductEvent.properties} ->> 'orgId' = ${facilitatorOrgId}`,
+      ),
+    )
+    .orderBy(desc(GameProductEvent.createdAt))
+    .limit(GAP_LIST_LIMIT);
+  return rows.flatMap((row) => {
+    const query = row.properties.query;
+    return typeof query === "string"
+      ? [{ id: row.id, query, createdAt: row.createdAt }]
+      : [];
+  });
+});
+
 export const orgKnowledgeRouter = {
   list,
   get,
@@ -414,4 +456,5 @@ export const orgKnowledgeRouter = {
   publish,
   remove,
   previewRetrieval,
+  listGaps,
 };
