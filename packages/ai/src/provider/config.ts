@@ -35,7 +35,7 @@ export function buildOpenAiCandidates(
 
   const models = split(env.OPENAI_MODELS).length
     ? split(env.OPENAI_MODELS)
-    : [env.OPENAI_MODEL ?? "gpt-4o-mini"];
+    : [env.OPENAI_MODEL ?? "gpt-5.6-luna"];
 
   const baseUrl = env.OPENAI_BASE_URL;
   const isGateway =

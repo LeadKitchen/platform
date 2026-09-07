@@ -15,6 +15,7 @@ export const MODEL_PRICING: Record<string, { input: number; output: number }> =
     "claude-opus-4-8": { input: 5, output: 25 },
     "claude-sonnet-5": { input: 3, output: 15 },
     "claude-haiku-4-5": { input: 1, output: 5 },
+    "gpt-5.6-luna": { input: 0.2, output: 1.2 },
     "gpt-5.1-all": { input: 1.25, output: 10 },
     "gpt-5.1": { input: 1.25, output: 10 },
     // router.cheap gateway rate, not OpenAI's list price — confirmed with the
