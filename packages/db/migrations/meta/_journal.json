@@ -22,6 +22,13 @@
       "when": 1788785766632,
       "tag": "0002_freezing_rogue",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1788789682880,
+      "tag": "0003_yummy_human_cannonball",
+      "breakpoints": true
     }
   ]
 }

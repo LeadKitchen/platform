@@ -82,6 +82,7 @@ export const orgRagKnowledge: KnowledgeStrategy = {
       GameKnowledgeDocument,
       GLOBAL_KNOWLEDGE_ORG_ID,
       inArray,
+      sql,
     } = await import("@acme/db");
     // Shared platform-wide while the knowledge base isn't split per team yet
     // — see `GLOBAL_KNOWLEDGE_ORG_ID` in `packages/db/src/schema/game/game.ts`.
@@ -137,6 +138,28 @@ export const orgRagKnowledge: KnowledgeStrategy = {
         },
       ];
     });
+
+    if (snippets.length > 0) {
+      // Fire-and-forget: this is analytics for the admin's "is my document
+      // actually helping" dashboard, not something the character's reply
+      // should ever wait on or fail over.
+      db.update(GameKnowledgeChunk)
+        .set({
+          retrievalCount: sql`${GameKnowledgeChunk.retrievalCount} + 1`,
+          lastRetrievedAt: new Date(),
+        })
+        .where(
+          inArray(
+            GameKnowledgeChunk.id,
+            snippets.map((snippet) => snippet.id),
+          ),
+        )
+        .catch((error) => {
+          console.warn(
+            `org-rag: failed to record chunk retrieval stats: ${error instanceof Error ? error.message : String(error)}`,
+          );
+        });
+    }
 
     return {
       snippets,

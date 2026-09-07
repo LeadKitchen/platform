@@ -71,6 +71,8 @@ export interface KnowledgeDocumentView {
   fileSizeBytes: number | null;
   wordCount: number | null;
   chunkCount: number;
+  totalRetrievals: number;
+  lastRetrievedAt: string | null;
 }
 
 interface ChunkView {
@@ -228,7 +230,11 @@ function UploadDialog({
         audience,
         originalFilename: file.name,
       });
-      onUploaded(document as KnowledgeDocumentView);
+      onUploaded({
+        ...document,
+        totalRetrievals: 0,
+        lastRetrievedAt: null,
+      } as KnowledgeDocumentView);
       toast.success("Документ загружен, начата обработка");
       reset();
       onOpenChange(false);
@@ -673,9 +679,9 @@ export function KnowledgeLibrary({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[30%]">Документ</TableHead>
-                  <TableHead className="w-[12%]">Статус</TableHead>
-                  <TableHead className="w-[16%]">
+                  <TableHead className="w-[26%]">Документ</TableHead>
+                  <TableHead className="w-[10%]">Статус</TableHead>
+                  <TableHead className="w-[14%]">
                     <span className="inline-flex items-center gap-1">
                       Доступ по умолчанию
                       <InfoPopover>
@@ -686,7 +692,7 @@ export function KnowledgeLibrary({
                       </InfoPopover>
                     </span>
                   </TableHead>
-                  <TableHead className="w-[16%]">
+                  <TableHead className="w-[14%]">
                     <span className="inline-flex items-center gap-1">
                       Обработано
                       <InfoPopover>
@@ -696,8 +702,19 @@ export function KnowledgeLibrary({
                       </InfoPopover>
                     </span>
                   </TableHead>
+                  <TableHead className="w-[12%]">
+                    <span className="inline-flex items-center gap-1">
+                      Используется
+                      <InfoPopover>
+                        Сколько раз фрагменты документа реально попадали в
+                        разговор персонажа с участником. Не учитывает ваши
+                        собственные запросы в панели «Проверка поиска» ниже —
+                        только настоящие диалоги.
+                      </InfoPopover>
+                    </span>
+                  </TableHead>
                   <TableHead className="w-[10%]">Загружен</TableHead>
-                  <TableHead className="w-[16%] text-right">Действия</TableHead>
+                  <TableHead className="w-[14%] text-right">Действия</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -745,6 +762,23 @@ export function KnowledgeLibrary({
                           <div className="text-muted-foreground text-xs">
                             {document.chunkCount} фрагм.
                           </div>
+                        </>
+                      ) : (
+                        <span className="text-muted-foreground">—</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="align-top text-sm">
+                      {document.status === "ready" &&
+                      document.totalRetrievals === 0 ? (
+                        <Badge variant="secondary">Не используется</Badge>
+                      ) : document.totalRetrievals > 0 ? (
+                        <>
+                          <div>{document.totalRetrievals} раз</div>
+                          {document.lastRetrievedAt ? (
+                            <div className="text-muted-foreground text-xs">
+                              Посл.: {formatDate(document.lastRetrievedAt)}
+                            </div>
+                          ) : null}
                         </>
                       ) : (
                         <span className="text-muted-foreground">—</span>

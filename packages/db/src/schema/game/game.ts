@@ -878,6 +878,15 @@ export const GameKnowledgeChunk = pgTable(
       .notNull(),
     tags: t.jsonb().$type<string[]>().default([]).notNull(),
     createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+    /**
+     * How many times `org-rag` (`packages/ai/src/strategies/knowledge/org-rag.ts`)
+     * has returned this chunk as a live-dialog retrieval hit — incremented
+     * there, not here. Admin QA (`previewRetrieval`) never touches this: it
+     * answers "did this document ever help a real conversation", which a
+     * facilitator's own test queries would only pollute.
+     */
+    retrievalCount: t.integer().default(0).notNull(),
+    lastRetrievedAt: t.timestamp({ withTimezone: true }),
   }),
   (table) => [
     index("game_knowledge_chunks_document_idx").on(table.documentId),

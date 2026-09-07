@@ -1,0 +1,2 @@
+ALTER TABLE "game_knowledge_chunks" ADD COLUMN "retrieval_count" integer DEFAULT 0 NOT NULL;--> statement-breakpoint
+ALTER TABLE "game_knowledge_chunks" ADD COLUMN "last_retrieved_at" timestamp with time zone;
