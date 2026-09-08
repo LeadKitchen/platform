@@ -207,15 +207,9 @@ export function createPipeline(
       ],
     };
 
-    // The spec is explicit: the AI employee keeps quiet until the manager
-    // actually brings them into the conversation. Once engaged, the gate is
-    // not consulted again — the character does not fall back asleep.
-    const gate = input.dialog.engaged
-      ? { engaged: true, reason: "диалог уже идёт", latencyMs: 0 }
-      : await engagement.check(
-          { dialog: input.dialog, utterance: input.utterance },
-          requestDeps,
-        );
+    // Wake-word gating removed: the character replies from the first
+    // message and no longer requires the manager to address them by name.
+    const gate = { engaged: true, reason: "гейт вовлечения отключён", latencyMs: 0 };
 
     if (!gate.engaged) {
       const gateUsage = addUsage(gate.usage);

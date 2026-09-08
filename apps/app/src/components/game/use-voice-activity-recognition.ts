@@ -20,7 +20,12 @@ function pickMimeType(): string | undefined {
 
 /** RMS amplitude above which the mic is considered to carry speech. */
 const SPEECH_RMS_THRESHOLD = 0.02;
-/** How long amplitude must stay high before an utterance is considered started — filters out clicks/taps. */
+/**
+ * How long amplitude must stay high before an utterance is confirmed as
+ * speech rather than a click/tap. Recording starts immediately on the first
+ * loud sample (so the onset of speech isn't lost) and is discarded if
+ * amplitude drops back down before this much time has passed.
+ */
 const SPEECH_START_MS = 150;
 /** How long trailing silence must last before an utterance is considered finished. */
 const SILENCE_END_MS = 900;
@@ -51,9 +56,11 @@ export interface UseVoiceActivityRecognitionResult {
  *
  * Keeps the microphone stream open for the whole call and uses a simple
  * volume-based voice-activity detector (Web Audio `AnalyserNode`, no extra
- * dependency) to find utterance boundaries — recording starts once amplitude
- * rises above a threshold for a beat, and stops (and is sent for
- * transcription) once it stays low for `SILENCE_END_MS`. `setPaused` lets the
+ * dependency) to find utterance boundaries — recording starts as soon as
+ * amplitude crosses a threshold (so the start of speech isn't clipped) and is
+ * discarded if it turns out to be a brief click/tap rather than sustained
+ * speech, then stops (and is sent for transcription) once amplitude stays low
+ * for `SILENCE_END_MS`. `setPaused` lets the
  * caller silence detection while the character is talking or a reply is
  * pending, so the app doesn't try to transcribe over itself.
  */
@@ -181,6 +188,16 @@ export function useVoiceActivityRecognition(options: {
         aboveSinceRef.current = null;
         belowSinceRef.current = null;
         if (recorderRef.current) stopRecorder(true);
+      } else if (recorderRef.current && aboveSinceRef.current !== null) {
+        // Recording started optimistically on the first loud sample, before
+        // SPEECH_START_MS has confirmed it's really speech and not a
+        // click/tap. Discard it if amplitude drops before confirmation.
+        if (!above) {
+          aboveSinceRef.current = null;
+          stopRecorder(true);
+        } else if (now - aboveSinceRef.current >= SPEECH_START_MS) {
+          aboveSinceRef.current = null;
+        }
       } else if (recorderRef.current) {
         if (above) {
           belowSinceRef.current = null;
@@ -197,12 +214,10 @@ export function useVoiceActivityRecognition(options: {
           stopRecorder(false);
         }
       } else if (above) {
-        if (aboveSinceRef.current === null) {
-          aboveSinceRef.current = now;
-        } else if (now - aboveSinceRef.current >= SPEECH_START_MS) {
-          aboveSinceRef.current = null;
-          beginUtterance();
-        }
+        // Start capturing right away so the onset of speech isn't lost —
+        // confirmation (above) discards this if it turns out to be a blip.
+        aboveSinceRef.current = now;
+        beginUtterance();
       } else {
         aboveSinceRef.current = null;
       }
