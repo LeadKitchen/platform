@@ -15,6 +15,7 @@ import {
   personaRegistry,
 } from "./registries";
 import {
+  type EngagementResult,
   type EvaluationResult,
   type KnowledgeResult,
   type PersonaFeedback,
@@ -209,7 +210,11 @@ export function createPipeline(
 
     // Wake-word gating removed: the character replies from the first
     // message and no longer requires the manager to address them by name.
-    const gate = { engaged: true, reason: "гейт вовлечения отключён", latencyMs: 0 };
+    const gate: EngagementResult = {
+      engaged: true,
+      reason: "гейт вовлечения отключён",
+      latencyMs: 0,
+    };
 
     if (!gate.engaged) {
       const gateUsage = addUsage(gate.usage);

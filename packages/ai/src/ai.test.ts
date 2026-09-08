@@ -132,7 +132,7 @@ function testProvider(replyText = "Поняла, сделаю."): {
 }
 
 describe("pipeline engagement gate", () => {
-  test("the character stays silent — and costs nothing — until addressed", async () => {
+  test("the character replies from the first message, without being addressed by name", async () => {
     const { provider, calls } = testProvider();
     const engine = createEngine({ provider });
     const pipeline = engine.pipeline("baseline");
@@ -142,28 +142,13 @@ describe("pipeline engagement gate", () => {
       utterance: "Так, посмотрим, что там по заказам на вечер",
     });
 
-    expect(result.reply.silent).toBe(true);
-    expect(result.reply.reply).toBe("");
-    expect(result.dialog.engaged).toBe(false);
-    expect(result.telemetry.costUsd).toBe(0);
-    expect(calls).toHaveLength(0);
-  });
-
-  test("addressing the employee by name starts the dialog", async () => {
-    const { provider, calls } = testProvider();
-    const engine = createEngine({ provider });
-    const pipeline = engine.pipeline("baseline");
-
-    const result = await pipeline.respond({
-      dialog: dialog({ employeeId: "anna", taskId: "apple_pies" }),
-      utterance: "Анна, нужно 20 пирогов к 18:00.",
-    });
-
     expect(result.reply.silent).toBe(false);
     expect(result.dialog.engaged).toBe(true);
     expect(result.dialog.turns).toHaveLength(2);
-    expect(result.dialog.emotion).toBe(1);
     expect(calls.map((call) => call.purpose)).toContain("persona.reply");
+    expect(
+      calls.map((call) => call.purpose),
+    ).not.toContain("engagement.check");
   });
 
   test("once engaged the character keeps answering", async () => {
@@ -172,7 +157,7 @@ describe("pipeline engagement gate", () => {
 
     const first = await pipeline.respond({
       dialog: dialog({ employeeId: "anna", taskId: "apple_pies" }),
-      utterance: "Анна, возьмёшь пироги?",
+      utterance: "Возьмёшь пироги?",
     });
     const second = await pipeline.respond({
       dialog: first.dialog,
@@ -180,45 +165,6 @@ describe("pipeline engagement gate", () => {
     });
 
     expect(second.reply.silent).toBe(false);
-  });
-});
-
-describe("engagement gate is pluggable", () => {
-  test("the LLM gate can recognise an address the markers miss", async () => {
-    const { provider, calls } = testProvider();
-    const heuristic = createEngine({ provider }).pipeline("baseline");
-    const llm = createEngine({ provider }).pipeline("llm-first");
-
-    // Обращение по должности, без имени и без вопроса: маркеры его не ловят.
-    const utterance = "Пусть десертный цех берёт торт на банкет.";
-
-    const byMarkers = await heuristic.respond({
-      dialog: dialog({ employeeId: "anna", taskId: "decorated_cake" }),
-      utterance,
-    });
-    const byModel = await llm.respond({
-      dialog: dialog({ employeeId: "anna", taskId: "decorated_cake" }),
-      utterance,
-    });
-
-    expect(byMarkers.reply.silent).toBe(true);
-    expect(byModel.reply.silent).toBe(false);
-    expect(calls.map((call) => call.purpose)).toContain("engagement.check");
-  });
-
-  test("the gate is not consulted again once the dialog is running", async () => {
-    const { provider, calls } = testProvider();
-    const pipeline = createEngine({ provider }).pipeline("llm-first");
-
-    const first = await pipeline.respond({
-      dialog: dialog({ employeeId: "anna", taskId: "apple_pies" }),
-      utterance: "Анна, возьмёшь пироги?",
-    });
-    calls.length = 0;
-
-    await pipeline.respond({ dialog: first.dialog, utterance: "Ага." });
-
-    expect(calls.map((call) => call.purpose)).not.toContain("engagement.check");
   });
 });
 
@@ -435,23 +381,6 @@ describe("streaming replies", () => {
     expect(chunks.at(-1)?.reply).toBe(turn.reply.reply);
     expect(turn.reply.silent).toBe(false);
     expect(turn.dialog.engaged).toBe(true);
-  });
-
-  test("a silent turn (gate not engaged) streams nothing", async () => {
-    const { provider, calls } = testProvider();
-    const pipeline = createEngine({ provider }).pipeline("baseline");
-
-    const { stream, result } = pipeline.respondStream({
-      dialog: dialog({ employeeId: "anna", taskId: "apple_pies" }),
-      utterance: "Так, посмотрим, что там по заказам на вечер",
-    });
-
-    const chunks = await collect(stream);
-    const turn = await result;
-
-    expect(chunks).toHaveLength(0);
-    expect(turn.reply.silent).toBe(true);
-    expect(calls).toHaveLength(0);
   });
 
   test("a persona strategy without respondStream falls back to one buffered chunk", async () => {

@@ -111,7 +111,7 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
   const [transcriptVisible, setTranscriptVisible] = useState(true);
   const [selfViewVisible, setSelfViewVisible] = useState(true);
   const [duration, setDuration] = useState(0);
-  const [fallbackDraft, setFallbackDraft] = useState("");
+  const [textDraft, setTextDraft] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [endDialog, setEndDialog] = useState<EndDialog>(null);
@@ -201,7 +201,7 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
     setPending(true);
     setError(null);
     setNotice(null);
-    setFallbackDraft("");
+    setTextDraft("");
     setTurns((current) => [
       ...current,
       { role: "manager", text, at: nowLabel() },
@@ -214,7 +214,7 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
       });
       if (result.silent) {
         setNotice(
-          `${props.employee.name} ждёт прямого обращения. Назовите сотрудника по имени и повторите мысль.`,
+          `${props.employee.name} не отреагировал на реплику. Попробуйте переформулировать мысль.`,
         );
       } else {
         setTurns((current) => [
@@ -229,7 +229,7 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
         );
       }
     } catch (cause) {
-      setFallbackDraft(text);
+      setTextDraft(text);
       setError(
         cause instanceof Error ? cause.message : "Не удалось получить ответ",
       );
@@ -712,34 +712,36 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
         </Alert>
       ) : null}
 
-      {!speech.supported || speech.error || fallbackDraft ? (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">
-              Текстовый резервный ввод
-            </CardTitle>
-            <CardDescription>
-              Используйте его, если браузер не распознаёт микрофон.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex gap-2">
-            <Textarea
-              aria-label="Реплика персонажу"
-              value={fallbackDraft}
-              rows={2}
-              disabled={pending}
-              onChange={(event) => setFallbackDraft(event.target.value)}
-            />
-            <Button
-              aria-label="Отправить реплику"
-              disabled={pending || !fallbackDraft.trim()}
-              onClick={() => void sendVoice(fallbackDraft)}
-            >
-              <IconSend />
-            </Button>
-          </CardContent>
-        </Card>
-      ) : null}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Написать текстом</CardTitle>
+          <CardDescription>
+            Можно печатать реплики вместо голоса в любой момент разговора.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex gap-2">
+          <Textarea
+            aria-label="Реплика персонажу"
+            value={textDraft}
+            rows={2}
+            disabled={pending}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                if (textDraft.trim()) void sendVoice(textDraft);
+              }
+            }}
+            onChange={(event) => setTextDraft(event.target.value)}
+          />
+          <Button
+            aria-label="Отправить реплику"
+            disabled={pending || !textDraft.trim()}
+            onClick={() => void sendVoice(textDraft)}
+          >
+            <IconSend />
+          </Button>
+        </CardContent>
+      </Card>
 
       <AlertDialog
         open={endDialog !== null}

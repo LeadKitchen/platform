@@ -77,7 +77,7 @@ interface PromptDebugData {
 }
 
 const CONVERSATION_STARTERS = [
-  "Обратиться по имени",
+  "Предложить помощь",
   "Объяснить ожидаемый результат",
   "Уточнить, всё ли понятно",
 ] as const;
@@ -248,7 +248,7 @@ export function DialogRoom(props: DialogRoomProps) {
 
         if (event.silent) {
           setNotice(
-            `${props.employee.name} не реагирует: сотрудник включается в диалог, только когда руководитель обращается к нему напрямую.`,
+            `${props.employee.name} не отреагировал на реплику. Попробуйте переформулировать мысль.`,
           );
         } else {
           const finalTurn: Turn = {
@@ -419,8 +419,8 @@ export function DialogRoom(props: DialogRoomProps) {
 
   function insertStarter(starter: (typeof CONVERSATION_STARTERS)[number]) {
     const text =
-      starter === "Обратиться по имени"
-        ? `${props.employee.name}, давайте обсудим задачу «${props.task.title}».`
+      starter === "Предложить помощь"
+        ? "Если что-то будет непонятно или понадобится помощь — сразу скажите."
         : starter === "Объяснить ожидаемый результат"
           ? `Ожидаемый результат: задача «${props.task.title}» должна быть выполнена качественно и в согласованный срок.`
           : "Расскажите, пожалуйста, как вы поняли задачу и что вам нужно для её выполнения?";
@@ -550,11 +550,10 @@ export function DialogRoom(props: DialogRoomProps) {
                         <ChefHatIllustration className="text-muted-foreground size-16" />
                       </EmptyMedia>
                       <EmptyTitle>
-                        {props.employee.name} ждёт вашего обращения
+                        {props.employee.name} готов к разговору
                       </EmptyTitle>
                       <EmptyDescription>
-                        Нажмите «Говорить» или напишите первую реплику. Начните
-                        с имени сотрудника, чтобы включить его в разговор.
+                        Нажмите «Говорить» или напишите первую реплику.
                       </EmptyDescription>
                     </EmptyHeader>
                   </Empty>
