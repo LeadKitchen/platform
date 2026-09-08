@@ -2,6 +2,25 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+const TTS_ENABLED_STORAGE_KEY = "game.voice.ttsEnabled";
+
+function loadTtsEnabled(): boolean {
+  if (typeof window === "undefined") return true;
+  try {
+    return window.localStorage.getItem(TTS_ENABLED_STORAGE_KEY) !== "0";
+  } catch {
+    return true;
+  }
+}
+
+function saveTtsEnabled(enabled: boolean) {
+  try {
+    window.localStorage.setItem(TTS_ENABLED_STORAGE_KEY, enabled ? "1" : "0");
+  } catch {
+    // Private browsing / storage disabled — the toggle just won't persist.
+  }
+}
+
 export interface UseSpeechSynthesisResult {
   supported: boolean;
   speaking: boolean;
@@ -28,7 +47,7 @@ export function useSpeechSynthesis(options: {
   const { dialogId, gender, lang = "ru-RU", onEnd } = options;
   const [supported, setSupported] = useState(false);
   const [speaking, setSpeaking] = useState(false);
-  const [enabled, setEnabledState] = useState(true);
+  const [enabled, setEnabledState] = useState(loadTtsEnabled);
   const onEndRef = useRef(onEnd);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const objectUrlRef = useRef<string | null>(null);
@@ -158,6 +177,7 @@ export function useSpeechSynthesis(options: {
   const setEnabled = useCallback(
     (next: boolean) => {
       setEnabledState(next);
+      saveTtsEnabled(next);
       if (!next) stop();
     },
     [stop],

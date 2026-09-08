@@ -43,6 +43,8 @@ import {
   IconSettings,
   IconSparkles,
   IconVideo,
+  IconVolume2,
+  IconVolumeOff,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -668,16 +670,16 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
                   </Button>
                   <Button
                     size="icon"
-                    variant={voice.enabled ? "secondary" : "outline"}
+                    variant={voice.enabled ? "secondary" : "destructive"}
                     aria-label={
                       voice.enabled
-                        ? "Выключить голос персонажа"
-                        : "Включить голос персонажа"
+                        ? "Выключить озвучку ответов"
+                        : "Включить озвучку ответов"
                     }
                     disabled={!voice.supported}
                     onClick={() => voice.setEnabled(!voice.enabled)}
                   >
-                    <IconMessageCircle />
+                    {voice.enabled ? <IconVolume2 /> : <IconVolumeOff />}
                   </Button>
                   <Button
                     size="icon"
