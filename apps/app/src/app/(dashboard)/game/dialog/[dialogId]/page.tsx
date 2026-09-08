@@ -87,12 +87,17 @@ export default async function DialogPage({
     isAdmin,
   };
 
-  if (voiceParam === "1") {
+  if (voiceParam === "0") {
     return (
       <>
-        <SiteHeader title="Ролевой диалог с ИИ" />
-        <main className="flex flex-1 flex-col p-4 lg:p-6">
-          <VoiceDialogRoom {...commonProps} />
+        <SiteHeader title="Ролевой диалог" />
+        <main className="flex flex-1 flex-col gap-4 p-4 lg:p-6">
+          <GameSectionHeader
+            eyebrow={`Практика · Раунд ${data.shift.round}`}
+            title={`Разговор с ${data.employee.name}`}
+            description="Сотрудник отвечает в своей роли. Ведите естественный диалог и завершите его, когда договоритесь о результате, сроке и контроле."
+          />
+          <DialogRoom {...commonProps} initialEvaluation={evaluation} />
         </main>
       </>
     );
@@ -100,14 +105,9 @@ export default async function DialogPage({
 
   return (
     <>
-      <SiteHeader title="Ролевой диалог" />
-      <main className="flex flex-1 flex-col gap-4 p-4 lg:p-6">
-        <GameSectionHeader
-          eyebrow={`Практика · Раунд ${data.shift.round}`}
-          title={`Разговор с ${data.employee.name}`}
-          description="Сотрудник отвечает в своей роли. Ведите естественный диалог и завершите его, когда договоритесь о результате, сроке и контроле."
-        />
-        <DialogRoom {...commonProps} initialEvaluation={evaluation} />
+      <SiteHeader title="Ролевой диалог с ИИ" />
+      <main className="flex flex-1 flex-col p-4 lg:p-6">
+        <VoiceDialogRoom {...commonProps} />
       </main>
     </>
   );
