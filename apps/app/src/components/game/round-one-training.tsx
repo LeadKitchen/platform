@@ -13,12 +13,6 @@ import {
   CardHeader,
   CardTitle,
   Progress,
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
 } from "@acme/ui";
 import {
   IconArrowRight,
@@ -127,6 +121,15 @@ export function RoundOneTraining() {
     setCurrentIndex(0);
   }
 
+  function select(field: "level" | "style", value: string) {
+    setAnswers({ ...answers, [`${item.id}:${field}`]: value });
+    setResults((current) => {
+      const next = { ...current };
+      delete next[item.id];
+      return next;
+    });
+  }
+
   return (
     <Card className="gap-0 overflow-hidden py-0">
       <CardHeader className="border-b py-5">
@@ -225,66 +228,51 @@ export function RoundOneTraining() {
             <div className="grid gap-4 md:grid-cols-2">
               <div className="flex flex-col gap-2">
                 <p className="text-sm font-medium">1. Уровень готовности</p>
-                <Select
-                  value={answers[`${item.id}:level`] ?? ""}
-                  onValueChange={(value) => {
-                    setAnswers({
-                      ...answers,
-                      [`${item.id}:level`]: value ?? "",
-                    });
-                    setResults((current) => {
-                      const next = { ...current };
-                      delete next[item.id];
-                      return next;
-                    });
-                  }}
+                <div
+                  role="group"
+                  aria-label={`Уровень сотрудника ${item.name}`}
+                  className="grid gap-2 sm:grid-cols-2"
                 >
-                  <SelectTrigger aria-label={`Уровень сотрудника ${item.name}`}>
-                    <SelectValue placeholder="Выберите уровень" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {LEVELS.map((level) => (
-                        <SelectItem key={level.id} value={level.id}>
-                          {level.label}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                  {LEVELS.map((level) => {
+                    const selected = answers[`${item.id}:level`] === level.id;
+                    return (
+                      <Button
+                        key={level.id}
+                        type="button"
+                        variant={selected ? "default" : "outline"}
+                        aria-pressed={selected}
+                        className="h-auto justify-start px-3 py-2.5 text-left whitespace-normal"
+                        onClick={() => select("level", level.id)}
+                      >
+                        {level.label}
+                      </Button>
+                    );
+                  })}
+                </div>
               </div>
 
               <div className="flex flex-col gap-2">
                 <p className="text-sm font-medium">2. Стиль руководства</p>
-                <Select
-                  value={answers[`${item.id}:style`] ?? ""}
-                  onValueChange={(value) => {
-                    setAnswers({
-                      ...answers,
-                      [`${item.id}:style`]: value ?? "",
-                    });
-                    setResults((current) => {
-                      const next = { ...current };
-                      delete next[item.id];
-                      return next;
-                    });
-                  }}
+                <div
+                  role="group"
+                  aria-label={`Стиль руководства для ${item.name}`}
+                  className="grid gap-2 sm:grid-cols-2"
                 >
-                  <SelectTrigger
-                    aria-label={`Стиль руководства для ${item.name}`}
-                  >
-                    <SelectValue placeholder="Выберите стиль" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {STYLES.map((style) => (
-                        <SelectItem key={style.id} value={style.id}>
-                          {style.label}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                  {STYLES.map((style) => {
+                    const selected = answers[`${item.id}:style`] === style.id;
+                    return (
+                      <Button
+                        key={style.id}
+                        type="button"
+                        variant={selected ? "default" : "outline"}
+                        aria-pressed={selected}
+                        onClick={() => select("style", style.id)}
+                      >
+                        {style.label}
+                      </Button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
 
