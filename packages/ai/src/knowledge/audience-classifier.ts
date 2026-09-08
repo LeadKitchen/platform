@@ -40,6 +40,8 @@ const SYSTEM_PROMPT = [
 ].join("\n");
 
 const BATCH_SIZE = 25;
+/** Bounded parallelism, same pattern as buildContextualIndex in contextual-rag.ts — large documents can produce dozens of batches, and running them one at a time was blowing past the task's execution timeout. */
+const CONCURRENCY = 4;
 
 function batches<T>(items: T[], size: number): T[][] {
   const result: T[][] = [];
@@ -49,56 +51,80 @@ function batches<T>(items: T[], size: number): T[][] {
   return result;
 }
 
+async function classifyBatch(
+  batch: { index: number; text: string }[],
+  provider: LlmProvider,
+  signal: AbortSignal | undefined,
+): Promise<AudienceClassification[]> {
+  const { value } = await provider.generate({
+    purpose: "knowledge.classify-audience",
+    schemaName: "AudienceClassification",
+    schema: classificationSchema,
+    effort: "low",
+    signal,
+    system: SYSTEM_PROMPT,
+    messages: [
+      {
+        role: "user",
+        content: JSON.stringify({
+          chunks: batch.map((item) => ({
+            index: item.index,
+            text: item.text.slice(0, 4000),
+          })),
+        }),
+      },
+    ],
+  });
+  const expectedIndexes = new Set(batch.map((item) => item.index));
+  const responseIndexes = new Set<number>();
+  if (
+    expectedIndexes.size !== batch.length ||
+    value.chunks.length !== batch.length
+  ) {
+    throw new Error("Invalid audience classification indexes");
+  }
+  for (const chunk of value.chunks) {
+    if (
+      !expectedIndexes.has(chunk.index) ||
+      responseIndexes.has(chunk.index)
+    ) {
+      throw new Error("Invalid audience classification indexes");
+    }
+    responseIndexes.add(chunk.index);
+  }
+  if (responseIndexes.size !== expectedIndexes.size) {
+    throw new Error("Invalid audience classification indexes");
+  }
+  return value.chunks;
+}
+
 export async function classifyChunkAudience(
   chunks: { index: number; text: string }[],
   options: { provider?: LlmProvider; signal?: AbortSignal } = {},
 ): Promise<AudienceClassification[]> {
   if (chunks.length === 0) return [];
   const provider = options.provider ?? createProviderFromEnv();
-  const results: AudienceClassification[] = [];
+  const chunkBatches = batches(chunks, BATCH_SIZE);
+  const results: AudienceClassification[][] = new Array(chunkBatches.length);
 
-  for (const batch of batches(chunks, BATCH_SIZE)) {
-    const { value } = await provider.generate({
-      purpose: "knowledge.classify-audience",
-      schemaName: "AudienceClassification",
-      schema: classificationSchema,
-      effort: "low",
-      signal: options.signal,
-      system: SYSTEM_PROMPT,
-      messages: [
-        {
-          role: "user",
-          content: JSON.stringify({
-            chunks: batch.map((item) => ({
-              index: item.index,
-              text: item.text.slice(0, 4000),
-            })),
-          }),
-        },
-      ],
-    });
-    const expectedIndexes = new Set(batch.map((item) => item.index));
-    const responseIndexes = new Set<number>();
-    if (
-      expectedIndexes.size !== batch.length ||
-      value.chunks.length !== batch.length
-    ) {
-      throw new Error("Invalid audience classification indexes");
-    }
-    for (const chunk of value.chunks) {
-      if (
-        !expectedIndexes.has(chunk.index) ||
-        responseIndexes.has(chunk.index)
-      ) {
-        throw new Error("Invalid audience classification indexes");
+  let cursor = 0;
+  const workers = Array.from(
+    { length: Math.max(1, Math.min(CONCURRENCY, chunkBatches.length)) },
+    async () => {
+      while (cursor < chunkBatches.length) {
+        const batchIndex = cursor;
+        cursor += 1;
+        const batch = chunkBatches[batchIndex];
+        if (!batch) return;
+        results[batchIndex] = await classifyBatch(
+          batch,
+          provider,
+          options.signal,
+        );
       }
-      responseIndexes.add(chunk.index);
-    }
-    if (responseIndexes.size !== expectedIndexes.size) {
-      throw new Error("Invalid audience classification indexes");
-    }
-    results.push(...value.chunks);
-  }
+    },
+  );
+  await Promise.all(workers);
 
-  return results;
+  return results.flat();
 }

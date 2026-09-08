@@ -236,7 +236,15 @@ export const chunkAndClassifyTask = hatchet.task<
 >({
   name: "ingest-chunk-and-classify",
   retries: 3,
-  executionTimeout: "180s",
+  // classifyChunkAudience batches 25 chunks per LLM call, now with bounded
+  // parallelism (4 at a time — see audience-classifier.ts) instead of one
+  // at a time. 180s was fine for typical documents but a long PDF (a 729-
+  // page upload hit this in production) produces enough batches that even
+  // parallelized classification can run past it; the internal try/catch
+  // around classifyChunkAudience only degrades to the default audience for
+  // errors thrown *inside* this task's own execution, not for Hatchet
+  // killing the task from outside once executionTimeout elapses.
+  executionTimeout: "900s",
   fn: async (input) => {
     const chunks = chunkText(input.text);
 
