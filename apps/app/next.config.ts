@@ -17,6 +17,7 @@ const contentSecurityPolicy = [
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://va.vercel-scripts.com`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
+  "media-src 'self' blob:",
   "font-src 'self' data:",
   "connect-src 'self' https:",
   "frame-ancestors 'none'",
