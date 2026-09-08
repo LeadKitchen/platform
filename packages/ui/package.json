@@ -21,7 +21,7 @@
     "class-variance-authority": "^0.7.1",
     "date-fns": "4.4.0",
     "input-otp": "^1.5.0",
-    "lucide-react": "^1.41.0",
+    "lucide-react": "^1.42.0",
     "react-day-picker": "^10.0.1",
     "react-hook-form": "^7.87.0",
     "recharts": "^3.10.1",
