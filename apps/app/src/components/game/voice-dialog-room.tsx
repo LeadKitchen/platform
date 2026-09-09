@@ -671,6 +671,7 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
                   <Button
                     size="icon"
                     variant={voice.enabled ? "secondary" : "destructive"}
+                    aria-pressed={voice.enabled}
                     aria-label={
                       voice.enabled
                         ? "Выключить озвучку ответов"

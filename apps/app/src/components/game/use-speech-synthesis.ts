@@ -47,7 +47,7 @@ export function useSpeechSynthesis(options: {
   const { dialogId, gender, lang = "ru-RU", onEnd } = options;
   const [supported, setSupported] = useState(false);
   const [speaking, setSpeaking] = useState(false);
-  const [enabled, setEnabledState] = useState(loadTtsEnabled);
+  const [enabled, setEnabledState] = useState(true);
   const onEndRef = useRef(onEnd);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const objectUrlRef = useRef<string | null>(null);
@@ -69,6 +69,10 @@ export function useSpeechSynthesis(options: {
       URL.revokeObjectURL(objectUrlRef.current);
       objectUrlRef.current = null;
     }
+  }, []);
+
+  useEffect(() => {
+    setEnabledState(loadTtsEnabled());
   }, []);
 
   useEffect(() => {
