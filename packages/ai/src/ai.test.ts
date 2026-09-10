@@ -146,9 +146,7 @@ describe("pipeline engagement gate", () => {
     expect(result.dialog.engaged).toBe(true);
     expect(result.dialog.turns).toHaveLength(2);
     expect(calls.map((call) => call.purpose)).toContain("persona.reply");
-    expect(
-      calls.map((call) => call.purpose),
-    ).not.toContain("engagement.check");
+    expect(calls.map((call) => call.purpose)).not.toContain("engagement.check");
   });
 
   test("once engaged the character keeps answering", async () => {

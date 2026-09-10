@@ -84,10 +84,7 @@ async function classifyBatch(
     throw new Error("Invalid audience classification indexes");
   }
   for (const chunk of value.chunks) {
-    if (
-      !expectedIndexes.has(chunk.index) ||
-      responseIndexes.has(chunk.index)
-    ) {
+    if (!expectedIndexes.has(chunk.index) || responseIndexes.has(chunk.index)) {
       throw new Error("Invalid audience classification indexes");
     }
     responseIndexes.add(chunk.index);
