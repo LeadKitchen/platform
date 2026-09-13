@@ -36,8 +36,8 @@ export async function compareVariants(
 ): Promise<VariantComparisonResult[]> {
   return Promise.all(
     variants.map(async (variant) => {
-      const pipeline = createPipeline(variant, deps);
       try {
+        const pipeline = createPipeline(variant, deps);
         const turn = await pipeline.respond(input);
         return { variant, turn };
       } catch (cause) {
