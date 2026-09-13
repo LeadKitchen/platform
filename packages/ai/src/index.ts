@@ -169,7 +169,14 @@ export * from "./types";
 export {
   BUILT_IN_VARIANTS,
   DEFAULT_VARIANT_ID,
+  groupVariantsByCategory,
   resolveVariant,
+  type VariantCategory,
   type VariantConfig,
+  variantCategorySchema,
   variantConfigSchema,
 } from "./variants";
+export {
+  compareVariants,
+  type VariantComparisonResult,
+} from "./compare";
