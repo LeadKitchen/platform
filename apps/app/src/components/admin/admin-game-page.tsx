@@ -1,6 +1,9 @@
 import { redirect } from "next/navigation";
 import type { BenchmarkRun } from "~/components/admin/admin-benchmark-reports";
-import type { AdminGameSection } from "~/components/admin/admin-game-dashboard";
+import type {
+  AdminGameData,
+  AdminGameSection,
+} from "~/components/admin/admin-game-dashboard";
 import { AdminGameDashboard } from "~/components/admin/admin-game-dashboard";
 import { SiteHeader } from "~/components/layout";
 import { api } from "~/orpc/server";
@@ -77,7 +80,11 @@ export async function AdminGamePage({
           analytics,
           productAnalytics,
           dialogs,
-          variants,
+          // oRPC's inferred return type for this deeply-nested router drops
+          // fields added after the router tree grew this large (a TS
+          // instantiation-depth limitation, not a runtime gap — the DB
+          // column is NOT NULL and always present).
+          variants: variants as unknown as AdminGameData["variants"],
           catalog,
           sessions,
           system,

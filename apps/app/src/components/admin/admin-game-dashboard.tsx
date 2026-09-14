@@ -103,10 +103,13 @@ interface GameTask {
   isActive: boolean;
 }
 
+type VariantCategory = "control" | "retrieval" | "learning" | "ensemble";
+
 interface Variant {
   id: string;
   name: string;
   description: string;
+  category: VariantCategory;
   engagement: string;
   knowledge: string;
   persona: string;
@@ -335,10 +338,35 @@ const emptyTask: GameTask = {
   isActive: true,
 };
 
+const VARIANT_CATEGORIES: VariantCategory[] = [
+  "control",
+  "retrieval",
+  "learning",
+  "ensemble",
+];
+
+const VARIANT_CATEGORY_LABELS: Record<VariantCategory, string> = {
+  control: "Контроль",
+  retrieval: "Retrieval (RAG)",
+  learning: "Обучение",
+  ensemble: "Ансамбль / мульти-агент",
+};
+
+const VARIANT_CATEGORY_DESCRIPTIONS: Record<VariantCategory, string> = {
+  control:
+    "Без retrieval, обучения и мульти-агентности — контрольная группа для сравнения.",
+  retrieval:
+    "Этап knowledge использует нетривиальный поиск: RAG и его вариации.",
+  learning: "Persona-стратегия обучается на обратной связи между диалогами.",
+  ensemble:
+    "Несколько вызовов модели сотрудничают или голосуют в рамках одного хода — сюда смотреть, если тестируете, как подходы работают в содружестве.",
+};
+
 const emptyVariant: Variant = {
   id: "",
   name: "",
   description: "",
+  category: "control",
   engagement: "heuristic",
   knowledge: "prompt-baseline",
   persona: "prompt-baseline",
@@ -755,10 +783,14 @@ export function AdminGameDashboard({
         params: parseObject(variantParams, "Параметры"),
       });
       if (!saved) throw new Error("API не вернул сохранённый вариант");
+      // See the cast in admin-game-page.tsx: oRPC drops `category` from this
+      // router's inferred return type, so it's cast back in here too.
+      const savedVariant = saved as unknown as Variant;
       setVariants((current) =>
-        [...current.filter((item) => item.id !== saved.id), saved].sort(
-          (a, b) => a.id.localeCompare(b.id),
-        ),
+        [
+          ...current.filter((item) => item.id !== savedVariant.id),
+          savedVariant,
+        ].sort((a, b) => a.id.localeCompare(b.id)),
       );
       toast.success("Вариант ИИ сохранён");
       router.refresh();
@@ -776,8 +808,9 @@ export function AdminGameDashboard({
         id,
         isActive,
       });
+      const savedVariant = saved as unknown as Variant;
       setVariants((current) =>
-        current.map((item) => (item.id === id ? saved : item)),
+        current.map((item) => (item.id === id ? savedVariant : item)),
       );
       if (variant.id === id)
         setVariant((current) => ({ ...current, isActive }));
@@ -1757,62 +1790,90 @@ export function AdminGameDashboard({
                 выбор всегда явный, без случайного распределения.
               </CardDescription>
             </CardHeader>
-            <CardContent className="grid gap-3 py-5">
-              {variants.map((item) => {
-                const isLive = item.id === liveVariantId;
+            <CardContent className="grid gap-5 py-5">
+              {VARIANT_CATEGORIES.map((category) => {
+                const items = variants.filter(
+                  (item) => (item.category ?? "control") === category,
+                );
+                if (items.length === 0) return null;
                 return (
-                  <div
-                    key={item.id}
-                    className={`flex flex-col gap-3 rounded-xl border p-4 transition-colors sm:flex-row sm:items-start sm:justify-between ${
-                      variant.id === item.id
-                        ? "border-primary bg-primary/5"
-                        : "hover:border-foreground/20 hover:bg-muted/40"
-                    }`}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => chooseVariant(item.id)}
-                      className="min-w-0 flex-1 text-left"
-                    >
-                      <span className="block font-medium">{item.name}</span>
-                      <span className="text-muted-foreground mt-1 block text-sm font-normal whitespace-normal">
-                        {item.knowledge} · {item.persona} · {item.evaluation}
-                      </span>
-                    </button>
-                    <div className="flex flex-wrap items-center gap-2">
-                      {isLive ? <Badge>Работает в игре</Badge> : null}
-                      <Badge variant={item.isActive ? "default" : "secondary"}>
-                        {item.isActive ? "Включён" : "Выключен"}
-                      </Badge>
-                      <Switch
-                        aria-label={
-                          item.isActive
-                            ? `Выключить «${item.name}»`
-                            : `Включить «${item.name}»`
-                        }
-                        checked={item.isActive}
-                        disabled={pending}
-                        onCheckedChange={(checked) =>
-                          toggleVariantActive(item.id, checked)
-                        }
-                      />
-                      {!isLive ? (
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="outline"
-                          disabled={pending || !item.isActive}
-                          title={
-                            item.isActive
-                              ? "Сделать вариантом, который работает в новых сессиях"
-                              : "Сначала включите вариант"
-                          }
-                          onClick={() => makeVariantDefault(item.id)}
-                        >
-                          Сделать активным
-                        </Button>
-                      ) : null}
+                  <div key={category} className="grid gap-3">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline">
+                          {VARIANT_CATEGORY_LABELS[category]}
+                        </Badge>
+                        <span className="text-muted-foreground text-xs">
+                          {items.length}
+                        </span>
+                      </div>
+                      <p className="text-muted-foreground mt-1 text-xs">
+                        {VARIANT_CATEGORY_DESCRIPTIONS[category]}
+                      </p>
                     </div>
+                    {items.map((item) => {
+                      const isLive = item.id === liveVariantId;
+                      return (
+                        <div
+                          key={item.id}
+                          className={`flex flex-col gap-3 rounded-xl border p-4 transition-colors sm:flex-row sm:items-start sm:justify-between ${
+                            variant.id === item.id
+                              ? "border-primary bg-primary/5"
+                              : "hover:border-foreground/20 hover:bg-muted/40"
+                          }`}
+                        >
+                          <button
+                            type="button"
+                            onClick={() => chooseVariant(item.id)}
+                            className="min-w-0 flex-1 text-left"
+                          >
+                            <span className="block font-medium">
+                              {item.name}
+                            </span>
+                            <span className="text-muted-foreground mt-1 block text-sm font-normal whitespace-normal">
+                              {item.knowledge} · {item.persona} ·{" "}
+                              {item.evaluation}
+                            </span>
+                          </button>
+                          <div className="flex flex-wrap items-center gap-2">
+                            {isLive ? <Badge>Работает в игре</Badge> : null}
+                            <Badge
+                              variant={item.isActive ? "default" : "secondary"}
+                            >
+                              {item.isActive ? "Включён" : "Выключен"}
+                            </Badge>
+                            <Switch
+                              aria-label={
+                                item.isActive
+                                  ? `Выключить «${item.name}»`
+                                  : `Включить «${item.name}»`
+                              }
+                              checked={item.isActive}
+                              disabled={pending}
+                              onCheckedChange={(checked) =>
+                                toggleVariantActive(item.id, checked)
+                              }
+                            />
+                            {!isLive ? (
+                              <Button
+                                type="button"
+                                size="sm"
+                                variant="outline"
+                                disabled={pending || !item.isActive}
+                                title={
+                                  item.isActive
+                                    ? "Сделать вариантом, который работает в новых сессиях"
+                                    : "Сначала включите вариант"
+                                }
+                                onClick={() => makeVariantDefault(item.id)}
+                              >
+                                Сделать активным
+                              </Button>
+                            ) : null}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 );
               })}
@@ -1867,6 +1928,36 @@ export function AdminGameDashboard({
                         })
                       }
                     />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="variant-category">
+                      Категория
+                    </FieldLabel>
+                    <Select
+                      value={variant.category}
+                      onValueChange={(value) =>
+                        setVariant({
+                          ...variant,
+                          category: (value as VariantCategory) ?? "control",
+                        })
+                      }
+                    >
+                      <SelectTrigger id="variant-category">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          {VARIANT_CATEGORIES.map((category) => (
+                            <SelectItem key={category} value={category}>
+                              {VARIANT_CATEGORY_LABELS[category]}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    <FieldDescription>
+                      {VARIANT_CATEGORY_DESCRIPTIONS[variant.category]}
+                    </FieldDescription>
                   </Field>
                   {(
                     [

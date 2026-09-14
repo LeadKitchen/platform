@@ -76,6 +76,7 @@ async function main(): Promise<void> {
         id: variant.id,
         name: variant.name,
         description: variant.description,
+        category: variant.category,
         engagement: variant.engagement,
         knowledge: variant.knowledge,
         persona: variant.persona,
@@ -86,8 +87,10 @@ async function main(): Promise<void> {
       })
       .onConflictDoUpdate({
         target: GameVariant.id,
-        // Stage wiring is code-owned; naming and rollout knobs stay editable.
+        // Stage wiring (and the category it implies) is code-owned; naming
+        // and rollout knobs stay editable.
         set: {
+          category: variant.category,
           engagement: variant.engagement,
           knowledge: variant.knowledge,
           persona: variant.persona,
