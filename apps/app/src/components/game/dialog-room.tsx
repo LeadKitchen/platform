@@ -60,11 +60,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { employeeAvatarUri, userAvatarUri } from "~/lib/avatar";
 import { client } from "~/orpc/react";
 import { EvaluationCard, type EvaluationView } from "./evaluation-card";
-import {
-  ChefHatIllustration,
-  SteamWisps,
-  TypingDots,
-} from "./illustrations";
+import { ChefHatIllustration, SteamWisps, TypingDots } from "./illustrations";
 import { useSpeechRecognition } from "./use-speech-recognition";
 
 interface Turn {
