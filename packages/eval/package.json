@@ -30,9 +30,9 @@
     "@acme/ai": "workspace:*",
     "@acme/db": "workspace:*",
     "@acme/game": "workspace:*",
-    "@ax-llm/ax": "24.0.17",
+    "@ax-llm/ax": "24.0.18",
     "@lmnr-ai/lmnr": "^0.8.45",
-    "zod": "4.5.4"
+    "zod": "4.6.5"
   },
   "devDependencies": {
     "@acme/tsconfig": "workspace:*",

@@ -31,9 +31,9 @@
     "@lmnr-ai/lmnr": "^0.8.45",
     "@orpc/contract": "^1.15.0",
     "@orpc/server": "^1.15.0",
-    "better-auth": "1.7.3",
+    "better-auth": "1.7.4",
     "superjson": "2.2.6",
-    "zod": "4.5.4"
+    "zod": "4.6.5"
   },
   "devDependencies": {
     "@acme/tsconfig": "workspace:*",
