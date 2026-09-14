@@ -1,0 +1,1 @@
+ALTER TABLE "game_variants" ADD COLUMN "category" varchar(16) DEFAULT 'control' NOT NULL;

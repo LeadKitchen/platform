@@ -58,6 +58,7 @@ export const GameVariant = pgTable("game_variants", (t) => ({
   id: t.text().primaryKey(),
   name: t.varchar({ length: 128 }).notNull(),
   description: t.text().default("").notNull(),
+  category: t.varchar({ length: 16 }).default("control").notNull(),
   engagement: t.varchar({ length: 64 }).default("heuristic").notNull(),
   knowledge: t.varchar({ length: 64 }).notNull(),
   persona: t.varchar({ length: 64 }).notNull(),

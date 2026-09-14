@@ -72,6 +72,7 @@ export const upsert = adminProcedure
       id: input.id,
       name: input.name,
       description: input.description,
+      category: input.category,
       engagement: input.engagement,
       knowledge: input.knowledge,
       persona: input.persona,

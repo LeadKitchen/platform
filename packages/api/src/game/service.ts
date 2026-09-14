@@ -165,6 +165,7 @@ export async function loadVariants(
     id: row.id,
     name: row.name,
     description: row.description,
+    category: row.category as VariantConfig["category"],
     engagement: row.engagement,
     knowledge: row.knowledge,
     persona: row.persona,
