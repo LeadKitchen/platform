@@ -208,7 +208,10 @@ export async function loadEngine(db: Database): Promise<Engine> {
  * default, once no category has a live variant configured yet.
  */
 export function pickLiveVariantId(
-  settings: { defaultVariantId: string | null; categoryVariantIds: Record<string, string> },
+  settings: {
+    defaultVariantId: string | null;
+    categoryVariantIds: Record<string, string>;
+  },
   engine: Pick<Engine, "defaultVariantId">,
 ): string {
   const candidates = Object.values(settings.categoryVariantIds);

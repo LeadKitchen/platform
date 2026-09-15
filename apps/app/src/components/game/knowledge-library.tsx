@@ -350,7 +350,8 @@ function UploadDialog({
               </FieldDescription>
             ) : (
               <FieldDescription>
-                Максимальный размер файла — {formatFileSize(MAX_UPLOAD_SIZE_BYTES)}
+                Максимальный размер файла —{" "}
+                {formatFileSize(MAX_UPLOAD_SIZE_BYTES)}
               </FieldDescription>
             )}
           </Field>

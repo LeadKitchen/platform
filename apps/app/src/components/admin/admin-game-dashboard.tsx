@@ -1841,9 +1841,7 @@ export function AdminGameDashboard({
                             </span>
                           </button>
                           <div className="flex flex-wrap items-center gap-2">
-                            {isLive ? (
-                              <Badge>Работает в игре</Badge>
-                            ) : null}
+                            {isLive ? <Badge>Работает в игре</Badge> : null}
                             <Badge
                               variant={item.isActive ? "default" : "secondary"}
                             >
