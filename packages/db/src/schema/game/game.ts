@@ -80,9 +80,23 @@ export const GameVariant = pgTable("game_variants", (t) => ({
 export const GameSettings = pgTable("game_settings", (t) => ({
   /** Always `global`; a key keeps the shape extensible without extra rows. */
   id: t.text().primaryKey(),
+  /** Fallback used only while no category below has a live variant set. */
   defaultVariantId: t.text().references(() => GameVariant.id, {
     onDelete: "set null",
   }),
+  /**
+   * The one variant live in the game for each {@link VariantCategory}, e.g.
+   * `{ control: "baseline", retrieval: "hybrid-rag" }`. A new session picks
+   * uniformly at random among these — an even split across categories, never
+   * weighted — so every family under test keeps getting real play. Not a
+   * foreign key: entries are validated against `GameVariant` in the router
+   * instead, since jsonb can't carry a per-key FK.
+   */
+  categoryVariantIds: t
+    .jsonb()
+    .$type<Record<string, string>>()
+    .default({})
+    .notNull(),
   defaultRound: t.integer().default(2).notNull(),
   defaultDeadlineMinutes: t.integer().default(60).notNull(),
   allowRoundThree: t.boolean().default(true).notNull(),

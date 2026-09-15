@@ -1,0 +1,1 @@
+ALTER TABLE "game_settings" ADD COLUMN "category_variant_ids" jsonb DEFAULT '{}'::jsonb NOT NULL;

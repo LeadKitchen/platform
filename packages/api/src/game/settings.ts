@@ -3,6 +3,7 @@ import { type Database, eq, GameSettings } from "@acme/db";
 export const DEFAULT_GAME_SETTINGS = {
   id: "global",
   defaultVariantId: null as string | null,
+  categoryVariantIds: {} as Record<string, string>,
   defaultRound: 2 as 2 | 3,
   defaultDeadlineMinutes: 60,
   allowRoundThree: true,

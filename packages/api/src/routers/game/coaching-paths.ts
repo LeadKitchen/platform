@@ -17,7 +17,11 @@ import {
   roleplayScenarioFromSnapshot,
 } from "../../game/roleplay";
 import { getActiveScorecardSnapshot } from "../../game/scorecards";
-import { loadEngine, resolveLiveVariantId } from "../../game/service";
+import {
+  loadEngine,
+  pickLiveVariantId,
+  resolveLiveVariantId,
+} from "../../game/service";
 import { loadGameSettings } from "../../game/settings";
 import { protectedProcedure } from "../../orpc";
 
@@ -83,7 +87,7 @@ export const startStep = protectedProcedure
         message: `Достигнут лимит активных сессий: ${settings.maxActiveSessions}`,
       });
     }
-    const variantId = settings.defaultVariantId ?? engine.defaultVariantId;
+    const variantId = pickLiveVariantId(settings, engine);
     engine.pipeline(variantId);
 
     return context.db.transaction(async (tx) => {

@@ -87,7 +87,10 @@ export async function AdminGamePage({
           variants: variants as unknown as AdminGameData["variants"],
           catalog,
           sessions,
-          system,
+          // Same oRPC instantiation-depth issue as `variants` above: a field
+          // recently added to `GameSettings` (categoryVariantIds) doesn't
+          // survive inference here even though it's always present at runtime.
+          system: system as unknown as AdminGameData["system"],
           users,
           organizations,
           benchmarks: benchmarks as unknown as BenchmarkRun[],
