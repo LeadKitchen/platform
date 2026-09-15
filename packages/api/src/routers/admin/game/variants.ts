@@ -179,26 +179,6 @@ export const setCategoryVariant = adminProcedure
     }),
   )
   .handler(async ({ context, input }) => {
-    if (input.variantId) {
-      const variant = await context.db.query.GameVariant.findFirst({
-        where: eq(GameVariant.id, input.variantId),
-        columns: { category: true, isActive: true },
-      });
-      if (!variant) {
-        throw new ORPCError("NOT_FOUND", { message: "Вариант не найден" });
-      }
-      if (!variant.isActive) {
-        throw new ORPCError("BAD_REQUEST", {
-          message: "Сначала включите вариант",
-        });
-      }
-      if (variant.category !== input.category) {
-        throw new ORPCError("BAD_REQUEST", {
-          message: "Вариант относится к другой категории",
-        });
-      }
-    }
-
     const audit = await mutateConfig(
       context.db,
       {
@@ -209,6 +189,25 @@ export const setCategoryVariant = adminProcedure
           : `Категория «${input.category}» осталась без живого варианта`,
       },
       async (tx, before) => {
+        if (input.variantId) {
+          const variant = await tx.query.GameVariant.findFirst({
+            where: eq(GameVariant.id, input.variantId),
+            columns: { category: true, isActive: true },
+          });
+          if (!variant) {
+            throw new ORPCError("NOT_FOUND", { message: "Вариант не найден" });
+          }
+          if (!variant.isActive) {
+            throw new ORPCError("BAD_REQUEST", {
+              message: "Сначала включите вариант",
+            });
+          }
+          if (variant.category !== input.category) {
+            throw new ORPCError("BAD_REQUEST", {
+              message: "Вариант относится к другой категории",
+            });
+          }
+        }
         const categoryVariantIds = { ...before.settings.categoryVariantIds };
         if (input.variantId) {
           categoryVariantIds[input.category] = input.variantId;
