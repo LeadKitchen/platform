@@ -110,6 +110,7 @@ export function DialogRoom(props: DialogRoomProps) {
   const [turns, setTurns] = useState<Turn[]>(props.initialTurns);
   const [draft, setDraft] = useState("");
   const [pending, setPending] = useState(false);
+  const [awaitingEmployeeReply, setAwaitingEmployeeReply] = useState(false);
   const [finished, setFinished] = useState(props.initialFinished);
   const [evaluation, setEvaluation] = useState<EvaluationView | null>(
     props.initialEvaluation,
@@ -142,10 +143,12 @@ export function DialogRoom(props: DialogRoomProps) {
   const managerTurns = turns.filter((turn) => turn.role === "manager").length;
   const conversationStep = finished ? 3 : managerTurns >= 2 ? 2 : 1;
   const conversationProgress = finished ? 100 : conversationStep * 33;
-  // Once the employee's reply starts streaming in as its own bubble, the
-  // separate "typing" row would just duplicate it — only show it while
-  // waiting for the first chunk to arrive.
-  const showTypingIndicator = pending && turns.at(-1)?.role !== "employee";
+  // Tracked via its own state rather than derived from turns.at(-1): right
+  // after send() sets `pending`, the manager's own turn hasn't been appended
+  // yet, so the last turn in the list still belongs to the *previous*
+  // exchange — deriving from it made the indicator flicker based on history
+  // instead of whether a reply is actually in flight.
+  const showTypingIndicator = pending && awaitingEmployeeReply;
 
   const employeeAvatar = employeeAvatarUri(props.employee.name);
   const managerAvatar =
@@ -216,11 +219,13 @@ export function DialogRoom(props: DialogRoomProps) {
     const controller = new AbortController();
     requestController.current = controller;
     setPending(true);
+    setAwaitingEmployeeReply(true);
     setError(null);
     setNotice(null);
     setFailedDraft(null);
     setDraft("");
     let employeeTurnStarted = false;
+    let firstEventSeen = false;
 
     try {
       const stream = await client.game.dialog.sayStream(
@@ -238,6 +243,10 @@ export function DialogRoom(props: DialogRoomProps) {
       // place instead of appending duplicates — the character "types" into
       // one growing turn rather than a new one per chunk.
       for await (const event of stream) {
+        if (!firstEventSeen) {
+          firstEventSeen = true;
+          setAwaitingEmployeeReply(false);
+        }
         if (event.type === "chunk") {
           employeeTurnStarted = true;
           setTurns((current) => {
@@ -313,6 +322,7 @@ export function DialogRoom(props: DialogRoomProps) {
         requestController.current = null;
       }
       setPending(false);
+      setAwaitingEmployeeReply(false);
     }
   }
 
