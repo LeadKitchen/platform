@@ -136,6 +136,26 @@ export function KitchenPatternBackdrop({ className }: { className?: string }) {
 }
 
 /**
+ * Три точки, «печатающие» ответ сотрудника — показываются только пока не
+ * пришёл ни один символ реального ответа (см. showTypingIndicator в
+ * dialog-room.tsx), чтобы не дублировать уже стримящийся текст.
+ */
+export function TypingDots({ className }: { className?: string }) {
+  const dots = ["0s", "0.15s", "0.3s"];
+  return (
+    <span className={className} aria-hidden="true">
+      {dots.map((delay, index) => (
+        <span
+          key={delay}
+          className={`animate-typing-dot bg-current inline-block size-1.5 rounded-full ${index === 1 ? "mx-1" : ""}`}
+          style={{ animationDelay: delay }}
+        />
+      ))}
+    </span>
+  );
+}
+
+/**
  * Пар за аватаром сотрудника, пока идёт «готовка» ответа — три волнистые
  * полоски поднимаются и растворяются со сдвигом по времени.
  */

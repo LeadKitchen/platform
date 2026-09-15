@@ -60,7 +60,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { employeeAvatarUri, userAvatarUri } from "~/lib/avatar";
 import { client } from "~/orpc/react";
 import { EvaluationCard, type EvaluationView } from "./evaluation-card";
-import { ChefHatIllustration, SteamWisps } from "./illustrations";
+import { ChefHatIllustration, SteamWisps, TypingDots } from "./illustrations";
 import { useSpeechRecognition } from "./use-speech-recognition";
 
 interface Turn {
@@ -110,6 +110,7 @@ export function DialogRoom(props: DialogRoomProps) {
   const [turns, setTurns] = useState<Turn[]>(props.initialTurns);
   const [draft, setDraft] = useState("");
   const [pending, setPending] = useState(false);
+  const [awaitingEmployeeReply, setAwaitingEmployeeReply] = useState(false);
   const [finished, setFinished] = useState(props.initialFinished);
   const [evaluation, setEvaluation] = useState<EvaluationView | null>(
     props.initialEvaluation,
@@ -142,6 +143,12 @@ export function DialogRoom(props: DialogRoomProps) {
   const managerTurns = turns.filter((turn) => turn.role === "manager").length;
   const conversationStep = finished ? 3 : managerTurns >= 2 ? 2 : 1;
   const conversationProgress = finished ? 100 : conversationStep * 33;
+  // Tracked via its own state rather than derived from turns.at(-1): right
+  // after send() sets `pending`, the manager's own turn hasn't been appended
+  // yet, so the last turn in the list still belongs to the *previous*
+  // exchange — deriving from it made the indicator flicker based on history
+  // instead of whether a reply is actually in flight.
+  const showTypingIndicator = pending && awaitingEmployeeReply;
 
   const employeeAvatar = employeeAvatarUri(props.employee.name);
   const managerAvatar =
@@ -212,11 +219,13 @@ export function DialogRoom(props: DialogRoomProps) {
     const controller = new AbortController();
     requestController.current = controller;
     setPending(true);
+    setAwaitingEmployeeReply(true);
     setError(null);
     setNotice(null);
     setFailedDraft(null);
     setDraft("");
     let employeeTurnStarted = false;
+    let firstEventSeen = false;
 
     try {
       const stream = await client.game.dialog.sayStream(
@@ -234,6 +243,10 @@ export function DialogRoom(props: DialogRoomProps) {
       // place instead of appending duplicates — the character "types" into
       // one growing turn rather than a new one per chunk.
       for await (const event of stream) {
+        if (!firstEventSeen) {
+          firstEventSeen = true;
+          setAwaitingEmployeeReply(false);
+        }
         if (event.type === "chunk") {
           employeeTurnStarted = true;
           setTurns((current) => {
@@ -309,6 +322,7 @@ export function DialogRoom(props: DialogRoomProps) {
         requestController.current = null;
       }
       setPending(false);
+      setAwaitingEmployeeReply(false);
     }
   }
 
@@ -454,7 +468,7 @@ export function DialogRoom(props: DialogRoomProps) {
               <div className="flex flex-wrap gap-2">
                 <Badge>
                   <span className="relative mr-1 flex size-2">
-                    <span className="bg-primary-foreground absolute inline-flex size-full animate-ping rounded-full opacity-75" />
+                    <span className="bg-primary-foreground motion-reduce:animate-none absolute inline-flex size-full animate-ping rounded-full opacity-75" />
                     <span className="bg-primary-foreground relative inline-flex size-2 rounded-full" />
                   </span>
                   В роли · ИИ
@@ -565,8 +579,8 @@ export function DialogRoom(props: DialogRoomProps) {
                     key={`${index}-${turn.role}`}
                     className={
                       turn.role === "manager"
-                        ? "bg-primary/10 ml-auto max-w-[92%] rounded-lg px-3 py-2 sm:max-w-[80%]"
-                        : "bg-muted mr-auto max-w-[92%] rounded-lg px-3 py-2 sm:max-w-[80%]"
+                        ? "bg-primary/10 animate-in fade-in slide-in-from-right-2 motion-reduce:animate-none ml-auto max-w-[92%] rounded-lg px-3 py-2 duration-300 sm:max-w-[80%]"
+                        : "bg-muted animate-in fade-in slide-in-from-left-2 motion-reduce:animate-none mr-auto max-w-[92%] rounded-lg px-3 py-2 duration-300 sm:max-w-[80%]"
                     }
                   >
                     <div className="mb-1 flex items-center gap-2">
@@ -614,12 +628,12 @@ export function DialogRoom(props: DialogRoomProps) {
                     {speech.interim}…
                   </p>
                 ) : null}
-                {pending ? (
+                {showTypingIndicator ? (
                   <div
                     aria-live="polite"
-                    className="bg-muted mr-auto flex items-center gap-2 rounded-lg px-3 py-2 text-sm"
+                    className="bg-muted text-muted-foreground animate-in fade-in slide-in-from-left-2 motion-reduce:animate-none mr-auto flex items-center gap-2 rounded-lg px-3 py-2 text-sm duration-300"
                   >
-                    <IconLoader2 className="animate-spin" />
+                    <TypingDots className="text-muted-foreground" />
                     {props.employee.name} отвечает…
                   </div>
                 ) : null}
@@ -628,14 +642,21 @@ export function DialogRoom(props: DialogRoomProps) {
             </ScrollArea>
 
             {notice ? (
-              <Alert aria-live="polite">
+              <Alert
+                aria-live="polite"
+                className="animate-in fade-in slide-in-from-top-1 motion-reduce:animate-none duration-300"
+              >
                 <IconAlertTriangle />
                 <AlertTitle>Обратите внимание</AlertTitle>
                 <AlertDescription>{notice}</AlertDescription>
               </Alert>
             ) : null}
             {error ? (
-              <Alert aria-live="assertive" variant="destructive">
+              <Alert
+                aria-live="assertive"
+                variant="destructive"
+                className="animate-in fade-in slide-in-from-top-1 motion-reduce:animate-none duration-300"
+              >
                 <IconAlertTriangle />
                 <AlertTitle>Не удалось продолжить разговор</AlertTitle>
                 <AlertDescription>{error}</AlertDescription>
@@ -652,7 +673,10 @@ export function DialogRoom(props: DialogRoomProps) {
               </Alert>
             ) : null}
             {speech.error ? (
-              <Alert variant="destructive">
+              <Alert
+                variant="destructive"
+                className="animate-in fade-in slide-in-from-top-1 motion-reduce:animate-none duration-300"
+              >
                 <IconAlertTriangle />
                 <AlertTitle>Голосовой ввод недоступен</AlertTitle>
                 <AlertDescription>{speech.error}</AlertDescription>
@@ -660,7 +684,7 @@ export function DialogRoom(props: DialogRoomProps) {
             ) : null}
 
             {finished ? (
-              <Alert>
+              <Alert className="animate-in fade-in slide-in-from-bottom-1 motion-reduce:animate-none duration-300">
                 <IconCheck />
                 <AlertTitle>Разговор завершён</AlertTitle>
                 <AlertDescription>
@@ -730,7 +754,13 @@ export function DialogRoom(props: DialogRoomProps) {
                       onClick={speech.listening ? speech.stop : startSpeech}
                     >
                       {speech.listening ? (
-                        <IconPlayerStop data-icon="inline-start" />
+                        <>
+                          <span className="relative mr-0.5 flex size-2">
+                            <span className="motion-reduce:animate-none absolute inline-flex size-full animate-ping rounded-full bg-white opacity-75" />
+                            <span className="relative inline-flex size-2 rounded-full bg-white" />
+                          </span>
+                          <IconPlayerStop data-icon="inline-start" />
+                        </>
                       ) : (
                         <IconMicrophone data-icon="inline-start" />
                       )}
