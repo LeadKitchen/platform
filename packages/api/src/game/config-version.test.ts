@@ -10,6 +10,7 @@ function snapshot(): ConfigSnapshot {
   return {
     settings: {
       defaultVariantId: "control",
+      categoryVariantIds: { control: "control" },
       defaultRound: 2,
       defaultDeadlineMinutes: 60,
       allowRoundThree: true,
