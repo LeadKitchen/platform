@@ -458,7 +458,7 @@ export function DialogRoom(props: DialogRoomProps) {
               <div className="flex flex-wrap gap-2">
                 <Badge>
                   <span className="relative mr-1 flex size-2">
-                    <span className="bg-primary-foreground absolute inline-flex size-full animate-ping rounded-full opacity-75" />
+                    <span className="bg-primary-foreground motion-reduce:animate-none absolute inline-flex size-full animate-ping rounded-full opacity-75" />
                     <span className="bg-primary-foreground relative inline-flex size-2 rounded-full" />
                   </span>
                   В роли · ИИ
@@ -569,8 +569,8 @@ export function DialogRoom(props: DialogRoomProps) {
                     key={`${index}-${turn.role}`}
                     className={
                       turn.role === "manager"
-                        ? "bg-primary/10 animate-in fade-in slide-in-from-right-2 ml-auto max-w-[92%] rounded-lg px-3 py-2 duration-300 sm:max-w-[80%]"
-                        : "bg-muted animate-in fade-in slide-in-from-left-2 mr-auto max-w-[92%] rounded-lg px-3 py-2 duration-300 sm:max-w-[80%]"
+                        ? "bg-primary/10 animate-in fade-in slide-in-from-right-2 motion-reduce:animate-none ml-auto max-w-[92%] rounded-lg px-3 py-2 duration-300 sm:max-w-[80%]"
+                        : "bg-muted animate-in fade-in slide-in-from-left-2 motion-reduce:animate-none mr-auto max-w-[92%] rounded-lg px-3 py-2 duration-300 sm:max-w-[80%]"
                     }
                   >
                     <div className="mb-1 flex items-center gap-2">
@@ -621,7 +621,7 @@ export function DialogRoom(props: DialogRoomProps) {
                 {showTypingIndicator ? (
                   <div
                     aria-live="polite"
-                    className="bg-muted text-muted-foreground animate-in fade-in slide-in-from-left-2 mr-auto flex items-center gap-2 rounded-lg px-3 py-2 text-sm duration-300"
+                    className="bg-muted text-muted-foreground animate-in fade-in slide-in-from-left-2 motion-reduce:animate-none mr-auto flex items-center gap-2 rounded-lg px-3 py-2 text-sm duration-300"
                   >
                     <TypingDots className="text-muted-foreground" />
                     {props.employee.name} отвечает…
@@ -634,7 +634,7 @@ export function DialogRoom(props: DialogRoomProps) {
             {notice ? (
               <Alert
                 aria-live="polite"
-                className="animate-in fade-in slide-in-from-top-1 duration-300"
+                className="animate-in fade-in slide-in-from-top-1 motion-reduce:animate-none duration-300"
               >
                 <IconAlertTriangle />
                 <AlertTitle>Обратите внимание</AlertTitle>
@@ -645,7 +645,7 @@ export function DialogRoom(props: DialogRoomProps) {
               <Alert
                 aria-live="assertive"
                 variant="destructive"
-                className="animate-in fade-in slide-in-from-top-1 duration-300"
+                className="animate-in fade-in slide-in-from-top-1 motion-reduce:animate-none duration-300"
               >
                 <IconAlertTriangle />
                 <AlertTitle>Не удалось продолжить разговор</AlertTitle>
@@ -665,7 +665,7 @@ export function DialogRoom(props: DialogRoomProps) {
             {speech.error ? (
               <Alert
                 variant="destructive"
-                className="animate-in fade-in slide-in-from-top-1 duration-300"
+                className="animate-in fade-in slide-in-from-top-1 motion-reduce:animate-none duration-300"
               >
                 <IconAlertTriangle />
                 <AlertTitle>Голосовой ввод недоступен</AlertTitle>
@@ -674,7 +674,7 @@ export function DialogRoom(props: DialogRoomProps) {
             ) : null}
 
             {finished ? (
-              <Alert className="animate-in fade-in slide-in-from-bottom-1 duration-300">
+              <Alert className="animate-in fade-in slide-in-from-bottom-1 motion-reduce:animate-none duration-300">
                 <IconCheck />
                 <AlertTitle>Разговор завершён</AlertTitle>
                 <AlertDescription>
@@ -746,7 +746,7 @@ export function DialogRoom(props: DialogRoomProps) {
                       {speech.listening ? (
                         <>
                           <span className="relative mr-0.5 flex size-2">
-                            <span className="absolute inline-flex size-full animate-ping rounded-full bg-white opacity-75" />
+                            <span className="motion-reduce:animate-none absolute inline-flex size-full animate-ping rounded-full bg-white opacity-75" />
                             <span className="relative inline-flex size-2 rounded-full bg-white" />
                           </span>
                           <IconPlayerStop data-icon="inline-start" />

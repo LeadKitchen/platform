@@ -78,6 +78,12 @@
   .animate-typing-dot {
     animation: typing-bounce 1.1s ease-in-out infinite;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-typing-dot {
+      animation: none;
+    }
+  }
 }
 
 /*
