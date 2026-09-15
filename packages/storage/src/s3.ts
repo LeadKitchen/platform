@@ -49,7 +49,7 @@ function getS3Client(): S3Client {
 }
 
 const BUCKET_NAME = env.AWS_S3_BUCKET;
-export const MAX_UPLOAD_SIZE_BYTES = 20 * 1024 * 1024;
+export const MAX_UPLOAD_SIZE_BYTES = 50 * 1024 * 1024;
 
 export async function createPresignedUrl(
   key: string,

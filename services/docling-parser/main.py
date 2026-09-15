@@ -47,7 +47,7 @@ converter = DocumentConverter(
 _convert_lock = asyncio.Lock()
 
 ALLOWED_SUFFIXES = {".pdf", ".docx"}
-MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024  # matches MAX_UPLOAD_SIZE_BYTES in @acme/storage
+MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024  # matches MAX_UPLOAD_SIZE_BYTES in @acme/storage
 # Content-Length covers the whole multipart body — boundaries and the file
 # field's own headers, not just file bytes — so the early check needs slack
 # over MAX_FILE_SIZE_BYTES or a file at exactly the advertised limit would be

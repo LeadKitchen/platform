@@ -137,6 +137,11 @@ function sourceTypeForFile(file: File): SourceType | null {
     : null;
 }
 
+// Must match MAX_UPLOAD_SIZE_BYTES in @acme/storage — checked again server-side
+// on requestUpload, this just gives an immediate, readable error instead of a
+// generic failure toast after the picker closes.
+const MAX_UPLOAD_SIZE_BYTES = 50 * 1024 * 1024;
+
 function statusVariant(
   status: DocumentStatus,
 ): "outline" | "accent" | "secondary" | "destructive" {
@@ -327,6 +332,14 @@ function UploadDialog({
                   toast.error("Поддерживаются только PDF, DOCX и TXT");
                   return;
                 }
+                if (selectedFile.size > MAX_UPLOAD_SIZE_BYTES) {
+                  setFile(null);
+                  event.target.value = "";
+                  toast.error(
+                    `Файл слишком большой (${formatFileSize(selectedFile.size)}). Максимум — ${formatFileSize(MAX_UPLOAD_SIZE_BYTES)}`,
+                  );
+                  return;
+                }
                 setFile(selectedFile);
               }}
             />
@@ -335,7 +348,11 @@ function UploadDialog({
                 Формат определён автоматически:{" "}
                 {detectedSourceType.toUpperCase()}
               </FieldDescription>
-            ) : null}
+            ) : (
+              <FieldDescription>
+                Максимальный размер файла — {formatFileSize(MAX_UPLOAD_SIZE_BYTES)}
+              </FieldDescription>
+            )}
           </Field>
         </FieldGroup>
         <DialogFooter className="justify-end gap-2">
