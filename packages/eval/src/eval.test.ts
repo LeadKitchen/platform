@@ -94,7 +94,10 @@ describe("runEvaluation", () => {
       // The rules engine drives the expected style for every variant, so it
       // must agree with the methodology labels regardless of the approach.
       expect(variant.expectedStyleAccuracy).toBe(1);
-      expect(variant.silenceAccuracy).toBe(1);
+      // Wake-word gating was removed from the pipeline: the character always
+      // engages from the first message, so the silence probe never sees a
+      // quiet turn any more.
+      expect(variant.silenceAccuracy).toBe(0);
       expect(variant.personaAdherence).toBe(1);
       expect(variant.scoreMae).toBeLessThan(25);
     }

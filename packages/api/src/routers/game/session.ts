@@ -13,7 +13,11 @@ import { z } from "zod";
 import { requireOwnedSession } from "../../game/access";
 import { getMemberOrgId } from "../../game/organizations";
 import { getActiveScorecardSnapshot } from "../../game/scorecards";
-import { loadEngine, resolveLiveVariantId } from "../../game/service";
+import {
+  loadEngine,
+  pickLiveVariantId,
+  resolveLiveVariantId,
+} from "../../game/service";
 import { loadGameSettings } from "../../game/settings";
 import { protectedProcedure } from "../../orpc";
 
@@ -23,9 +27,10 @@ const roundSchema = z.union([z.literal(2), z.literal(3)]);
  * Open a game session for a team.
  *
  * The variant is fixed for the whole session so a team is never scored by two
- * different approaches mid-game. Which variant that is comes only from admin
- * choice — the configured default in game settings, or the engine's built-in
- * fallback — never from a random split.
+ * different approaches mid-game. Which variant that is comes from an even
+ * random split across the admin's per-category live picks (see
+ * `pickLiveVariantId`), so every family under test keeps getting real play;
+ * only the *pool* to split across is admin-controlled, not the draw itself.
  *
  * @example client.game.session.create({ title: "Смена 1", round: 2 })
  */
@@ -85,7 +90,7 @@ export const create = protectedProcedure
       });
     }
 
-    const variantId = settings.defaultVariantId ?? engine.defaultVariantId;
+    const variantId = pickLiveVariantId(settings, engine);
 
     // Fail here rather than at the first utterance of the first dialog.
     engine.pipeline(variantId);

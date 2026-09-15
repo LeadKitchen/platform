@@ -129,6 +129,7 @@ interface Strategy {
 
 interface GameSettings {
   defaultVariantId: string | null;
+  categoryVariantIds: Record<string, string>;
   defaultRound: 2 | 3;
   defaultDeadlineMinutes: number;
   allowRoundThree: boolean;
@@ -527,8 +528,6 @@ export function AdminGameDashboard({
     () => sessions.filter((item) => item.session.status === "completed").length,
     [sessions],
   );
-  const liveVariantId =
-    settings.defaultVariantId ?? initialData.system.runtime.defaultVariant;
   const employeeCompetencesPreview = useMemo(() => {
     const parsed = safeParseRecord(employeeCompetences);
     if (!parsed) return null;
@@ -823,22 +822,26 @@ export function AdminGameDashboard({
     }
   }
 
-  async function makeVariantDefault(id: string) {
+  async function setCategoryLiveVariant(
+    category: VariantCategory,
+    id: string | null,
+  ) {
     setPending(true);
     try {
-      const saved = await client.admin.game.system.updateSettings({
-        ...settings,
-        defaultVariantId: id,
+      const saved = await client.admin.game.variants.setCategoryVariant({
+        category,
+        variantId: id,
       });
       if (!saved) throw new Error("API не вернул сохранённые настройки");
-      setSettings({
-        defaultVariantId: saved.defaultVariantId,
-        defaultRound: saved.defaultRound === 3 ? 3 : 2,
-        defaultDeadlineMinutes: saved.defaultDeadlineMinutes,
-        allowRoundThree: saved.allowRoundThree,
-        maxActiveSessions: saved.maxActiveSessions,
-      });
-      toast.success("Этот вариант теперь работает в новых сессиях");
+      setSettings((current) => ({
+        ...current,
+        categoryVariantIds: saved.categoryVariantIds,
+      }));
+      toast.success(
+        id
+          ? "Этот вариант теперь работает в новых сессиях своей категории"
+          : "Категория осталась без живого варианта",
+      );
       router.refresh();
     } catch (cause) {
       toast.error(cause instanceof Error ? cause.message : "Ошибка обновления");
@@ -873,6 +876,7 @@ export function AdminGameDashboard({
       if (!saved) throw new Error("API не вернул сохранённые настройки");
       setSettings({
         defaultVariantId: saved.defaultVariantId,
+        categoryVariantIds: saved.categoryVariantIds,
         defaultRound: saved.defaultRound === 3 ? 3 : 2,
         defaultDeadlineMinutes: saved.defaultDeadlineMinutes,
         allowRoundThree: saved.allowRoundThree,
@@ -1796,6 +1800,7 @@ export function AdminGameDashboard({
                   (item) => (item.category ?? "control") === category,
                 );
                 if (items.length === 0) return null;
+                const categoryLiveId = settings.categoryVariantIds[category];
                 return (
                   <div key={category} className="grid gap-3">
                     <div>
@@ -1812,7 +1817,7 @@ export function AdminGameDashboard({
                       </p>
                     </div>
                     {items.map((item) => {
-                      const isLive = item.id === liveVariantId;
+                      const isLive = item.id === categoryLiveId;
                       return (
                         <div
                           key={item.id}
@@ -1836,7 +1841,9 @@ export function AdminGameDashboard({
                             </span>
                           </button>
                           <div className="flex flex-wrap items-center gap-2">
-                            {isLive ? <Badge>Работает в игре</Badge> : null}
+                            {isLive ? (
+                              <Badge>Работает в игре</Badge>
+                            ) : null}
                             <Badge
                               variant={item.isActive ? "default" : "secondary"}
                             >
@@ -1854,7 +1861,20 @@ export function AdminGameDashboard({
                                 toggleVariantActive(item.id, checked)
                               }
                             />
-                            {!isLive ? (
+                            {isLive ? (
+                              <Button
+                                type="button"
+                                size="sm"
+                                variant="outline"
+                                disabled={pending}
+                                title="Убрать этот вариант из живых в этой категории"
+                                onClick={() =>
+                                  setCategoryLiveVariant(category, null)
+                                }
+                              >
+                                Убрать из живых
+                              </Button>
+                            ) : (
                               <Button
                                 type="button"
                                 size="sm"
@@ -1862,14 +1882,16 @@ export function AdminGameDashboard({
                                 disabled={pending || !item.isActive}
                                 title={
                                   item.isActive
-                                    ? "Сделать вариантом, который работает в новых сессиях"
+                                    ? "Сделать вариантом, который работает в новых сессиях этой категории"
                                     : "Сначала включите вариант"
                                 }
-                                onClick={() => makeVariantDefault(item.id)}
+                                onClick={() =>
+                                  setCategoryLiveVariant(category, item.id)
+                                }
                               >
                                 Сделать активным
                               </Button>
-                            ) : null}
+                            )}
                           </div>
                         </div>
                       );
@@ -2173,8 +2195,12 @@ export function AdminGameDashboard({
                 <FieldGroup>
                   <Field>
                     <FieldLabel htmlFor="settings-default-variant">
-                      Вариант ИИ по умолчанию
+                      Запасной вариант ИИ
                     </FieldLabel>
+                    <FieldDescription>
+                      Используется только пока ни в одной категории не выбран
+                      живой вариант.
+                    </FieldDescription>
                     <Select
                       value={settings.defaultVariantId ?? "__automatic"}
                       onValueChange={(value) =>

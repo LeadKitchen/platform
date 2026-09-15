@@ -26,6 +26,7 @@ import { getActiveScorecardSnapshot } from "../../game/scorecards";
 import {
   loadCatalog,
   loadEngine,
+  pickLiveVariantId,
   resolveLiveVariantId,
 } from "../../game/service";
 import { loadGameSettings } from "../../game/settings";
@@ -239,7 +240,7 @@ export const start = protectedProcedure
       });
     }
 
-    const variantId = settings.defaultVariantId ?? engine.defaultVariantId;
+    const variantId = pickLiveVariantId(settings, engine);
     engine.pipeline(variantId);
 
     return context.db.transaction(async (tx) => {

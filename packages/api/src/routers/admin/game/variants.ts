@@ -4,6 +4,7 @@ import {
   evaluationRegistry,
   knowledgeRegistry,
   personaRegistry,
+  variantCategorySchema,
   variantConfigSchema,
 } from "@acme/ai";
 import { asc, eq, GameSettings, GameVariant } from "@acme/db";
@@ -46,11 +47,15 @@ export const upsert = adminProcedure
     if (!input.isActive) {
       const settings = await context.db.query.GameSettings.findFirst({
         where: eq(GameSettings.id, "global"),
-        columns: { defaultVariantId: true },
+        columns: { defaultVariantId: true, categoryVariantIds: true },
       });
-      if (settings?.defaultVariantId === input.id) {
+      if (
+        settings?.defaultVariantId === input.id ||
+        Object.values(settings?.categoryVariantIds ?? {}).includes(input.id)
+      ) {
         throw new ORPCError("BAD_REQUEST", {
-          message: "Сначала выберите другой вариант ИИ по умолчанию",
+          message:
+            "Сначала уберите этот вариант из живых по категориям или выберите другой вариант ИИ по умолчанию",
         });
       }
     }
@@ -94,10 +99,14 @@ export const upsert = adminProcedure
       async (tx, before) => {
         if (
           !values.isActive &&
-          before.settings.defaultVariantId === values.id
+          (before.settings.defaultVariantId === values.id ||
+            Object.values(before.settings.categoryVariantIds).includes(
+              values.id,
+            ))
         ) {
           throw new ORPCError("BAD_REQUEST", {
-            message: "Сначала выберите другой вариант ИИ по умолчанию",
+            message:
+              "Сначала уберите этот вариант из живых по категориям или выберите другой вариант ИИ по умолчанию",
           });
         }
         const [variant] = await tx
@@ -127,9 +136,16 @@ export const setActive = adminProcedure
         summary: `${input.isActive ? "Включён" : "Выключен"} вариант ${input.id}`,
       },
       async (tx, before) => {
-        if (!input.isActive && before.settings.defaultVariantId === input.id) {
+        if (
+          !input.isActive &&
+          (before.settings.defaultVariantId === input.id ||
+            Object.values(before.settings.categoryVariantIds).includes(
+              input.id,
+            ))
+        ) {
           throw new ORPCError("BAD_REQUEST", {
-            message: "Сначала выберите другой вариант ИИ по умолчанию",
+            message:
+              "Сначала уберите этот вариант из живых по категориям или выберите другой вариант ИИ по умолчанию",
           });
         }
         const [variant] = await tx
@@ -148,4 +164,73 @@ export const setActive = adminProcedure
     return variant;
   });
 
-export const adminGameVariantsRouter = { list, upsert, setActive };
+/**
+ * Set (or clear) the one variant live in the game for a category. Each
+ * category holds at most one live variant — setting a new one replaces
+ * whatever was live for that category before.
+ *
+ * @example client.admin.game.variants.setCategoryVariant({ category: "retrieval", variantId: "hybrid-rag" })
+ */
+export const setCategoryVariant = adminProcedure
+  .input(
+    z.object({
+      category: variantCategorySchema,
+      variantId: z.string().max(64).nullable(),
+    }),
+  )
+  .handler(async ({ context, input }) => {
+    const audit = await mutateConfig(
+      context.db,
+      {
+        actorId: context.session.user.id,
+        source: "form",
+        summary: input.variantId
+          ? `Живой вариант категории «${input.category}»: ${input.variantId}`
+          : `Категория «${input.category}» осталась без живого варианта`,
+      },
+      async (tx, before) => {
+        if (input.variantId) {
+          const variant = await tx.query.GameVariant.findFirst({
+            where: eq(GameVariant.id, input.variantId),
+            columns: { category: true, isActive: true },
+          });
+          if (!variant) {
+            throw new ORPCError("NOT_FOUND", { message: "Вариант не найден" });
+          }
+          if (!variant.isActive) {
+            throw new ORPCError("BAD_REQUEST", {
+              message: "Сначала включите вариант",
+            });
+          }
+          if (variant.category !== input.category) {
+            throw new ORPCError("BAD_REQUEST", {
+              message: "Вариант относится к другой категории",
+            });
+          }
+        }
+        const categoryVariantIds = { ...before.settings.categoryVariantIds };
+        if (input.variantId) {
+          categoryVariantIds[input.category] = input.variantId;
+        } else {
+          delete categoryVariantIds[input.category];
+        }
+        const [settings] = await tx
+          .insert(GameSettings)
+          .values({ id: "global", categoryVariantIds })
+          .onConflictDoUpdate({
+            target: GameSettings.id,
+            set: { categoryVariantIds },
+          })
+          .returning();
+        return settings;
+      },
+    );
+    return audit.result;
+  });
+
+export const adminGameVariantsRouter = {
+  list,
+  upsert,
+  setActive,
+  setCategoryVariant,
+};

@@ -200,6 +200,24 @@ export async function loadEngine(db: Database): Promise<Engine> {
  * not a stale, value. A variant absent from the table (built-in, never
  * synced to the DB) is treated as active, same as before this check existed.
  */
+/**
+ * Which variant a brand-new session/dialog should run under: uniformly at
+ * random among the categories' live picks (`GameSettings.categoryVariantIds`)
+ * — an even split across every family under test, never weighted — falling
+ * back to the legacy single `defaultVariantId`, then the engine's built-in
+ * default, once no category has a live variant configured yet.
+ */
+export function pickLiveVariantId(
+  settings: { defaultVariantId: string | null; categoryVariantIds: Record<string, string> },
+  engine: Pick<Engine, "defaultVariantId">,
+): string {
+  const candidates = Object.values(settings.categoryVariantIds);
+  if (candidates.length === 0) {
+    return settings.defaultVariantId ?? engine.defaultVariantId;
+  }
+  return candidates[Math.floor(Math.random() * candidates.length)]!;
+}
+
 export async function resolveLiveVariantId(
   tx: Database,
   variantId: string,

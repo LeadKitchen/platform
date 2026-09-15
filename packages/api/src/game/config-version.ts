@@ -15,6 +15,7 @@ type Transaction = Parameters<Parameters<Database["transaction"]>[0]>[0];
 export interface ConfigSnapshot {
   settings: {
     defaultVariantId: string | null;
+    categoryVariantIds: Record<string, string>;
     defaultRound: number;
     defaultDeadlineMinutes: number;
     allowRoundThree: boolean;
@@ -39,6 +40,7 @@ export async function loadConfigSnapshot(
     settings: settings
       ? {
           defaultVariantId: settings.defaultVariantId,
+          categoryVariantIds: settings.categoryVariantIds,
           defaultRound: settings.defaultRound,
           defaultDeadlineMinutes: settings.defaultDeadlineMinutes,
           allowRoundThree: settings.allowRoundThree,
@@ -46,6 +48,7 @@ export async function loadConfigSnapshot(
         }
       : {
           defaultVariantId: null,
+          categoryVariantIds: {},
           defaultRound: 2,
           defaultDeadlineMinutes: 60,
           allowRoundThree: true,
