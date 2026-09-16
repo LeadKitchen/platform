@@ -209,28 +209,64 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
       { role: "manager", text, at: nowLabel() },
     ]);
 
+    // Tracks whether an employee turn has already been appended for this
+    // reply, so later chunks (and the final "done" event) replace it in
+    // place instead of appending duplicates — mirrors dialog-room.tsx.
+    let employeeTurnStarted = false;
+
     try {
-      const result = await client.game.dialog.say({
+      const stream = await client.game.dialog.sayStream({
         dialogId: props.dialogId,
         text,
       });
-      if (result.silent) {
-        setNotice(
-          `${props.employee.name} не отреагировал на реплику. Попробуйте переформулировать мысль.`,
-        );
-      } else {
-        setTurns((current) => [
-          ...current,
-          { role: "employee", text: result.reply, at: nowLabel() },
-        ]);
-        voice.speak(result.reply);
-      }
-      if (result.managerToxic) {
-        setNotice(
-          "Реплика распознана как грубая — это повлияет на итоговую оценку.",
-        );
+
+      for await (const event of stream) {
+        if (event.type === "chunk") {
+          employeeTurnStarted = true;
+          setTurns((current) => {
+            const last = current.at(-1);
+            if (last?.role === "employee") {
+              return [...current.slice(0, -1), { ...last, text: event.reply }];
+            }
+            return [
+              ...current,
+              { role: "employee", text: event.reply, at: nowLabel() },
+            ];
+          });
+          continue;
+        }
+
+        if (event.silent) {
+          setNotice(
+            `${props.employee.name} не отреагировал на реплику. Попробуйте переформулировать мысль.`,
+          );
+        } else {
+          setTurns((current) => {
+            const last = current.at(-1);
+            const finalTurn: VoiceTurn = {
+              role: "employee",
+              text: event.reply,
+              at: nowLabel(),
+            };
+            if (employeeTurnStarted && last?.role === "employee") {
+              return [...current.slice(0, -1), finalTurn];
+            }
+            return [...current, finalTurn];
+          });
+          voice.speak(event.reply);
+        }
+        if (event.managerToxic) {
+          setNotice(
+            "Реплика распознана как грубая — это повлияет на итоговую оценку.",
+          );
+        }
       }
     } catch (cause) {
+      if (employeeTurnStarted) {
+        setTurns((current) =>
+          current.at(-1)?.role === "employee" ? current.slice(0, -1) : current,
+        );
+      }
       setTextDraft(text);
       setError(
         cause instanceof Error ? cause.message : "Не удалось получить ответ",
