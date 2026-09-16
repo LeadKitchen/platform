@@ -39,6 +39,10 @@ import {
   ScrollArea,
   Separator,
   Textarea,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
 } from "@acme/ui";
 import {
   IconAlertTriangle,
@@ -573,6 +577,7 @@ export function DialogRoom(props: DialogRoomProps) {
                   </Empty>
                 ) : null}
 
+                <TooltipProvider>
                 {turns.map((turn, index) => (
                   <div
                     // biome-ignore lint/suspicious/noArrayIndexKey: Реплики неизменяемы и только добавляются в конец.
@@ -602,7 +607,26 @@ export function DialogRoom(props: DialogRoomProps) {
                         </AvatarFallback>
                       </Avatar>
                       <p className="text-muted-foreground text-xs">
-                        {turn.role === "manager" ? "Вы" : props.employee.name}
+                        {turn.role === "manager" ? (
+                          "Вы"
+                        ) : (
+                          <Tooltip>
+                            <TooltipTrigger
+                              render={
+                                <span
+                                  tabIndex={0}
+                                  className="decoration-muted-foreground/50 cursor-default underline decoration-dotted underline-offset-2"
+                                />
+                              }
+                            >
+                              {props.employee.name}
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              Ответ сгенерирован ИИ-вариантом «
+                              {props.variantName}»
+                            </TooltipContent>
+                          </Tooltip>
+                        )}
                       </p>
                       {props.isAdmin && turn.promptEventId ? (
                         <Button
@@ -622,6 +646,7 @@ export function DialogRoom(props: DialogRoomProps) {
                     <p className="text-sm whitespace-pre-wrap">{turn.text}</p>
                   </div>
                 ))}
+                </TooltipProvider>
 
                 {speech.interim ? (
                   <p className="text-muted-foreground ml-auto text-sm italic">
