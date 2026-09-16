@@ -6,6 +6,7 @@ import { generateText, Output, streamText } from "ai";
 import { z } from "zod";
 
 import type {
+  LlmEffort,
   LlmProvider,
   LlmRequest,
   LlmResult,
@@ -164,6 +165,37 @@ export interface AiSdkProviderOptions {
 
 const DEFAULT_TIMEOUT_MS = 120_000;
 
+/**
+ * Map `effort` to the vendor's own reasoning-depth knob.
+ *
+ * Without this, every call runs at the model's *default* reasoning effort —
+ * which for a reasoning model is rarely "low" — regardless of what a variant
+ * asked for. `deps.effort` was already threaded through every strategy call
+ * site expressly to keep latency-sensitive turns (a persona reply) fast; this
+ * is the one place it actually has to reach the model.
+ *
+ * Anthropic's "thinking" is opt-in and off by default (unlike OpenAI's
+ * reasoning models, where it can't be turned off, only dialed down), so a
+ * missing mapping there costs nothing and isn't worth the token-budget
+ * plumbing `thinking.budgetTokens` would need.
+ */
+function reasoningProviderOptions(
+  vendor: AiSdkVendor,
+  effort: LlmEffort | undefined,
+): Record<string, Record<string, string>> | undefined {
+  if (!effort) return undefined;
+  switch (vendor) {
+    case "openai":
+      return { openai: { reasoningEffort: effort } };
+    case "openai-compatible":
+      // `createOpenAICompatible({ name: "gateway", ... })` below makes
+      // "gateway" the provider-options key the SDK reads this under.
+      return { gateway: { reasoningEffort: effort } };
+    default:
+      return undefined;
+  }
+}
+
 function buildModel(options: AiSdkProviderOptions): LanguageModel {
   switch (options.vendor) {
     case "openai":
@@ -270,6 +302,10 @@ export function createAiSdkProvider(
             })),
             output: Output.object({ schema: request.schema }),
             maxOutputTokens,
+            providerOptions: reasoningProviderOptions(
+              options.vendor,
+              request.effort,
+            ),
             // Retries belong to the pool, not to the SDK: an availability
             // failure should move to the next candidate immediately instead of
             // backing off against an endpoint that is already out of quota.
@@ -402,6 +438,10 @@ export function createAiSdkProvider(
         })),
         output: Output.object({ schema: request.schema }),
         maxOutputTokens,
+        providerOptions: reasoningProviderOptions(
+          options.vendor,
+          request.effort,
+        ),
         maxRetries: 0,
         abortSignal: streamSignal,
       });
