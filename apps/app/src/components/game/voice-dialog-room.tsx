@@ -262,12 +262,21 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
         }
       }
     } catch (cause) {
-      if (employeeTurnStarted) {
-        setTurns((current) =>
-          current.at(-1)?.role === "employee" ? current.slice(0, -1) : current,
-        );
+      try {
+        const current = await client.game.dialog.byId({
+          dialogId: props.dialogId,
+        });
+        setTurns(current.turns.map((turn) => ({ ...turn, at: "Ранее" })));
+      } catch {
+        if (employeeTurnStarted) {
+          setTurns((current) =>
+            current.at(-1)?.role === "employee"
+              ? current.slice(0, -1)
+              : current,
+          );
+        }
+        setTextDraft(text);
       }
-      setTextDraft(text);
       setError(
         cause instanceof Error ? cause.message : "Не удалось получить ответ",
       );
