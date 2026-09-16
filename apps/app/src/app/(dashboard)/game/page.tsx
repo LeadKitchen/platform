@@ -15,9 +15,7 @@ import {
 } from "@acme/ui";
 import {
   IconArrowRight,
-  IconCalendar,
   IconCheck,
-  IconChefHat,
   IconClock,
   IconListCheck,
   IconMessages,
@@ -28,6 +26,7 @@ import {
 } from "@tabler/icons-react";
 import Link from "next/link";
 import {
+  ChefHatIllustration,
   CreateSessionForm,
   PracticeOverview,
   TicketIllustration,
@@ -124,101 +123,120 @@ export default async function GamePage() {
     0,
     onboardingSteps.findIndex((step) => !step.complete),
   );
+  const allOnboardingComplete =
+    completedOnboardingSteps === onboardingSteps.length;
 
   return (
     <>
       <SiteHeader title="Обзор" />
       <main className="flex flex-1 flex-col gap-4 p-4 lg:p-6">
-        <Card className="gap-0 overflow-hidden py-0">
-          <CardHeader className="border-b py-5">
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              <CardTitle className="flex items-center gap-2">
-                <IconListCheck className="size-4" />
-                Стартовый маршрут
-              </CardTitle>
-              <span className="text-muted-foreground text-xs">
-                Займёт около 15 минут
-              </span>
+        {allOnboardingComplete ? (
+          <Card className="flex-row items-center gap-3 py-3">
+            <span className="bg-brand/10 text-brand flex size-8 shrink-0 items-center justify-center rounded-full">
+              <IconCheck className="size-4" />
+            </span>
+            <div className="min-w-0">
+              <p className="text-sm font-medium">Стартовый маршрут пройден</p>
+              <p className="text-muted-foreground text-xs">
+                Все 4 шага выполнены — переходите к регулярной практике ниже.
+              </p>
             </div>
-            <div className="flex items-center gap-3 sm:justify-end">
-              <span className="text-muted-foreground text-xs tabular-nums">
-                {completedOnboardingSteps} из {onboardingSteps.length} выполнено
-              </span>
-              <Badge variant="outline">
-                {Math.round(
-                  (completedOnboardingSteps / onboardingSteps.length) * 100,
-                )}
-                %
-              </Badge>
-            </div>
-          </CardHeader>
-          <Progress
-            value={(completedOnboardingSteps / onboardingSteps.length) * 100}
-            className="h-1 rounded-none border-0"
-          />
-          <CardContent className="px-3 sm:px-6">
-            <Accordion defaultValue={[`step-${currentStepIndex}`]}>
-              {onboardingSteps.map((step, index) => (
-                <AccordionItem
-                  key={step.title}
-                  value={`step-${index}`}
-                  className="last:border-b-0"
-                >
-                  <AccordionTrigger className="gap-3 px-2 hover:no-underline">
-                    <span
-                      className={`flex size-5 shrink-0 items-center justify-center rounded-full border text-[10px] ${
-                        step.complete
-                          ? "border-primary text-primary"
-                          : "border-border text-muted-foreground"
-                      }`}
-                    >
-                      {step.complete ? <IconCheck className="size-3" /> : null}
-                    </span>
-                    <span
-                      className={
-                        step.complete
-                          ? "text-muted-foreground line-through"
-                          : undefined
-                      }
-                    >
-                      {step.title}
-                    </span>
-                  </AccordionTrigger>
-                  <AccordionContent className="pl-10 pr-8">
-                    <p className="text-muted-foreground max-w-3xl leading-6">
-                      {step.description}
-                    </p>
-                    <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
-                      {step.benefits.map((benefit) => (
-                        <span
-                          key={benefit}
-                          className="text-muted-foreground flex items-center gap-1.5 text-xs"
-                        >
-                          <IconCheck className="text-primary size-3.5" />
-                          {benefit}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="mt-4 flex flex-wrap items-center gap-3">
-                      {step.complete ? (
-                        <Badge variant="secondary">Шаг выполнен</Badge>
-                      ) : (
-                        <Button
-                          size="sm"
-                          render={<Link href={step.href} />}
-                          nativeButton={false}
-                        >
-                          {step.action}
-                          <IconArrowRight data-icon="inline-end" />
-                        </Button>
-                      )}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </CardContent>
-        </Card>
+          </Card>
+        ) : (
+          <Card className="gap-0 overflow-hidden py-0">
+            <CardHeader className="border-b py-5">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <CardTitle className="flex items-center gap-2">
+                  <IconListCheck className="size-4" />
+                  Стартовый маршрут
+                </CardTitle>
+                <span className="text-muted-foreground text-xs">
+                  Займёт около 15 минут
+                </span>
+              </div>
+              <div className="flex items-center gap-3 sm:justify-end">
+                <span className="text-muted-foreground text-xs tabular-nums">
+                  {completedOnboardingSteps} из {onboardingSteps.length}{" "}
+                  выполнено
+                </span>
+                <Badge variant="outline">
+                  {Math.round(
+                    (completedOnboardingSteps / onboardingSteps.length) * 100,
+                  )}
+                  %
+                </Badge>
+              </div>
+            </CardHeader>
+            <Progress
+              value={(completedOnboardingSteps / onboardingSteps.length) * 100}
+              className="h-1 rounded-none border-0"
+            />
+            <CardContent className="px-3 sm:px-6">
+              <Accordion defaultValue={[`step-${currentStepIndex}`]}>
+                {onboardingSteps.map((step, index) => (
+                  <AccordionItem
+                    key={step.title}
+                    value={`step-${index}`}
+                    className="last:border-b-0"
+                  >
+                    <AccordionTrigger className="gap-3 px-2 hover:no-underline">
+                      <span
+                        className={`flex size-5 shrink-0 items-center justify-center rounded-full border text-[10px] ${
+                          step.complete
+                            ? "border-brand text-brand"
+                            : "border-border text-muted-foreground"
+                        }`}
+                      >
+                        {step.complete ? (
+                          <IconCheck className="size-3" />
+                        ) : null}
+                      </span>
+                      <span
+                        className={
+                          step.complete
+                            ? "text-muted-foreground line-through"
+                            : undefined
+                        }
+                      >
+                        {step.title}
+                      </span>
+                    </AccordionTrigger>
+                    <AccordionContent className="pl-10 pr-8">
+                      <p className="text-muted-foreground max-w-3xl leading-6">
+                        {step.description}
+                      </p>
+                      <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
+                        {step.benefits.map((benefit) => (
+                          <span
+                            key={benefit}
+                            className="text-muted-foreground flex items-center gap-1.5 text-xs"
+                          >
+                            <IconCheck className="text-brand size-3.5" />
+                            {benefit}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="mt-4 flex flex-wrap items-center gap-3">
+                        {step.complete ? (
+                          <Badge variant="secondary">Шаг выполнен</Badge>
+                        ) : (
+                          <Button
+                            size="sm"
+                            render={<Link href={step.href} />}
+                            nativeButton={false}
+                          >
+                            {step.action}
+                            <IconArrowRight data-icon="inline-end" />
+                          </Button>
+                        )}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </CardContent>
+          </Card>
+        )}
 
         <PracticeOverview
           dialogs={playerProgress.dialogs}
@@ -340,8 +358,8 @@ export default async function GamePage() {
 
           <Card id="start-practice">
             <CardHeader>
-              <span className="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-lg">
-                <IconChefHat className="size-5" />
+              <span className="bg-brand/10 text-brand flex size-10 items-center justify-center rounded-lg">
+                <ChefHatIllustration className="size-5" />
               </span>
               <CardTitle>Новая смена</CardTitle>
               <CardDescription>
@@ -367,10 +385,10 @@ export default async function GamePage() {
           </Card>
         </section>
 
-        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           <Card className="gap-4">
             <CardHeader>
-              <IconSchool className="text-primary size-5" />
+              <IconSchool className="text-brand size-5" />
               <CardTitle className="text-base">Освежить теорию</CardTitle>
               <CardDescription>
                 Четыре ситуации по стилям руководства — около пяти минут.
@@ -389,7 +407,7 @@ export default async function GamePage() {
           </Card>
           <Card className="gap-4">
             <CardHeader>
-              <IconMessages className="text-primary size-5" />
+              <IconMessages className="text-brand size-5" />
               <CardTitle className="text-base">Ролевые диалоги с ИИ</CardTitle>
               <CardDescription>
                 Выберите управленческую ситуацию или создайте собственного
@@ -409,7 +427,7 @@ export default async function GamePage() {
           </Card>
           <Card className="gap-4">
             <CardHeader>
-              <IconVideo className="text-primary size-5" />
+              <IconVideo className="text-brand size-5" />
               <CardTitle className="text-base">Посмотреть пример</CardTitle>
               <CardDescription>
                 Демо показывает весь путь: от выбора смены до итогового разбора.
@@ -423,26 +441,6 @@ export default async function GamePage() {
                 nativeButton={false}
               >
                 Смотреть демо
-              </Button>
-            </CardFooter>
-          </Card>
-          <Card className="gap-4">
-            <CardHeader>
-              <IconCalendar className="text-primary size-5" />
-              <CardTitle className="text-base">Регулярность важнее</CardTitle>
-              <CardDescription>
-                Короткая практика несколько раз в неделю быстрее закрепляет
-                навык.
-              </CardDescription>
-            </CardHeader>
-            <CardFooter>
-              <Button
-                variant="outline"
-                size="sm"
-                render={<a href="#start-practice" />}
-                nativeButton={false}
-              >
-                Запланировать попытку
               </Button>
             </CardFooter>
           </Card>
