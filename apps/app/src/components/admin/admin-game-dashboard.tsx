@@ -1865,12 +1865,12 @@ export function AdminGameDashboard({
                                 size="sm"
                                 variant="outline"
                                 disabled={pending}
-                                title="Убрать этот вариант из живых в этой категории"
+                                title="Убрать этот вариант из активных в этой категории"
                                 onClick={() =>
                                   setCategoryLiveVariant(category, null)
                                 }
                               >
-                                Убрать из живых
+                                Убрать из активных
                               </Button>
                             ) : (
                               <Button
