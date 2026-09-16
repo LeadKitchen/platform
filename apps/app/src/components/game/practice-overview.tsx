@@ -52,7 +52,9 @@ function buildWeeklyActivity(
   dailyActivity: { date: string; dialogs: number }[],
   weeks: number,
 ) {
-  const byDate = new Map(dailyActivity.map((item) => [item.date, item.dialogs]));
+  const byDate = new Map(
+    dailyActivity.map((item) => [item.date, item.dialogs]),
+  );
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
   const weekday = (today.getUTCDay() + 6) % 7; // Monday = 0
