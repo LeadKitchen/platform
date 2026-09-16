@@ -25,7 +25,7 @@ const scoreConfig = {
   score: { label: "Оценка", color: "var(--chart-1)" },
 } satisfies ChartConfig;
 
-const activityConfig = {
+const ACTIVITY_CONFIG = {
   dialogs: { label: "Разговоры", color: "var(--chart-1)" },
 } satisfies ChartConfig;
 
@@ -127,7 +127,7 @@ export function PracticeOverview({
           </div>
         </CardHeader>
         <CardContent className="py-5">
-          <ChartContainer config={activityConfig} className="h-40 w-full">
+          <ChartContainer config={ACTIVITY_CONFIG} className="h-40 w-full">
             <BarChart accessibilityLayer data={weeklyActivity}>
               <CartesianGrid vertical={false} />
               <XAxis dataKey="label" tickLine={false} axisLine={false} />
