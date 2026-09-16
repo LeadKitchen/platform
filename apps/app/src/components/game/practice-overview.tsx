@@ -19,10 +19,14 @@ import {
   IconMessages,
   IconTarget,
 } from "@tabler/icons-react";
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 const scoreConfig = {
   score: { label: "Оценка", color: "var(--chart-1)" },
+} satisfies ChartConfig;
+
+const ACTIVITY_CONFIG = {
+  dialogs: { label: "Разговоры", color: "var(--chart-1)" },
 } satisfies ChartConfig;
 
 interface PracticeOverviewProps {
@@ -44,12 +48,35 @@ function formatDate(date: string) {
   }).format(new Date(`${date}T00:00:00Z`));
 }
 
-function activityTone(value: number) {
-  if (value >= 4) return "bg-primary";
-  if (value >= 3) return "bg-primary/75";
-  if (value >= 2) return "bg-primary/50";
-  if (value >= 1) return "bg-primary/25";
-  return "bg-muted";
+function buildWeeklyActivity(
+  dailyActivity: { date: string; dialogs: number }[],
+  weeks: number,
+) {
+  const byDate = new Map(
+    dailyActivity.map((item) => [item.date, item.dialogs]),
+  );
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+  const weekday = (today.getUTCDay() + 6) % 7; // Monday = 0
+  const currentWeekStart = new Date(today);
+  currentWeekStart.setUTCDate(today.getUTCDate() - weekday);
+  const firstWeekStart = new Date(currentWeekStart);
+  firstWeekStart.setUTCDate(currentWeekStart.getUTCDate() - (weeks - 1) * 7);
+
+  return Array.from({ length: weeks }, (_, index) => {
+    const weekStart = new Date(firstWeekStart);
+    weekStart.setUTCDate(firstWeekStart.getUTCDate() + index * 7);
+    let weekDialogs = 0;
+    for (let day = 0; day < 7; day++) {
+      const date = new Date(weekStart);
+      date.setUTCDate(weekStart.getUTCDate() + day);
+      weekDialogs += byDate.get(date.toISOString().slice(0, 10)) ?? 0;
+    }
+    return {
+      label: formatDate(weekStart.toISOString().slice(0, 10)),
+      dialogs: weekDialogs,
+    };
+  });
 }
 
 /** Плотная сводка активности и коучинга для страницы «Обзор» сотрудника. */
@@ -63,17 +90,7 @@ export function PracticeOverview({
   scoreTrend,
   criteria,
 }: PracticeOverviewProps) {
-  const activityByDate = new Map(
-    dailyActivity.map((item) => [item.date, item.dialogs]),
-  );
-  const lastDate = new Date();
-  lastDate.setUTCHours(0, 0, 0, 0);
-  const activityCells = Array.from({ length: 364 }, (_, index) => {
-    const date = new Date(lastDate);
-    date.setUTCDate(lastDate.getUTCDate() - (363 - index));
-    const key = date.toISOString().slice(0, 10);
-    return { date: key, dialogs: activityByDate.get(key) ?? 0 };
-  });
+  const weeklyActivity = buildWeeklyActivity(dailyActivity, 12);
   const scoreChart = scoreTrend.map((item) => ({
     ...item,
     label: formatDate(item.date),
@@ -89,10 +106,10 @@ export function PracticeOverview({
               Активность
             </p>
             <CardTitle id="activity-title" className="mt-1">
-              Ежедневная практика
+              Практика по неделям
             </CardTitle>
             <CardDescription className="mt-1">
-              Тренировочная активность за последние 12 месяцев
+              Сколько разговоров вы провели за последние 12 недель
             </CardDescription>
           </div>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-xs sm:justify-end">
@@ -109,43 +126,15 @@ export function PracticeOverview({
             <Badge variant="outline">Мои данные</Badge>
           </div>
         </CardHeader>
-        <CardContent className="overflow-x-auto py-5">
-          <div className="mx-auto w-[828px]">
-            <div className="text-muted-foreground mb-2 grid grid-cols-3 text-xs">
-              <span>12 месяцев назад</span>
-              <span className="text-center">6 месяцев назад</span>
-              <span className="text-right">Сегодня</span>
-            </div>
-            <ul className="sr-only">
-              {activityCells.map((item) => (
-                <li key={item.date}>
-                  {item.date}: {item.dialogs} разборов
-                </li>
-              ))}
-            </ul>
-            <div
-              className="grid grid-flow-col grid-rows-7 gap-1"
-              aria-hidden="true"
-            >
-              {activityCells.map((item) => (
-                <div
-                  key={item.date}
-                  title={`${formatDate(item.date)}: ${item.dialogs} разборов`}
-                  className={`size-3 rounded-[3px] border border-black/[0.03] ${activityTone(item.dialogs)}`}
-                />
-              ))}
-            </div>
-            <div className="text-muted-foreground mt-3 flex items-center justify-end gap-1.5 text-xs">
-              <span className="mr-1">Меньше</span>
-              {[0, 1, 2, 3, 4].map((value) => (
-                <span
-                  key={value}
-                  className={`size-3 rounded-[3px] ${activityTone(value)}`}
-                />
-              ))}
-              <span className="ml-1">Больше</span>
-            </div>
-          </div>
+        <CardContent className="py-5">
+          <ChartContainer config={ACTIVITY_CONFIG} className="h-40 w-full">
+            <BarChart accessibilityLayer data={weeklyActivity}>
+              <CartesianGrid vertical={false} />
+              <XAxis dataKey="label" tickLine={false} axisLine={false} />
+              <ChartTooltip content={<ChartTooltipContent />} />
+              <Bar dataKey="dialogs" fill="var(--color-dialogs)" radius={4} />
+            </BarChart>
+          </ChartContainer>
         </CardContent>
       </Card>
 

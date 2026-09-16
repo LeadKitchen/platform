@@ -30,11 +30,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
   Empty,
   EmptyContent,
   EmptyDescription,
@@ -60,22 +55,16 @@ import {
   toast,
 } from "@acme/ui";
 import {
-  IconArchive,
   IconArrowLeft,
   IconArrowRight,
   IconBolt,
   IconCheck,
-  IconDots,
-  IconEdit,
-  IconHistory,
   IconMessages,
   IconMicrophone,
   IconPlayerPlay,
   IconPlus,
   IconSearch,
   IconSparkles,
-  IconStar,
-  IconStarFilled,
   IconTargetArrow,
   IconUsers,
 } from "@tabler/icons-react";
@@ -85,14 +74,15 @@ import { useMemo, useState } from "react";
 import { employeeAvatarUri } from "~/lib/avatar";
 import { client } from "~/orpc/react";
 import { GameSectionHeader } from "./game-section-header";
+import {
+  CATEGORY_LABELS,
+  type EmployeeLevel,
+  initials,
+  LEVEL_LABELS,
+  type RoleplayCategory,
+  ScenarioCard,
+} from "./scenario-card";
 
-type RoleplayCategory =
-  | "tasking"
-  | "feedback"
-  | "resistance"
-  | "overload"
-  | "delegation";
-type EmployeeLevel = "L1" | "L2" | "L3" | "L4";
 type RoleplayMode = "full" | "objections";
 
 export type RoleplayScenarioView =
@@ -126,21 +116,6 @@ interface RoleplayCatalogProps {
   reference: RoleplayReference;
 }
 
-const CATEGORY_LABELS: Record<RoleplayCategory, string> = {
-  tasking: "Постановка задачи",
-  feedback: "Обратная связь",
-  resistance: "Сопротивление",
-  overload: "Перегруз",
-  delegation: "Делегирование",
-};
-
-const LEVEL_LABELS: Record<EmployeeLevel, string> = {
-  L1: "L1 · новичок",
-  L2: "L2 · осваивает",
-  L3: "L3 · способен",
-  L4: "L4 · эксперт",
-};
-
 const ALL_CATEGORY = "all";
 
 interface ScenarioDraft {
@@ -162,29 +137,6 @@ function lines(value: string): string[] {
     .split("\n")
     .map((item) => item.trim())
     .filter(Boolean);
-}
-
-function initials(name: string): string {
-  return name
-    .split(/\s+/)
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
-
-function attemptLabel(count: number): string {
-  const lastTwoDigits = count % 100;
-  const lastDigit = count % 10;
-  const suffix =
-    lastTwoDigits >= 11 && lastTwoDigits <= 14
-      ? "попыток"
-      : lastDigit === 1
-        ? "попытка"
-        : lastDigit >= 2 && lastDigit <= 4
-          ? "попытки"
-          : "попыток";
-  return `${count} ${suffix}`;
 }
 
 function emptyDraft(reference: RoleplayReference): ScenarioDraft {
@@ -1216,118 +1168,20 @@ export function RoleplayCatalog({
         {filtered.length > 0 ? (
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {filtered.map((scenario) => (
-              <Card key={scenario.id} className="overflow-hidden py-0">
-                <div className="from-primary/20 via-muted to-accent/30 flex h-28 items-end bg-gradient-to-br p-4">
-                  <Avatar className="size-12 border-2 border-background">
-                    <AvatarImage
-                      src={employeeAvatarUri(scenario.employeeName)}
-                      alt={scenario.employeeName}
-                    />
-                    <AvatarFallback>
-                      {initials(scenario.employeeName)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="ml-auto flex gap-1">
-                    {scenario.source === "custom" ? (
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        aria-label={
-                          scenario.isFavorite
-                            ? "Убрать из избранного"
-                            : "Добавить в избранное"
-                        }
-                        disabled={mutationPending}
-                        onClick={() => toggleFavorite(scenario)}
-                      >
-                        {scenario.isFavorite ? (
-                          <IconStarFilled />
-                        ) : (
-                          <IconStar />
-                        )}
-                      </Button>
-                    ) : null}
-                    {scenario.source === "custom" ? (
-                      <DropdownMenu>
-                        <DropdownMenuTrigger
-                          render={
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              aria-label="Действия со сценарием"
-                            />
-                          }
-                        >
-                          <IconDots />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuGroup>
-                            <DropdownMenuItem
-                              onClick={() => {
-                                setEditing(scenario);
-                                setEditorOpen(true);
-                              }}
-                            >
-                              <IconEdit />
-                              Редактировать
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              variant="destructive"
-                              onClick={() => setArchiving(scenario)}
-                            >
-                              <IconArchive />В архив
-                            </DropdownMenuItem>
-                          </DropdownMenuGroup>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    ) : null}
-                  </div>
-                </div>
-                <CardHeader>
-                  <div className="min-w-0">
-                    <CardTitle className="truncate text-base">
-                      {scenario.employeeName}
-                    </CardTitle>
-                    <CardDescription className="truncate">
-                      {scenario.employeeRole}
-                    </CardDescription>
-                  </div>
-                  <Badge variant="outline">{scenario.employeeLevel}</Badge>
-                </CardHeader>
-                <CardContent className="flex min-h-48 flex-col gap-3">
-                  <div className="flex flex-wrap gap-2">
-                    <Badge variant="secondary">
-                      {CATEGORY_LABELS[scenario.category]}
-                    </Badge>
-                    {scenario.source === "custom" ? (
-                      <Badge variant="outline">Мой сценарий</Badge>
-                    ) : null}
-                  </div>
-                  <div>
-                    <p className="font-medium">{scenario.title}</p>
-                    <p className="text-muted-foreground mt-1 line-clamp-4 text-sm leading-5">
-                      {scenario.description}
-                    </p>
-                  </div>
-                  <div className="text-muted-foreground mt-auto flex items-center gap-1.5 text-xs">
-                    <IconHistory className="size-4" />
-                    {attemptLabel(attemptCount.get(scenario.id) ?? 0)}
-                  </div>
-                </CardContent>
-                <CardFooter className="border-t py-4">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setDetails(scenario)}
-                  >
-                    Подробнее
-                  </Button>
-                  <Button size="sm" onClick={() => setStarting(scenario)}>
-                    <IconPlayerPlay data-icon="inline-start" />
-                    Начать
-                  </Button>
-                </CardFooter>
-              </Card>
+              <ScenarioCard
+                key={scenario.id}
+                scenario={scenario}
+                attemptCount={attemptCount.get(scenario.id) ?? 0}
+                mutationPending={mutationPending}
+                onToggleFavorite={toggleFavorite}
+                onEdit={(item) => {
+                  setEditing(item);
+                  setEditorOpen(true);
+                }}
+                onArchive={(item) => setArchiving(item)}
+                onDetails={(item) => setDetails(item)}
+                onStart={(item) => setStarting(item)}
+              />
             ))}
           </div>
         ) : (
