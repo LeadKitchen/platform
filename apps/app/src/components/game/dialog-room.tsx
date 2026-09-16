@@ -609,13 +609,13 @@ export function DialogRoom(props: DialogRoomProps) {
                           type="button"
                           variant="ghost"
                           size="icon"
-                          className="ml-auto size-5"
+                          className="ml-auto size-6"
                           aria-label="Показать промпт, отправленный в LLM"
                           onClick={() =>
                             void openPromptDebug(turn.promptEventId ?? "")
                           }
                         >
-                          <IconInfoCircle className="size-3.5" />
+                          <IconInfoCircle className="size-4" />
                         </Button>
                       ) : null}
                     </div>
@@ -751,19 +751,34 @@ export function DialogRoom(props: DialogRoomProps) {
                     <Button
                       type="button"
                       variant={speech.listening ? "destructive" : "outline"}
+                      className="px-3"
                       onClick={speech.listening ? speech.stop : startSpeech}
                     >
                       {speech.listening ? (
-                        <>
-                          <span className="relative mr-0.5 flex size-2">
-                            <span className="motion-reduce:animate-none absolute inline-flex size-full animate-ping rounded-full bg-white opacity-75" />
-                            <span className="relative inline-flex size-2 rounded-full bg-white" />
-                          </span>
-                          <IconPlayerStop data-icon="inline-start" />
-                        </>
-                      ) : (
-                        <IconMicrophone data-icon="inline-start" />
-                      )}
+                        <span className="relative mr-0.5 flex size-2">
+                          <span className="motion-reduce:animate-none absolute inline-flex size-full animate-ping rounded-full bg-white opacity-75" />
+                          <span className="relative inline-flex size-2 rounded-full bg-white" />
+                        </span>
+                      ) : null}
+                      <span
+                        className="relative inline-flex size-4 shrink-0"
+                        data-icon="inline-start"
+                      >
+                        <IconPlayerStop
+                          className={`absolute inset-0 size-4 transition-[opacity,filter,scale] duration-300 ease-[cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none ${
+                            speech.listening
+                              ? "scale-100 opacity-100 blur-none"
+                              : "scale-[0.25] opacity-0 blur-[4px]"
+                          }`}
+                        />
+                        <IconMicrophone
+                          className={`size-4 transition-[opacity,filter,scale] duration-300 ease-[cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none ${
+                            speech.listening
+                              ? "scale-[0.25] opacity-0 blur-[4px]"
+                              : "scale-100 opacity-100 blur-none"
+                          }`}
+                        />
+                      </span>
                       {speech.listening
                         ? `Остановить · ${String(Math.floor(recordingSeconds / 60)).padStart(2, "0")}:${String(recordingSeconds % 60).padStart(2, "0")}`
                         : "Говорить"}
