@@ -218,7 +218,8 @@ export function pickLiveVariantId(
   if (candidates.length === 0) {
     return settings.defaultVariantId ?? engine.defaultVariantId;
   }
-  return candidates[Math.floor(Math.random() * candidates.length)]!;
+  const index = Math.floor(Math.random() * candidates.length);
+  return candidates[index] ?? engine.defaultVariantId;
 }
 
 export async function resolveLiveVariantId(

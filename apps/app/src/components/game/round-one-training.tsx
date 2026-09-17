@@ -228,10 +228,9 @@ export function RoundOneTraining() {
             <div className="grid gap-4 md:grid-cols-2">
               <div className="flex flex-col gap-2">
                 <p className="text-sm font-medium">1. Уровень готовности</p>
-                <div
-                  role="group"
+                <fieldset
                   aria-label={`Уровень сотрудника ${item.name}`}
-                  className="grid gap-2 sm:grid-cols-2"
+                  className="m-0 grid min-w-0 gap-2 border-0 p-0 sm:grid-cols-2"
                 >
                   {LEVELS.map((level) => {
                     const selected = answers[`${item.id}:level`] === level.id;
@@ -248,15 +247,14 @@ export function RoundOneTraining() {
                       </Button>
                     );
                   })}
-                </div>
+                </fieldset>
               </div>
 
               <div className="flex flex-col gap-2">
                 <p className="text-sm font-medium">2. Стиль руководства</p>
-                <div
-                  role="group"
+                <fieldset
                   aria-label={`Стиль руководства для ${item.name}`}
-                  className="grid gap-2 sm:grid-cols-2"
+                  className="m-0 grid min-w-0 gap-2 border-0 p-0 sm:grid-cols-2"
                 >
                   {STYLES.map((style) => {
                     const selected = answers[`${item.id}:style`] === style.id;
@@ -272,7 +270,7 @@ export function RoundOneTraining() {
                       </Button>
                     );
                   })}
-                </div>
+                </fieldset>
               </div>
             </div>
 

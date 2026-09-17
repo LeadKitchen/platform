@@ -616,6 +616,7 @@ export function DialogRoom(props: DialogRoomProps) {
                               <TooltipTrigger
                                 render={
                                   <span
+                                    // biome-ignore lint/a11y/noNoninteractiveTabindex: makes the tooltip reachable by keyboard since the trigger renders as a <span>, not a button.
                                     tabIndex={0}
                                     className="decoration-muted-foreground/50 cursor-default underline decoration-dotted underline-offset-2"
                                   />
