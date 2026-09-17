@@ -578,74 +578,76 @@ export function DialogRoom(props: DialogRoomProps) {
                 ) : null}
 
                 <TooltipProvider>
-                {turns.map((turn, index) => (
-                  <div
-                    // biome-ignore lint/suspicious/noArrayIndexKey: Реплики неизменяемы и только добавляются в конец.
-                    key={`${index}-${turn.role}`}
-                    className={
-                      turn.role === "manager"
-                        ? "bg-primary/10 animate-in fade-in slide-in-from-right-2 motion-reduce:animate-none ml-auto max-w-[92%] rounded-lg px-3 py-2 duration-300 sm:max-w-[80%]"
-                        : "bg-muted animate-in fade-in slide-in-from-left-2 motion-reduce:animate-none mr-auto max-w-[92%] rounded-lg px-3 py-2 duration-300 sm:max-w-[80%]"
-                    }
-                  >
-                    <div className="mb-1 flex items-center gap-2">
-                      <Avatar className="size-6">
-                        <AvatarImage
-                          src={
-                            turn.role === "manager"
-                              ? managerAvatar
-                              : employeeAvatar
-                          }
-                          alt={
-                            turn.role === "manager" ? "Вы" : props.employee.name
-                          }
-                        />
-                        <AvatarFallback>
-                          {turn.role === "manager"
-                            ? "ВЫ"
-                            : props.employee.name.slice(0, 1).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <p className="text-muted-foreground text-xs">
-                        {turn.role === "manager" ? (
-                          "Вы"
-                        ) : (
-                          <Tooltip>
-                            <TooltipTrigger
-                              render={
-                                <span
-                                  tabIndex={0}
-                                  className="decoration-muted-foreground/50 cursor-default underline decoration-dotted underline-offset-2"
-                                />
-                              }
-                            >
-                              {props.employee.name}
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              Ответ сгенерирован ИИ-вариантом «
-                              {props.variantName}»
-                            </TooltipContent>
-                          </Tooltip>
-                        )}
-                      </p>
-                      {props.isAdmin && turn.promptEventId ? (
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="ml-auto size-6"
-                          aria-label="Показать промпт, отправленный в LLM"
-                          onClick={() =>
-                            void openPromptDebug(turn.promptEventId ?? "")
-                          }
-                        >
-                          <IconInfoCircle className="size-4" />
-                        </Button>
-                      ) : null}
+                  {turns.map((turn, index) => (
+                    <div
+                      // biome-ignore lint/suspicious/noArrayIndexKey: Реплики неизменяемы и только добавляются в конец.
+                      key={`${index}-${turn.role}`}
+                      className={
+                        turn.role === "manager"
+                          ? "bg-primary/10 animate-in fade-in slide-in-from-right-2 motion-reduce:animate-none ml-auto max-w-[92%] rounded-lg px-3 py-2 duration-300 sm:max-w-[80%]"
+                          : "bg-muted animate-in fade-in slide-in-from-left-2 motion-reduce:animate-none mr-auto max-w-[92%] rounded-lg px-3 py-2 duration-300 sm:max-w-[80%]"
+                      }
+                    >
+                      <div className="mb-1 flex items-center gap-2">
+                        <Avatar className="size-6">
+                          <AvatarImage
+                            src={
+                              turn.role === "manager"
+                                ? managerAvatar
+                                : employeeAvatar
+                            }
+                            alt={
+                              turn.role === "manager"
+                                ? "Вы"
+                                : props.employee.name
+                            }
+                          />
+                          <AvatarFallback>
+                            {turn.role === "manager"
+                              ? "ВЫ"
+                              : props.employee.name.slice(0, 1).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <p className="text-muted-foreground text-xs">
+                          {turn.role === "manager" ? (
+                            "Вы"
+                          ) : (
+                            <Tooltip>
+                              <TooltipTrigger
+                                render={
+                                  <span
+                                    tabIndex={0}
+                                    className="decoration-muted-foreground/50 cursor-default underline decoration-dotted underline-offset-2"
+                                  />
+                                }
+                              >
+                                {props.employee.name}
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                Ответ сгенерирован ИИ-вариантом «
+                                {props.variantName}»
+                              </TooltipContent>
+                            </Tooltip>
+                          )}
+                        </p>
+                        {props.isAdmin && turn.promptEventId ? (
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="ml-auto size-6"
+                            aria-label="Показать промпт, отправленный в LLM"
+                            onClick={() =>
+                              void openPromptDebug(turn.promptEventId ?? "")
+                            }
+                          >
+                            <IconInfoCircle className="size-4" />
+                          </Button>
+                        ) : null}
+                      </div>
+                      <p className="text-sm whitespace-pre-wrap">{turn.text}</p>
                     </div>
-                    <p className="text-sm whitespace-pre-wrap">{turn.text}</p>
-                  </div>
-                ))}
+                  ))}
                 </TooltipProvider>
 
                 {speech.interim ? (
