@@ -110,10 +110,18 @@ export async function uploadBufferToS3(
   }
 }
 
-export async function getDownloadUrl(key: string): Promise<string> {
+export async function getDownloadUrl(
+  key: string,
+  downloadFilename?: string,
+): Promise<string> {
   const command = new GetObjectCommand({
     Bucket: BUCKET_NAME,
     Key: key,
+    // Forces a "Save as" with the document's original name instead of the
+    // opaque generated S3 key, without needing to proxy the bytes ourselves.
+    ResponseContentDisposition: downloadFilename
+      ? `attachment; filename="${encodeURIComponent(downloadFilename)}"`
+      : undefined,
   });
 
   return getSignedUrl(getS3Client(), command, { expiresIn: 3600 }); // 1 hour

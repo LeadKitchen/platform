@@ -43,6 +43,7 @@ import {
   toast,
 } from "@acme/ui";
 import {
+  IconDownload,
   IconFileText,
   IconInfoCircle,
   IconRefresh,
@@ -185,6 +186,18 @@ function formatDate(value: string | Date) {
     year: "numeric",
     timeZone: "UTC",
   });
+}
+
+/** Presigned link to the original file the admin uploaded — opened in a new tab so the browser handles the "Save as". */
+async function downloadDocument(document: KnowledgeDocumentView) {
+  try {
+    const { url } = await client.org.knowledge.download({ id: document.id });
+    window.open(url, "_blank", "noopener,noreferrer");
+  } catch (cause) {
+    toast.error(
+      cause instanceof Error ? cause.message : "Не удалось скачать документ",
+    );
+  }
 }
 
 function UploadDialog({
@@ -429,7 +442,17 @@ function ReviewDialog({
     <Dialog open onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[88vh] overflow-y-auto sm:max-w-3xl">
         <DialogHeader>
-          <DialogTitle>{document.title}</DialogTitle>
+          <div className="flex items-start justify-between gap-4 pr-8">
+            <DialogTitle>{document.title}</DialogTitle>
+            <Button
+              variant="outline"
+              size="sm"
+              className="shrink-0"
+              onClick={() => downloadDocument(document)}
+            >
+              <IconDownload /> Скачать оригинал
+            </Button>
+          </div>
           <DialogDescription>
             ИИ уже разбил документ на фрагменты и предложил доступ для каждого.
             Проверьте и при необходимости смените вариант: «Персонаж» —
@@ -667,6 +690,7 @@ export function KnowledgeLibrary({
   );
   const [removing, setRemoving] = useState<KnowledgeDocumentView | null>(null);
   const [pendingId, setPendingId] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const refresh = useCallback(async () => {
@@ -729,6 +753,27 @@ export function KnowledgeLibrary({
     }
   }
 
+  const normalizedSearch = search.trim().toLowerCase();
+  const filteredDocuments = normalizedSearch
+    ? documents.filter((document) =>
+        `${document.title} ${document.originalFilename ?? ""}`
+          .toLowerCase()
+          .includes(normalizedSearch),
+      )
+    : documents;
+
+  const stats = {
+    total: documents.length,
+    ready: documents.filter((document) => document.status === "ready").length,
+    needsReview: documents.filter(
+      (document) => document.status === "needs_review",
+    ).length,
+    retrievals: documents.reduce(
+      (sum, document) => sum + document.totalRetrievals,
+      0,
+    ),
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <header className="flex flex-wrap items-start justify-between gap-4">
@@ -752,7 +797,57 @@ export function KnowledgeLibrary({
         </div>
       </header>
 
+      {documents.length > 0 ? (
+        <div className="bg-card grid overflow-hidden rounded-xl border sm:grid-cols-4 sm:divide-x">
+          <div className="flex flex-col gap-1 border-b p-5 sm:border-b-0">
+            <span className="text-muted-foreground text-xs font-medium tracking-[0.06em] uppercase">
+              Документов
+            </span>
+            <span className="text-3xl font-medium tracking-[-0.03em] tabular-nums">
+              {stats.total}
+            </span>
+          </div>
+          <div className="flex flex-col gap-1 border-b p-5 sm:border-b-0">
+            <span className="text-muted-foreground text-xs font-medium tracking-[0.06em] uppercase">
+              Опубликовано
+            </span>
+            <span className="text-3xl font-medium tracking-[-0.03em] tabular-nums">
+              {stats.ready}
+            </span>
+          </div>
+          <div className="flex flex-col gap-1 border-b p-5 sm:border-b-0">
+            <span className="text-muted-foreground text-xs font-medium tracking-[0.06em] uppercase">
+              Ждут проверки
+            </span>
+            <span className="text-3xl font-medium tracking-[-0.03em] tabular-nums">
+              {stats.needsReview}
+            </span>
+          </div>
+          <div className="flex flex-col gap-1 p-5">
+            <span className="text-muted-foreground text-xs font-medium tracking-[0.06em] uppercase">
+              Обращений персонажа
+            </span>
+            <span className="text-3xl font-medium tracking-[-0.03em] tabular-nums">
+              {stats.retrievals}
+            </span>
+          </div>
+        </div>
+      ) : null}
+
       <Card className="gap-0 overflow-hidden py-0">
+        {documents.length > 0 ? (
+          <CardHeader className="border-b py-4">
+            <div className="relative">
+              <IconSearch className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
+              <Input
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Поиск по названию или имени файла"
+                className="pl-9"
+              />
+            </div>
+          </CardHeader>
+        ) : null}
         <CardContent className="p-0">
           {documents.length === 0 ? (
             <div className="flex flex-col items-center gap-2 p-10 text-center">
@@ -762,11 +857,18 @@ export function KnowledgeLibrary({
                 вашим материалам.
               </p>
             </div>
+          ) : filteredDocuments.length === 0 ? (
+            <div className="flex flex-col items-center gap-2 p-10 text-center">
+              <IconSearch className="text-muted-foreground size-8" />
+              <p className="text-muted-foreground text-sm">
+                Ничего не найдено по запросу «{search.trim()}».
+              </p>
+            </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[26%]">Документ</TableHead>
+                  <TableHead className="w-[22%]">Документ</TableHead>
                   <TableHead className="w-[10%]">Статус</TableHead>
                   <TableHead className="w-[14%]">
                     <span className="inline-flex items-center gap-1">
@@ -801,11 +903,11 @@ export function KnowledgeLibrary({
                     </span>
                   </TableHead>
                   <TableHead className="w-[10%]">Загружен</TableHead>
-                  <TableHead className="w-[14%] text-right">Действия</TableHead>
+                  <TableHead className="w-[18%] text-right">Действия</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {documents.map((document) => (
+                {filteredDocuments.map((document) => (
                   <TableRow key={document.id}>
                     <TableCell className="align-top whitespace-normal">
                       <button
@@ -895,6 +997,15 @@ export function KnowledgeLibrary({
                             Повторить
                           </Button>
                         ) : null}
+                        <Button
+                          size="icon"
+                          className="size-8"
+                          variant="ghost"
+                          aria-label="Скачать оригинал"
+                          onClick={() => downloadDocument(document)}
+                        >
+                          <IconDownload />
+                        </Button>
                         <Button
                           size="icon"
                           className="size-8"

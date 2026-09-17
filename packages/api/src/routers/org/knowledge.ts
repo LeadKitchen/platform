@@ -19,6 +19,7 @@ import {
   createPresignedUrl,
   deleteObjectFromS3,
   generateS3Key,
+  getDownloadUrl,
   MAX_UPLOAD_SIZE_BYTES,
 } from "@acme/storage";
 import { ORPCError } from "@orpc/server";
@@ -335,6 +336,19 @@ export const publish = protectedProcedure
     return { id: input.id };
   });
 
+/** Presigned link to the original uploaded file — lets an admin re-download the manual as it was submitted. */
+export const download = protectedProcedure
+  .input(z.object({ id: z.uuid() }))
+  .handler(async ({ context, input }) => {
+    await assertKnowledgeAccess(context.db, context.session.user);
+    const document = await assertOwnedDocument(context.db, input.id);
+    const url = await getDownloadUrl(
+      document.s3Key,
+      document.originalFilename ?? document.title,
+    );
+    return { url };
+  });
+
 export const remove = protectedProcedure
   .input(z.object({ id: z.uuid() }))
   .handler(async ({ context, input }) => {
@@ -454,6 +468,7 @@ export const orgKnowledgeRouter = {
   retry,
   updateChunkAudience,
   publish,
+  download,
   remove,
   previewRetrieval,
   listGaps,
