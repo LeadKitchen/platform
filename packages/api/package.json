@@ -29,9 +29,9 @@
     "@acme/storage": "workspace:*",
     "@acme/validators": "workspace:*",
     "@lmnr-ai/lmnr": "^0.8.45",
-    "@orpc/contract": "^1.15.0",
-    "@orpc/server": "^1.15.0",
-    "better-auth": "1.7.4",
+    "@orpc/contract": "^1.15.1",
+    "@orpc/server": "^1.15.1",
+    "better-auth": "1.7.5",
     "superjson": "2.2.6",
     "zod": "4.6.5"
   },
