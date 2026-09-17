@@ -457,37 +457,40 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
                   ? "Микрофон выключен"
                   : "Сигнал: отличный"}
           </Badge>
-          <Button
-            size="icon"
-            variant={speech.muted ? "destructive" : "outline"}
-            aria-label={
-              speech.muted ? "Включить микрофон" : "Выключить микрофон"
-            }
-            disabled={!speech.supported}
-            onClick={() => speech.setMuted(!speech.muted)}
-          >
-            {speech.muted ? <IconMicrophoneOff /> : <IconMicrophone />}
-          </Button>
-          <Button
-            size="icon"
-            variant={transcriptVisible ? "secondary" : "outline"}
-            aria-label={
-              transcriptVisible ? "Скрыть транскрипт" : "Показать транскрипт"
-            }
-            onClick={() => setTranscriptVisible((current) => !current)}
-          >
-            <IconMessageCircle />
-          </Button>
-          <Button
-            size="icon"
-            variant={selfViewVisible ? "secondary" : "outline"}
-            aria-label={
-              selfViewVisible ? "Скрыть свой экран" : "Показать свой экран"
-            }
-            onClick={() => setSelfViewVisible((current) => !current)}
-          >
-            <IconVideo />
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              size="icon"
+              variant={speech.muted ? "destructive" : "outline"}
+              aria-label={
+                speech.muted ? "Включить микрофон" : "Выключить микрофон"
+              }
+              disabled={!speech.supported}
+              onClick={() => speech.setMuted(!speech.muted)}
+            >
+              {speech.muted ? <IconMicrophoneOff /> : <IconMicrophone />}
+            </Button>
+            <Button
+              size="icon"
+              variant={transcriptVisible ? "secondary" : "outline"}
+              aria-label={
+                transcriptVisible ? "Скрыть транскрипт" : "Показать транскрипт"
+              }
+              onClick={() => setTranscriptVisible((current) => !current)}
+            >
+              <IconMessageCircle />
+            </Button>
+            <Button
+              size="icon"
+              variant={selfViewVisible ? "secondary" : "outline"}
+              aria-label={
+                selfViewVisible ? "Скрыть свой экран" : "Показать свой экран"
+              }
+              onClick={() => setSelfViewVisible((current) => !current)}
+            >
+              <IconVideo />
+            </Button>
+          </div>
+          <Separator orientation="vertical" className="h-6" />
           <Button
             size="icon"
             variant="destructive"
@@ -502,9 +505,9 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
 
       <div
         className={cn(
-          "grid min-h-0 flex-1 gap-4",
+          "grid min-h-0 gap-4 lg:flex-1",
           transcriptVisible
-            ? "lg:grid-cols-[360px_minmax(0,1fr)]"
+            ? "lg:grid-cols-[minmax(380px,1.4fr)_minmax(320px,1fr)]"
             : "grid-cols-1",
         )}
       >
@@ -523,21 +526,21 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
               </div>
             </CardHeader>
             <CardContent className="flex min-h-0 flex-1 flex-col p-0">
-              <ScrollArea className="h-[calc(100vh-15.5rem)] min-h-[420px] px-4 py-4">
-                <div className="flex flex-col gap-4">
+              <ScrollArea className="min-h-[420px] flex-1 px-5 py-5">
+                <div className="mx-auto flex max-w-[640px] flex-col gap-5">
                   {turns.map((turn, index) => (
                     <div
                       // biome-ignore lint/suspicious/noArrayIndexKey: Реплики только добавляются в конец.
                       key={`${turn.role}-${index}`}
                       className={cn(
-                        "flex max-w-[92%] flex-col gap-1 rounded-xl px-3 py-2",
+                        "flex max-w-[85%] flex-col gap-1.5 rounded-2xl px-4 py-3",
                         turn.role === "manager"
                           ? "bg-primary/10 ml-auto"
                           : "bg-muted mr-auto",
                       )}
                     >
                       <div className="flex items-center gap-2">
-                        <Avatar className="size-5">
+                        <Avatar className="size-6">
                           <AvatarImage
                             src={
                               turn.role === "manager"
@@ -556,20 +559,20 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
                               : props.employee.name.slice(0, 1).toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
-                        <span className="text-muted-foreground text-xs">
+                        <span className="text-sm font-medium">
                           {turn.role === "manager" ? "Вы" : props.employee.name}
                         </span>
                         <span className="text-muted-foreground ml-auto text-xs tabular-nums">
                           {turn.at}
                         </span>
                       </div>
-                      <p className="text-sm leading-6 whitespace-pre-wrap">
+                      <p className="text-[15px] leading-relaxed whitespace-pre-wrap">
                         {turn.text}
                       </p>
                     </div>
                   ))}
                   {speech.transcribing ? (
-                    <div className="bg-primary/5 ml-auto flex max-w-[92%] items-center gap-2 rounded-xl border border-dashed px-3 py-2">
+                    <div className="bg-primary/5 ml-auto flex max-w-[85%] items-center gap-2 rounded-2xl border border-dashed px-4 py-3">
                       <IconLoader2 className="animate-spin" />
                       <p className="text-muted-foreground text-sm italic">
                         Распознаём реплику…
@@ -577,7 +580,7 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
                     </div>
                   ) : null}
                   {pending ? (
-                    <div className="bg-muted mr-auto flex items-center gap-2 rounded-xl px-3 py-2 text-sm">
+                    <div className="bg-muted mr-auto flex items-center gap-2 rounded-2xl px-4 py-3 text-sm">
                       <IconLoader2 className="animate-spin" />
                       {props.employee.name} формулирует ответ…
                     </div>
