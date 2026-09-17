@@ -17,10 +17,12 @@ import {
 import {
   IconArrowRight,
   IconCheck,
+  IconFlagCheck,
   IconRefresh,
   IconSchool,
   IconUser,
 } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { client } from "~/orpc/react";
 
@@ -82,6 +84,7 @@ const CASES = [
 ] as const;
 
 export function RoundOneTraining() {
+  const router = useRouter();
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [results, setResults] = useState<Record<string, boolean>>({});
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -147,6 +150,15 @@ export function RoundOneTraining() {
             {Object.keys(results).length} из {CASES.length} пройдено
           </span>
           <Badge variant="outline">{score} верно</Badge>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => router.push("/game")}
+          >
+            <IconFlagCheck data-icon="inline-start" />
+            Завершить
+          </Button>
         </CardAction>
       </CardHeader>
       <Progress
