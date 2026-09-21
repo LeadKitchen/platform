@@ -42,7 +42,6 @@ export function useVoiceDialogRoom(props: VoiceDialogRoomProps) {
     eventId: string;
     requestId: number;
   } | null>(null);
-  const transcriptEndRef = useRef<HTMLDivElement>(null);
   const employeeAvatar = employeeAvatarUri(props.employee.name);
   const managerAvatar =
     props.uploadedAvatarUrl ?? userAvatarUri(props.userAvatarSeed ?? "manager");
@@ -55,7 +54,6 @@ export function useVoiceDialogRoom(props: VoiceDialogRoomProps) {
     dialogId: props.dialogId,
     gender: props.employee.gender,
   });
-  const latestActivity = `${turns.length}:${pending}:${speech.transcribing}`;
 
   useEffect(() => {
     if (phase !== "active") return;
@@ -65,15 +63,6 @@ export function useVoiceDialogRoom(props: VoiceDialogRoomProps) {
     );
     return () => window.clearInterval(timer);
   }, [phase]);
-
-  useEffect(() => {
-    if (latestActivity) {
-      transcriptEndRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-      });
-    }
-  }, [latestActivity]);
 
   // The mic keeps listening continuously — pause voice-activity detection
   // while the character is talking or a reply is in flight, so the app never
@@ -327,7 +316,6 @@ export function useVoiceDialogRoom(props: VoiceDialogRoomProps) {
     promptData,
     promptLoading,
     promptError,
-    transcriptEndRef,
     employeeAvatar,
     managerAvatar,
     speech,

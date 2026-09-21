@@ -86,7 +86,6 @@ export function VoiceDialogRoom(props: VoiceDialogRoomProps) {
             onOpenPromptDebug={(eventId) => void room.openPromptDebug(eventId)}
             transcribing={room.speech.transcribing}
             pending={room.pending}
-            transcriptEndRef={room.transcriptEndRef}
           />
         ) : null}
 

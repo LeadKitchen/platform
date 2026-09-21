@@ -5,6 +5,7 @@ export const cn = (...inputs: Parameters<typeof cx>) => twMerge(cx(inputs));
 
 // Export all components
 export * from "./accordion";
+export * from "./ai-elements";
 export * from "./alert";
 export * from "./alert-dialog";
 export * from "./avatar";
