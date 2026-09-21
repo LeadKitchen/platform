@@ -21,6 +21,7 @@ import { IconClock, IconInfoCircle } from "@tabler/icons-react";
 import type { VoiceTurn } from "./voice-dialog-room-types";
 import { durationLabel } from "./voice-dialog-room-utils";
 
+/** Renders the auto-scrolling transcript and live dialog activity states. */
 export function VoiceDialogTranscriptPanel(props: {
   turns: VoiceTurn[];
   duration: number;

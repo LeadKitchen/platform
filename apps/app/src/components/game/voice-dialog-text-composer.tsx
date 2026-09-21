@@ -12,6 +12,7 @@ import {
   PromptInputToolbar,
 } from "@acme/ui";
 
+/** Provides a text fallback for sending replies during a voice dialog. */
 export function VoiceDialogTextComposer(props: {
   value: string;
   onChange: (value: string) => void;
