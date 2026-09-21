@@ -47,6 +47,8 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { CharacterAvatar } from "~/components/game/character-avatar";
+import { employeeAvatarUri } from "~/lib/avatar";
 import { client } from "~/orpc/react";
 
 type DraftResult = Awaited<
@@ -524,9 +526,21 @@ export function AdminCharacterStudio(props: {
                               {quality?.score ?? 0}%
                             </Badge>
                           </CardAction>
-                          <CardTitle>
-                            {character?.profile.name ?? response.characterId}
-                          </CardTitle>
+                          <div className="flex items-center gap-3">
+                            <CharacterAvatar
+                              className="size-10"
+                              src={employeeAvatarUri(
+                                character?.profile.name ?? response.characterId,
+                                character?.profile,
+                              )}
+                              name={
+                                character?.profile.name ?? response.characterId
+                              }
+                            />
+                            <CardTitle>
+                              {character?.profile.name ?? response.characterId}
+                            </CardTitle>
+                          </div>
                           <CardDescription>
                             {character?.profile.role ?? "Неизвестная роль"} ·{" "}
                             {response.emotion}
@@ -604,7 +618,17 @@ export function AdminCharacterStudio(props: {
                         {quality?.score ?? 0}%
                       </Badge>
                     </CardAction>
-                    <CardTitle>{character.profile.name}</CardTitle>
+                    <div className="flex items-center gap-3">
+                      <CharacterAvatar
+                        className="size-11"
+                        src={employeeAvatarUri(
+                          character.profile.name,
+                          character.profile,
+                        )}
+                        name={character.profile.name}
+                      />
+                      <CardTitle>{character.profile.name}</CardTitle>
+                    </div>
                     <CardDescription>
                       {character.profile.role} · {character.profile.level} ·{" "}
                       <code>{character.profile.id}</code>

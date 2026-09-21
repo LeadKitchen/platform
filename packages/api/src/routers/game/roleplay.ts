@@ -17,6 +17,7 @@ import { getMemberOrgId } from "../../game/organizations";
 import {
   buildRoleplayNotes,
   buildRoleplayTemplates,
+  loadEmployeeGenders,
   mapStoredRoleplayScenario,
   ROLEPLAY_CATEGORIES,
   resolveRoleplayScenario,
@@ -69,7 +70,7 @@ async function validateCatalogIds(
 
 /** Catalog plus the participant's recent attempts. */
 export const list = protectedProcedure.handler(async ({ context }) => {
-  const [catalog, customRows, attempts] = await Promise.all([
+  const [catalog, customRows, attempts, employeeGenders] = await Promise.all([
     loadCatalog(context.db),
     context.db
       .select()
@@ -103,18 +104,22 @@ export const list = protectedProcedure.handler(async ({ context }) => {
         ),
       )
       .orderBy(desc(GameSession.createdAt)),
+    loadEmployeeGenders(context.db),
   ]);
 
   return {
     scenarios: [
       ...buildRoleplayTemplates(catalog),
-      ...customRows.map(mapStoredRoleplayScenario),
+      ...customRows.map((row) =>
+        mapStoredRoleplayScenario(row, employeeGenders),
+      ),
     ],
     attempts,
     reference: {
       employees: catalog.employees.map((employee) => ({
         id: employee.id,
         name: employee.name,
+        gender: employee.gender,
         role: employee.role,
         level: employee.level,
       })),
@@ -130,7 +135,7 @@ export const list = protectedProcedure.handler(async ({ context }) => {
 export const create = protectedProcedure
   .input(scenarioFields)
   .handler(async ({ context, input }) => {
-    await validateCatalogIds(context, input);
+    const catalog = await validateCatalogIds(context, input);
     const orgId = await getMemberOrgId(context.db, context.session.user.id);
     const [created] = await context.db
       .insert(GameRoleplayScenario)
@@ -145,13 +150,13 @@ export const create = protectedProcedure
         message: "Не удалось создать сценарий",
       });
     }
-    return mapStoredRoleplayScenario(created);
+    return mapStoredRoleplayScenario(created, catalog.employees);
   });
 
 export const update = protectedProcedure
   .input(scenarioFields.extend({ id: z.uuid() }))
   .handler(async ({ context, input }) => {
-    await validateCatalogIds(context, input);
+    const catalog = await validateCatalogIds(context, input);
     const { id, ...values } = input;
     const [updated] = await context.db
       .update(GameRoleplayScenario)
@@ -167,7 +172,7 @@ export const update = protectedProcedure
     if (!updated) {
       throw new ORPCError("NOT_FOUND", { message: "Сценарий не найден" });
     }
-    return mapStoredRoleplayScenario(updated);
+    return mapStoredRoleplayScenario(updated, catalog.employees);
   });
 
 export const setFavorite = protectedProcedure
@@ -187,7 +192,10 @@ export const setFavorite = protectedProcedure
     if (!updated) {
       throw new ORPCError("NOT_FOUND", { message: "Сценарий не найден" });
     }
-    return mapStoredRoleplayScenario(updated);
+    return mapStoredRoleplayScenario(
+      updated,
+      await loadEmployeeGenders(context.db),
+    );
   });
 
 export const archive = protectedProcedure

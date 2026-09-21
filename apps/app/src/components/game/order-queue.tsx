@@ -34,13 +34,13 @@ import {
 import {
   IconAlertTriangle,
   IconArrowRight,
-  IconChefHat,
   IconClock,
   IconFlagCheck,
-  IconUser,
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { CharacterAvatar } from "~/components/game/character-avatar";
+import { employeeAvatarUri } from "~/lib/avatar";
 import { client } from "~/orpc/react";
 import { TicketIllustration } from "./illustrations";
 
@@ -49,6 +49,7 @@ export interface EmployeeOption {
   name: string;
   role: string;
   levelLabel: string;
+  gender?: "male" | "female";
 }
 
 export interface TaskOption {
@@ -249,7 +250,16 @@ export function OrderQueue(props: {
                   <SelectGroup>
                     {props.employees.map((employee) => (
                       <SelectItem key={employee.id} value={employee.id}>
-                        {employee.name} — {employee.role}
+                        <span className="flex items-center gap-2">
+                          <CharacterAvatar
+                            className="size-6"
+                            src={employeeAvatarUri(employee.name, employee)}
+                            name={employee.name}
+                          />
+                          <span>
+                            {employee.name} — {employee.role}
+                          </span>
+                        </span>
                       </SelectItem>
                     ))}
                   </SelectGroup>
@@ -285,9 +295,16 @@ export function OrderQueue(props: {
 
             <div className="bg-muted/40 flex flex-col gap-3 rounded-lg border p-4 md:col-span-2 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-3">
-                <div className="bg-background flex size-10 items-center justify-center rounded-lg border">
-                  <IconChefHat />
-                </div>
+                {selectedEmployee ? (
+                  <CharacterAvatar
+                    className="size-10"
+                    src={employeeAvatarUri(
+                      selectedEmployee.name,
+                      selectedEmployee,
+                    )}
+                    name={selectedEmployee.name}
+                  />
+                ) : null}
                 <div>
                   <p className="font-medium">
                     {selectedTask?.title ?? "Задача"} →{" "}
@@ -344,9 +361,20 @@ export function OrderQueue(props: {
                 style={{ animationDelay: `${Math.min(index, 6) * 40}ms` }}
               >
                 <div className="flex items-start gap-3">
-                  <span className="bg-background flex size-9 shrink-0 items-center justify-center rounded-lg border">
-                    <IconUser className="size-4" />
-                  </span>
+                  <CharacterAvatar
+                    className="size-9"
+                    src={employeeAvatarUri(
+                      employeeById.get(order.employeeId)?.name ??
+                        order.employeeId,
+                      employeeById.get(order.employeeId) ?? {
+                        id: order.employeeId,
+                      },
+                    )}
+                    name={
+                      employeeById.get(order.employeeId)?.name ??
+                      order.employeeId
+                    }
+                  />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm font-medium">
                       {employeeById.get(order.employeeId)?.name ??

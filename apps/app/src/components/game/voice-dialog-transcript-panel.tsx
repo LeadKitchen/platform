@@ -18,6 +18,7 @@ import {
   Response,
 } from "@acme/ui";
 import { IconClock, IconInfoCircle } from "@tabler/icons-react";
+import { CharacterAvatar } from "./character-avatar";
 import type { VoiceTurn } from "./voice-dialog-room-types";
 import { durationLabel } from "./voice-dialog-room-utils";
 
@@ -83,14 +84,15 @@ export function VoiceDialogTranscriptPanel(props: {
                     </div>
                     <Response>{turn.text}</Response>
                   </MessageContent>
-                  <MessageAvatar
-                    src={
-                      from === "user"
-                        ? props.managerAvatar
-                        : props.employeeAvatar
-                    }
-                    name={from === "user" ? "Вы" : props.employeeName}
-                  />
+                  {from === "user" ? (
+                    <MessageAvatar src={props.managerAvatar} name="Вы" />
+                  ) : (
+                    <CharacterAvatar
+                      className="size-6"
+                      src={props.employeeAvatar}
+                      name={props.employeeName}
+                    />
+                  )}
                 </Message>
               );
             })}

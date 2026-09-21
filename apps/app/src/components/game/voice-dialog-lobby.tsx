@@ -4,9 +4,6 @@ import {
   Alert,
   AlertDescription,
   AlertTitle,
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
   Badge,
   Button,
   Card,
@@ -21,6 +18,7 @@ import {
   IconPlayerPlay,
   IconSparkles,
 } from "@tabler/icons-react";
+import { CharacterAvatar } from "~/components/game/character-avatar";
 import type { VoiceDialogRoomProps } from "./voice-dialog-room-types";
 
 export function VoiceDialogLobby(props: {
@@ -48,12 +46,11 @@ export function VoiceDialogLobby(props: {
       </CardHeader>
       <CardContent className="flex flex-col gap-5">
         <div className="flex items-center gap-3 rounded-xl border p-4">
-          <Avatar className="size-14">
-            <AvatarImage src={employeeAvatar} alt={employee.name} />
-            <AvatarFallback>
-              {employee.name.slice(0, 1).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
+          <CharacterAvatar
+            className="size-14"
+            src={employeeAvatar}
+            name={employee.name}
+          />
           <div className="min-w-0 flex-1">
             <p className="font-semibold">{employee.name}</p>
             <p className="text-muted-foreground text-sm">{employee.role}</p>

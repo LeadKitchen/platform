@@ -2,9 +2,6 @@
 
 import type { RouterOutputs } from "@acme/api";
 import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
   Badge,
   Button,
   Card,
@@ -49,6 +46,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import { CharacterAvatar } from "~/components/game/character-avatar";
 import { employeeAvatarUri } from "~/lib/avatar";
 import { client } from "~/orpc/react";
 import { GameSectionHeader } from "./game-section-header";
@@ -60,28 +58,20 @@ export type CoachingPathStepView = CoachingPathView["steps"][number];
 export type CoachingAssignmentView =
   RouterOutputs["game"]["coachingPaths"]["listMine"][number];
 
-function initials(name: string) {
-  return name
-    .split(/\s+/)
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
-
 function ScenarioAvatar({
   scenario,
 }: {
   scenario: CoachingPathStepView["scenario"];
 }) {
   return (
-    <Avatar className="size-10 border-2 border-background">
-      <AvatarImage
-        src={employeeAvatarUri(scenario.employeeName)}
-        alt={scenario.employeeName}
-      />
-      <AvatarFallback>{initials(scenario.employeeName)}</AvatarFallback>
-    </Avatar>
+    <CharacterAvatar
+      className="size-10 border-2 border-background"
+      src={employeeAvatarUri(scenario.employeeName, {
+        id: scenario.baseEmployeeId,
+        gender: scenario.employeeGender,
+      })}
+      name={scenario.employeeName}
+    />
   );
 }
 

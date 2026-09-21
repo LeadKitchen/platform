@@ -13,9 +13,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertTitle,
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
   Badge,
   Button,
   Card,
@@ -71,13 +68,13 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import { CharacterAvatar } from "~/components/game/character-avatar";
 import { employeeAvatarUri } from "~/lib/avatar";
 import { client } from "~/orpc/react";
 import { GameSectionHeader } from "./game-section-header";
 import {
   CATEGORY_LABELS,
   type EmployeeLevel,
-  initials,
   LEVEL_LABELS,
   type RoleplayCategory,
   ScenarioCard,
@@ -104,6 +101,7 @@ interface RoleplayReference {
   employees: Array<{
     id: string;
     name: string;
+    gender: "male" | "female";
     role: string;
     level: string;
   }>;
@@ -527,15 +525,20 @@ function ScenarioEditorDialog({
           <Card>
             <CardHeader>
               <div className="flex items-start gap-3">
-                <Avatar className="size-12">
-                  <AvatarImage
-                    src={employeeAvatarUri(draft.employeeName)}
-                    alt={draft.employeeName}
-                  />
-                  <AvatarFallback>
-                    {initials(draft.employeeName)}
-                  </AvatarFallback>
-                </Avatar>
+                <CharacterAvatar
+                  className="size-12"
+                  src={employeeAvatarUri(draft.employeeName, {
+                    id: draft.baseEmployeeId,
+                    gender:
+                      reference.employees.find(
+                        (employee) => employee.id === draft.baseEmployeeId,
+                      )?.gender ??
+                      (draft.baseEmployeeId === scenario?.baseEmployeeId
+                        ? scenario.employeeGender
+                        : undefined),
+                  })}
+                  name={draft.employeeName}
+                />
                 <div className="min-w-0">
                   <CardTitle>{draft.employeeName}</CardTitle>
                   <CardDescription>{draft.employeeRole}</CardDescription>
@@ -664,15 +667,14 @@ function StartTrainingDialog({
         {scenario ? (
           <div className="flex flex-col gap-5">
             <div className="flex items-start gap-3">
-              <Avatar className="size-14">
-                <AvatarImage
-                  src={employeeAvatarUri(scenario.employeeName)}
-                  alt={scenario.employeeName}
-                />
-                <AvatarFallback>
-                  {initials(scenario.employeeName)}
-                </AvatarFallback>
-              </Avatar>
+              <CharacterAvatar
+                className="size-14"
+                src={employeeAvatarUri(scenario.employeeName, {
+                  id: scenario.baseEmployeeId,
+                  gender: scenario.employeeGender,
+                })}
+                name={scenario.employeeName}
+              />
               <div className="min-w-0 flex-1">
                 <h3 className="font-semibold">{scenario.employeeName}</h3>
                 <p className="text-muted-foreground text-sm">
@@ -780,15 +782,14 @@ function ScenarioDetailsDialog({
         {scenario ? (
           <div className="flex flex-col gap-5">
             <div className="flex items-center gap-3">
-              <Avatar className="size-12">
-                <AvatarImage
-                  src={employeeAvatarUri(scenario.employeeName)}
-                  alt={scenario.employeeName}
-                />
-                <AvatarFallback>
-                  {initials(scenario.employeeName)}
-                </AvatarFallback>
-              </Avatar>
+              <CharacterAvatar
+                className="size-12"
+                src={employeeAvatarUri(scenario.employeeName, {
+                  id: scenario.baseEmployeeId,
+                  gender: scenario.employeeGender,
+                })}
+                name={scenario.employeeName}
+              />
               <div>
                 <p className="font-medium">{scenario.employeeName}</p>
                 <p className="text-muted-foreground text-sm">
@@ -1034,15 +1035,14 @@ export function RoleplayCatalog({
                 }
               }}
             >
-              <Avatar className="size-10">
-                <AvatarImage
-                  src={employeeAvatarUri(latestScenario.employeeName)}
-                  alt={latestScenario.employeeName}
-                />
-                <AvatarFallback>
-                  {initials(latestScenario.employeeName)}
-                </AvatarFallback>
-              </Avatar>
+              <CharacterAvatar
+                className="size-10"
+                src={employeeAvatarUri(latestScenario.employeeName, {
+                  id: latestScenario.baseEmployeeId,
+                  gender: latestScenario.employeeGender,
+                })}
+                name={latestScenario.employeeName}
+              />
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-sm font-medium">
                   {latestScenario.employeeName}

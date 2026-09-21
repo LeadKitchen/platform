@@ -57,6 +57,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { VariantComparison, type VariantStats } from "~/components/game";
+import { CharacterAvatar } from "~/components/game/character-avatar";
+import { employeeAvatarUri } from "~/lib/avatar";
 import { client } from "~/orpc/react";
 import { AdminAiAssistant } from "./admin-ai-assistant";
 import { AdminAnalyticsAssistant } from "./admin-analytics-assistant";
@@ -1243,7 +1245,12 @@ export function AdminGameDashboard({
                       : "hover:border-foreground/20 hover:bg-muted/40"
                   }`}
                 >
-                  <span className="min-w-0">
+                  <CharacterAvatar
+                    className="size-10"
+                    src={employeeAvatarUri(item.name, item)}
+                    name={item.name}
+                  />
+                  <span className="min-w-0 flex-1">
                     <span className="block truncate font-medium">
                       {item.name}
                     </span>
@@ -1260,9 +1267,18 @@ export function AdminGameDashboard({
           </Card>
           <Card className="gap-0 overflow-hidden py-0">
             <CardHeader className="border-b py-5">
-              <CardTitle>
-                {employee.id ? "Редактирование сотрудника" : "Новый сотрудник"}
-              </CardTitle>
+              <div className="flex items-center gap-3">
+                <CharacterAvatar
+                  className="size-11"
+                  src={employeeAvatarUri(employee.name, employee)}
+                  name={employee.name || "Новый сотрудник"}
+                />
+                <CardTitle>
+                  {employee.id
+                    ? "Редактирование сотрудника"
+                    : "Новый сотрудник"}
+                </CardTitle>
+              </div>
               <CardDescription>
                 Опишите словами, что изменить в персонаже — ИИ обновит
                 компетенции и профиль личности.

@@ -5,10 +5,42 @@ import {
   applyRoleplayScenario,
   buildRoleplayNotes,
   buildRoleplayTemplates,
+  loadEmployeeGenders,
   resolveRoleplayScenario,
+  withRoleplayEmployeeGender,
 } from "./roleplay";
 
 describe("roleplay scenarios", () => {
+  it("preserves the gender of a hidden custom employee in saved scenarios", async () => {
+    const db = {
+      select: () => ({
+        from: async () => [{ id: "hidden-custom", gender: "female" }],
+      }),
+    } as never;
+    const savedScenario = { baseEmployeeId: "hidden-custom" };
+
+    const displayed = withRoleplayEmployeeGender(
+      savedScenario,
+      await loadEmployeeGenders(db),
+    );
+
+    expect(displayed.employeeGender).toBe("female");
+    expect(savedScenario).not.toHaveProperty("employeeGender");
+  });
+
+  it("uses built-in employee genders before the database has been seeded", async () => {
+    const db = {
+      select: () => ({ from: async () => [] }),
+    } as never;
+
+    const displayed = withRoleplayEmployeeGender(
+      { baseEmployeeId: "marina" },
+      await loadEmployeeGenders(db),
+    );
+
+    expect(displayed.employeeGender).toBe("female");
+  });
+
   it("builds templates only from available catalog entities", () => {
     const templates = buildRoleplayTemplates(defaultCatalog);
 

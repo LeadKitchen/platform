@@ -54,6 +54,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import { CharacterAvatar } from "~/components/game/character-avatar";
 import { employeeAvatarUri } from "~/lib/avatar";
 import { client } from "~/orpc/react";
 import { GameSectionHeader } from "./game-section-header";
@@ -252,15 +253,14 @@ export function CoachingPathDetail({
               <span className="bg-primary text-primary-foreground flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold">
                 {index + 1}
               </span>
-              <Avatar className="size-11">
-                <AvatarImage
-                  src={employeeAvatarUri(step.scenario.employeeName)}
-                  alt={step.scenario.employeeName}
-                />
-                <AvatarFallback>
-                  {initials(step.scenario.employeeName)}
-                </AvatarFallback>
-              </Avatar>
+              <CharacterAvatar
+                className="size-11"
+                src={employeeAvatarUri(step.scenario.employeeName, {
+                  id: step.scenario.baseEmployeeId,
+                  gender: step.scenario.employeeGender,
+                })}
+                name={step.scenario.employeeName}
+              />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium">
                   {step.scenario.employeeName}

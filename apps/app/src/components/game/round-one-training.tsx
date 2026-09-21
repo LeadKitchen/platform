@@ -20,10 +20,11 @@ import {
   IconFlagCheck,
   IconRefresh,
   IconSchool,
-  IconUser,
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { CharacterAvatar } from "~/components/game/character-avatar";
+import { employeeAvatarUri } from "~/lib/avatar";
 import { client } from "~/orpc/react";
 
 const LEVELS = [
@@ -167,7 +168,7 @@ export function RoundOneTraining() {
       />
 
       <CardContent className="p-0">
-        <div className="grid lg:grid-cols-[260px_minmax(0,1fr)]">
+        <div className="grid grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)]">
           <aside className="border-b p-3 lg:min-h-[560px] lg:border-b-0 lg:border-r">
             <p className="text-muted-foreground px-3 pb-2 text-xs font-medium uppercase tracking-wide">
               Этапы пути
@@ -201,6 +202,13 @@ export function RoundOneTraining() {
                         index + 1
                       )}
                     </span>
+                    <CharacterAvatar
+                      className="size-8"
+                      src={employeeAvatarUri(caseItem.name, {
+                        id: caseItem.id,
+                      })}
+                      name={caseItem.name}
+                    />
                     <span className="min-w-0">
                       <span className="block truncate text-sm font-medium">
                         {caseItem.name}
@@ -222,9 +230,11 @@ export function RoundOneTraining() {
           <div className="flex flex-col gap-6 p-5 sm:p-6">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div className="flex items-center gap-3">
-                <span className="bg-muted flex size-11 items-center justify-center rounded-lg">
-                  <IconUser className="size-5" />
-                </span>
+                <CharacterAvatar
+                  className="size-11"
+                  src={employeeAvatarUri(item.name, { id: item.id })}
+                  name={item.name}
+                />
                 <div>
                   <h2 className="text-lg font-semibold">{item.name}</h2>
                   <p className="text-muted-foreground text-sm">{item.role}</p>

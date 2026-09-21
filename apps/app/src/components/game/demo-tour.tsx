@@ -1,9 +1,6 @@
 "use client";
 
 import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
   Badge,
   Button,
   Card,
@@ -32,7 +29,8 @@ import {
 } from "@tabler/icons-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { employeeAvatarUri, userAvatarUri } from "~/lib/avatar";
+import { CharacterAvatar } from "~/components/game/character-avatar";
+import { DEMO_MANAGER_AVATAR, employeeAvatarUri } from "~/lib/avatar";
 import {
   DEFAULT_DEMO_SCENARIO_ID,
   DEMO_SCENARIO_GROUPS,
@@ -82,7 +80,7 @@ export function DemoTour() {
 
   const activeGroup = groupOfScenario(scenario);
   const employeeAvatar = employeeAvatarUri(scenario.employee.name);
-  const managerAvatar = userAvatarUri("demo-manager");
+  const managerAvatar = DEMO_MANAGER_AVATAR;
 
   const [visibleCount, setVisibleCount] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -179,13 +177,11 @@ export function DemoTour() {
                   }`}
                 >
                   <span className="from-primary/20 via-muted to-accent/30 flex h-28 items-end bg-gradient-to-br p-4">
-                    <Avatar className="size-12 border-2 border-background">
-                      <AvatarImage
-                        src={employeeAvatarUri(item.employee.name)}
-                        alt={item.employee.name}
-                      />
-                      <AvatarFallback>{item.employee.initials}</AvatarFallback>
-                    </Avatar>
+                    <CharacterAvatar
+                      className="size-12 border-2 border-background"
+                      src={employeeAvatarUri(item.employee.name)}
+                      name={item.employee.name}
+                    />
                   </span>
                   <span className="flex min-h-44 flex-col p-4">
                     <span className="flex items-start justify-between gap-3">
@@ -225,13 +221,11 @@ export function DemoTour() {
         <CardHeader className="border-b py-5">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="flex items-center gap-3">
-              <Avatar className="size-12">
-                <AvatarImage
-                  src={employeeAvatar}
-                  alt={scenario.employee.name}
-                />
-                <AvatarFallback>{scenario.employee.initials}</AvatarFallback>
-              </Avatar>
+              <CharacterAvatar
+                className="size-12"
+                src={employeeAvatar}
+                name={scenario.employee.name}
+              />
               <div>
                 <CardTitle>{scenario.employee.name}</CardTitle>
                 <CardDescription>{scenario.employee.role}</CardDescription>
@@ -279,25 +273,15 @@ export function DemoTour() {
                   }
                 >
                   <div className="mb-1 flex items-center gap-2">
-                    <Avatar className="size-6">
-                      <AvatarImage
-                        src={
-                          turn.role === "manager"
-                            ? managerAvatar
-                            : employeeAvatar
-                        }
-                        alt={
-                          turn.role === "manager"
-                            ? "Вы"
-                            : scenario.employee.name
-                        }
-                      />
-                      <AvatarFallback>
-                        {turn.role === "manager"
-                          ? "ВЫ"
-                          : scenario.employee.initials}
-                      </AvatarFallback>
-                    </Avatar>
+                    <CharacterAvatar
+                      className="size-6"
+                      src={
+                        turn.role === "manager" ? managerAvatar : employeeAvatar
+                      }
+                      name={
+                        turn.role === "manager" ? "Вы" : scenario.employee.name
+                      }
+                    />
                     <p className="text-muted-foreground text-xs">
                       {turn.role === "manager" ? "Вы" : scenario.employee.name}
                     </p>

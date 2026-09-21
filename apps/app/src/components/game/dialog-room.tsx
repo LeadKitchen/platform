@@ -61,6 +61,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { CharacterAvatar } from "~/components/game/character-avatar";
 import { employeeAvatarUri, userAvatarUri } from "~/lib/avatar";
 import { client } from "~/orpc/react";
 import { EvaluationCard, type EvaluationView } from "./evaluation-card";
@@ -88,7 +89,12 @@ const CONVERSATION_STARTERS = [
 
 export interface DialogRoomProps {
   dialogId: string;
-  employee: { id: string; name: string; role: string };
+  employee: {
+    id: string;
+    name: string;
+    role: string;
+    gender: "male" | "female";
+  };
   task: { title: string };
   shift: { round: number; activeOrders: number; soloOnShift: boolean };
   initialTurns: Turn[];
@@ -154,7 +160,7 @@ export function DialogRoom(props: DialogRoomProps) {
   // instead of whether a reply is actually in flight.
   const showTypingIndicator = pending && awaitingEmployeeReply;
 
-  const employeeAvatar = employeeAvatarUri(props.employee.name);
+  const employeeAvatar = employeeAvatarUri(props.employee.name, props.employee);
   const managerAvatar =
     props.uploadedAvatarUrl ?? userAvatarUri(props.userAvatarSeed ?? "manager");
 
@@ -454,15 +460,11 @@ export function DialogRoom(props: DialogRoomProps) {
               <div className="flex items-center gap-3">
                 <div className="relative">
                   {pending ? <SteamWisps /> : null}
-                  <Avatar className="size-12">
-                    <AvatarImage
-                      src={employeeAvatar}
-                      alt={props.employee.name}
-                    />
-                    <AvatarFallback>
-                      {props.employee.name.slice(0, 1).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
+                  <CharacterAvatar
+                    className="size-12"
+                    src={employeeAvatar}
+                    name={props.employee.name}
+                  />
                 </div>
                 <div>
                   <CardTitle>{props.employee.name}</CardTitle>
@@ -589,25 +591,18 @@ export function DialogRoom(props: DialogRoomProps) {
                       }
                     >
                       <div className="mb-1 flex items-center gap-2">
-                        <Avatar className="size-6">
-                          <AvatarImage
-                            src={
-                              turn.role === "manager"
-                                ? managerAvatar
-                                : employeeAvatar
-                            }
-                            alt={
-                              turn.role === "manager"
-                                ? "Вы"
-                                : props.employee.name
-                            }
+                        {turn.role === "manager" ? (
+                          <Avatar className="size-6">
+                            <AvatarImage src={managerAvatar} alt="Вы" />
+                            <AvatarFallback>ВЫ</AvatarFallback>
+                          </Avatar>
+                        ) : (
+                          <CharacterAvatar
+                            className="size-6"
+                            src={employeeAvatar}
+                            name={props.employee.name}
                           />
-                          <AvatarFallback>
-                            {turn.role === "manager"
-                              ? "ВЫ"
-                              : props.employee.name.slice(0, 1).toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
+                        )}
                         <p className="text-muted-foreground text-xs">
                           {turn.role === "manager" ? (
                             "Вы"

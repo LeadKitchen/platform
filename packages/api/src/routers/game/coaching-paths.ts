@@ -14,7 +14,9 @@ import { z } from "zod";
 import { getMemberOrgId } from "../../game/organizations";
 import {
   buildRoleplayNotes,
+  loadEmployeeGenders,
   roleplayScenarioFromSnapshot,
+  withRoleplayEmployeeGender,
 } from "../../game/roleplay";
 import { getActiveScorecardSnapshot } from "../../game/scorecards";
 import {
@@ -28,16 +30,29 @@ import { protectedProcedure } from "../../orpc";
 export const listMine = protectedProcedure.handler(async ({ context }) => {
   const orgId = await getMemberOrgId(context.db, context.session.user.id);
   if (!orgId) return [];
-  return context.db
-    .select()
-    .from(GameCoachingPathAssignment)
-    .where(
-      and(
-        eq(GameCoachingPathAssignment.orgId, orgId),
-        eq(GameCoachingPathAssignment.participantId, context.session.user.id),
-      ),
-    )
-    .orderBy(desc(GameCoachingPathAssignment.createdAt));
+  const [assignments, employeeGenders] = await Promise.all([
+    context.db
+      .select()
+      .from(GameCoachingPathAssignment)
+      .where(
+        and(
+          eq(GameCoachingPathAssignment.orgId, orgId),
+          eq(GameCoachingPathAssignment.participantId, context.session.user.id),
+        ),
+      )
+      .orderBy(desc(GameCoachingPathAssignment.createdAt)),
+    loadEmployeeGenders(context.db),
+  ]);
+  return assignments.map((assignment) => ({
+    ...assignment,
+    pathSnapshot: {
+      ...assignment.pathSnapshot,
+      steps: assignment.pathSnapshot.steps.map((step) => ({
+        ...step,
+        scenario: withRoleplayEmployeeGender(step.scenario, employeeGenders),
+      })),
+    },
+  }));
 });
 
 export const startStep = protectedProcedure

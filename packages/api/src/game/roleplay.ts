@@ -1,15 +1,17 @@
 import {
   type Database,
   eq,
+  GameEmployee,
   GameRoleplayScenario,
   type GameRoleplayScenarioSnapshot,
 } from "@acme/db";
-import type {
-  Catalog,
-  CompetenceState,
-  Employee,
-  EmployeeLevel,
-  Task,
+import {
+  type Catalog,
+  type CompetenceState,
+  defaultCatalog,
+  type Employee,
+  type EmployeeLevel,
+  type Task,
 } from "@acme/game";
 import { ORPCError } from "@orpc/server";
 import { z } from "zod";
@@ -32,6 +34,7 @@ export interface RoleplayScenario {
   baseEmployeeId: string;
   baseTaskId: string;
   employeeName: string;
+  employeeGender?: Employee["gender"];
   employeeRole: string;
   employeeLevel: EmployeeLevel;
   category: RoleplayCategory;
@@ -205,6 +208,7 @@ export function buildRoleplayTemplates(catalog: Catalog): RoleplayScenario[] {
         baseEmployeeId: employee.id,
         baseTaskId: task.id,
         employeeName: employee.name,
+        employeeGender: employee.gender,
         employeeRole: employee.role,
         employeeLevel: employee.level,
         category: definition.category,
@@ -223,6 +227,7 @@ export function buildRoleplayTemplates(catalog: Catalog): RoleplayScenario[] {
 
 export function mapStoredRoleplayScenario(
   row: typeof GameRoleplayScenario.$inferSelect,
+  employees: ReadonlyArray<Pick<Employee, "id" | "gender">>,
 ): RoleplayScenario {
   return {
     id: row.id,
@@ -231,6 +236,9 @@ export function mapStoredRoleplayScenario(
     baseEmployeeId: row.baseEmployeeId,
     baseTaskId: row.baseTaskId,
     employeeName: row.employeeName,
+    employeeGender: employees.find(
+      (employee) => employee.id === row.baseEmployeeId,
+    )?.gender,
     employeeRole: row.employeeRole,
     employeeLevel: asLevel(row.employeeLevel),
     category: asCategory(row.category),
@@ -268,7 +276,29 @@ export async function resolveRoleplayScenario(
   if (!row || (userId && row.createdBy !== userId)) {
     throw new ORPCError("NOT_FOUND", { message: "Сценарий не найден" });
   }
-  return mapStoredRoleplayScenario(row);
+  return mapStoredRoleplayScenario(row, catalog.employees);
+}
+
+/** Keep saved scenarios' portraits stable after their employee is hidden. */
+export async function loadEmployeeGenders(db: Database) {
+  const employees = await db
+    .select({ id: GameEmployee.id, gender: GameEmployee.gender })
+    .from(GameEmployee);
+  return employees.length > 0 ? employees : defaultCatalog.employees;
+}
+
+export function withRoleplayEmployeeGender<
+  T extends { baseEmployeeId: string },
+>(
+  scenario: T,
+  employees: ReadonlyArray<Pick<Employee, "id" | "gender">>,
+): T & { employeeGender?: Employee["gender"] } {
+  return {
+    ...scenario,
+    employeeGender: employees.find(
+      (employee) => employee.id === scenario.baseEmployeeId,
+    )?.gender,
+  };
 }
 
 export function snapshotRoleplayScenario(

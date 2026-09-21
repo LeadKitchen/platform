@@ -28,6 +28,7 @@ export const reference = protectedProcedure.handler(async ({ context }) => {
     employees: catalog.employees.map((employee) => ({
       id: employee.id,
       name: employee.name,
+      gender: employee.gender,
       role: employee.role,
       level: employee.level,
       levelLabel: LEVEL_LABELS[employee.level],

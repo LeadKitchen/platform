@@ -1,9 +1,6 @@
 "use client";
 
 import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
   Badge,
   Button,
   Card,
@@ -15,6 +12,7 @@ import {
 } from "@acme/ui";
 import { IconSettings } from "@tabler/icons-react";
 import Link from "next/link";
+import { CharacterAvatar } from "~/components/game/character-avatar";
 
 const STATUS_BARS = [0, 1, 2, 3, 4, 5, 6];
 
@@ -94,12 +92,11 @@ export function VoiceDialogEmployeePanel(props: {
           {speaking || pending ? (
             <span className="bg-primary/20 absolute -inset-4 animate-pulse rounded-full" />
           ) : null}
-          <Avatar className="relative size-28 border-4 border-background shadow-lg">
-            <AvatarImage src={props.employeeAvatar} alt={props.employeeName} />
-            <AvatarFallback>
-              {props.employeeName.slice(0, 1).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
+          <CharacterAvatar
+            className="relative size-28 border-4 border-background shadow-lg"
+            src={props.employeeAvatar}
+            name={props.employeeName}
+          />
         </div>
         <div className="flex h-8 items-center gap-1" aria-hidden="true">
           {STATUS_BARS.map((bar) => (

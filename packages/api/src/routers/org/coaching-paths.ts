@@ -15,8 +15,10 @@ import { ORPCError } from "@orpc/server";
 import { z } from "zod";
 import { requireFacilitatorOrgIdFromContext } from "../../game/organizations";
 import {
+  loadEmployeeGenders,
   resolveRoleplayScenario,
   snapshotRoleplayScenario,
+  withRoleplayEmployeeGender,
 } from "../../game/roleplay";
 import { loadCatalog } from "../../game/service";
 import { protectedProcedure } from "../../orpc";
@@ -74,7 +76,7 @@ async function assertPath(
 
 export const list = protectedProcedure.handler(async ({ context }) => {
   const orgId = await requireFacilitatorOrgIdFromContext(context);
-  const [paths, assignmentStats] = await Promise.all([
+  const [paths, assignmentStats, employeeGenders] = await Promise.all([
     context.db
       .select()
       .from(GameCoachingPath)
@@ -97,6 +99,7 @@ export const list = protectedProcedure.handler(async ({ context }) => {
         GameCoachingPathAssignment.pathId,
         GameCoachingPathAssignment.status,
       ),
+    loadEmployeeGenders(context.db),
   ]);
   const stats = new Map<string, { assigned: number; completed: number }>();
   for (const row of assignmentStats) {
@@ -107,6 +110,10 @@ export const list = protectedProcedure.handler(async ({ context }) => {
   }
   return paths.map((path) => ({
     ...path,
+    steps: path.steps.map((step) => ({
+      ...step,
+      scenario: withRoleplayEmployeeGender(step.scenario, employeeGenders),
+    })),
     assignedCount: stats.get(path.id)?.assigned ?? 0,
     completedCount: stats.get(path.id)?.completed ?? 0,
   }));
@@ -116,7 +123,10 @@ export const byId = protectedProcedure
   .input(z.object({ id: z.uuid() }))
   .handler(async ({ context, input }) => {
     const orgId = await requireFacilitatorOrgIdFromContext(context);
-    const path = await assertPath(context.db, orgId, input.id);
+    const [path, employeeGenders] = await Promise.all([
+      assertPath(context.db, orgId, input.id),
+      loadEmployeeGenders(context.db),
+    ]);
     const assignments = await context.db
       .select({
         assignment: GameCoachingPathAssignment,
@@ -131,7 +141,16 @@ export const byId = protectedProcedure
       .innerJoin(user, eq(user.id, GameCoachingPathAssignment.participantId))
       .where(eq(GameCoachingPathAssignment.pathId, path.id))
       .orderBy(desc(GameCoachingPathAssignment.createdAt));
-    return { path, assignments };
+    return {
+      path: {
+        ...path,
+        steps: path.steps.map((step) => ({
+          ...step,
+          scenario: withRoleplayEmployeeGender(step.scenario, employeeGenders),
+        })),
+      },
+      assignments,
+    };
   });
 
 export const create = protectedProcedure

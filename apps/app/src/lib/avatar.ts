@@ -1,28 +1,90 @@
 import { createAvatar } from "@dicebear/core";
 import * as glass from "@dicebear/glass";
-import * as notionists from "@dicebear/notionists";
 
-const EMPLOYEE_PHOTO_AVATARS: Record<string, string> = {
-  "Анна Соколова": "/images/roleplay/anna-sokolova.webp",
-  "Игорь Петров": "/images/roleplay/igor-petrov.webp",
-  "Ольга Веретенникова": "/images/roleplay/olga-veretennikova.webp",
-};
+interface EmployeeAvatarIdentity {
+  id?: string;
+  gender?: "male" | "female";
+}
+
+const EMPLOYEE_PORTRAITS = [
+  {
+    id: "anna",
+    name: "Анна Соколова",
+    gender: "female",
+    src: "/images/roleplay/anna-sokolova.webp",
+  },
+  {
+    id: "igor",
+    name: "Игорь Петров",
+    gender: "male",
+    src: "/images/roleplay/igor-petrov.webp",
+  },
+  {
+    id: "marina",
+    name: "Марина Лебедева",
+    gender: "female",
+    src: "/images/roleplay/marina-lebedeva.webp",
+  },
+  {
+    // Существующий ID Дениса сохраняется в сценариях и истории диалогов.
+    id: "timur",
+    name: "Денис Волков",
+    gender: "male",
+    src: "/images/roleplay/denis-volkov.webp",
+  },
+  {
+    id: "olga",
+    name: "Ольга Веретенникова",
+    gender: "female",
+    src: "/images/roleplay/olga-veretennikova.webp",
+  },
+] as const;
+
+function normalizeName(name: string): string {
+  return name.trim().replace(/\s+/g, " ").toLowerCase();
+}
+
+export const DEMO_MANAGER_AVATAR = "/images/roleplay/demo-manager.webp";
+
+/** Use another local photo of the same gender when a character image fails. */
+export function characterAvatarFallbackUri(src: string): string {
+  const gender =
+    EMPLOYEE_PORTRAITS.find((portrait) => portrait.src === src)?.gender ??
+    "male";
+  return (
+    EMPLOYEE_PORTRAITS.find(
+      (portrait) => portrait.gender === gender && portrait.src !== src,
+    )?.src ?? EMPLOYEE_PORTRAITS[0].src
+  );
+}
 
 /**
- * Основные персонажи используют локальные сгенерированные фотопортреты, чтобы
- * выглядеть одинаково в каталоге, комнате диалога и демо-туре. Для новых
- * пользовательских персонажей остаётся детерминированный DiceBear fallback —
- * им же временно пользуются Марина Лебедева и Денис Волков, пока для них не
- * готовы новые фотопортреты славянской внешности.
+ * Единые локальные фотопортреты для всех экранов. Новые персонажи получают
+ * стабильное фото из того же набора с учётом пола, без рисованных заглушек.
+ * Выбор по имени сохраняет портрет между черновиком персонажа и его публикацией.
  */
-export function employeeAvatarUri(seed: string): string {
-  const photoAvatar = EMPLOYEE_PHOTO_AVATARS[seed.trim()];
-  if (photoAvatar) return photoAvatar;
+export function employeeAvatarUri(
+  seed: string,
+  identity: EmployeeAvatarIdentity = {},
+): string {
+  const name = normalizeName(seed);
+  const candidates = EMPLOYEE_PORTRAITS.filter(
+    (item) => !identity.gender || item.gender === identity.gender,
+  );
+  const portrait =
+    candidates.find((item) => normalizeName(item.name) === name) ??
+    candidates.find(
+      (item) =>
+        item.id === identity.id &&
+        (!name || name === normalizeName(item.name).split(" ")[0]),
+    );
+  if (portrait) return portrait.src;
 
-  return createAvatar(notionists, {
-    seed,
-    size: 64,
-  }).toDataUri();
+  let hash = 0;
+  for (const char of name) {
+    hash = (Math.imul(hash, 31) + char.charCodeAt(0)) >>> 0;
+  }
+  return candidates[hash % candidates.length]?.src ?? EMPLOYEE_PORTRAITS[0].src;
 }
 
 /**

@@ -12,7 +12,9 @@ import { IconCheck, IconTarget, IconX } from "@tabler/icons-react";
 import { redirect } from "next/navigation";
 import { getSession } from "~/auth/server";
 import { GameSectionHeader, PrintButton } from "~/components/game";
+import { CharacterAvatar } from "~/components/game/character-avatar";
 import { SiteHeader } from "~/components/layout";
+import { employeeAvatarUri } from "~/lib/avatar";
 import { api } from "~/orpc/server";
 
 export const dynamic = "force-dynamic";
@@ -90,11 +92,18 @@ export default async function DialogReportPage({
 
         <Card className="gap-0 overflow-hidden py-0">
           <CardHeader className="border-b py-5">
-            <div>
-              <CardTitle>{data.employee.name}</CardTitle>
-              <p className="text-muted-foreground mt-1 text-sm">
-                Разговор провёл {session?.user.name ?? "Участник"}
-              </p>
+            <div className="flex items-center gap-3">
+              <CharacterAvatar
+                className="size-11"
+                src={employeeAvatarUri(data.employee.name, data.employee)}
+                name={data.employee.name}
+              />
+              <div>
+                <CardTitle>{data.employee.name}</CardTitle>
+                <p className="text-muted-foreground mt-1 text-sm">
+                  Разговор провёл {session?.user.name ?? "Участник"}
+                </p>
+              </div>
             </div>
             <div className="flex flex-wrap gap-2">
               {evaluation.scorecardName ? (

@@ -1,8 +1,5 @@
 import type { RouterOutputs } from "@acme/api";
 import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
   Badge,
   Button,
   Card,
@@ -26,6 +23,7 @@ import {
   IconStar,
   IconStarFilled,
 } from "@tabler/icons-react";
+import { CharacterAvatar } from "~/components/game/character-avatar";
 import { employeeAvatarUri } from "~/lib/avatar";
 
 export type RoleplayCategory =
@@ -58,15 +56,6 @@ const CATEGORY_ACCENT: Record<RoleplayCategory, string> = {
   overload: "from-chart-4/25 via-muted to-chart-4/5",
   delegation: "from-chart-5/25 via-muted to-chart-5/5",
 };
-
-export function initials(name: string): string {
-  return name
-    .split(/\s+/)
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
 
 export function attemptLabel(count: number): string {
   const lastTwoDigits = count % 100;
@@ -109,13 +98,14 @@ export function ScenarioCard({
       <div
         className={`flex h-28 items-end bg-gradient-to-br p-4 ${CATEGORY_ACCENT[scenario.category]}`}
       >
-        <Avatar className="size-12 border-2 border-background">
-          <AvatarImage
-            src={employeeAvatarUri(scenario.employeeName)}
-            alt={scenario.employeeName}
-          />
-          <AvatarFallback>{initials(scenario.employeeName)}</AvatarFallback>
-        </Avatar>
+        <CharacterAvatar
+          className="size-12 border-2 border-background"
+          src={employeeAvatarUri(scenario.employeeName, {
+            id: scenario.baseEmployeeId,
+            gender: scenario.employeeGender,
+          })}
+          name={scenario.employeeName}
+        />
         <div className="ml-auto flex gap-1">
           {scenario.source === "custom" ? (
             <Button

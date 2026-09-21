@@ -42,7 +42,7 @@ export function useVoiceDialogRoom(props: VoiceDialogRoomProps) {
     eventId: string;
     requestId: number;
   } | null>(null);
-  const employeeAvatar = employeeAvatarUri(props.employee.name);
+  const employeeAvatar = employeeAvatarUri(props.employee.name, props.employee);
   const managerAvatar =
     props.uploadedAvatarUrl ?? userAvatarUri(props.userAvatarSeed ?? "manager");
 

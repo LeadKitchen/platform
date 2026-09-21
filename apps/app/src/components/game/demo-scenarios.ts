@@ -37,7 +37,6 @@ export interface DemoScenario {
   employee: {
     name: string;
     role: string;
-    initials: string;
   };
   taskTitle: string;
   shift: {
@@ -73,7 +72,6 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
     employee: {
       name: "Денис Волков",
       role: "Стажёр · уровень L1",
-      initials: "Д",
     },
     taskTitle: "Заготовка овощей на смену",
     shift: { round: 2, activeOrders: 1, soloOnShift: false },
@@ -170,7 +168,6 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
     employee: {
       name: "Марина Лебедева",
       role: "Помощник повара · уровень L2",
-      initials: "М",
     },
     taskTitle: "Салаты дня, 15 порций",
     shift: { round: 2, activeOrders: 2, soloOnShift: false },
@@ -260,7 +257,6 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
     employee: {
       name: "Игорь Петров",
       role: "Повар горячего цеха · уровень L3",
-      initials: "И",
     },
     taskTitle: "Стейк рибай, средняя прожарка (в очереди 3 заказа)",
     shift: { round: 2, activeOrders: 3, soloOnShift: false },
@@ -354,7 +350,6 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
     employee: {
       name: "Анна Соколова",
       role: "Повар десертов · уровень L4",
-      initials: "А",
     },
     taskTitle: "Пироги с яблоком, 20 порций",
     shift: { round: 2, activeOrders: 1, soloOnShift: false },
@@ -440,7 +435,6 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
     employee: {
       name: "Денис Волков",
       role: "Стажёр · уровень L1",
-      initials: "Д",
     },
     taskTitle: "Заготовка овощей на смену",
     shift: { round: 2, activeOrders: 1, soloOnShift: false },
@@ -548,7 +542,6 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
     employee: {
       name: "Марина Лебедева",
       role: "Помощник повара · уровень L2",
-      initials: "М",
     },
     taskTitle: "Салаты дня, 15 порций",
     shift: { round: 2, activeOrders: 2, soloOnShift: false },
@@ -644,7 +637,6 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
     employee: {
       name: "Игорь Петров",
       role: "Повар горячего цеха · уровень L3",
-      initials: "И",
     },
     taskTitle: "Стейк рибай, средняя прожарка (в очереди 3 заказа)",
     shift: { round: 2, activeOrders: 3, soloOnShift: false },
@@ -750,7 +742,6 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
     employee: {
       name: "Анна Соколова",
       role: "Повар десертов · уровень L4",
-      initials: "А",
     },
     taskTitle: "Пироги с яблоком, 20 порций",
     shift: { round: 2, activeOrders: 1, soloOnShift: false },
@@ -854,7 +845,6 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
     employee: {
       name: "Ольга Веретенникова",
       role: "Су-шеф · уровень L4",
-      initials: "О",
     },
     taskTitle: "Горячее на банкет, 40 порций (одна в смене)",
     shift: { round: 3, activeOrders: 4, soloOnShift: true },
